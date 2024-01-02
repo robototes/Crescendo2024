@@ -1,0 +1,16 @@
+{
+	"recommendations": [
+		"editorconfig.editorconfig",
+		"vscjava.vscode-java-pack",
+		"github.vscode-pull-request-github",
+		"vscjava.vscode-gradle",
+		"gruntfuggly.todo-tree",
+		"wpilibsuite.vscode-wpilib",
+		"redhat.java",
+		"vscjava.vscode-java-debug",
+		"vscjava.vscode-java-test",
+		"vscjava.vscode-maven",
+		"vscjava.vscode-java-dependency",
+		"visualstudioexptteam.vscodeintellicode"
+	]
+}
