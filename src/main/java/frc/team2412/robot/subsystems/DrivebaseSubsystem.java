@@ -1,79 +1,97 @@
 package frc.team2412.robot.subsystems;
 
-import java.io.File;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2412.robot.Robot;
+import java.io.File;
+import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 import swervelib.SwerveDrive;
+import swervelib.math.SwerveMath;
 import swervelib.parser.SwerveParser;
 
 public class DrivebaseSubsystem extends SubsystemBase {
 
-    // SWERVE CONSTANTS (that aren't in deploy dir)
+	// SWERVE CONSTANTS (that aren't in deploy dir)
 
-    private static final double MAX_SPEED = 1.0;
+	private static final double MAX_SPEED = 1.0;
+	private static final double JOYSTICK_DEADBAND = 0.05;
 
-    private final SwerveDrive swerveDrive;
+	private final SwerveDrive swerveDrive;
 
-    public DrivebaseSubsystem() {
-        File swerveJsonDirectory;
+	public DrivebaseSubsystem() {
+		File swerveJsonDirectory;
 
-        if (Robot.getInstance().isCompetition()) {
-            swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "swerve");
-        } else {
-            swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "practiceswerve");
-        }
+		if (Robot.getInstance().isCompetition()) {
+			swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "swerve");
+		} else {
+			swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "practiceswerve");
+		}
 
-        try {
-            swerveDrive = new SwerveParser(swerveJsonDirectory).createSwerveDrive(MAX_SPEED);
-        } catch (Exception e) {
-            throw new RuntimeException();
-        }
+		try {
+			swerveDrive = new SwerveParser(swerveJsonDirectory).createSwerveDrive(MAX_SPEED);
+		} catch (Exception e) {
+			throw new RuntimeException();
+		}
 
-        // set drive motors to brake
-        swerveDrive.setMotorIdleMode(true);
-        // enable optimization (never move the angle wheels more than 90 degrees)
-        swerveDrive.setModuleStateOptimization(true);
-        // swerve drive heading will slowly drift over time as you translate. this method enables an active correction using pid. disabled until testing can be done
-        swerveDrive.setHeadingCorrection(false);
-        // supposed to do something? see https://broncbotz3481.github.io/YAGSL/swervelib/SwerveDrive.html#chassisVelocityCorrection
-        swerveDrive.chassisVelocityCorrection = true;
+		// set drive motors to brake
+		swerveDrive.setMotorIdleMode(true);
+		// enable optimization (never move the angle wheels more than 90 degrees)
+		swerveDrive.setModuleStateOptimization(true);
+		// swerve drive heading will slowly drift over time as you translate. this method enables an
+		// active correction using pid. disabled until testing can be done
+		swerveDrive.setHeadingCorrection(false);
+		// supposed to do something? see
+		// https://broncbotz3481.github.io/YAGSL/swervelib/SwerveDrive.html#chassisVelocityCorrection
+		swerveDrive.chassisVelocityCorrection = true;
 
-        swerveDrive.synchronizeModuleEncoders();
-    }
+		swerveDrive.synchronizeModuleEncoders();
+	}
 
-    public void drive(
-        Translation2d translation,
-        Rotation2d rotation,
-        boolean fieldOriented) {
-        swerveDrive.drive(translation, rotation.getRadians(), fieldOriented, false);
-    }
+	public void drive(Translation2d translation, Rotation2d rotation, boolean fieldOriented) {
+		swerveDrive.drive(translation, rotation.getRadians(), fieldOriented, false);
+	}
 
-    /*
-     * Set the robot's pose.
-     * TODO: does this change yaw too? does this affect field oriented?
-     */
-    public void setPose(Pose2d pose) {
-        swerveDrive.resetOdometry(pose);
-    }
+	/**
+	 * Drives the robot using joystick inputs
+	 *
+	 * @param forward Forward motion in meters. A negative value makes the robot go backwards
+	 * @param strafe Strafe motion in meters. A negative value makes the robot go left
+	 * @param rotation Rotation2d value of robot rotation. CW is positive TODO: is this true?
+	 */
+	public Command driveJoystick(
+			DoubleSupplier forward, DoubleSupplier strafe, Supplier<Rotation2d> rotation) {
+		Rotation2d constrainedRotation =
+				Rotation2d.fromRotations(
+						SwerveMath.applyDeadband(rotation.get().getRotations(), true, JOYSTICK_DEADBAND));
+		Translation2d constrainedTranslation =
+				new Translation2d(
+						SwerveMath.applyDeadband(forward.getAsDouble(), true, JOYSTICK_DEADBAND),
+						SwerveMath.applyDeadband(strafe.getAsDouble(), true, JOYSTICK_DEADBAND));
+		return this.run(() -> drive(constrainedTranslation, constrainedRotation, true));
+	}
 
-    /*
-     * Reset the gyro angle. After this method is called, yaw will be zero. Pose is also updated to zero rotation but same position
-     */
-    public void resetGyro() {
-        swerveDrive.zeroGyro();
-    }
+	/** Set the robot's pose. TODO: does this change yaw too? does this affect field oriented? */
+	public void setPose(Pose2d pose) {
+		swerveDrive.resetOdometry(pose);
+	}
 
-    /*
-     * Reset everything we can on the drivebase. To be used before auto starts
-     */
-    public void resetRobot() {
-        swerveDrive.resetEncoders();
-        resetGyro();
-        setPose(new Pose2d());
-    }
+	/**
+	 * Reset the gyro angle. After this method is called, yaw will be zero. Pose is also updated to
+	 * zero rotation but same position
+	 */
+	public void resetGyro() {
+		swerveDrive.zeroGyro();
+	}
+
+	/** Reset everything we can on the drivebase. To be used before auto starts */
+	public void resetRobot() {
+		swerveDrive.resetEncoders();
+		resetGyro();
+		setPose(new Pose2d());
+	}
 }

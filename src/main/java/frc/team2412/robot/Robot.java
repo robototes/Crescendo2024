@@ -43,7 +43,9 @@ public class Robot extends TimedRobot {
 
 	private static RobotType getTypeFromAddress() {
 		if (PRACTICE_ADDRESS.exists()) return RobotType.PRACTICE;
-		else {return RobotType.COMPETITION;}
+		else {
+			return RobotType.COMPETITION;
+		}
 	}
 
 	@Override
