@@ -1,8 +1,13 @@
 package frc.team2412.robot.subsystems;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -20,6 +25,13 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
 	private static final double MAX_SPEED = 1.0;
 	private static final double JOYSTICK_DEADBAND = 0.05;
+	private static final double DRIVEBASE_RADIUS = 0;
+
+	// AUTO CONSTANTS
+
+	private static final PIDConstants AUTO_TRANSLATION_PID = new PIDConstants(0, 0, 0);
+	private static final PIDConstants AUTO_ROTATION_PID = new PIDConstants(0, 0, 0);
+	private static final double MAX_AUTO_SPEED = 0;
 
 	private final SwerveDrive swerveDrive;
 
@@ -50,8 +62,38 @@ public class DrivebaseSubsystem extends SubsystemBase {
 		swerveDrive.chassisVelocityCorrection = true;
 
 		swerveDrive.synchronizeModuleEncoders();
+
+		// Configure auto builder for PathPlanner
+		AutoBuilder.configureHolonomic(
+				this::getPose,
+				this::setPose,
+				this::getRobotSpeeds,
+				this::drive,
+				new HolonomicPathFollowerConfig(
+						AUTO_TRANSLATION_PID,
+						AUTO_ROTATION_PID,
+						MAX_AUTO_SPEED,
+						DRIVEBASE_RADIUS,
+						new ReplanningConfig()),
+				this);
 	}
 
+	/**
+	 * Drive with robot-relative chassis speeds
+	 *
+	 * @param speeds Robot-relative speeds
+	 */
+	public void drive(ChassisSpeeds speeds) {
+		swerveDrive.drive(speeds);
+	}
+
+	/**
+	 * Drive the robot
+	 *
+	 * @param translation
+	 * @param rotation
+	 * @param fieldOriented Whether these values are field oriented
+	 */
 	public void drive(Translation2d translation, Rotation2d rotation, boolean fieldOriented) {
 		swerveDrive.drive(translation, rotation.getRadians(), fieldOriented, false);
 	}
@@ -75,9 +117,18 @@ public class DrivebaseSubsystem extends SubsystemBase {
 		return this.run(() -> drive(constrainedTranslation, constrainedRotation, true));
 	}
 
+	public ChassisSpeeds getRobotSpeeds() {
+		return swerveDrive.getRobotVelocity();
+	}
+
 	/** Set the robot's pose. TODO: does this change yaw too? does this affect field oriented? */
 	public void setPose(Pose2d pose) {
 		swerveDrive.resetOdometry(pose);
+	}
+
+	/** Get the robot's pose */
+	public Pose2d getPose() {
+		return swerveDrive.getPose();
 	}
 
 	/**
