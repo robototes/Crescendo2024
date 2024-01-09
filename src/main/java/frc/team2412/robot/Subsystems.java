@@ -5,7 +5,6 @@ public class Subsystems {
 		public static final boolean DRIVEBASE_ENABLED = false;
 	}
 
-
 	public Subsystems() {
 		// initialize subsystems here (wow thats wild)
 	}
