@@ -1,8 +1,6 @@
 # This gitignore has been specially created by the WPILib team.
 # If you remove items from this file, intellisense might break.
 
-.Glass
-
 ### C++ ###
 # Prerequisites
 *.d
@@ -106,13 +104,11 @@ Temporary Items
 .apdisk
 
 ### VisualStudioCode ###
-.factorypath
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-.factorypath
 
 ### Windows ###
 # Windows thumbnail cache files
@@ -162,21 +158,21 @@ gradle-app.setting
 .settings/
 bin/
 
+# IntelliJ
+*.iml
+*.ipr
+*.iws
+.idea/
+out/
+
+# Fleet
+.fleet
+
 # Simulation GUI and other tools window save file
 *-window.json
-simgui*.json
-.wpilog
 
-# Vim :)
-Session.vim
-.undodir
+# Simulation data log directory
+logs/
 
-# Intellij IDEA platform
-.idea
-local.properties
-
-# WPILib datalog tool config files
-.DataLogTool/
-
-# Don't know what's creating this
-.project
+# Folder that has CTRE Phoenix Sim device config storage
+ctre_sim/

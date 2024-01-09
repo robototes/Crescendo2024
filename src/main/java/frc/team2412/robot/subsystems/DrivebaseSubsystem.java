@@ -75,6 +75,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 						MAX_AUTO_SPEED,
 						DRIVEBASE_RADIUS,
 						new ReplanningConfig()),
+				false,
 				this);
 	}
 
