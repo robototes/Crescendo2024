@@ -97,7 +97,7 @@ public class CANCoderSwerve extends SwerveAbsoluteEncoder
     if (strength == MagnetHealthValue.Magnet_Invalid || strength == MagnetHealthValue.Magnet_Red)
     {
       readingError = true;
-      DriverStation.reportWarning("CANCoder " + encoder.getDeviceID() + " reading was faulty.\n", false);
+      // DriverStation.reportWarning("CANCoder " + encoder.getDeviceID() + " reading was faulty.\n", false);
       return 0;
     }
     StatusSignal<Double> angle = encoder.getAbsolutePosition().refresh();

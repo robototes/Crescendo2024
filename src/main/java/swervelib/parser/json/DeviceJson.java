@@ -13,18 +13,19 @@ import swervelib.encoders.SparkMaxAnalogEncoderSwerve;
 import swervelib.encoders.SparkMaxEncoderSwerve;
 import swervelib.encoders.SwerveAbsoluteEncoder;
 import swervelib.imu.ADIS16448Swerve;
-// import swervelib.imu.ADIS16470Swerve;
+import swervelib.imu.ADIS16470Swerve;
 import swervelib.imu.ADXRS450Swerve;
 import swervelib.imu.AnalogGyroSwerve;
 import swervelib.imu.NavXSwerve;
 import swervelib.imu.Pigeon2Swerve;
-// import swervelib.imu.PigeonSwerve;
+import swervelib.imu.PigeonSwerve;
 import swervelib.imu.SwerveIMU;
-// import swervelib.motors.SparkMaxBrushedMotorSwerve;
-// import swervelib.motors.SparkMaxSwerve;
+import swervelib.motors.SparkFlexSwerve;
+import swervelib.motors.SparkMaxBrushedMotorSwerve;
+import swervelib.motors.SparkMaxSwerve;
 import swervelib.motors.SwerveMotor;
 import swervelib.motors.TalonFXSwerve;
-// import swervelib.motors.TalonSRXSwerve;
+import swervelib.motors.TalonSRXSwerve;
 
 /**
  * Device JSON parsed class. Used to access the JSON data.
@@ -106,8 +107,7 @@ public class DeviceJson
       case "adis16448":
         return new ADIS16448Swerve();
       case "adis16470":
-        // return new ADIS16470Swerve();
-        return null;
+        return new ADIS16470Swerve();
       case "adxrs450":
         return new ADXRS450Swerve();
       case "analog":
@@ -127,8 +127,7 @@ public class DeviceJson
       case "navx_mxp":
         return new NavXSwerve(Port.kMXP);
       case "pigeon":
-        // return new PigeonSwerve(id);
-        return null;
+        return new PigeonSwerve(id);
       case "pigeon2":
         return new Pigeon2Swerve(id, canbus != null ? canbus : "");
       default:
@@ -155,34 +154,35 @@ public class DeviceJson
         switch (canbus)
         {
           case "greyhill_63r256":
-            // return new SparkMaxBrushedMotorSwerve(id, isDriveMotor, Type.kQuadrature, 1024, false);
+            return new SparkMaxBrushedMotorSwerve(id, isDriveMotor, Type.kQuadrature, 1024, false);
           case "srx_mag_encoder":
-            // return new SparkMaxBrushedMotorSwerve(id, isDriveMotor, Type.kQuadrature, 4096, false);
+            return new SparkMaxBrushedMotorSwerve(id, isDriveMotor, Type.kQuadrature, 4096, false);
           case "throughbore":
-            // return new SparkMaxBrushedMotorSwerve(id, isDriveMotor, Type.kQuadrature, 8192, false);
+            return new SparkMaxBrushedMotorSwerve(id, isDriveMotor, Type.kQuadrature, 8192, false);
           case "throughbore_dataport":
-            // return new SparkMaxBrushedMotorSwerve(id, isDriveMotor, Type.kNoSensor, 8192, true);
+            return new SparkMaxBrushedMotorSwerve(id, isDriveMotor, Type.kNoSensor, 8192, true);
           case "greyhill_63r256_dataport":
-            // return new SparkMaxBrushedMotorSwerve(id, isDriveMotor, Type.kQuadrature, 1024, true);
+            return new SparkMaxBrushedMotorSwerve(id, isDriveMotor, Type.kQuadrature, 1024, true);
           case "srx_mag_encoder_dataport":
-            // return new SparkMaxBrushedMotorSwerve(id, isDriveMotor, Type.kQuadrature, 4096, true);
+            return new SparkMaxBrushedMotorSwerve(id, isDriveMotor, Type.kQuadrature, 4096, true);
           default:
             if (isDriveMotor)
             {
               throw new RuntimeException("Spark MAX " + id + " MUST have a encoder attached to the motor controller.");
             }
             // We are creating a motor for an angle motor which will use the absolute encoder attached to the data port.
-            // return new SparkMaxBrushedMotorSwerve(id, isDriveMotor, Type.kNoSensor, 0, false);
-            return null;
+            return new SparkMaxBrushedMotorSwerve(id, isDriveMotor, Type.kNoSensor, 0, false);
         }
       case "neo":
       case "sparkmax":
-        // return new SparkMaxSwerve(id, isDriveMotor);
+        return new SparkMaxSwerve(id, isDriveMotor);
+      case "sparkflex":
+        return new SparkFlexSwerve(id, isDriveMotor);
       case "falcon":
       case "talonfx":
         return new TalonFXSwerve(id, canbus != null ? canbus : "", isDriveMotor);
       case "talonsrx":
-        // return new TalonSRXSwerve(id, isDriveMotor);
+        return new TalonSRXSwerve(id, isDriveMotor);
       default:
         throw new RuntimeException(type + " is not a recognized motor type.");
     }

@@ -26,7 +26,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 	// SWERVE CONSTANTS (that aren't in deploy dir)
 
 	private static final double MAX_SPEED = 1.0;
-	private static final double JOYSTICK_DEADBAND = 0.05;
+	private static final double JOYSTICK_DEADBAND = 0.0;
 	private static final double DRIVEBASE_RADIUS = 0;
 
 	// AUTO CONSTANTS
@@ -42,8 +42,10 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
 		if (Robot.getInstance().isCompetition()) {
 			swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "swerve");
+			System.out.println("Running competition swerve");
 		} else {
 			swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "practiceswerve");
+			System.out.println("Running practice swerve");
 		}
 
 		try {
@@ -55,13 +57,13 @@ public class DrivebaseSubsystem extends SubsystemBase {
 		// set drive motors to brake
 		swerveDrive.setMotorIdleMode(true);
 		// enable optimization (never move the angle wheels more than 90 degrees)
-		swerveDrive.setModuleStateOptimization(true);
+		swerveDrive.setModuleStateOptimization(false);
 		// swerve drive heading will slowly drift over time as you translate. this method enables an
 		// active correction using pid. disabled until testing can be done
 		swerveDrive.setHeadingCorrection(false);
 		// supposed to do something? see
 		// https://broncbotz3481.github.io/YAGSL/swervelib/SwerveDrive.html#chassisVelocityCorrection
-		swerveDrive.chassisVelocityCorrection = true;
+		swerveDrive.chassisVelocityCorrection = false;
 
 		swerveDrive.synchronizeModuleEncoders();
 

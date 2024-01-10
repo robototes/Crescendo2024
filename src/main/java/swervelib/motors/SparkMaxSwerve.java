@@ -2,39 +2,38 @@ package swervelib.motors;
 
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMax.ControlType;
-import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkBase.ControlType;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
+import com.revrobotics.MotorFeedbackSensor;
 import com.revrobotics.REVLibError;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxAlternateEncoder;
+import com.revrobotics.SparkMaxAnalogSensor;
 import com.revrobotics.SparkMaxPIDController;
-import com.revrobotics.SparkMaxRelativeEncoder.Type;
 import edu.wpi.first.wpilibj.DriverStation;
 import java.util.function.Supplier;
 import swervelib.encoders.SwerveAbsoluteEncoder;
 import swervelib.parser.PIDFConfig;
 
 /**
- * Brushed motor control with SparkMax.
+ * An implementation of {@link CANSparkMax} as a {@link SwerveMotor}.
  */
-public class SparkMaxBrushedMotorSwerve extends SwerveMotor
+public class SparkMaxSwerve extends SwerveMotor
 {
 
   /**
    * SparkMAX Instance.
    */
-  public CANSparkMax motor;
-
-  /**
-   * Absolute encoder attached to the SparkMax (if exists)
-   */
-  public  AbsoluteEncoder       absoluteEncoder;
+  public  CANSparkMax           motor;
   /**
    * Integrated encoder.
    */
   public  RelativeEncoder       encoder;
+  /**
+   * Absolute encoder attached to the SparkMax (if exists)
+   */
+  public  SwerveAbsoluteEncoder absoluteEncoder;
   /**
    * Closed-loop PID controller.
    */
@@ -47,65 +46,34 @@ public class SparkMaxBrushedMotorSwerve extends SwerveMotor
   /**
    * Initialize the swerve motor.
    *
-   * @param motor                  The SwerveMotor as a SparkMax object.
-   * @param isDriveMotor           Is the motor being initialized a drive motor?
-   * @param encoderType            {@link Type} of encoder to use for the {@link CANSparkMax} device.
-   * @param countsPerRevolution    The number of encoder pulses for the {@link Type} encoder per revolution.
-   * @param useDataPortQuadEncoder Use the encoder attached to the data port of the spark max for a quadrature encoder.
+   * @param motor        The SwerveMotor as a SparkMax object.
+   * @param isDriveMotor Is the motor being initialized a drive motor?
    */
-  public SparkMaxBrushedMotorSwerve(CANSparkMax motor, boolean isDriveMotor, Type encoderType, int countsPerRevolution,
-                                    boolean useDataPortQuadEncoder)
+  public SparkMaxSwerve(CANSparkMax motor, boolean isDriveMotor)
   {
-    // Drive motors **MUST** have an encoder attached.
-    if (isDriveMotor && encoderType == Type.kNoSensor)
-    {
-      DriverStation.reportError("Cannot use motor without encoder.", true);
-      throw new RuntimeException("Cannot use SparkMAX as a drive motor without an encoder attached.");
-    }
-
-    // Hall encoders can be used as quadrature encoders.
-    if (encoderType == Type.kHallSensor)
-    {
-      encoderType = Type.kQuadrature;
-    }
-
     this.motor = motor;
     this.isDriveMotor = isDriveMotor;
-
     factoryDefaults();
     clearStickyFaults();
 
-    // Get the onboard PID controller.
+    encoder = motor.getEncoder();
     pid = motor.getPIDController();
+    pid.setFeedbackDevice(
+        encoder); // Configure feedback of the PID controller as the integrated encoder.
 
-    // If there is a sensor attached to the data port or encoder port set the relative encoder.
-    if (isDriveMotor || (encoderType != Type.kNoSensor || useDataPortQuadEncoder))
-    {
-      this.encoder = useDataPortQuadEncoder ?
-                     motor.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, countsPerRevolution) :
-                     motor.getEncoder(encoderType, countsPerRevolution);
-
-      // Configure feedback of the PID controller as the integrated encoder.
-      configureSparkMax(() -> pid.setFeedbackDevice(encoder));
-    }
     // Spin off configurations in a different thread.
-    // configureSparkMax(() -> motor.setCANTimeout(0)); // Commented it out because it prevents feedback.
+    // configureSparkMax(() -> motor.setCANTimeout(0)); // Commented out because it prevents feedback.
   }
 
   /**
    * Initialize the {@link SwerveMotor} as a {@link CANSparkMax} connected to a Brushless Motor.
    *
-   * @param id                     CAN ID of the SparkMax.
-   * @param isDriveMotor           Is the motor being initialized a drive motor?
-   * @param encoderType            {@link Type} of encoder to use for the {@link CANSparkMax} device.
-   * @param countsPerRevolution    The number of encoder pulses for the {@link Type} encoder per revolution.
-   * @param useDataPortQuadEncoder Use the encoder attached to the data port of the spark max for a quadrature encoder.
+   * @param id           CAN ID of the SparkMax.
+   * @param isDriveMotor Is the motor being initialized a drive motor?
    */
-  public SparkMaxBrushedMotorSwerve(int id, boolean isDriveMotor, Type encoderType, int countsPerRevolution,
-                                    boolean useDataPortQuadEncoder)
+  public SparkMaxSwerve(int id, boolean isDriveMotor)
   {
-    this(new CANSparkMax(id, MotorType.kBrushed), isDriveMotor, encoderType, countsPerRevolution,
-         useDataPortQuadEncoder);
+    this(new CANSparkMax(id, MotorType.kBrushless), isDriveMotor);
   }
 
   /**
@@ -213,15 +181,14 @@ public class SparkMaxBrushedMotorSwerve extends SwerveMotor
   @Override
   public SwerveMotor setAbsoluteEncoder(SwerveAbsoluteEncoder encoder)
   {
-    if (encoder.getAbsoluteEncoder() instanceof AbsoluteEncoder)
+    if (encoder.getAbsoluteEncoder() instanceof MotorFeedbackSensor)
     {
-      absoluteEncoder = (AbsoluteEncoder) encoder.getAbsoluteEncoder();
-      configureSparkMax(() -> pid.setFeedbackDevice(absoluteEncoder));
-    }
-    if (absoluteEncoder == null && this.encoder == null)
-    {
-      DriverStation.reportError("An encoder MUST be defined to work with a SparkMAX", true);
-      throw new RuntimeException("An encoder MUST be defined to work with a SparkMAX");
+      DriverStation.reportWarning(
+          "IF possible configure the duty cycle encoder offset in the REV Hardware Client instead of using the" +
+          " absoluteEncoderOffset in the Swerve Module JSON!",
+          false);
+      absoluteEncoder = encoder;
+      configureSparkMax(() -> pid.setFeedbackDevice((MotorFeedbackSensor) absoluteEncoder.getAbsoluteEncoder()));
     }
     return this;
   }
@@ -244,8 +211,28 @@ public class SparkMaxBrushedMotorSwerve extends SwerveMotor
       configureCANStatusFrames(10, 20, 20, 500, 500);
     } else
     {
-      configureSparkMax(() -> absoluteEncoder.setPositionConversionFactor(positionConversionFactor));
-      configureSparkMax(() -> absoluteEncoder.setVelocityConversionFactor(positionConversionFactor / 60));
+      configureSparkMax(() -> {
+        if (absoluteEncoder.getAbsoluteEncoder() instanceof AbsoluteEncoder)
+        {
+          return ((AbsoluteEncoder) absoluteEncoder.getAbsoluteEncoder()).setPositionConversionFactor(
+              positionConversionFactor);
+        } else
+        {
+          return ((SparkMaxAnalogSensor) absoluteEncoder.getAbsoluteEncoder()).setPositionConversionFactor(
+              positionConversionFactor);
+        }
+      });
+      configureSparkMax(() -> {
+        if (absoluteEncoder.getAbsoluteEncoder() instanceof AbsoluteEncoder)
+        {
+          return ((AbsoluteEncoder) absoluteEncoder.getAbsoluteEncoder()).setVelocityConversionFactor(
+              positionConversionFactor / 60);
+        } else
+        {
+          return ((SparkMaxAnalogSensor) absoluteEncoder.getAbsoluteEncoder()).setVelocityConversionFactor(
+              positionConversionFactor / 60);
+        }
+      });
     }
   }
 
@@ -260,7 +247,6 @@ public class SparkMaxBrushedMotorSwerve extends SwerveMotor
 //    int pidSlot =
 //        isDriveMotor ? SparkMAX_slotIdx.Velocity.ordinal() : SparkMAX_slotIdx.Position.ordinal();
     int pidSlot = 0;
-
     configureSparkMax(() -> pid.setP(config.p, pidSlot));
     configureSparkMax(() -> pid.setI(config.i, pidSlot));
     configureSparkMax(() -> pid.setD(config.d, pidSlot));
@@ -332,6 +318,12 @@ public class SparkMaxBrushedMotorSwerve extends SwerveMotor
   @Override
   public void burnFlash()
   {
+    try
+    {
+      Thread.sleep(200);
+    } catch (Exception e)
+    {
+    }
     configureSparkMax(() -> motor.burnFlash());
   }
 
@@ -355,16 +347,28 @@ public class SparkMaxBrushedMotorSwerve extends SwerveMotor
   @Override
   public void setReference(double setpoint, double feedforward)
   {
+    boolean possibleBurnOutIssue = true;
 //    int pidSlot =
 //        isDriveMotor ? SparkMAX_slotIdx.Velocity.ordinal() : SparkMAX_slotIdx.Position.ordinal();
     int pidSlot = 0;
-    configureSparkMax(() ->
-                          pid.setReference(
-                              setpoint,
-                              isDriveMotor ? ControlType.kVelocity : ControlType.kPosition,
-                              pidSlot,
-                              feedforward)
-                     );
+
+    if (isDriveMotor)
+    {
+      configureSparkMax(() ->
+                            pid.setReference(
+                                setpoint,
+                                ControlType.kVelocity,
+                                pidSlot,
+                                feedforward));
+    } else
+    {
+      configureSparkMax(() ->
+                            pid.setReference(
+                                setpoint,
+                                ControlType.kPosition,
+                                pidSlot,
+                                feedforward));
+    }
   }
 
   /**
@@ -399,7 +403,7 @@ public class SparkMaxBrushedMotorSwerve extends SwerveMotor
   @Override
   public double getPosition()
   {
-    return absoluteEncoder == null ? encoder.getPosition() : absoluteEncoder.getPosition();
+    return absoluteEncoder == null ? encoder.getPosition() : absoluteEncoder.getAbsolutePosition();
   }
 
   /**
@@ -414,5 +418,24 @@ public class SparkMaxBrushedMotorSwerve extends SwerveMotor
     {
       configureSparkMax(() -> encoder.setPosition(position));
     }
+  }
+
+  /**
+   * REV Slots for PID configuration.
+   */
+  enum SparkMAX_slotIdx
+  {
+    /**
+     * Slot 1, used for position PID's.
+     */
+    Position,
+    /**
+     * Slot 2, used for velocity PID's.
+     */
+    Velocity,
+    /**
+     * Slot 3, used arbitrarily. (Documentation show simulations).
+     */
+    Simulation
   }
 }
