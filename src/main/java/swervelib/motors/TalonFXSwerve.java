@@ -29,6 +29,7 @@ public class TalonFXSwerve extends SwerveMotor
    * Whether the absolute encoder is integrated.
    */
   private final boolean              absoluteEncoder         = false;
+  private double positionConversionFactor = 0;
   /**
    * Motion magic angle voltage setter.
    */
@@ -154,11 +155,13 @@ public class TalonFXSwerve extends SwerveMotor
     TalonFXConfigurator cfg = motor.getConfigurator();
     cfg.refresh(configuration);
 
+    this.positionConversionFactor = positionConversionFactor;
+
     configuration.MotionMagic = configuration.MotionMagic
         .withMotionMagicCruiseVelocity(100 / positionConversionFactor)
         .withMotionMagicAcceleration((100 / positionConversionFactor) / 0.100)
         .withMotionMagicExpo_kV(0.12 * positionConversionFactor)
-        .withMotionMagicExpo_kA(0.1);
+        .withMotionMagicExpo_kA(5);
 
     configuration.Feedback = configuration.Feedback
         .withSensorToMechanismRatio(positionConversionFactor)
@@ -321,10 +324,11 @@ public class TalonFXSwerve extends SwerveMotor
 
     if (isDriveMotor)
     {
-      motor.setControl(m_velocityVoltageSetter.withVelocity(setpoint));
+      motor.setControl(m_velocityVoltageSetter.withVelocity(setpoint));//*positionConversionFactor));//setpoint*positionConversionFactor));
     } else
     {
-      motor.setControl(m_angleVoltageSetter.withPosition(setpoint));
+      // Motion magic takes input in rotations
+      motor.setControl(m_angleVoltageSetter.withPosition(setpoint/360));
     }
   }
 
@@ -336,7 +340,7 @@ public class TalonFXSwerve extends SwerveMotor
   @Override
   public double getVelocity()
   {
-    return motor.getVelocity().getValue();
+    return isDriveMotor ? motor.getVelocity().getValue() : motor.getVelocity().getValue() * 360;
   }
 
   /**
@@ -347,7 +351,7 @@ public class TalonFXSwerve extends SwerveMotor
   @Override
   public double getPosition()
   {
-    return motor.getPosition().getValue();
+    return isDriveMotor ? motor.getPosition().getValue() : motor.getPosition().getValue() * 360;
   }
 
   /**
@@ -362,7 +366,7 @@ public class TalonFXSwerve extends SwerveMotor
     {
       position = position < 0 ? (position % 360) + 360 : position;
       TalonFXConfigurator cfg = motor.getConfigurator();
-      cfg.setPosition(position);
+      cfg.setPosition(position / 360);
     }
   }
 

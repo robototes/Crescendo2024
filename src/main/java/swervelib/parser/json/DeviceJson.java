@@ -1,6 +1,6 @@
 package swervelib.parser.json;
 
-import com.revrobotics.SparkMaxRelativeEncoder.Type;
+import com.revrobotics.SparkRelativeEncoder.Type;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.SPI;

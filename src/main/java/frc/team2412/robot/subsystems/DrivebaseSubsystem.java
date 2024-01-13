@@ -20,12 +20,13 @@ import java.util.function.Supplier;
 import swervelib.SwerveDrive;
 import swervelib.math.SwerveMath;
 import swervelib.parser.SwerveParser;
+import swervelib.telemetry.SwerveDriveTelemetry;
 
 public class DrivebaseSubsystem extends SubsystemBase {
 
 	// SWERVE CONSTANTS (that aren't in deploy dir)
 
-	private static final double MAX_SPEED = 1.0;
+	private static final double MAX_SPEED = 0.1;
 	private static final double JOYSTICK_DEADBAND = 0.0;
 	private static final double DRIVEBASE_RADIUS = 0;
 
@@ -57,7 +58,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 		// set drive motors to brake
 		swerveDrive.setMotorIdleMode(true);
 		// enable optimization (never move the angle wheels more than 90 degrees)
-		swerveDrive.setModuleStateOptimization(false);
+		//	swerveDrive.setModuleStateOptimization(false);
 		// swerve drive heading will slowly drift over time as you translate. this method enables an
 		// active correction using pid. disabled until testing can be done
 		swerveDrive.setHeadingCorrection(false);
@@ -81,6 +82,8 @@ public class DrivebaseSubsystem extends SubsystemBase {
 						new ReplanningConfig()),
 				()->DriverStation.getAlliance().get().equals(Alliance.Red), // flip path if on the red alliance
 				this);
+		
+		SwerveDriveTelemetry.verbosity = SwerveDriveTelemetry.TelemetryVerbosity.HIGH;
 	}
 
 	/**
@@ -148,7 +151,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
 	/** Reset everything we can on the drivebase. To be used before auto starts */
 	public void resetRobot() {
-		swerveDrive.resetEncoders();
+		swerveDrive.resetDriveEncoders();
 		resetGyro();
 		setPose(new Pose2d());
 	}
