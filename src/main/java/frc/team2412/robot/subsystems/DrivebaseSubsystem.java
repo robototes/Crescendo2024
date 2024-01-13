@@ -27,7 +27,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 	// SWERVE CONSTANTS (that aren't in deploy dir)
 
 	private static final double MAX_SPEED = 0.1;
-	private static final double JOYSTICK_DEADBAND = 0.0;
+	private static final double JOYSTICK_DEADBAND = 0.05;
 	private static final double DRIVEBASE_RADIUS = 0;
 
 	// AUTO CONSTANTS
@@ -64,7 +64,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 		swerveDrive.setHeadingCorrection(false);
 		// supposed to do something? see
 		// https://broncbotz3481.github.io/YAGSL/swervelib/SwerveDrive.html#chassisVelocityCorrection
-		swerveDrive.chassisVelocityCorrection = false;
+		swerveDrive.chassisVelocityCorrection = true;
 
 		swerveDrive.synchronizeModuleEncoders();
 
@@ -103,7 +103,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 	 * @param fieldOriented Whether these values are field oriented
 	 */
 	public void drive(Translation2d translation, Rotation2d rotation, boolean fieldOriented) {
-		swerveDrive.drive(translation, rotation.getRadians(), fieldOriented, false);
+		swerveDrive.drive(translation.unaryMinus(), -rotation.getRadians(), fieldOriented, false);
 	}
 
 	/**

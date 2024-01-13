@@ -29,7 +29,6 @@ public class TalonFXSwerve extends SwerveMotor
    * Whether the absolute encoder is integrated.
    */
   private final boolean              absoluteEncoder         = false;
-  private double positionConversionFactor = 0;
   /**
    * Motion magic angle voltage setter.
    */
@@ -154,8 +153,6 @@ public class TalonFXSwerve extends SwerveMotor
   {
     TalonFXConfigurator cfg = motor.getConfigurator();
     cfg.refresh(configuration);
-
-    this.positionConversionFactor = positionConversionFactor;
 
     configuration.MotionMagic = configuration.MotionMagic
         .withMotionMagicCruiseVelocity(100 / positionConversionFactor)
@@ -324,7 +321,7 @@ public class TalonFXSwerve extends SwerveMotor
 
     if (isDriveMotor)
     {
-      motor.setControl(m_velocityVoltageSetter.withVelocity(setpoint));//*positionConversionFactor));//setpoint*positionConversionFactor));
+      motor.setControl(m_velocityVoltageSetter.withVelocity(setpoint));
     } else
     {
       // Motion magic takes input in rotations

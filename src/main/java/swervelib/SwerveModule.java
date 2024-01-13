@@ -174,7 +174,7 @@ public class SwerveModule
    */
   public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop, boolean force)
   {
-    desiredState = SwerveModuleState.optimize(desiredState, lastState.angle);
+    desiredState = SwerveModuleState.optimize(desiredState, getState().angle);
 
     if (isOpenLoop)
     {
@@ -322,7 +322,7 @@ public class SwerveModule
    */
   public double getRelativePosition()
   {
-    return angleMotor.getPosition() * 360;
+    return angleMotor.getPosition();
   }
 
   /**

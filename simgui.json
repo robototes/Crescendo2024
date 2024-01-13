@@ -21,10 +21,25 @@
       "/SmartDashboard/navX-Sensor[1]": "Gyro"
     },
     "windows": {
+      "/SmartDashboard/Field": {
+        "window": {
+          "visible": true
+        }
+      },
       "/SmartDashboard/Scheduler": {
         "window": {
           "visible": true
         }
+      }
+    }
+  },
+  "NetworkTables": {
+    "transitory": {
+      "SmartDashboard": {
+        "Field": {
+          "open": true
+        },
+        "open": true
       }
     }
   },
