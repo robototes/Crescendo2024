@@ -2,7 +2,7 @@ plugins {
 	id "java"
 	id "com.diffplug.spotless" version "6.15.0"
 	id "edu.wpi.first.GradleRIO" version "2024.1.1"
-	id "net.ltgt.errorprone"
+	id "net.ltgt.errorprone" version "3.1.0"
 }
 
 repositories {
@@ -67,7 +67,7 @@ def includeDesktopSupport = true
 // Also defines JUnit 5.
 dependencies {
 	implementation 'org.jetbrains:annotations:19.0.0'
-	compileOnly group: "com.google.errorprone", name: "error_prone_annotations", version: "2.10.0"
+	compileOnly group: "com.google.errorprone", name: "error_prone_annotations", version: "2.24.1"
 
 	implementation wpi.java.deps.wpilib()
 	implementation wpi.java.vendor.java()
@@ -89,7 +89,7 @@ dependencies {
 	testImplementation 'org.junit.jupiter:junit-jupiter:5.10.1'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-	errorprone group: "com.google.errorprone", name: "error_prone_core", version: "2.10.0"
+	errorprone group: "com.google.errorprone", name: "error_prone_core", version: "2.24.1"
 }
 
 tasks.withType(JavaCompile).configureEach {
