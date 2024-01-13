@@ -66,7 +66,6 @@ def includeDesktopSupport = true
 // Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
 // Also defines JUnit 5.
 dependencies {
-	implementation 'org.jetbrains:annotations:19.0.0'
 	compileOnly group: "com.google.errorprone", name: "error_prone_annotations", version: "2.24.1"
 
 	implementation wpi.java.deps.wpilib()
