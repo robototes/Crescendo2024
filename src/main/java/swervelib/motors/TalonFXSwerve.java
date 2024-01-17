@@ -153,7 +153,7 @@ public class TalonFXSwerve extends SwerveMotor
   {
     TalonFXConfigurator cfg = motor.getConfigurator();
     cfg.refresh(configuration);
-
+    
     configuration.MotionMagic = configuration.MotionMagic
         .withMotionMagicCruiseVelocity(100 / positionConversionFactor)
         .withMotionMagicAcceleration((100 / positionConversionFactor) / 0.100)
