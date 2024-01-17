@@ -1,13 +1,8 @@
 plugins {
-<<<<<<< HEAD
-    id "java"
-    id "edu.wpi.first.GradleRIO" version "2024.1.1"
-=======
 	id "java"
 	id "com.diffplug.spotless" version "6.15.0"
 	id "edu.wpi.first.GradleRIO" version "2024.1.1"
 	id "net.ltgt.errorprone" version "3.1.0"
->>>>>>> e35ae118517e251d5a2f7e3ed0ddf345befe5016
 }
 
 java {
@@ -15,9 +10,6 @@ java {
     targetCompatibility = JavaVersion.VERSION_17
 }
 
-<<<<<<< HEAD
-def ROBOT_MAIN_CLASS = "frc.team2412.robot.Main"
-=======
 java {
 	sourceCompatibility = JavaVersion.VERSION_17
 	targetCompatibility = JavaVersion.VERSION_17
@@ -33,21 +25,10 @@ def getProjectBooleanProperty(String name, boolean defaultValue = false) {
 }
 
 def ROBOT_MAIN_CLASS = getProjectBooleanProperty('automatedTest') ? "frc.team2412.robot.test.AutomatedTestMain" : "frc.team2412.robot.Main"
->>>>>>> e35ae118517e251d5a2f7e3ed0ddf345befe5016
 
 // Define my targets (RoboRIO) and artifacts (deployable files)
 // This is added by GradleRIO's backing project DeployUtils.
 deploy {
-<<<<<<< HEAD
-    targets {
-        roborio(getTargetTypeClass('RoboRIO')) {
-            // Team number is loaded either from the .wpilib/wpilib_preferences.json
-            // or from command line. If not found an exception will be thrown.
-            // You can use getTeamOrDefault(team) instead of getTeamNumber if you
-            // want to store a team number in this file.
-            team = project.frc.getTeamNumber()
-            debug = project.frc.getDebugOrDefault(false)
-=======
 	targets {
 		roborio(getTargetTypeClass('RoboRIO')) {
 			// Team number is loaded either from the .wpilib/wpilib_preferences.json
@@ -56,25 +37,11 @@ deploy {
 			// want to store a team number in this file.
 			team = project.frc.getTeamNumber()
 			debug = project.frc.getDebugOrDefault(false)
->>>>>>> e35ae118517e251d5a2f7e3ed0ddf345befe5016
 
             artifacts {
                 // First part is artifact name, 2nd is artifact type
                 // getTargetTypeClass is a shortcut to get the class type using a string
 
-<<<<<<< HEAD
-                frcJava(getArtifactTypeClass('FRCJavaArtifact')) {
-                }
-
-                // Static files artifact
-                frcStaticFileDeploy(getArtifactTypeClass('FileTreeArtifact')) {
-                    files = project.fileTree('src/main/deploy')
-                    directory = '/home/lvuser/deploy'
-                }
-            }
-        }
-    }
-=======
 				frcJava(getArtifactTypeClass('FRCJavaArtifact')) {
 				}
 
@@ -86,7 +53,6 @@ deploy {
 			}
 		}
 	}
->>>>>>> e35ae118517e251d5a2f7e3ed0ddf345befe5016
 }
 
 def deployArtifact = deploy.targets.roborio.artifacts.frcJava
@@ -100,12 +66,7 @@ def includeDesktopSupport = true
 // Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
 // Also defines JUnit 5.
 dependencies {
-<<<<<<< HEAD
-    implementation wpi.java.deps.wpilib()
-    implementation wpi.java.vendor.java()
-=======
 	compileOnly group: "com.google.errorprone", name: "error_prone_annotations", version: "2.24.1"
->>>>>>> e35ae118517e251d5a2f7e3ed0ddf345befe5016
 
     roborioDebug wpi.java.deps.wpilibJniDebug(wpi.platforms.roborio)
     roborioDebug wpi.java.vendor.jniDebug(wpi.platforms.roborio)
@@ -121,10 +82,6 @@ dependencies {
     nativeRelease wpi.java.vendor.jniRelease(wpi.platforms.desktop)
     simulationRelease wpi.sim.enableRelease()
 
-<<<<<<< HEAD
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.1'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-=======
 	nativeRelease wpi.java.deps.wpilibJniRelease(wpi.platforms.desktop)
 	nativeRelease wpi.java.vendor.jniRelease(wpi.platforms.desktop)
 	simulationRelease wpi.sim.enableRelease()
@@ -133,7 +90,6 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
 	errorprone group: "com.google.errorprone", name: "error_prone_core", version: "2.24.1"
->>>>>>> e35ae118517e251d5a2f7e3ed0ddf345befe5016
 }
 
 test {
@@ -150,29 +106,19 @@ test {
 wpi.sim.addGui().defaultEnabled = true
 wpi.sim.addDriverstation()
 
-<<<<<<< HEAD
-=======
 if (!getProjectBooleanProperty('automatedTest')) {
 	wpi.sim.addGui().defaultEnabled = true
 	wpi.sim.addDriverstation()
 }
 
->>>>>>> e35ae118517e251d5a2f7e3ed0ddf345befe5016
 // Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')
 // in order to make them all available at runtime. Also adding the manifest so WPILib
 // knows where to look for our Robot Class.
 jar {
-<<<<<<< HEAD
-    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
-    from sourceSets.main.allSource
-    manifest edu.wpi.first.gradlerio.GradleRIOPlugin.javaManifest(ROBOT_MAIN_CLASS)
-    duplicatesStrategy = DuplicatesStrategy.INCLUDE
-=======
 	from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
 	from sourceSets.main.allSource
 	manifest edu.wpi.first.gradlerio.GradleRIOPlugin.javaManifest(ROBOT_MAIN_CLASS)
 	duplicatesStrategy = DuplicatesStrategy.INCLUDE
->>>>>>> e35ae118517e251d5a2f7e3ed0ddf345befe5016
 }
 
 // Configure jar and deploy tasks
@@ -182,9 +128,6 @@ wpi.java.configureTestTasks(test)
 
 // Configure string concat to always inline compile
 tasks.withType(JavaCompile) {
-<<<<<<< HEAD
-    options.compilerArgs.add '-XDstringConcat=inline'
-=======
 	options.compilerArgs.add '-XDstringConcat=inline'
 }
 
@@ -207,5 +150,4 @@ spotless {
 		endWithNewline();
 		trimTrailingWhitespace();
 	}
->>>>>>> e35ae118517e251d5a2f7e3ed0ddf345befe5016
 }
