@@ -9,8 +9,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2412.robot.Robot;
@@ -80,9 +80,12 @@ public class DrivebaseSubsystem extends SubsystemBase {
 						MAX_AUTO_SPEED,
 						DRIVEBASE_RADIUS,
 						new ReplanningConfig()),
-				()->DriverStation.getAlliance().get().equals(Alliance.Red), // flip path if on the red alliance
+				() ->
+						DriverStation.getAlliance()
+								.get()
+								.equals(Alliance.Red), // flip path if on the red alliance
 				this);
-		
+
 		SwerveDriveTelemetry.verbosity = SwerveDriveTelemetry.TelemetryVerbosity.HIGH;
 	}
 
@@ -115,16 +118,17 @@ public class DrivebaseSubsystem extends SubsystemBase {
 	 */
 	public Command driveJoystick(
 			DoubleSupplier forward, DoubleSupplier strafe, Supplier<Rotation2d> rotation) {
-		return this.run(() -> {
-			Rotation2d constrainedRotation =
-					Rotation2d.fromRotations(
-							SwerveMath.applyDeadband(rotation.get().getRotations(), true, JOYSTICK_DEADBAND));
-			Translation2d constrainedTranslation =
-					new Translation2d(
-							SwerveMath.applyDeadband(forward.getAsDouble(), true, JOYSTICK_DEADBAND),
-							SwerveMath.applyDeadband(strafe.getAsDouble(), true, JOYSTICK_DEADBAND));
-			drive(constrainedTranslation, constrainedRotation, true);
-		});
+		return this.run(
+				() -> {
+					Rotation2d constrainedRotation =
+							Rotation2d.fromRotations(
+									SwerveMath.applyDeadband(rotation.get().getRotations(), true, JOYSTICK_DEADBAND));
+					Translation2d constrainedTranslation =
+							new Translation2d(
+									SwerveMath.applyDeadband(forward.getAsDouble(), true, JOYSTICK_DEADBAND),
+									SwerveMath.applyDeadband(strafe.getAsDouble(), true, JOYSTICK_DEADBAND));
+					drive(constrainedTranslation, constrainedRotation, true);
+				});
 	}
 
 	public ChassisSpeeds getRobotSpeeds() {
