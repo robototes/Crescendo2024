@@ -5,9 +5,9 @@ plugins {
 	id "net.ltgt.errorprone" version "3.1.0"
 }
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+repositories {
+	mavenCentral()
+	maven { url "https://jitpack.io" }
 }
 
 java {
@@ -38,9 +38,9 @@ deploy {
 			team = project.frc.getTeamNumber()
 			debug = project.frc.getDebugOrDefault(false)
 
-            artifacts {
-                // First part is artifact name, 2nd is artifact type
-                // getTargetTypeClass is a shortcut to get the class type using a string
+			artifacts {
+				// First part is artifact name, 2nd is artifact type
+				// getTargetTypeClass is a shortcut to get the class type using a string
 
 				frcJava(getArtifactTypeClass('FRCJavaArtifact')) {
 				}
@@ -68,19 +68,18 @@ def includeDesktopSupport = true
 dependencies {
 	compileOnly group: "com.google.errorprone", name: "error_prone_annotations", version: "2.24.1"
 
-    roborioDebug wpi.java.deps.wpilibJniDebug(wpi.platforms.roborio)
-    roborioDebug wpi.java.vendor.jniDebug(wpi.platforms.roborio)
+	implementation wpi.java.deps.wpilib()
+	implementation wpi.java.vendor.java()
 
-    roborioRelease wpi.java.deps.wpilibJniRelease(wpi.platforms.roborio)
-    roborioRelease wpi.java.vendor.jniRelease(wpi.platforms.roborio)
+	roborioDebug wpi.java.deps.wpilibJniDebug(wpi.platforms.roborio)
+	roborioDebug wpi.java.vendor.jniDebug(wpi.platforms.roborio)
 
-    nativeDebug wpi.java.deps.wpilibJniDebug(wpi.platforms.desktop)
-    nativeDebug wpi.java.vendor.jniDebug(wpi.platforms.desktop)
-    simulationDebug wpi.sim.enableDebug()
+	roborioRelease wpi.java.deps.wpilibJniRelease(wpi.platforms.roborio)
+	roborioRelease wpi.java.vendor.jniRelease(wpi.platforms.roborio)
 
-    nativeRelease wpi.java.deps.wpilibJniRelease(wpi.platforms.desktop)
-    nativeRelease wpi.java.vendor.jniRelease(wpi.platforms.desktop)
-    simulationRelease wpi.sim.enableRelease()
+	nativeDebug wpi.java.deps.wpilibJniDebug(wpi.platforms.desktop)
+	nativeDebug wpi.java.vendor.jniDebug(wpi.platforms.desktop)
+	simulationDebug wpi.sim.enableDebug()
 
 	nativeRelease wpi.java.deps.wpilibJniRelease(wpi.platforms.desktop)
 	nativeRelease wpi.java.vendor.jniRelease(wpi.platforms.desktop)
@@ -92,9 +91,8 @@ dependencies {
 	errorprone group: "com.google.errorprone", name: "error_prone_core", version: "2.24.1"
 }
 
-test {
-    useJUnitPlatform()
-    systemProperty 'junit.jupiter.extensions.autodetection.enabled', 'true'
+tasks.withType(JavaCompile).configureEach {
+	options.errorprone.disableWarningsInGeneratedCode = true
 }
 
 test {
@@ -103,8 +101,6 @@ test {
 }
 
 // Simulation configuration (e.g. environment variables).
-wpi.sim.addGui().defaultEnabled = true
-wpi.sim.addDriverstation()
 
 if (!getProjectBooleanProperty('automatedTest')) {
 	wpi.sim.addGui().defaultEnabled = true
@@ -151,3 +147,6 @@ spotless {
 		trimTrailingWhitespace();
 	}
 }
+tasks.named("build") { finalizedBy("spotlessApply") }
+tasks.named("deploy") { finalizedBy("spotlessApply") }
+spotlessCheck.mustRunAfter(compileJava);
