@@ -29,3 +29,6 @@ pluginManagement {
 		id 'net.ltgt.errorprone' version '2.0.2'
 	}
 }
+
+Properties props = System.getProperties();
+props.setProperty("org.gradle.internal.native.headers.unresolved.dependencies.ignore", "true");
