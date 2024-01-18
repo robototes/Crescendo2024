@@ -5,21 +5,12 @@ public class Hardware {
 
 	// drive devices [1 - 19]
 
-
 	// cameras
-
 
 	// climb [20 - 29]
 
-
-
 	// shooter [30 - 39]
 
-
-
 	// intake [40 - 49]
-
-
-
 
 }

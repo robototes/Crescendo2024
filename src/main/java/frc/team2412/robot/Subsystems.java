@@ -8,13 +8,10 @@ public class Subsystems {
 		public static final boolean CLIMB_ENABLED = false;
 		public static final boolean SHOOTER_ENBABLED = false;
 		public static final boolean INTAKE_ENABLED = false;
-
 	}
-
-
 
 	public Subsystems() {
 		// initialize subsystems here (wow thats wild)
-		
+
 	}
 }
