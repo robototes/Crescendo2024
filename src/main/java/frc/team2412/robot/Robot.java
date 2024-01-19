@@ -1,26 +1,51 @@
 package frc.team2412.robot;
 
-import edu.wpi.first.wpilibj.*;
+import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.team2412.robot.util.MACAddress;
 
 public class Robot extends TimedRobot {
 	/** Singleton Stuff */
 	private static Robot instance = null;
+
+	enum RobotType {
+		COMPETITION,
+		PRACTICE;
+	}
 
 	public static Robot getInstance() {
 		if (instance == null) instance = new Robot();
 		return instance;
 	}
 
+	private final RobotType robotType;
 	public Controls controls;
 	public Subsystems subsystems;
 
-	protected Robot() {
+	protected Robot(RobotType type) {
 		// non public for singleton. Protected so test class can subclass
 		instance = this;
+		robotType = type;
+	}
+
+	protected Robot() {
+		this(getTypeFromAddress());
+	}
+
+	public static final MACAddress COMPETITION_ADDRESS = MACAddress.of(0x33, 0x9d, 0xd1);
+	public static final MACAddress PRACTICE_ADDRESS = MACAddress.of(0x33, 0x9D, 0xE7);
+
+	private static RobotType getTypeFromAddress() {
+		if (PRACTICE_ADDRESS.exists()) return RobotType.PRACTICE;
+		else {
+			return RobotType.COMPETITION;
+		}
 	}
 
 	@Override
@@ -85,5 +110,13 @@ public class Robot extends TimedRobot {
 	@Override
 	public void disabledInit() {
 		Shuffleboard.stopRecording();
+	}
+
+	public RobotType getRobotType() {
+		return robotType;
+	}
+
+	public boolean isCompetition() {
+		return getRobotType() == RobotType.COMPETITION;
 	}
 }

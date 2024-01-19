@@ -1,7 +1,12 @@
 package frc.team2412.robot;
 
-import static frc.team2412.robot.Controls.ControlConstants.*;
+import static frc.team2412.robot.Controls.ControlConstants.CODRIVER_CONTROLLER_PORT;
+import static frc.team2412.robot.Controls.ControlConstants.CONTROLLER_PORT;
+import static frc.team2412.robot.Subsystems.SubsystemConstants.DRIVEBASE_ENABLED;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class Controls {
@@ -19,5 +24,20 @@ public class Controls {
 		driveController = new CommandXboxController(CONTROLLER_PORT);
 		codriveController = new CommandXboxController(CODRIVER_CONTROLLER_PORT);
 		this.s = s;
+
+		if (DRIVEBASE_ENABLED) {
+			bindDrivebaseControls();
+		}
+	}
+
+	private void bindDrivebaseControls() {
+		CommandScheduler.getInstance()
+				.setDefaultCommand(
+						s.drivebaseSubsystem,
+						s.drivebaseSubsystem.driveJoystick(
+								driveController::getLeftY,
+								driveController::getLeftX,
+								() -> Rotation2d.fromRotations(driveController.getRightX())));
+		driveController.start().onTrue(new InstantCommand(s.drivebaseSubsystem::resetGyro));
 	}
 }
