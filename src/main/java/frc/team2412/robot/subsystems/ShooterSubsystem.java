@@ -47,10 +47,11 @@ public class ShooterSubsystem extends SubsystemBase {
 
 	public void shoot(double speed) {
 		shooterTopMotor.set(speed);
-		shooterBottomMotor.set(speed);
+		shooterBottomMotor.set(-speed);
 	}
-
+	// returns the degrees of the angle of the shooter
 	public double getAngle() {
+		// get position returns a double in the form of rotations
 		return Units.rotationsToDegrees(shooterAngleEncoder.getPosition());
 	}
 
