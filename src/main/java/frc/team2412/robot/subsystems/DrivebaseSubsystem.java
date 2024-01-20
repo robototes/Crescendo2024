@@ -26,7 +26,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
 	// SWERVE CONSTANTS (that aren't in deploy dir)
 
-	private static final double MAX_SPEED = 0.1;
+	private static final double MAX_SPEED = 0.3;
 	private static final double JOYSTICK_DEADBAND = 0.05;
 	private static final double DRIVEBASE_RADIUS = 0;
 
@@ -101,12 +101,15 @@ public class DrivebaseSubsystem extends SubsystemBase {
 	/**
 	 * Drive the robot
 	 *
-	 * @param translation
-	 * @param rotation
 	 * @param fieldOriented Whether these values are field oriented
 	 */
 	public void drive(Translation2d translation, Rotation2d rotation, boolean fieldOriented) {
-		swerveDrive.drive(translation.unaryMinus(), -rotation.getRadians(), fieldOriented, false);
+		// if we're requesting the robot to stay still, lock wheels in X formation
+		if (translation.getNorm() == 0 && rotation.getRotations() == 0) {
+			swerveDrive.lockPose();
+		} else {
+			swerveDrive.drive(translation.unaryMinus(), -rotation.getRadians(), fieldOriented, false);
+		}
 	}
 
 	/**
@@ -122,11 +125,14 @@ public class DrivebaseSubsystem extends SubsystemBase {
 				() -> {
 					Rotation2d constrainedRotation =
 							Rotation2d.fromRotations(
-									SwerveMath.applyDeadband(rotation.get().getRotations(), true, JOYSTICK_DEADBAND));
+									SwerveMath.applyDeadband(rotation.get().getRotations(), true, JOYSTICK_DEADBAND)
+											* MAX_SPEED);
 					Translation2d constrainedTranslation =
 							new Translation2d(
-									SwerveMath.applyDeadband(forward.getAsDouble(), true, JOYSTICK_DEADBAND),
-									SwerveMath.applyDeadband(strafe.getAsDouble(), true, JOYSTICK_DEADBAND));
+									SwerveMath.applyDeadband(forward.getAsDouble(), true, JOYSTICK_DEADBAND)
+											* MAX_SPEED,
+									SwerveMath.applyDeadband(strafe.getAsDouble(), true, JOYSTICK_DEADBAND)
+											* MAX_SPEED);
 					drive(constrainedTranslation, constrainedRotation, true);
 				});
 	}
