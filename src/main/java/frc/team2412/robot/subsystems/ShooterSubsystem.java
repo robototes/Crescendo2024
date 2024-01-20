@@ -1,9 +1,12 @@
 package frc.team2412.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkAbsoluteEncoder;
+import com.revrobotics.SparkPIDController;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2412.robot.Hardware;
 
@@ -19,6 +22,7 @@ public class ShooterSubsystem extends SubsystemBase {
 	private final TalonFX shooterBottomMotor;
 	private final CANSparkMax shooterAngleMotor;
 	private final SparkAbsoluteEncoder shooterAngleEncoder;
+	private final SparkPIDController shooterAnglePidController;
 	// Constructor
 	public ShooterSubsystem() {
 
@@ -28,6 +32,7 @@ public class ShooterSubsystem extends SubsystemBase {
 		shooterAngleMotor = new CANSparkMax(Hardware.SHOOTER_ANGLE_MOTOR_ID, MotorType.kBrushless);
 		shooterAngleEncoder =
 				shooterAngleMotor.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
+		shooterAnglePidController = shooterAngleMotor.getPIDController();
 	}
 
 	// drive specific motor method
@@ -43,5 +48,13 @@ public class ShooterSubsystem extends SubsystemBase {
 	public void shoot(double speed) {
 		shooterTopMotor.set(speed);
 		shooterBottomMotor.set(speed);
+	}
+
+	public double getAngle() {
+		return Units.rotationsToDegrees(shooterAngleEncoder.getPosition());
+	}
+
+	public void setAngle(double angle) {
+		shooterAnglePidController.setReference(Units.degreesToRotations(angle), ControlType.kPosition);
 	}
 }
