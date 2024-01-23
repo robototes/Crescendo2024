@@ -1,8 +1,8 @@
 package frc.team2412.robot.subsystems;
 
-import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.SparkPIDController;
@@ -18,10 +18,10 @@ public class LauncherSubsystem extends SubsystemBase {
 	public static final double ANGLE_CHANGE_SPEED = 0.15;
 
 	// HARDWARE
-	private final TalonFX launcherTopMotor;
-	private final TalonFX launcherBottomMotor;
-	private final CANSparkMax launcherAngleMotor;
-	private final CANSparkMax launcherHoodMotor;
+	private final CANSparkFlex launcherTopMotor;
+	private final CANSparkFlex launcherBottomMotor;
+	private final CANSparkFlex launcherAngleMotor;
+	private final CANSparkFlex launcherHoodMotor;
 	private final SparkAbsoluteEncoder launcherAngleEncoder;
 	private final SparkAbsoluteEncoder launcherHoodEncoder;
 	private final SparkPIDController launcherAnglePidController;
@@ -30,10 +30,10 @@ public class LauncherSubsystem extends SubsystemBase {
 	public LauncherSubsystem() {
 
 		// MOTOR INSTANCE VARIBLES
-		launcherTopMotor = new TalonFX(Hardware.LAUNCHER_TOP_MOTOR_ID);
-		launcherBottomMotor = new TalonFX(Hardware.LAUNCHER_BOTTOM_MOTOR_ID);
-		launcherAngleMotor = new CANSparkMax(Hardware.LAUNCHER_ANGLE_MOTOR_ID, MotorType.kBrushless);
-		launcherHoodMotor = new CANSparkMax(Hardware.LAUNCHER_HOOD_MOTOR_ID, MotorType.kBrushless);
+		launcherTopMotor = new CANSparkFlex(Hardware.LAUNCHER_TOP_MOTOR_ID, MotorType.kBrushless);
+		launcherBottomMotor = new CANSparkFlex(Hardware.LAUNCHER_BOTTOM_MOTOR_ID, MotorType.kBrushless);
+		launcherAngleMotor = new CANSparkFlex(Hardware.LAUNCHER_ANGLE_MOTOR_ID, MotorType.kBrushless);
+		launcherHoodMotor = new CANSparkFlex(Hardware.LAUNCHER_HOOD_MOTOR_ID, MotorType.kBrushless);
 		launcherAngleEncoder =
 				launcherAngleMotor.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
 		launcherHoodEncoder =
@@ -42,13 +42,9 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherHoodPidController = launcherHoodMotor.getPIDController();
 	}
 
-	// drive specific motor method
-	public void driveMotor(TalonFX motor, double speed) {
-		motor.set(speed);
-	}
 
 	// stop specific motor method
-	public void stopMotor(TalonFX motor) {
+	public void stopMotor(CANSparkFlex motor) {
 		motor.stopMotor();
 	}
 
