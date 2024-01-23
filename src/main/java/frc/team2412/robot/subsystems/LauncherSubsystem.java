@@ -1,9 +1,8 @@
 package frc.team2412.robot.subsystems;
 
 import com.revrobotics.CANSparkBase.ControlType;
-import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkFlex;
-import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.SparkPIDController;
 import edu.wpi.first.math.util.Units;
@@ -41,7 +40,6 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherAnglePidController = launcherAngleMotor.getPIDController();
 		launcherHoodPidController = launcherHoodMotor.getPIDController();
 	}
-
 
 	// stop specific motor method
 	public void stopMotor(CANSparkFlex motor) {
