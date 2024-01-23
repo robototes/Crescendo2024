@@ -3,7 +3,7 @@ package frc.team2412.robot;
 import static frc.team2412.robot.Subsystems.SubsystemConstants.*;
 
 import frc.team2412.robot.subsystems.DrivebaseSubsystem;
-import frc.team2412.robot.subsystems.ShooterSubsystem;
+import frc.team2412.robot.subsystems.LauncherSubsystem;
 
 public class Subsystems {
 	public static class SubsystemConstants {
@@ -13,21 +13,21 @@ public class Subsystems {
 		public static final boolean APRILTAGS_ENABLED = false;
 		public static final boolean LIMELIGHT_ENABLED = false;
 		public static final boolean CLIMB_ENABLED = false;
-		public static final boolean SHOOTER_ENABLED = false;
+		public static final boolean LAUNCHER_ENABLED = false;
 		public static final boolean INTAKE_ENABLED = false;
 		public static final boolean DRIVEBASE_ENABLED = true;
 	}
 
 	public final DrivebaseSubsystem drivebaseSubsystem;
-	public ShooterSubsystem shooterSubsystem;
+	public LauncherSubsystem launcherSubsystem;
 
 	public Subsystems() {
 		// initialize subsystems here (wow thats wild)
 		if (DRIVEBASE_ENABLED) {
 			drivebaseSubsystem = new DrivebaseSubsystem();
 		}
-		if (SHOOTER_ENABLED) {
-			shooterSubsystem = new ShooterSubsystem();
+		if (LAUNCHER_ENABLED) {
+			launcherSubsystem = new LauncherSubsystem();
 		}
 	}
 }
