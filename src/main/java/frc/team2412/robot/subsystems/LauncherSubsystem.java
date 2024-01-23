@@ -36,7 +36,8 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherHoodMotor = new CANSparkMax(Hardware.LAUNCHER_HOOD_MOTOR_ID, MotorType.kBrushless);
 		launcherAngleEncoder =
 				launcherAngleMotor.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
-		launcherHoodEncoder = launcherHoodMotor.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
+		launcherHoodEncoder =
+				launcherHoodMotor.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
 		launcherAnglePidController = launcherAngleMotor.getPIDController();
 		launcherHoodPidController = launcherHoodMotor.getPIDController();
 	}
