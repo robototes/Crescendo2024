@@ -23,8 +23,8 @@ public class LauncherSubsystem extends SubsystemBase {
 	private final CANSparkFlex launcherHoodMotor;
 	private final SparkAbsoluteEncoder launcherAngleEncoder;
 	private final SparkAbsoluteEncoder launcherHoodEncoder;
-	private final SparkPIDController launcherAnglePidController;
-	private final SparkPIDController launcherHoodPidController;
+	private final SparkPIDController launcherAnglePIDController;
+	private final SparkPIDController launcherHoodPIDController;
 	// Constructor
 	public LauncherSubsystem() {
 
@@ -37,8 +37,8 @@ public class LauncherSubsystem extends SubsystemBase {
 				launcherAngleMotor.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
 		launcherHoodEncoder =
 				launcherHoodMotor.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
-		launcherAnglePidController = launcherAngleMotor.getPIDController();
-		launcherHoodPidController = launcherHoodMotor.getPIDController();
+		launcherAnglePIDController = launcherAngleMotor.getPIDController();
+		launcherHoodPIDController = launcherHoodMotor.getPIDController();
 	}
 
 	// stop specific motor method
@@ -57,7 +57,7 @@ public class LauncherSubsystem extends SubsystemBase {
 	}
 
 	public void setAngle(double angle) {
-		launcherAnglePidController.setReference(Units.degreesToRotations(angle), ControlType.kPosition);
+		launcherAnglePIDController.setReference(Units.degreesToRotations(angle), ControlType.kPosition);
 	}
 
 	public double getHoodAngle() {
@@ -65,6 +65,6 @@ public class LauncherSubsystem extends SubsystemBase {
 	}
 
 	public void setHoodAngle(double angle) {
-		launcherHoodPidController.setReference(Units.degreesToRotations(angle), ControlType.kPosition);
+		launcherHoodPIDController.setReference(Units.degreesToRotations(angle), ControlType.kPosition);
 	}
 }
