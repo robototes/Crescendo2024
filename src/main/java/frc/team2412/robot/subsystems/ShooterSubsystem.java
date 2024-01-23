@@ -18,11 +18,14 @@ public class ShooterSubsystem extends SubsystemBase {
 	public static final double ANGLE_CHANGE_SPEED = 0.15;
 
 	// HARDWARE
-	private final TalonFX shooterTopMotor;
-	private final TalonFX shooterBottomMotor;
-	private final CANSparkMax shooterAngleMotor;
-	private final SparkAbsoluteEncoder shooterAngleEncoder;
-	private final SparkPIDController shooterAnglePidController;
+	private TalonFX shooterTopMotor;
+	private TalonFX shooterBottomMotor;
+	private CANSparkMax shooterAngleMotor;
+	private CANSparkMax shooterHoodMotor;
+	private SparkAbsoluteEncoder shooterAngleEncoder;
+	private SparkAbsoluteEncoder shooterHoodEncoder;
+	private SparkPIDController shooterAnglePidController;
+	private SparkPIDController shooterHoodPidController;
 	// Constructor
 	public ShooterSubsystem() {
 
@@ -30,9 +33,12 @@ public class ShooterSubsystem extends SubsystemBase {
 		shooterTopMotor = new TalonFX(Hardware.SHOOTER_TOP_MOTOR_ID);
 		shooterBottomMotor = new TalonFX(Hardware.SHOOTER_BOTTOM_MOTOR_ID);
 		shooterAngleMotor = new CANSparkMax(Hardware.SHOOTER_ANGLE_MOTOR_ID, MotorType.kBrushless);
+		shooterHoodMotor = new CANSparkMax(Hardware.SHOOTER_HOOD_MOTOR_ID, MotorType.kBrushless);
 		shooterAngleEncoder =
 				shooterAngleMotor.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
+		shooterHoodEncoder = shooterHoodMotor.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
 		shooterAnglePidController = shooterAngleMotor.getPIDController();
+		shooterHoodPidController = shooterHoodMotor.getPIDController();
 	}
 
 	// drive specific motor method
@@ -57,5 +63,13 @@ public class ShooterSubsystem extends SubsystemBase {
 
 	public void setAngle(double angle) {
 		shooterAnglePidController.setReference(Units.degreesToRotations(angle), ControlType.kPosition);
+	}
+
+	public double getHoodAngle() {
+		return Units.rotationsToDegrees(shooterHoodEncoder.getPosition());
+	}
+
+	public void setHoodAngle(double angle) {
+		shooterHoodPidController.setReference(Units.degreesToRotations(angle), ControlType.kPosition);
 	}
 }
