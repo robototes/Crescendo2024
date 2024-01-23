@@ -18,14 +18,14 @@ public class LauncherSubsystem extends SubsystemBase {
 	public static final double ANGLE_CHANGE_SPEED = 0.15;
 
 	// HARDWARE
-	private TalonFX launcherTopMotor;
-	private TalonFX launcherBottomMotor;
-	private CANSparkMax launcherAngleMotor;
-	private CANSparkMax launcherHoodMotor;
-	private SparkAbsoluteEncoder launcherAngleEncoder;
-	private SparkAbsoluteEncoder launcherHoodEncoder;
-	private SparkPIDController launcherAnglePidController;
-	private SparkPIDController launcherHoodPidController;
+	private final TalonFX launcherTopMotor;
+	private final TalonFX launcherBottomMotor;
+	private final CANSparkMax launcherAngleMotor;
+	private final CANSparkMax launcherHoodMotor;
+	private final SparkAbsoluteEncoder launcherAngleEncoder;
+	private final SparkAbsoluteEncoder launcherHoodEncoder;
+	private final SparkPIDController launcherAnglePidController;
+	private final SparkPIDController launcherHoodPidController;
 	// Constructor
 	public LauncherSubsystem() {
 
