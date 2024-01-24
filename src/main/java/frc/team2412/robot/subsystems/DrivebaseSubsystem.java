@@ -34,7 +34,8 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
 	private static final PIDConstants AUTO_TRANSLATION_PID = new PIDConstants(0.1, 0, 0);
 	private static final PIDConstants AUTO_ROTATION_PID = new PIDConstants(5.0, 0, 0);
-	private static final double MAX_AUTO_SPEED = 500.0; // this seems to only affect rotation for some reason
+	private static final double MAX_AUTO_SPEED =
+			500.0; // this seems to only affect rotation for some reason
 
 	private final SwerveDrive swerveDrive;
 
