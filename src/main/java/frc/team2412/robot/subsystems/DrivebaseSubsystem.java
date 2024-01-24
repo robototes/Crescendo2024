@@ -26,9 +26,10 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
 	// SWERVE CONSTANTS (that aren't in deploy dir)
 
-	private static final double MAX_SPEED = 0.3;
+	private static final double MAX_SPEED = 1.0;
 	private static final double JOYSTICK_DEADBAND = 0.05;
-	private static final double DRIVEBASE_RADIUS = 0;
+	private static final double DRIVEBASE_RADIUS =
+			Math.hypot(8.5, 8.5); // our wheels are 8.5 inches by 8.5 inches from the center of the bot;
 
 	// AUTO CONSTANTS
 
@@ -52,6 +53,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 		try {
 			swerveDrive = new SwerveParser(swerveJsonDirectory).createSwerveDrive(MAX_SPEED);
 		} catch (Exception e) {
+			System.out.println(e);
 			throw new RuntimeException();
 		}
 
@@ -61,7 +63,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 		//	swerveDrive.setModuleStateOptimization(false);
 		// swerve drive heading will slowly drift over time as you translate. this method enables an
 		// active correction using pid. disabled until testing can be done
-		swerveDrive.setHeadingCorrection(false);
+		swerveDrive.setHeadingCorrection(true, 0.1);
 		// supposed to do something? see
 		// https://broncbotz3481.github.io/YAGSL/swervelib/SwerveDrive.html#chassisVelocityCorrection
 		swerveDrive.chassisVelocityCorrection = true;

@@ -5,13 +5,13 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import swervelib.encoders.SwerveAbsoluteEncoder;
 import swervelib.math.SwerveMath;
 import swervelib.motors.SwerveMotor;
 import swervelib.parser.SwerveModuleConfiguration;
 import swervelib.simulation.SwerveModuleSimulation;
+import swervelib.telemetry.Alert;
 import swervelib.telemetry.SwerveDriveTelemetry;
 import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
@@ -24,6 +24,10 @@ public class SwerveModule {
 	private final SwerveMotor angleMotor, driveMotor;
 	/** Absolute encoder for swerve drive. */
 	private final SwerveAbsoluteEncoder absoluteEncoder;
+	/** An {@link Alert} for if pushing the Absolute Encoder offset to the encoder fails. */
+	private final Alert encoderOffsetWarning;
+	/** An {@link Alert} for if there is no Absolute Encoder on the module. */
+	private final Alert noEncoderWarning;
 	/**
 	 * Module number for kinematics, usually 0 to 3. front left -> front right -> back left -> back
 	 * right.
@@ -90,7 +94,7 @@ public class SwerveModule {
 		// Config angle motor/controller
 		angleMotor.configureIntegratedEncoder(moduleConfiguration.conversionFactors.angle);
 		angleMotor.configurePIDF(moduleConfiguration.anglePIDF);
-		angleMotor.configurePIDWrapping(0, 90);
+		angleMotor.configurePIDWrapping(0, 180);
 		angleMotor.setInverted(moduleConfiguration.angleMotorInverted);
 		angleMotor.setMotorBrake(false);
 
@@ -108,6 +112,17 @@ public class SwerveModule {
 		}
 
 		lastState = getState();
+
+		noEncoderWarning =
+				new Alert(
+						"Motors",
+						"There is no Absolute Encoder on module #" + moduleNumber,
+						Alert.AlertType.WARNING);
+		encoderOffsetWarning =
+				new Alert(
+						"Motors",
+						"Pushing the Absolute Encoder offset to the encoder failed on module #" + moduleNumber,
+						Alert.AlertType.WARNING);
 	}
 
 	/**
@@ -146,7 +161,8 @@ public class SwerveModule {
 	 *     desired state onto the swerve module.
 	 */
 	public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop, boolean force) {
-		desiredState = SwerveModuleState.optimize(desiredState, getState().angle);
+		desiredState =
+				SwerveModuleState.optimize(desiredState, Rotation2d.fromDegrees(getAbsolutePosition()));
 
 		if (isOpenLoop) {
 			double percentOutput = desiredState.speedMetersPerSecond / maxSpeed;
@@ -161,12 +177,12 @@ public class SwerveModule {
 			/* If the error is close to 0.25 rotations, then we're 90 degrees, so movement doesn't help us at all */
 			double cosineScalar = Math.cos(Units.degreesToRadians(steerMotorError));
 			/* Make sure we don't invert our drive, even though we shouldn't ever target over 90 degrees anyway */
-			if (cosineScalar < 0.0) {
+			if (cosineScalar < 0.0 || desiredState.speedMetersPerSecond == 0) {
 				cosineScalar = 0.0;
 			}
 
 			double velocity = desiredState.speedMetersPerSecond * (cosineScalar);
-			driveMotor.setReference(velocity, 0);
+			driveMotor.setReference(velocity, feedforward.calculate(velocity));
 		}
 
 		/* // Not necessary anymore.
@@ -328,6 +344,15 @@ public class SwerveModule {
 	}
 
 	/**
+	 * Get the {@link SwerveAbsoluteEncoder} for the {@link SwerveModule}.
+	 *
+	 * @return {@link SwerveAbsoluteEncoder} for the swerve module.
+	 */
+	public SwerveAbsoluteEncoder getAbsoluteEncoder() {
+		return absoluteEncoder;
+	}
+
+	/**
 	 * Fetch the {@link SwerveModuleConfiguration} for the {@link SwerveModule} with the parsed
 	 * configurations.
 	 *
@@ -346,12 +371,10 @@ public class SwerveModule {
 			if (absoluteEncoder.setAbsoluteEncoderOffset(angleOffset)) {
 				angleOffset = 0;
 			} else {
-				DriverStation.reportWarning(
-						"Pushing the Absolute Encoder offset to the encoder failed on module #" + moduleNumber,
-						false);
+				encoderOffsetWarning.set(true);
 			}
 		} else {
-			DriverStation.reportWarning("There is no Absolute Encoder on module #" + moduleNumber, false);
+			noEncoderWarning.set(true);
 		}
 	}
 
@@ -384,6 +407,10 @@ public class SwerveModule {
 					"Module[" + configuration.name + "] Raw Absolute Encoder",
 					absoluteEncoder.getAbsolutePosition());
 		}
+		SmartDashboard.putNumber(
+				"Module[" + configuration.name + "] Raw Angle Encoder", angleMotor.getPosition());
+		SmartDashboard.putNumber(
+				"Module[" + configuration.name + "] Raw Drive Encoder", driveMotor.getPosition());
 		SmartDashboard.putNumber(
 				"Module[" + configuration.name + "] Adjusted Absolute Encoder", getAbsolutePosition());
 		SmartDashboard.putNumber(

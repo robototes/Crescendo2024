@@ -1,7 +1,7 @@
 package swervelib.encoders;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import swervelib.telemetry.Alert;
 
 /**
  * DutyCycle encoders such as "US Digital MA3 with PWM Output, the CTRE Mag Encoder, the Rev Hex
@@ -17,6 +17,8 @@ public class PWMDutyCycleEncoderSwerve extends SwerveAbsoluteEncoder {
 	private final DutyCycleEncoder encoder;
 	/** Inversion state. */
 	private boolean isInverted;
+	/** An {@link Alert} for if the encoder cannot report accurate velocities. */
+	private Alert inaccurateVelocities;
 
 	/**
 	 * Constructor for the PWM duty cycle encoder.
@@ -25,6 +27,11 @@ public class PWMDutyCycleEncoderSwerve extends SwerveAbsoluteEncoder {
 	 */
 	public PWMDutyCycleEncoderSwerve(int pin) {
 		encoder = new DutyCycleEncoder(pin);
+		inaccurateVelocities =
+				new Alert(
+						"Encoders",
+						"The PWM Duty Cycle encoder may not report accurate velocities!",
+						Alert.AlertType.WARNING_TRACE);
 	}
 
 	/**
@@ -64,8 +71,7 @@ public class PWMDutyCycleEncoderSwerve extends SwerveAbsoluteEncoder {
 	 */
 	@Override
 	public double getVelocity() {
-		DriverStation.reportWarning(
-				"The PWM Duty Cycle encoder may not report accurate velocities!", true);
+		inaccurateVelocities.set(true);
 		return encoder.get();
 	}
 

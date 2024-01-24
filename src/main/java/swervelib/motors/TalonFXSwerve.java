@@ -16,20 +16,18 @@ public class TalonFXSwerve extends SwerveMotor {
 
 	/** Factory default already occurred. */
 	private final boolean factoryDefaultOccurred = false;
-	/** Current TalonFX configuration. */
-	private TalonFXConfiguration configuration = new TalonFXConfiguration();
 	/** Whether the absolute encoder is integrated. */
 	private final boolean absoluteEncoder = false;
 	/** Motion magic angle voltage setter. */
 	private final MotionMagicVoltage m_angleVoltageSetter = new MotionMagicVoltage(0);
-	//  /**
-	//   * Motion Magic exponential voltage setters.
-	//   */
-	//  private final MotionMagicExpoVoltage m_angleVoltageExpoSetter = new MotionMagicExpoVoltage(0);
 	/** Velocity voltage setter for controlling drive motor. */
 	private final VelocityVoltage m_velocityVoltageSetter = new VelocityVoltage(0);
 	/** TalonFX motor controller. */
 	TalonFX motor;
+	/** Conversion factor for the motor. */
+	private double conversionFactor;
+	/** Current TalonFX configuration. */
+	private TalonFXConfiguration configuration = new TalonFXConfiguration();
 
 	/**
 	 * Constructor for TalonFX swerve motor.
@@ -128,15 +126,20 @@ public class TalonFXSwerve extends SwerveMotor {
 		TalonFXConfigurator cfg = motor.getConfigurator();
 		cfg.refresh(configuration);
 
-		configuration.MotionMagic =
-				configuration.MotionMagic.withMotionMagicCruiseVelocity(100 / positionConversionFactor)
-						.withMotionMagicAcceleration((100 / positionConversionFactor) / 0.100)
-						.withMotionMagicExpo_kV(0.12 * positionConversionFactor)
-						.withMotionMagicExpo_kA(5);
+		positionConversionFactor = 1 / positionConversionFactor;
+		if (!isDriveMotor) {
+			positionConversionFactor *= 360;
+		}
+		conversionFactor = positionConversionFactor;
 
-		configuration.Feedback =
-				configuration.Feedback.withSensorToMechanismRatio(positionConversionFactor)
-						.withFeedbackSensorSource(FeedbackSensorSourceValue.RotorSensor);
+		configuration.MotionMagic =
+				configuration.MotionMagic.withMotionMagicCruiseVelocity(100.0 / positionConversionFactor)
+						.withMotionMagicAcceleration((100.0 / positionConversionFactor) / 0.100)
+						.withMotionMagicExpo_kV(0.12 * positionConversionFactor)
+						.withMotionMagicExpo_kA(0.1);
+
+		configuration.Feedback.withFeedbackSensorSource(FeedbackSensorSourceValue.RotorSensor)
+				.withSensorToMechanismRatio(positionConversionFactor);
 
 		cfg.apply(configuration);
 		// Taken from democat's library.
@@ -206,6 +209,7 @@ public class TalonFXSwerve extends SwerveMotor {
 	 */
 	@Override
 	public void configurePIDF(PIDFConfig config) {
+
 		TalonFXConfigurator cfg = motor.getConfigurator();
 		cfg.refresh(configuration.Slot0);
 		cfg.apply(
@@ -291,10 +295,9 @@ public class TalonFXSwerve extends SwerveMotor {
 		//    }
 
 		if (isDriveMotor) {
-			motor.setControl(m_velocityVoltageSetter.withVelocity(setpoint));
+			motor.setControl(m_velocityVoltageSetter.withVelocity(setpoint).withFeedForward(feedforward));
 		} else {
-			// Motion magic takes input in rotations
-			motor.setControl(m_angleVoltageSetter.withPosition(setpoint / 360));
+			motor.setControl(m_angleVoltageSetter.withPosition(setpoint / 360.0));
 		}
 	}
 
@@ -305,7 +308,7 @@ public class TalonFXSwerve extends SwerveMotor {
 	 */
 	@Override
 	public double getVelocity() {
-		return isDriveMotor ? motor.getVelocity().getValue() : motor.getVelocity().getValue() * 360;
+		return motor.getVelocity().getValue();
 	}
 
 	/**
@@ -315,7 +318,7 @@ public class TalonFXSwerve extends SwerveMotor {
 	 */
 	@Override
 	public double getPosition() {
-		return isDriveMotor ? motor.getPosition().getValue() : motor.getPosition().getValue() * 360;
+		return motor.getPosition().getValue();
 	}
 
 	/**

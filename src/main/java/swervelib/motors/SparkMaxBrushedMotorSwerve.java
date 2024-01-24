@@ -11,10 +11,10 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAlternateEncoder;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.SparkRelativeEncoder.Type;
-import edu.wpi.first.wpilibj.DriverStation;
 import java.util.function.Supplier;
 import swervelib.encoders.SwerveAbsoluteEncoder;
 import swervelib.parser.PIDFConfig;
+import swervelib.telemetry.Alert;
 
 /** Brushed motor control with SparkMax. */
 public class SparkMaxBrushedMotorSwerve extends SwerveMotor {
@@ -30,6 +30,12 @@ public class SparkMaxBrushedMotorSwerve extends SwerveMotor {
 	public SparkPIDController pid;
 	/** Factory default already occurred. */
 	private boolean factoryDefaultOccurred = false;
+	/** An {@link Alert} for if the motor has no encoder. */
+	private Alert noEncoderAlert;
+	/** An {@link Alert} for if there is an error configuring the motor. */
+	private Alert failureConfiguringAlert;
+	/** An {@link Alert} for if the motor has no encoder defined. */
+	private Alert noEncoderDefinedAlert;
 
 	/**
 	 * Initialize the swerve motor.
@@ -50,7 +56,7 @@ public class SparkMaxBrushedMotorSwerve extends SwerveMotor {
 			boolean useDataPortQuadEncoder) {
 		// Drive motors **MUST** have an encoder attached.
 		if (isDriveMotor && encoderType == Type.kNoSensor) {
-			DriverStation.reportError("Cannot use motor without encoder.", true);
+			noEncoderAlert.set(true);
 			throw new RuntimeException(
 					"Cannot use SparkMAX as a drive motor without an encoder attached.");
 		}
@@ -83,6 +89,19 @@ public class SparkMaxBrushedMotorSwerve extends SwerveMotor {
 		// Spin off configurations in a different thread.
 		// configureSparkMax(() -> motor.setCANTimeout(0)); // Commented it out because it prevents
 		// feedback.
+
+		noEncoderAlert =
+				new Alert("Motors", "Cannot use motor without encoder.", Alert.AlertType.ERROR_TRACE);
+		failureConfiguringAlert =
+				new Alert(
+						"Motors",
+						"Failure configuring motor " + motor.getDeviceId(),
+						Alert.AlertType.WARNING_TRACE);
+		noEncoderDefinedAlert =
+				new Alert(
+						"Motors",
+						"An encoder MUST be defined to work with a SparkMAX",
+						Alert.AlertType.ERROR_TRACE);
 	}
 
 	/**
@@ -121,7 +140,7 @@ public class SparkMaxBrushedMotorSwerve extends SwerveMotor {
 				return;
 			}
 		}
-		DriverStation.reportWarning("Failure configuring motor " + motor.getDeviceId(), true);
+		failureConfiguringAlert.set(true);
 	}
 
 	/**
@@ -204,7 +223,7 @@ public class SparkMaxBrushedMotorSwerve extends SwerveMotor {
 			configureSparkMax(() -> pid.setFeedbackDevice(absoluteEncoder));
 		}
 		if (absoluteEncoder == null && this.encoder == null) {
-			DriverStation.reportError("An encoder MUST be defined to work with a SparkMAX", true);
+			noEncoderDefinedAlert.set(true);
 			throw new RuntimeException("An encoder MUST be defined to work with a SparkMAX");
 		}
 		return this;
