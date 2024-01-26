@@ -75,8 +75,6 @@ public class SwerveDrive {
 	public boolean headingCorrection = false;
 	/** Deadband for speeds in heading correction. */
 	private double HEADING_CORRECTION_DEADBAND = 0.01;
-	/** Whether heading correction PID is currently active. */
-	private boolean correctionEnabled = false;
 	/** Swerve IMU device for sensing the heading of the robot. */
 	private SwerveIMU imu;
 	/** Simulation of the swerve drive. */
@@ -399,15 +397,11 @@ public class SwerveDrive {
 			if (Math.abs(velocity.omegaRadiansPerSecond) < HEADING_CORRECTION_DEADBAND
 					&& (Math.abs(velocity.vxMetersPerSecond) > HEADING_CORRECTION_DEADBAND
 							|| Math.abs(velocity.vyMetersPerSecond) > HEADING_CORRECTION_DEADBAND)) {
-				if (!correctionEnabled) {
-					lastHeadingRadians = getOdometryHeading().getRadians() + Math.PI;
-					correctionEnabled = true;
-				}
 				velocity.omegaRadiansPerSecond =
 						swerveController.headingCalculate(
-								lastHeadingRadians, getOdometryHeading().getRadians());
+								getOdometryHeading().getRadians(), lastHeadingRadians);
 			} else {
-				correctionEnabled = false;
+				lastHeadingRadians = getOdometryHeading().getRadians();
 			}
 		}
 

@@ -25,7 +25,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
 	// SWERVE CONSTANTS (that aren't in deploy dir)
 
-	private static final double MAX_SPEED = 1.0;
+	private static final double MAX_SPEED = 2.0;
 	private static final double JOYSTICK_DEADBAND = 0.05;
 	private static final double DRIVEBASE_RADIUS =
 			Math.hypot(8.5, 8.5); // our wheels are 8.5 inches by 8.5 inches from the center of the bot;
