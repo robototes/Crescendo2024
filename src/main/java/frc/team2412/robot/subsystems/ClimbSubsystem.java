@@ -1,13 +1,18 @@
 package frc.team2412.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.CAN;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.team2412.robot.Hardware;
 import frc.team2412.robot.Robot;
 
-import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.CANSparkFlex;
-import com.revrobotics.CANSparkFlexLowLevel.MotorType;
-import com.revrobotics.CANSparkFlex.IdleMode;
+import com.revrobotics.SparkAbsoluteEncoder;
+import com.revrobotics.SparkPIDController;
+import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.SparkAbsoluteEncoder.Type;
+import com.revrobotics.CANSparkBase.ControlType;
+import com.revrobotics.CANSparkBase.IdleMode;
 
 public class ClimbSubsystem extends SubsystemBase{
     //public or private?
@@ -23,18 +28,18 @@ public class ClimbSubsystem extends SubsystemBase{
     //  INSTANCE VARIABLES
     private final CANSparkFlex motorLeft;
     private final CANSparkFlex motorRight;
-    private final SparkFlexAbsoluteEncoder encoderLeft;
-    private final SparkFlexAbsoluteEncoder encoderRight;
+    private final SparkAbsoluteEncoder encoderLeft;
+    private final SparkAbsoluteEncoder encoderRight;
     private final SparkPIDController motorLeftPIDController;
     private final SparkPIDController motorRightPIDController;
 
     //encoder position
     public ClimbSubsystem() {
         //motor = new MOTOR_NAME (port number found in hardware);
-        this.motorLeft = new motor(CLIMB_MOTOR_ONE, MotorType.kBrushless);
-        this.motorRight = new motor(CLIMB_MOTOR_TWO,MotorType.kBrushless );
-        this.encoderLeft = new motorLeft.getAbsoluteEncoder(Type.kDutyCycle);
-        this.encoderRight = new motorRight.getAbsoluteEncoder(Type.kDutyCycle);
+        motorLeft = new CANSparkFlex(Hardware.CLIMB_MOTOR_ONE, MotorType.kBrushless);
+        motorRight = new CANSparkFlex(Hardware.CLIMB_MOTOR_TWO,MotorType.kBrushless);
+        encoderLeft = motorLeft.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
+        encoderRight = motorRight.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
 
         //PID
         this.motorLeftPIDController = motorLeft.getPIDController();
@@ -83,19 +88,19 @@ public class ClimbSubsystem extends SubsystemBase{
 
     //return encoder angle
     public double encoderLeftPosition() {
-        return motorLeft.getPosition();
+        return encoderLeft.getPosition();
     }
     
     public double encoderRightPosition() {
-        return motorRight.getPosition();
+        return encoderRight.getPosition();
     }
 
     //calculate height climbed
     //reset encoder to 0 if reset == true
     public void resetEncoder(boolean reset) {
         if (reset) {
-            motorLeft.setPositionConversionFactor(0);
-            motorRight.setPositionConversionFactor(0);
+            encoderLeft.setPositionConversionFactor(0);
+            encoderRight.setPositionConversionFactor(0);
         }
     }
 

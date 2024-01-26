@@ -8,7 +8,8 @@ public class Hardware {
 	// cameras
 
 	// climb [20 - 29]
-
+	public static final int CLIMB_MOTOR_ONE = 20;
+	public static final int CLIMB_MOTOR_TWO = 21;
 	// shooter [30 - 39]
 
 	// intake [40 - 49]
