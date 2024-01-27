@@ -41,6 +41,20 @@ public class LauncherSubsystem extends SubsystemBase {
 					.withSize(2, 1)
 					.withWidget(BuiltInWidgets.kTextView)
 					.getEntry();
+
+	GenericEntry launcherAngle =
+			Shuffleboard.getTab("Launcher")
+					.addPersistent("Launcher angle", getAngle())
+					.withSize(1, 1)
+					.withWidget(BuiltInWidgets.kTextView)
+					.getEntry();
+
+	GenericEntry isNote =
+			Shuffleboard.getTab("Launcher")
+					.addPersistent("is loaded", false)
+					.withSize(1, 1)
+					.withWidget(BuiltInWidgets.kBooleanBox)
+					.getEntry();
 	// Constructor
 	public LauncherSubsystem() {
 
@@ -120,5 +134,6 @@ public class LauncherSubsystem extends SubsystemBase {
 	@Override
 	public void periodic() {
 		launcherSpeed.setDouble(launcherTopEncoder.getVelocity());
+		launcherAngle.setDouble(getAngle());
 	}
 }
