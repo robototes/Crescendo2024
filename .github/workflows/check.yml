@@ -21,5 +21,8 @@ jobs:
       - name: Check
         run: ./gradlew check
 
+      - name: Verify no formatting changes
+        run: git --no-pager diff --exit-code HEAD
+
       - name: Automated Sim Test
         run: ./gradlew simulateJavaDebug -PautomatedTest=true

@@ -93,6 +93,7 @@ dependencies {
 
 tasks.withType(JavaCompile).configureEach {
 	options.errorprone.disableWarningsInGeneratedCode = true
+	options.errorprone.excludedPaths = ".*/src/main/java/swervelib/.*"
 }
 
 test {
