@@ -16,4 +16,9 @@ public class Hardware {
 	public static final int LAUNCHER_HOOD_MOTOR_ID = 33;
 	// intake [40 - 49]
 
+
+
+	//sensors [1 - 19]
+	public static final int LAUNCHER_SENSOR_1 = 1;
+	public static final int LAUNCHER_SENSOR_2 = 2;
 }

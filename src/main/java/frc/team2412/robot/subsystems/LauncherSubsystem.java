@@ -10,6 +10,7 @@ import com.revrobotics.SparkAbsoluteEncoder.Type;
 import com.revrobotics.SparkPIDController;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -34,6 +35,9 @@ public class LauncherSubsystem extends SubsystemBase {
 	private final SparkAbsoluteEncoder launcherHoodEncoder;
 	private final SparkPIDController launcherAnglePIDController;
 	private final SparkPIDController launcherHoodPIDController;
+
+	//digitalInput (sensor)
+	DigitalInput sensor1 = new DigitalInput(Hardware.LAUNCHER_SENSOR_1);
 
 	GenericEntry launcherSpeed =
 			Shuffleboard.getTab("Launcher")
@@ -135,5 +139,6 @@ public class LauncherSubsystem extends SubsystemBase {
 	public void periodic() {
 		launcherSpeed.setDouble(launcherTopEncoder.getVelocity());
 		launcherAngle.setDouble(getAngle());
+		isNote.setBoolean(sensor1.get());
 	}
 }
