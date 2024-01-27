@@ -31,6 +31,7 @@ public class Controls {
 	}
 
 	private void bindDrivebaseControls() {
+		// bind translation and rotation controls
 		CommandScheduler.getInstance()
 				.setDefaultCommand(
 						s.drivebaseSubsystem,
@@ -38,6 +39,11 @@ public class Controls {
 								driveController::getLeftY,
 								driveController::getLeftX,
 								() -> Rotation2d.fromRotations(driveController.getRightX())));
+
+		// reset gyro button
 		driveController.start().onTrue(new InstantCommand(s.drivebaseSubsystem::resetGyro));
+
+		// toggle x-wheels button
+		driveController.rightStick().onTrue(new InstantCommand(s.drivebaseSubsystem::toggleXWheels));
 	}
 }
