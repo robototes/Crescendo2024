@@ -36,7 +36,7 @@ public class LauncherSubsystem extends SubsystemBase {
 	private final SparkPIDController launcherAnglePIDController;
 	private final SparkPIDController launcherHoodPIDController;
 
-	//digitalInput (sensor)
+	// digitalInput (sensor)
 	DigitalInput sensor1 = new DigitalInput(Hardware.LAUNCHER_SENSOR_1);
 
 	GenericEntry launcherSpeed =
