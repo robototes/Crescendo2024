@@ -21,6 +21,8 @@ public class LauncherSubsystem extends SubsystemBase {
 	public static final double SPEAKER_SHOOT_SPEED = 0.5;
 	public static final double AMP_SHOOT_SPEED = 0.2;
 	public static final double ANGLE_CHANGE_SPEED = 0.15;
+	public static final double ANGLE_TOLERANCE = 0.5;
+
 
 	// HARDWARE
 	private final CANSparkFlex launcherTopMotor;
