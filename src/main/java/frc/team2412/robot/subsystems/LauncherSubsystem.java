@@ -131,10 +131,6 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherHoodPIDController.setReference(Units.degreesToRotations(angle), ControlType.kPosition);
 	}
 
-	public void DistanceModifier(double distance, double modifier) {
-		double speed = distance / modifier;
-	}
-
 	@Override
 	public void periodic() {
 		launcherSpeed.setDouble(launcherTopEncoder.getVelocity());
