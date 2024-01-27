@@ -23,7 +23,6 @@ public class LauncherSubsystem extends SubsystemBase {
 	public static final double ANGLE_CHANGE_SPEED = 0.15;
 	public static final double ANGLE_TOLERANCE = 0.5;
 
-
 	// HARDWARE
 	private final CANSparkFlex launcherTopMotor;
 	private final CANSparkFlex launcherBottomMotor;
