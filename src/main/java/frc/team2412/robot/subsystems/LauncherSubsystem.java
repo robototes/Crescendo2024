@@ -91,6 +91,7 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherBottomMotor.setIdleMode(IdleMode.kBrake);
 		launcherAngleMotor.setIdleMode(IdleMode.kBrake);
 		launcherHoodMotor.setIdleMode(IdleMode.kBrake);
+		launcherBottomMotor.setInverted(true);
 
 		// current limit
 		launcherTopMotor.setSmartCurrentLimit(20);
@@ -111,7 +112,7 @@ public class LauncherSubsystem extends SubsystemBase {
 
 	public void shoot(double speed) {
 		launcherTopMotor.set(speed);
-		launcherBottomMotor.set(-speed);
+		launcherBottomMotor.set(speed);
 	}
 	// returns the degrees of the angle of the launcher
 	public double getAngle() {
