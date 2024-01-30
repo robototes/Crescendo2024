@@ -21,7 +21,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2412.robot.Robot;
 import frc.team2412.robot.Robot.RobotType;
-
 import java.io.File;
 import java.util.EnumSet;
 import java.util.function.DoubleSupplier;
@@ -40,9 +39,10 @@ public class DrivebaseSubsystem extends SubsystemBase {
 	private static final double JOYSTICK_DEADBAND = 0.05;
 	// TODO: change this to allow for comp robot
 	private static final double DRIVEBASE_RADIUS =
-			Robot.getInstance().getRobotType() == RobotType.PRACTICE ? 
-				Math.hypot(8.5, 8.5) // our wheels are 8.5 inches by 8.5 inches from the center of the bot;
-				: 0.3937; // crane radius
+			Robot.getInstance().getRobotType() == RobotType.PRACTICE
+					? Math.hypot(
+							8.5, 8.5) // our wheels are 8.5 inches by 8.5 inches from the center of the bot;
+					: 0.3937; // crane radius
 	private static final double HEADING_CORRECTION_DEADBAND = 0.005;
 
 	// AUTO CONSTANTS
