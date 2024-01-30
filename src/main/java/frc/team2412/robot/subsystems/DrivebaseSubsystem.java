@@ -25,12 +25,13 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
 	// SWERVE CONSTANTS (that aren't in deploy dir)
 
-	private static final double MAX_SPEED = 2.0;
+	private static final double MAX_SPEED = 4.4196;
 	private static final double JOYSTICK_DEADBAND = 0.05;
-	private static final double DRIVEBASE_RADIUS =
-			Math.hypot(8.5, 8.5); // our wheels are 8.5 inches by 8.5 inches from the center of the bot;
+	private static final double DRIVEBASE_RADIUS = 0.3937; // crane
 
 	// AUTO CONSTANTS
+
+	public static final Rotation2d MAX_ROTATIONS_PER_SEC = Rotation2d.fromRotations(0.8574);
 
 	private static final PIDConstants AUTO_TRANSLATION_PID = new PIDConstants(0.1, 0, 0);
 	private static final PIDConstants AUTO_ROTATION_PID = new PIDConstants(5.0, 0, 0);
@@ -43,7 +44,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 		File swerveJsonDirectory;
 
 		if (Robot.getInstance().isCompetition()) {
-			swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "swerve");
+			swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "craneswerve"); // crane
 			System.out.println("Running competition swerve");
 		} else {
 			swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "practiceswerve");
