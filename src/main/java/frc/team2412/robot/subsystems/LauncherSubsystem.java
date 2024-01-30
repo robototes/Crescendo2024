@@ -63,18 +63,18 @@ public class LauncherSubsystem extends SubsystemBase {
 	public LauncherSubsystem() {
 
 		// MOTOR INSTANCE VARIBLES
-		//motors
+		// motors
 		launcherTopMotor = new CANSparkFlex(Hardware.LAUNCHER_TOP_MOTOR_ID, MotorType.kBrushless);
 		launcherBottomMotor = new CANSparkFlex(Hardware.LAUNCHER_BOTTOM_MOTOR_ID, MotorType.kBrushless);
 		launcherAngleMotor = new CANSparkFlex(Hardware.LAUNCHER_ANGLE_MOTOR_ID, MotorType.kBrushless);
 		launcherHoodMotor = new CANSparkFlex(Hardware.LAUNCHER_HOOD_MOTOR_ID, MotorType.kBrushless);
-		//encoders
+		// encoders
 		launcherTopEncoder = launcherTopMotor.getEncoder();
 		launcherBottomEncoder = launcherBottomMotor.getEncoder();
 		launcherAngleEncoder = launcherAngleMotor.getAbsoluteEncoder(Type.kDutyCycle);
 		launcherHoodEncoder =
 				launcherHoodMotor.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
-		//PID controllers
+		// PID controllers
 		launcherAnglePIDController = launcherAngleMotor.getPIDController();
 		launcherHoodPIDController = launcherHoodMotor.getPIDController();
 		launcherAnglePIDController.setFeedbackDevice(launcherAngleEncoder);
@@ -93,7 +93,7 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherBottomMotor.setIdleMode(IdleMode.kCoast);
 		launcherAngleMotor.setIdleMode(IdleMode.kBrake);
 		launcherHoodMotor.setIdleMode(IdleMode.kBrake);
-		//inveritng the bottom motor lmao
+		// inveritng the bottom motor lmao
 		launcherBottomMotor.setInverted(true);
 
 		// current limit
@@ -137,7 +137,7 @@ public class LauncherSubsystem extends SubsystemBase {
 
 	@Override
 	public void periodic() {
-		//.get will be replaced with .getVelocity once PID is established for flywheels :C
+		// .get will be replaced with .getVelocity once PID is established for flywheels :C
 		launcherSpeed.setDouble(launcherTopMotor.get());
 		launcherAngle.setDouble(getAngle());
 		isNote.setBoolean(sensor1.get());

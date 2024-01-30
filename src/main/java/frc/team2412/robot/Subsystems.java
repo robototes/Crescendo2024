@@ -28,7 +28,7 @@ public class Subsystems {
 		}
 		if (LAUNCHER_ENABLED) {
 			launcherSubsystem = new LauncherSubsystem();
-		}else{
+		} else {
 			launcherSubsystem = null;
 		}
 	}
