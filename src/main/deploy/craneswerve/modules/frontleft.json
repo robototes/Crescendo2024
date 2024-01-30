@@ -3,7 +3,7 @@
     "front": 8.5,
     "left": 8.5
   },
-  "absoluteEncoderOffset": 249.521484,
+  "absoluteEncoderOffset": 159.521484,
   "drive": {
     "type": "neo",
     "id": 1,
@@ -21,6 +21,6 @@
   },
   "inverted": {
     "drive": false,
-    "angle": false
+    "angle": true
   }
 }
