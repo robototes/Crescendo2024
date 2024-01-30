@@ -36,8 +36,6 @@ public class LauncherSubsystem extends SubsystemBase {
 	private final SparkPIDController launcherAnglePIDController;
 	private final SparkPIDController launcherHoodPIDController;
 
-	// digitalInput (sensor)
-	DigitalInput sensor1 = new DigitalInput(Hardware.LAUNCHER_SENSOR_1);
 
 	GenericEntry launcherSpeed =
 			Shuffleboard.getTab("Launcher")
@@ -51,13 +49,6 @@ public class LauncherSubsystem extends SubsystemBase {
 					.addPersistent("Launcher angle", getAngle())
 					.withSize(1, 1)
 					.withWidget(BuiltInWidgets.kTextView)
-					.getEntry();
-
-	GenericEntry isNote =
-			Shuffleboard.getTab("Launcher")
-					.addPersistent("is loaded", false)
-					.withSize(1, 1)
-					.withWidget(BuiltInWidgets.kBooleanBox)
 					.getEntry();
 	// Constructor
 	public LauncherSubsystem() {
@@ -140,6 +131,5 @@ public class LauncherSubsystem extends SubsystemBase {
 		// .get will be replaced with .getVelocity once PID is established for flywheels :C
 		launcherSpeed.setDouble(launcherTopMotor.get());
 		launcherAngle.setDouble(getAngle());
-		isNote.setBoolean(sensor1.get());
 	}
 }
