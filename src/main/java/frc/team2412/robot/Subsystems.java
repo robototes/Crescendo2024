@@ -19,7 +19,7 @@ public class Subsystems {
 	}
 
 	public final DrivebaseSubsystem drivebaseSubsystem;
-	public LauncherSubsystem launcherSubsystem;
+	public final LauncherSubsystem launcherSubsystem;
 
 	public Subsystems() {
 		// initialize subsystems here (wow thats wild)
@@ -28,6 +28,8 @@ public class Subsystems {
 		}
 		if (LAUNCHER_ENABLED) {
 			launcherSubsystem = new LauncherSubsystem();
+		}else{
+			launcherSubsystem = null;
 		}
 	}
 }
