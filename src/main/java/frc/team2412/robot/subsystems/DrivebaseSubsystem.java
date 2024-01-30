@@ -38,7 +38,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 	private static final double JOYSTICK_DEADBAND = 0.05;
 	private static final double DRIVEBASE_RADIUS =
 			Math.hypot(8.5, 8.5); // our wheels are 8.5 inches by 8.5 inches from the center of the bot;
-	private static final double HEADING_CORRECTION_DEADBAND = 0.1;
+	private static final double HEADING_CORRECTION_DEADBAND = 0.005;
 
 	// AUTO CONSTANTS
 
@@ -78,8 +78,9 @@ public class DrivebaseSubsystem extends SubsystemBase {
 		swerveDrive.setMotorIdleMode(true);
 		// swerve drive heading will slowly drift over time as you translate. this method enables an
 		// active correction using pid. disabled until testing can be done
-		swerveDrive.setHeadingCorrection(
-				headingCorrectionEntry.getBoolean(true), HEADING_CORRECTION_DEADBAND);
+		// TODO: this still doesn't work well - the rotation deadband and translation deadband should
+		// really be seperate
+		swerveDrive.setHeadingCorrection(headingCorrectionEntry.getBoolean(true), 2.0, 0.5);
 		swerveDrive.chassisVelocityCorrection = true;
 
 		swerveDrive.synchronizeModuleEncoders();
@@ -201,8 +202,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 				headingCorrectionEntry,
 				EnumSet.of(NetworkTableEvent.Kind.kValueAll),
 				event -> {
-					swerveDrive.setHeadingCorrection(
-							event.valueData.value.getBoolean(), HEADING_CORRECTION_DEADBAND);
+					swerveDrive.setHeadingCorrection(event.valueData.value.getBoolean());
 				});
 	}
 }
