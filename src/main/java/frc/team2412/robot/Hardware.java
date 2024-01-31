@@ -12,5 +12,7 @@ public class Hardware {
 	// shooter [30 - 39]
 
 	// intake [40 - 49]
-
+	// sensor testing
+	public static final int INTAKE_MOTOR_1 = 55, INTAKE_MOTOR_2 = 56;
+	public static final int INTAKE_DISTANCE_SENSOR = 7;
 }
