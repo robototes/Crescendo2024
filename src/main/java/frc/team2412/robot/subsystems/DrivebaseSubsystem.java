@@ -39,9 +39,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 	private static final double HEADING_CORRECTION_DEADBAND = 0.005;
 
 	// AUTO CONSTANTS
-
-	public static final Rotation2d MAX_ROTATIONS_PER_SEC = Rotation2d.fromRotations(0.8574);
-
+	
 	private static final PIDConstants AUTO_TRANSLATION_PID = new PIDConstants(0.1, 0, 0);
 	private static final PIDConstants AUTO_ROTATION_PID = new PIDConstants(5.0, 0, 0);
 	private static final double MAX_AUTO_SPEED =
