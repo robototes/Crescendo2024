@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2412.robot.Robot;
+import frc.team2412.robot.Robot.RobotType;
+
 import java.io.File;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
@@ -25,9 +27,19 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
 	// SWERVE CONSTANTS (that aren't in deploy dir)
 
-	private static final double MAX_SPEED = 4.4196;
+	private static final double MAX_SPEED = Robot.getInstance().getRobotType() == RobotType.PRACTICE
+											? 2.0
+											: Robot.getInstance().getRobotType() == RobotType.CRANE
+											? 3.0
+											: null;
+	// distance from center of the robot to the furthest module
+	private static final double DRIVEBASE_RADIUS = Robot.getInstance().getRobotType() == RobotType.PRACTICE
+													? 0.305328701
+													: Robot.getInstance().getRobotType() == RobotType.CRANE
+													? 0.3937
+													: null;
 	private static final double JOYSTICK_DEADBAND = 0.05;
-	private static final double DRIVEBASE_RADIUS = 0.3937; // crane
+	private static final double HEADING_CORRECTION_DEADBAND = 0.005;
 
 	// AUTO CONSTANTS
 
