@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2412.robot.Robot;
+import frc.team2412.robot.Robot.RobotType;
 import java.io.File;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
@@ -25,10 +26,17 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
 	// SWERVE CONSTANTS (that aren't in deploy dir)
 
-	private static final double MAX_SPEED = 2.0;
-	private static final double JOYSTICK_DEADBAND = 0.05;
+	private static final double MAX_SPEED =
+			Robot.getInstance().getRobotType() == RobotType.PRACTICE
+					? 2.0
+					: Robot.getInstance().getRobotType() == RobotType.CRANE ? 3.0 : 0.0;
+	// distance from center of the robot to the furthest module
 	private static final double DRIVEBASE_RADIUS =
-			Math.hypot(8.5, 8.5); // our wheels are 8.5 inches by 8.5 inches from the center of the bot;
+			Robot.getInstance().getRobotType() == RobotType.PRACTICE
+					? 0.305328701
+					: Robot.getInstance().getRobotType() == RobotType.CRANE ? 0.3937 : 0.0;
+	private static final double JOYSTICK_DEADBAND = 0.05;
+	private static final double HEADING_CORRECTION_DEADBAND = 0.005;
 
 	// AUTO CONSTANTS
 
@@ -42,12 +50,19 @@ public class DrivebaseSubsystem extends SubsystemBase {
 	public DrivebaseSubsystem() {
 		File swerveJsonDirectory;
 
-		if (Robot.getInstance().isCompetition()) {
-			swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "swerve");
-			System.out.println("Running competition swerve");
-		} else {
-			swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "practiceswerve");
-			System.out.println("Running practice swerve");
+		switch (Robot.getInstance().getRobotType()) {
+			case PRACTICE:
+				swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "practiceswerve");
+				System.out.println("Running practice swerve");
+				break;
+			case CRANE:
+				swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "craneswerve");
+				System.out.println("Running crane swerve");
+				break;
+			case COMPETITION:
+			default:
+				swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "swerve");
+				System.out.println("Running competition swerve");
 		}
 
 		try {
@@ -63,7 +78,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 		//	swerveDrive.setModuleStateOptimization(false);
 		// swerve drive heading will slowly drift over time as you translate. this method enables an
 		// active correction using pid. disabled until testing can be done
-		swerveDrive.setHeadingCorrection(true, 0.1);
+		swerveDrive.setHeadingCorrection(false, 0.1);
 		// supposed to do something? see
 		// https://broncbotz3481.github.io/YAGSL/swervelib/SwerveDrive.html#chassisVelocityCorrection
 		swerveDrive.chassisVelocityCorrection = true;
