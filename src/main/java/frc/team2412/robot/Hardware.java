@@ -13,6 +13,5 @@ public class Hardware {
 	public static final int LAUNCHER_TOP_MOTOR_ID = 30;
 	public static final int LAUNCHER_BOTTOM_MOTOR_ID = 31;
 	public static final int LAUNCHER_ANGLE_MOTOR_ID = 32;
-	public static final int LAUNCHER_HOOD_MOTOR_ID = 33;
 	// intake [40 - 49]
 }
