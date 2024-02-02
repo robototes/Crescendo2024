@@ -32,7 +32,6 @@ public class LauncherSubsystem extends SubsystemBase {
 	private final SparkAbsoluteEncoder launcherAngleEncoder;
 	private final SparkPIDController launcherAnglePIDController;
 
-
 	GenericEntry launcherSpeed =
 			Shuffleboard.getTab("Launcher")
 					.addPersistent("Launcher Speed", SPEAKER_SHOOT_SPEED)
