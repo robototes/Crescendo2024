@@ -12,93 +12,101 @@ public class IntakeSubsystem extends SubsystemBase {
 	public static final double INTAKE_IN_SPEED = 0.3;
 	public static final double INGEST_SPEED = 0.2;
 	public static final double INDEX_SPEEED = 0.2;
-	public static final double FEEDER = 0.25; // YUMNAH please initialize THIS
+	public static final double FEEDER = 0.25;
 	public static final double DEEPS = 2.0;
 
 	// 'skirt' intake
-	private final CANSparkFlex intakeMotor1;
-	private final CANSparkFlex intakeMotor2;
-	private final CANSparkFlex intakeMotor3;
-	private final CANSparkFlex intakeMotor4;
+	private final CANSparkFlex intakeMotorFront;
+	private final CANSparkFlex intakeMotorBack;
+	private final CANSparkFlex intakeMotorLeft;
+	private final CANSparkFlex intakeMotorRight;
 
-	private final CANSparkFlex injestMotor1;
-	private final CANSparkFlex injestMotor2;
-	private final CANSparkFlex injestMotor3;
+	private final CANSparkFlex injestMotorLeft;
+	private final CANSparkFlex injestMotorRight;
+
+	private final CANSparkFlex indexMotorTop;
+	private final CANSparkFlex indexMotorMiddle;
+	private final CANSparkFlex indexMotorBottom;
 
 	public IntakeSubsystem() {
 
-		intakeMotor1 = new CANSparkFlex(INTAKE_1, MotorType.kBrushless);
-		intakeMotor2 = new CANSparkFlex(INTAKE_2, MotorType.kBrushless);
-		intakeMotor3 = new CANSparkFlex(INTAKE_3, MotorType.kBrushless);
-		intakeMotor4 = new CANSparkFlex(INTAKE_4, MotorType.kBrushless);
+		intakeMotorFront = new CANSparkFlex(INTAKE_MOTOR_FRONT, MotorType.kBrushless);
+		intakeMotorBack = new CANSparkFlex(INTAKE_MOTOR_BACK, MotorType.kBrushless);
+		intakeMotorLeft = new CANSparkFlex(INTAKE_MOTOR_LEFT, MotorType.kBrushless);
+		intakeMotorRight = new CANSparkFlex(INTAKE_MOTOR_RIGHT, MotorType.kBrushless);
+
+		injestMotorLeft = new CANSparkFlex(INJEST_MOTOR_LEFT, MotorType.kBrushless);
+		injestMotorRight = new CANSparkFlex(INJEST_MOTOR_RIGHT, MotorType.kBrushless);
+
+		injestMotorBack = new CANSparkFlex(INJEST_MOTOR_BACK, MotorType.kBrushless);
 
 		resetMotors();
-
-		injestMotor1 = new CANSparkFlex(INJEST_1, MotorType.kBrushless);
-		injestMotor2 = new CANSparkFlex(INJEST_2, MotorType.kBrushless);
-		injestMotor3 = new CANSparkFlex(INJEST_3, MotorType.kBrushless);
-
-		intakeMotor2.follow(intakeMotor1);
-		intakeMotor3.follow(intakeMotor1);
-		intakeMotor4.follow(intakeMotor1);
 	}
 
 	public void resetMotors() {
-		intakeMotor1.restoreFactoryDefaults();
-		intakeMotor2.restoreFactoryDefaults();
-		intakeMotor3.restoreFactoryDefaults();
-		intakeMotor4.restoreFactoryDefaults();
+		intakeMotorFront.restoreFactoryDefaults();
+		intakeMotorBack.restoreFactoryDefaults();
+		intakeMotorLeft.restoreFactoryDefaults();
+		intakeMotorRight.restoreFactoryDefaults();
 
-		injestMotor1.restoreFactoryDefaults();
-		injestMotor2.restoreFactoryDefaults();
-		injestMotor3.restoreFactoryDefaults();
+		injestMotorLeft.restoreFactoryDefaults();
+		injestMotorRight.restoreFactoryDefaults();
 
-		intakeMotor1.setIdleMode(IdleMode.kBrake);
-		intakeMotor2.setIdleMode(IdleMode.kBrake);
-		intakeMotor3.setIdleMode(IdleMode.kBrake);
-		intakeMotor4.setIdleMode(IdleMode.kBrake);
+		intakeMotorFront.setIdleMode(IdleMode.kBrake);
+		intakeMotorBack.setIdleMode(IdleMode.kBrake);
+		intakeMotorLeft.setIdleMode(IdleMode.kBrake);
+		intakeMotorRight.setIdleMode(IdleMode.kBrake);
 
-		injestMotor1.setIdleMode(IdleMode.kBrake);
-		injestMotor2.setIdleMode(IdleMode.kBrake);
-		injestMotor3.setIdleMode(IdleMode.kBrake);
+		injestMotorLeft.setIdleMode(IdleMode.kBrake);
+		injestMotorRight.setIdleMode(IdleMode.kBrake);
 
-		intakeMotor1.setInverted(true);
-		intakeMotor2.setInverted(true);
-		intakeMotor3.setInverted(true);
-		intakeMotor4.setInverted(true);
+		intakeMotorFront.setInverted(true);
+		intakeMotorBack.setInverted(true);
+		intakeMotorLeft.setInverted(true);
+		intakeMotorRight.setInverted(true);
 
-		intakeMotor1.setInverted(true);
-		intakeMotor2.setInverted(true);
-		intakeMotor3.setInverted(true);
+		injestMotorLeft.setInverted(true);
+		injestMotorRight.setInverted(true);
 
-		intakeMotor1.setSmartCurrentLimit(20);
-		intakeMotor2.setSmartCurrentLimit(20);
-		intakeMotor3.setSmartCurrentLimit(20);
-		intakeMotor4.setSmartCurrentLimit(20);
+		intakeMotorFront.setSmartCurrentLimit(20);
+		intakeMotorBack.setSmartCurrentLimit(20);
+		intakeMotorLeft.setSmartCurrentLimit(20);
+		intakeMotorRight.setSmartCurrentLimit(20);
 
-		injestMotor1.setSmartCurrentLimit(20);
-		injestMotor2.setSmartCurrentLimit(20);
-		injestMotor3.setSmartCurrentLimit(20);
+		injestMotorLeft.setSmartCurrentLimit(20);
+		injestMotorRight.setSmartCurrentLimit(20);
 
-		intakeMotor1.burnFlash();
-		intakeMotor2.burnFlash();
-		intakeMotor3.burnFlash();
-		intakeMotor4.burnFlash();
+		intakeMotorFront.burnFlash();
+		intakeMotorBack.burnFlash();
+		intakeMotorLeft.burnFlash();
+		intakeMotorRight.burnFlash();
 
-		injestMotor1.burnFlash();
-		injestMotor2.burnFlash();
-		injestMotor3.burnFlash();
+		injestMotorLeft.burnFlash();
+		injestMotorRight.burnFlash();
 	}
 
-	public void intake() {
-		intakeMotor1.set(INTAKE_IN_SPEED);
+	private void intake() {
+		intakeMotor(intakeMotorFront);
+		intakeMotor(intakeMotorBack);
+		intakeMotor(intakeMotorLeft);
+		intakeMotor(intakeMotorRight);
 	}
 
-	void stopMotor() {
-		intakeMotor1.set(0);
+	public void intakeMotor(CANSparkFlex motor) {
+		motor.set(INTAKE_IN_SPEED);
+    }
+
+	private void stopIntakeMotors() {
+		intakeMotorFront.set(0);
+        intakeMotorBack.set(0);
+        intakeMotorLeft.set(0);
+        intakeMotorRight.set(0);
 	}
 
 	public void spitOut() {
-		intakeMotor1.set(INTAKE_FAST_OUT_SPEED);
+		intakeMotorFront.set(INTAKE_FAST_OUT_SPEED);
+        intakeMotorBack.set(INTAKE_FAST_OUT_SPEED);
+        intakeMotorLeft.set(INTAKE_FAST_OUT_SPEED);
+        intakeMotorRight.set(INTAKE_FAST_OUT_SPEED);
 	}
 }
