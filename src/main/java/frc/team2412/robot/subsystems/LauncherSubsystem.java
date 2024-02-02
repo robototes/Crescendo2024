@@ -2,6 +2,9 @@ package frc.team2412.robot.subsystems;
 
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
+
+import java.util.Map;
+
 import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
@@ -32,14 +35,15 @@ public class LauncherSubsystem extends SubsystemBase {
 	private final SparkAbsoluteEncoder launcherAngleEncoder;
 	private final SparkPIDController launcherAnglePIDController;
 
-	private final GenericEntry launcherSpeed =
+	private final GenericEntry launcherSpeedEntry =
 			Shuffleboard.getTab("Launcher")
 					.addPersistent("Launcher Speed", SPEAKER_SHOOT_SPEED)
 					.withSize(1, 1)
-					.withWidget(BuiltInWidgets.kTextView)
+					.withWidget(BuiltInWidgets.kNumberSlider)
+					.withProperties(Map.of("Min", -1, "Max", 1))
 					.getEntry();
 
-	private final GenericEntry launcherAngle =
+	private final GenericEntry launcherAngleEntry =
 			Shuffleboard.getTab("Launcher")
 					.addPersistent("Launcher angle", getAngle())
 					.withSize(1, 1)
@@ -90,9 +94,9 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherBottomMotor.set(0);
 	}
 
-	public void shoot(double speed) {
-		launcherTopMotor.set(speed);
-		launcherBottomMotor.set(speed);
+	public void shoot() {
+		launcherTopMotor.set(launcherSpeedEntry.getDouble(SPEAKER_SHOOT_SPEED));
+		launcherBottomMotor.set(launcherSpeedEntry.getDouble(SPEAKER_SHOOT_SPEED));
 	}
 	// returns the degrees of the angle of the launcher
 	public double getAngle() {
@@ -107,7 +111,7 @@ public class LauncherSubsystem extends SubsystemBase {
 	@Override
 	public void periodic() {
 		// .get will be replaced with .getVelocity once PID is established for flywheels :C
-		launcherSpeed.setDouble(launcherTopMotor.get());
-		launcherAngle.setDouble(getAngle());
+		launcherSpeedEntry.setDouble(launcherTopMotor.get());
+		launcherAngleEntry.setDouble(getAngle());
 	}
 }
