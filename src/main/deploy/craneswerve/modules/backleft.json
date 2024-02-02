@@ -1,0 +1,27 @@
+{
+  "location": {
+    "front": -12,
+    "left": 10
+  },
+  "absoluteEncoderOffset": 224.912109,
+  "drive": {
+    "type": "neo",
+    "id": 7,
+    "canbus": null
+  },
+  "angle": {
+    "type": "neo",
+    "id": 8,
+    "canbus": null
+  },
+
+  "encoder": {
+    "type": "cancoder",
+    "id": 9,
+    "canbus": null
+  },
+  "inverted": {
+    "drive": false,
+    "angle": true
+  }
+}

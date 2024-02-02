@@ -17,8 +17,9 @@ public class Robot extends TimedRobot {
 	/** Singleton Stuff */
 	private static Robot instance = null;
 
-	enum RobotType {
+	public enum RobotType {
 		COMPETITION,
+		CRANE,
 		PRACTICE;
 	}
 
@@ -43,14 +44,17 @@ public class Robot extends TimedRobot {
 		this(getTypeFromAddress());
 	}
 
-	public static final MACAddress COMPETITION_ADDRESS = MACAddress.of(0x33, 0x9d, 0xd1);
+	public static final MACAddress COMPETITION_ADDRESS = MACAddress.of(0x00, 0x00, 0x00);
+	public static final MACAddress CRANE_ADDRESS = MACAddress.of(0x33, 0x9d, 0xd1);
 	public static final MACAddress PRACTICE_ADDRESS = MACAddress.of(0x33, 0x9D, 0xE7);
 
 	private static RobotType getTypeFromAddress() {
 		if (PRACTICE_ADDRESS.exists()) return RobotType.PRACTICE;
-		else {
-			return RobotType.COMPETITION;
-		}
+		if (CRANE_ADDRESS.exists()) return RobotType.CRANE;
+		if (!COMPETITION_ADDRESS.exists())
+			DriverStation.reportWarning(
+					"Code running on unknown MAC Address! Running competition code anyways", true);
+		return RobotType.COMPETITION;
 	}
 
 	@Override
