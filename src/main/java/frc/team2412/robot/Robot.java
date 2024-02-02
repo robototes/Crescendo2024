@@ -1,8 +1,6 @@
 package frc.team2412.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
-
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -137,6 +135,6 @@ public class Robot extends TimedRobot {
 	public void registerCommands() {
 
 		// param: String commandName, Command command
-		// NamedCommands.registerCommand(); 
+		// NamedCommands.registerCommand();
 	}
 }

@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.team2412.robot.util.ChoreoHandler;
 
 public class Controls {
 	public static class ControlConstants {
@@ -28,6 +29,7 @@ public class Controls {
 		if (DRIVEBASE_ENABLED) {
 			bindDrivebaseControls();
 		}
+		bindChoreoControls();
 	}
 
 	private void bindDrivebaseControls() {
@@ -39,5 +41,9 @@ public class Controls {
 								driveController::getLeftX,
 								() -> Rotation2d.fromRotations(driveController.getRightX())));
 		driveController.start().onTrue(new InstantCommand(s.drivebaseSubsystem::resetGyro));
+	}
+
+	private void bindChoreoControls() {
+		driveController.b().onTrue(ChoreoHandler.getChoreoCommand("testPath"));
 	}
 }
