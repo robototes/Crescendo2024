@@ -88,8 +88,8 @@ public class LauncherSubsystem extends SubsystemBase {
 
 	// stop specific motor method
 	public void stopLauncher() {
-		launcherTopMotor.set(0);
-		launcherBottomMotor.set(0);
+		launcherTopMotor.stopMotor();
+		launcherBottomMotor.stopMotor();
 	}
 
 	public void shoot() {
