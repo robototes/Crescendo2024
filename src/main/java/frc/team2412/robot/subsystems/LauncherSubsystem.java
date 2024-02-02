@@ -32,14 +32,14 @@ public class LauncherSubsystem extends SubsystemBase {
 	private final SparkAbsoluteEncoder launcherAngleEncoder;
 	private final SparkPIDController launcherAnglePIDController;
 
-	GenericEntry launcherSpeed =
+	private final GenericEntry launcherSpeed =
 			Shuffleboard.getTab("Launcher")
 					.addPersistent("Launcher Speed", SPEAKER_SHOOT_SPEED)
 					.withSize(1, 1)
 					.withWidget(BuiltInWidgets.kTextView)
 					.getEntry();
 
-	GenericEntry launcherAngle =
+	private final GenericEntry launcherAngle =
 			Shuffleboard.getTab("Launcher")
 					.addPersistent("Launcher angle", getAngle())
 					.withSize(1, 1)
@@ -85,8 +85,9 @@ public class LauncherSubsystem extends SubsystemBase {
 	}
 
 	// stop specific motor method
-	public void stopMotor(CANSparkFlex motor) {
-		motor.stopMotor();
+	public void stopLauncher() {
+		launcherTopMotor.set(0);
+		launcherBottomMotor.set(0);
 	}
 
 	public void shoot(double speed) {
