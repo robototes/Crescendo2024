@@ -27,18 +27,16 @@ public class LauncherSubsystem extends SubsystemBase {
 	private final CANSparkFlex launcherTopMotor;
 	private final CANSparkFlex launcherBottomMotor;
 	private final CANSparkFlex launcherAngleMotor;
-	private final CANSparkFlex launcherHoodMotor;
 	private final RelativeEncoder launcherTopEncoder;
 	private final RelativeEncoder launcherBottomEncoder;
 	private final SparkAbsoluteEncoder launcherAngleEncoder;
-	private final SparkAbsoluteEncoder launcherHoodEncoder;
 	private final SparkPIDController launcherAnglePIDController;
-	private final SparkPIDController launcherHoodPIDController;
+
 
 	GenericEntry launcherSpeed =
 			Shuffleboard.getTab("Launcher")
 					.addPersistent("Launcher Speed", SPEAKER_SHOOT_SPEED)
-					.withSize(2, 1)
+					.withSize(1, 1)
 					.withWidget(BuiltInWidgets.kTextView)
 					.getEntry();
 
@@ -56,32 +54,24 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherTopMotor = new CANSparkFlex(Hardware.LAUNCHER_TOP_MOTOR_ID, MotorType.kBrushless);
 		launcherBottomMotor = new CANSparkFlex(Hardware.LAUNCHER_BOTTOM_MOTOR_ID, MotorType.kBrushless);
 		launcherAngleMotor = new CANSparkFlex(Hardware.LAUNCHER_ANGLE_MOTOR_ID, MotorType.kBrushless);
-		launcherHoodMotor = new CANSparkFlex(Hardware.LAUNCHER_HOOD_MOTOR_ID, MotorType.kBrushless);
 		// encoders
 		launcherTopEncoder = launcherTopMotor.getEncoder();
 		launcherBottomEncoder = launcherBottomMotor.getEncoder();
 		launcherAngleEncoder = launcherAngleMotor.getAbsoluteEncoder(Type.kDutyCycle);
-		launcherHoodEncoder =
-				launcherHoodMotor.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
+
 		// PID controllers
 		launcherAnglePIDController = launcherAngleMotor.getPIDController();
-		launcherHoodPIDController = launcherHoodMotor.getPIDController();
 		launcherAnglePIDController.setFeedbackDevice(launcherAngleEncoder);
-		launcherHoodPIDController.setFeedbackDevice(launcherHoodEncoder);
-		configMotors();
 	}
 
 	public void configMotors() {
 		launcherTopMotor.restoreFactoryDefaults();
 		launcherBottomMotor.restoreFactoryDefaults();
 		launcherAngleMotor.restoreFactoryDefaults();
-		launcherHoodMotor.restoreFactoryDefaults();
-
 		// idle mode (wow)
 		launcherTopMotor.setIdleMode(IdleMode.kCoast);
 		launcherBottomMotor.setIdleMode(IdleMode.kCoast);
 		launcherAngleMotor.setIdleMode(IdleMode.kBrake);
-		launcherHoodMotor.setIdleMode(IdleMode.kBrake);
 		// inveritng the bottom motor lmao
 		launcherBottomMotor.setInverted(true);
 
@@ -89,12 +79,10 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherTopMotor.setSmartCurrentLimit(20);
 		launcherBottomMotor.setSmartCurrentLimit(20);
 		launcherAngleMotor.setSmartCurrentLimit(20);
-		launcherHoodMotor.setSmartCurrentLimit(20);
 
 		launcherTopMotor.burnFlash();
 		launcherBottomMotor.burnFlash();
 		launcherAngleMotor.burnFlash();
-		launcherHoodMotor.burnFlash();
 	}
 
 	// stop specific motor method
@@ -114,14 +102,6 @@ public class LauncherSubsystem extends SubsystemBase {
 
 	public void setAngle(double angle) {
 		launcherAnglePIDController.setReference(Units.degreesToRotations(angle), ControlType.kPosition);
-	}
-
-	public double getHoodAngle() {
-		return Units.rotationsToDegrees(launcherHoodEncoder.getPosition());
-	}
-
-	public void setHoodAngle(double angle) {
-		launcherHoodPIDController.setReference(Units.degreesToRotations(angle), ControlType.kPosition);
 	}
 
 	@Override
