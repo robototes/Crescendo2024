@@ -1,156 +1,84 @@
 package frc.team2412.robot.subsystems;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.networktables.DoubleArraySubscriber;
+import edu.wpi.first.networktables.NetworkTableEvent;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import io.github.oblarg.oblog.annotations.Log;
+import java.util.EnumSet;
+import java.util.function.BiConsumer;
 
-public class LimelightSubsystem extends SubsystemBase {
-	// CONSTANTS
+/**
+ * All poses and transforms use the NWU (North-West-Up) coordinate system, where +X is
+ * north/forward, +Y is west/left, and +Z is up. On the field, this is based on the blue driver
+ * station (+X is forward from blue driver station, +Y is left, +Z is up).
+ *
+ * <p>At some point we should discuss how we want to handle the different alliances.
+ */
+public class VisionSubsystem extends SubsystemBase {
+	private BiConsumer<Pose2d, Double> poseConsumer;
+	/** Null if no known robot pose, otherwise the last calculated robot pose from vision data. */
+	private Pose3d robotPose = null;
 
-	private static final PIDController TRANSLATION_PID = new PIDController(10.0, 0, 0);
-	private static final PIDController ROTATION_PID = new PIDController(8.0, 0, 0);
+	private double lastTimestampSeconds = 0;
+	private DoubleArraySubscriber targetPose;
 
-	// meters?
-	public static final double CAMERA_MOUNT_HEIGHT = 0.1143;
-	public static final double CAMERA_ANGLE_OFFSET = 0;
-	public static final double TARGET_HEIGHT = 0.33;
+	public VisionSubsystem(BiConsumer<Pose2d, Double> poseConsumer) {
+		this.poseConsumer = poseConsumer;
+		var networkTables = NetworkTableInstance.getDefault();
 
-	public static final double GOAL_DISTANCE_FROM_TARGET = 0.7;
-	public static final double GOAL_DISTANCE_FROM_NOTE = 0.3;
+		// // Connect to photonvision server
+		// // Only in sim because normally photonvision connects to robot
+		// if (RobotBase.isSimulation()) {
+		// 	networkTables.stopServer();
+		// 	networkTables.startClient4("localhost");
+		// }
 
-	// MEMBERS
-
-	NetworkTable networkTable;
-
-	String currentPoseString;
-	String targetPoseString;
-
-	// network tables
-
-	// CONSTRUCTOR !
-	public LimelightSubsystem() {
-
-		// broadcast 10.24.12.227
-
-		// logging
-		currentPoseString = "";
-		targetPoseString = "";
-
-		networkTable = NetworkTableInstance.getDefault().getTable("limelight");
-		ShuffleboardTab limelightTab = Shuffleboard.getTab("Limelight");
-
-		limelightTab.addBoolean("hasTarget", this::hasTargets).withPosition(0, 0).withSize(1, 1);
-		limelightTab
-				.addDouble("Horizontal Offset", this::getHorizontalOffset)
-				.withPosition(1, 0)
-				.withSize(1, 1);
-		limelightTab
-				.addDouble("Vertical Offset", this::getVerticalOffset)
-				.withPosition(2, 0)
-				.withSize(1, 1);
-
-		limelightTab
-				.addDouble("Target Distance ", this::getDistanceFromTarget)
-				.withPosition(3, 0)
-				.withSize(1, 1);
-		limelightTab
-				.addDouble("Target Distance 2 - TEST ", this::getDistanceFromTargetTheSecond)
-				.withPosition(4, 0)
-				.withSize(1, 1);
-		limelightTab
-				.addString("Current Pose ", this::getCurrentPoseString)
-				.withPosition(0, 1)
-				.withSize(4, 1);
-
-		limelightTab
-				.addString("Target Pose ", this::getTargetPoseString)
-				.withPosition(0, 2)
-				.withSize(4, 1);
+		this.targetPose =
+				networkTables
+						.getTable("limelight")
+						.getDoubleArrayTopic("botpose_wpired") // TODO Get color from driverstation
+						.subscribe(new double[] {});
+		networkTables.addListener(
+				targetPose, EnumSet.of(NetworkTableEvent.Kind.kValueAll), this::processEvent);
 	}
-	// METHODS
 
+	public void processEvent(NetworkTableEvent event) {
+		// TODO Account for latency
+		var time = Timer.getFPGATimestamp();
+		double[] pose = targetPose.get();
+
+		var rotation =
+				new Rotation3d(Math.toRadians(pose[3]), Math.toRadians(pose[4]), Math.toRadians(pose[5]));
+		robotPose = new Pose3d(pose[0], pose[1], pose[2], rotation);
+		// TODO 3D odometry
+		poseConsumer.accept(robotPose.toPose2d(), time);
+	}
+
+	@Log
 	public boolean hasTargets() {
-		return (networkTable.getEntry("tv").getDouble(0) != 0);
+		return true;
 	}
 
-	public double getHorizontalOffset() {
-		return networkTable.getEntry("tx").getDouble(0);
+	/**
+	 * Calculates the robot pose using the best target. Returns null if there is no known robot pose.
+	 *
+	 * @return The calculated robot pose in meters.
+	 */
+	public Pose3d getRobotPose() {
+		return robotPose;
 	}
 
-	public double getVerticalOffset() {
-		return networkTable.getEntry("ty").getDouble(0);
+	/**
+	 * Returns the last time we saw an AprilTag.
+	 *
+	 * @return The time we last saw an AprilTag in seconds since FPGA startup.
+	 */
+	public double getLastTimestampSeconds() {
+		return lastTimestampSeconds;
 	}
-
-	public double getBoxWidth() {
-		return networkTable.getEntry("tshort").getDouble(0);
-	}
-
-	public double getDistanceFromTarget() {
-
-		// 1.3 at 1.9
-		// 1.0 at 1.3
-
-		double angleToTarget = getVerticalOffset();
-		// return (TARGET_HEIGHT - CAMERA_MOUNT_HEIGHT) / Math.tan(CAMERA_ANGLE_OFFSET + angleToTarget);
-
-		return (TARGET_HEIGHT - CAMERA_MOUNT_HEIGHT)
-				/ (CAMERA_ANGLE_OFFSET + Math.tan(Units.degreesToRadians(getVerticalOffset())));
-	}
-
-	public double getDistanceFromTargetTheSecond() {
-
-		// focal length = (P x D) / W
-		double focal_length = 346.1818;
-
-		// distance = (W x F) / P
-		// returns inches for testing purposes, will divide by 39.3700787 to return meters
-		return (8.25 * focal_length) / getBoxWidth();
-	}
-
-	// tan(degree) * distance = sideways distance
-
-	// target height / tan(vertical angle)
-
-	// TODO fix this or something
-	public Pose2d getTargetPose(Pose2d currentPose) {
-
-		// math thing to get target pose using current pose
-
-		Rotation2d targetHeading =
-				new Rotation2d(
-						currentPose.getRotation().getRadians() + Units.degreesToRadians(getHorizontalOffset()));
-		double targetDistance = getDistanceFromTargetTheSecond() / 39.3700787;
-
-		double targetX = Math.sin(targetHeading.getRadians()) * targetDistance;
-		double targetY = Math.cos(targetHeading.getRadians()) * targetDistance;
-
-		Pose2d targetPose =
-				new Pose2d(currentPose.getX() + targetY, currentPose.getY() + targetX, targetHeading);
-
-		currentPoseString = currentPose.toString();
-		targetPoseString = targetPose.toString();
-
-		return targetPose;
-	}
-
-	public String getCurrentPoseString() {
-		return currentPoseString;
-	}
-
-	public String getTargetPoseString() {
-		return targetPoseString;
-	}
-
-	public boolean isWithinDistance() {
-		return (getDistanceFromTarget() <= GOAL_DISTANCE_FROM_TARGET);
-	}
-
-	@Override
-	public void periodic() {}
 }
