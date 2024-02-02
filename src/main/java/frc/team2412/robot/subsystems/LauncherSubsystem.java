@@ -35,8 +35,8 @@ public class LauncherSubsystem extends SubsystemBase {
 
 	private final GenericEntry launcherSpeedEntry =
 			Shuffleboard.getTab("Launcher")
-					.addPersistent("Launcher Speed", SPEAKER_SHOOT_SPEED)
-					.withSize(1, 1)
+					.addPersistent("Launcher Speed setpoint", SPEAKER_SHOOT_SPEED)
+					.withSize(2, 1)
 					.withWidget(BuiltInWidgets.kNumberSlider)
 					.withProperties(Map.of("Min", -1, "Max", 1))
 					.getEntry();
@@ -44,6 +44,12 @@ public class LauncherSubsystem extends SubsystemBase {
 	private final GenericEntry launcherAngleEntry =
 			Shuffleboard.getTab("Launcher")
 					.addPersistent("Launcher angle", getAngle())
+					.withSize(1, 1)
+					.withWidget(BuiltInWidgets.kTextView)
+					.getEntry();
+	private final GenericEntry launcherSpeed =
+			Shuffleboard.getTab("Launcher")
+					.addPersistent("Launcher Speed", 0)
 					.withSize(1, 1)
 					.withWidget(BuiltInWidgets.kTextView)
 					.getEntry();
@@ -109,7 +115,7 @@ public class LauncherSubsystem extends SubsystemBase {
 	@Override
 	public void periodic() {
 		// .get will be replaced with .getVelocity once PID is established for flywheels :C
-		launcherSpeedEntry.setDouble(launcherTopMotor.get());
 		launcherAngleEntry.setDouble(getAngle());
+		launcherSpeed.setDouble(launcherTopMotor.get());
 	}
 }
