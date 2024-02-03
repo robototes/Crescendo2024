@@ -410,7 +410,6 @@ public class SwerveDrive {
 								getOdometryHeading().getRadians(), lastHeadingRadians);
 			} else {
 				lastHeadingRadians = getOdometryHeading().getRadians();
-				System.out.println(velocity.omegaRadiansPerSecond);
 			}
 		}
 
