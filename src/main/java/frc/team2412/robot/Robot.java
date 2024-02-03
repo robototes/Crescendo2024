@@ -1,6 +1,8 @@
 package frc.team2412.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -12,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.team2412.robot.util.MACAddress;
+import frc.team2412.robot.util.MatchDashboard;
 
 public class Robot extends TimedRobot {
 	/** Singleton Stuff */
@@ -31,8 +34,9 @@ public class Robot extends TimedRobot {
 	private final RobotType robotType;
 	public Controls controls;
 	public Subsystems subsystems;
+	public MatchDashboard dashboard;
 
-	private SendableChooser<Command> autoChooser;
+	public SendableChooser<Command> autoChooser;
 
 	protected Robot(RobotType type) {
 		// non public for singleton. Protected so test class can subclass
@@ -65,7 +69,6 @@ public class Robot extends TimedRobot {
 		controls = new Controls(subsystems);
 
 		autoChooser = AutoBuilder.buildAutoChooser();
-		SmartDashboard.putData("Auto Chooser", autoChooser);
 
 		Shuffleboard.startRecording();
 
@@ -86,6 +89,8 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putData(CommandScheduler.getInstance());
 
 		DriverStation.silenceJoystickConnectionWarning(true);
+
+		dashboard = new MatchDashboard(subsystems);
 	}
 
 	@Override
