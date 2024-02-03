@@ -33,7 +33,7 @@ public class LauncherSubsystem extends SubsystemBase {
 	private final SparkAbsoluteEncoder launcherAngleEncoder;
 	private final SparkPIDController launcherAnglePIDController;
 
-	private final GenericEntry launcherSpeedEntry =
+	private final GenericEntry SetlauncherSpeedEntry =
 			Shuffleboard.getTab("Launcher")
 					.addPersistent("Launcher Speed setpoint", SPEAKER_SHOOT_SPEED)
 					.withSize(2, 1)
@@ -43,13 +43,13 @@ public class LauncherSubsystem extends SubsystemBase {
 
 	private final GenericEntry launcherAngleEntry =
 			Shuffleboard.getTab("Launcher")
-					.addPersistent("Launcher angle", getAngle())
+					.add("Launcher angle", getAngle())
 					.withSize(1, 1)
 					.withWidget(BuiltInWidgets.kTextView)
 					.getEntry();
-	private final GenericEntry launcherSpeed =
+	private final GenericEntry launcherSpeedEntry =
 			Shuffleboard.getTab("Launcher")
-					.addPersistent("Launcher Speed", 0)
+					.add("Launcher Speed", 0)
 					.withSize(1, 1)
 					.withWidget(BuiltInWidgets.kTextView)
 					.getEntry();
@@ -92,15 +92,16 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherAngleMotor.burnFlash();
 	}
 
-	// stop specific motor method
+	// stop launcher motors method
 	public void stopLauncher() {
 		launcherTopMotor.stopMotor();
 		launcherBottomMotor.stopMotor();
 	}
 
 	public void launch() {
-		launcherTopMotor.set(launcherSpeedEntry.getDouble(SPEAKER_SHOOT_SPEED));
-		launcherBottomMotor.set(launcherSpeedEntry.getDouble(SPEAKER_SHOOT_SPEED));
+		double speed = SetlauncherSpeedEntry.getDouble(SPEAKER_SHOOT_SPEED);
+		launcherTopMotor.set(speed);
+		launcherBottomMotor.set(speed);
 	}
 	// returns the degrees of the angle of the launcher
 	public double getAngle() {
@@ -116,6 +117,6 @@ public class LauncherSubsystem extends SubsystemBase {
 	public void periodic() {
 		// .get will be replaced with .getVelocity once PID is established for flywheels :C
 		launcherAngleEntry.setDouble(getAngle());
-		launcherSpeed.setDouble(launcherTopMotor.get());
+		launcherSpeedEntry.setDouble(launcherTopMotor.get());
 	}
 }
