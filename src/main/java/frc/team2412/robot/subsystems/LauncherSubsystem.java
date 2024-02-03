@@ -33,7 +33,7 @@ public class LauncherSubsystem extends SubsystemBase {
 	private final SparkAbsoluteEncoder launcherAngleEncoder;
 	private final SparkPIDController launcherAnglePIDController;
 
-	private final GenericEntry SetlauncherSpeedEntry =
+	private final GenericEntry setLauncherSpeedEntry =
 			Shuffleboard.getTab("Launcher")
 					.addPersistent("Launcher Speed setpoint", SPEAKER_SHOOT_SPEED)
 					.withSize(2, 1)
@@ -99,7 +99,7 @@ public class LauncherSubsystem extends SubsystemBase {
 	}
 
 	public void launch() {
-		double speed = SetlauncherSpeedEntry.getDouble(SPEAKER_SHOOT_SPEED);
+		double speed = setLauncherSpeedEntry.getDouble(SPEAKER_SHOOT_SPEED);
 		launcherTopMotor.set(speed);
 		launcherBottomMotor.set(speed);
 	}
