@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.team2412.robot.util.MACAddress;
+import frc.team2412.robot.util.MatchDashboard;
 
 public class Robot extends TimedRobot {
 	/** Singleton Stuff */
@@ -31,8 +32,9 @@ public class Robot extends TimedRobot {
 	private final RobotType robotType;
 	public Controls controls;
 	public Subsystems subsystems;
+	public MatchDashboard dashboard;
 
-	private SendableChooser<Command> autoChooser;
+	public SendableChooser<Command> autoChooser;
 
 	protected Robot(RobotType type) {
 		// non public for singleton. Protected so test class can subclass
@@ -53,7 +55,7 @@ public class Robot extends TimedRobot {
 		if (CRANE_ADDRESS.exists()) return RobotType.CRANE;
 		if (!COMPETITION_ADDRESS.exists())
 			DriverStation.reportWarning(
-					"Code running on unknown MAC Address! Running competition code anyways", true);
+					"Code running on unknown MAC Address! Running competition code anyways", false);
 		return RobotType.COMPETITION;
 	}
 
@@ -89,6 +91,7 @@ public class Robot extends TimedRobot {
 		DriverStation.silenceJoystickConnectionWarning(true);
 
 		registerCommands();
+		dashboard = new MatchDashboard(subsystems);
 	}
 
 	@Override

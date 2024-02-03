@@ -8,19 +8,30 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.networktables.NetworkTableEvent;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2412.robot.Robot;
 import frc.team2412.robot.Robot.RobotType;
 import java.io.File;
+import java.util.EnumSet;
+import java.util.Map;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 import swervelib.SwerveDrive;
 import swervelib.math.SwerveMath;
 import swervelib.parser.SwerveParser;
+import swervelib.telemetry.SwerveDriveTelemetry;
+import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
 public class DrivebaseSubsystem extends SubsystemBase {
 
@@ -29,12 +40,12 @@ public class DrivebaseSubsystem extends SubsystemBase {
 	private static final double MAX_SPEED =
 			Robot.getInstance().getRobotType() == RobotType.PRACTICE
 					? 4.09
-					: Robot.getInstance().getRobotType() == RobotType.CRANE ? 5 : 0.0;
+					: Robot.getInstance().getRobotType() == RobotType.CRANE ? 5 : 1.0;
 	// distance from center of the robot to the furthest module
 	private static final double DRIVEBASE_RADIUS =
 			Robot.getInstance().getRobotType() == RobotType.PRACTICE
 					? 0.305328701
-					: Robot.getInstance().getRobotType() == RobotType.CRANE ? 0.3937 : 0.0;
+					: Robot.getInstance().getRobotType() == RobotType.CRANE ? 0.3937 : 0.3;
 	private static final double JOYSTICK_DEADBAND = 0.05;
 	private static final double HEADING_CORRECTION_DEADBAND = 0.005;
 
@@ -46,8 +57,19 @@ public class DrivebaseSubsystem extends SubsystemBase {
 			500.0; // this seems to only affect rotation for some reason
 
 	private final SwerveDrive swerveDrive;
+	private final ShuffleboardTab drivebaseTab = Shuffleboard.getTab("Drivebase");
+
+	private boolean xWheelsEnabled = true;
+
+	// shuffleboard variables
+	private GenericEntry headingCorrectionEntry;
+	private GenericEntry translationSpeedEntry;
+	private GenericEntry rotationSpeedEntry;
+	private GenericEntry xWheelsEntry;
 
 	public DrivebaseSubsystem() {
+		initShuffleboard();
+
 		File swerveJsonDirectory;
 
 		switch (Robot.getInstance().getRobotType()) {
@@ -74,13 +96,10 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
 		// set drive motors to brake
 		swerveDrive.setMotorIdleMode(true);
-		// enable optimization (never move the angle wheels more than 90 degrees)
-		//	swerveDrive.setModuleStateOptimization(false);
 		// swerve drive heading will slowly drift over time as you translate. this method enables an
 		// active correction using pid. disabled until testing can be done
-		swerveDrive.setHeadingCorrection(false, 0.1);
-		// supposed to do something? see
-		// https://broncbotz3481.github.io/YAGSL/swervelib/SwerveDrive.html#chassisVelocityCorrection
+		// TODO: this still needs to be improved
+		swerveDrive.setHeadingCorrection(headingCorrectionEntry.getBoolean(true), 2.0, 0.5);
 		swerveDrive.chassisVelocityCorrection = true;
 
 		swerveDrive.synchronizeModuleEncoders();
@@ -102,6 +121,10 @@ public class DrivebaseSubsystem extends SubsystemBase {
 								.get()
 								.equals(Alliance.Red), // flip path if on the red alliance
 				this);
+
+		// LOW verbosity only sends field position, HIGH sends full drive data, MACHINE sends data
+		// viewable by AdvantageScope
+		SwerveDriveTelemetry.verbosity = TelemetryVerbosity.LOW;
 	}
 
 	/**
@@ -120,7 +143,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 	 */
 	public void drive(Translation2d translation, Rotation2d rotation, boolean fieldOriented) {
 		// if we're requesting the robot to stay still, lock wheels in X formation
-		if (translation.getNorm() == 0 && rotation.getRotations() == 0) {
+		if (translation.getNorm() == 0 && rotation.getRotations() == 0 && xWheelsEnabled) {
 			swerveDrive.lockPose();
 		} else {
 			swerveDrive.drive(translation.unaryMinus(), -rotation.getRadians(), fieldOriented, false);
@@ -141,13 +164,16 @@ public class DrivebaseSubsystem extends SubsystemBase {
 					Rotation2d constrainedRotation =
 							Rotation2d.fromRotations(
 									SwerveMath.applyDeadband(rotation.get().getRotations(), true, JOYSTICK_DEADBAND)
-											* MAX_SPEED);
+											* MAX_SPEED
+											* rotationSpeedEntry.getDouble(1.0));
 					Translation2d constrainedTranslation =
 							new Translation2d(
 									SwerveMath.applyDeadband(forward.getAsDouble(), true, JOYSTICK_DEADBAND)
-											* MAX_SPEED,
+											* MAX_SPEED
+											* translationSpeedEntry.getDouble(1.0),
 									SwerveMath.applyDeadband(strafe.getAsDouble(), true, JOYSTICK_DEADBAND)
-											* MAX_SPEED);
+											* MAX_SPEED
+											* translationSpeedEntry.getDouble(1.0));
 					drive(constrainedTranslation, constrainedRotation, true);
 				});
 	}
@@ -179,5 +205,52 @@ public class DrivebaseSubsystem extends SubsystemBase {
 		swerveDrive.resetDriveEncoders();
 		resetGyro();
 		setPose(new Pose2d());
+	}
+
+	public void toggleXWheels() {
+		xWheelsEnabled = !xWheelsEnabled;
+		xWheelsEntry.setBoolean(xWheelsEnabled);
+	}
+
+	public Field2d getField() {
+		return swerveDrive.field;
+	}
+
+	private void initShuffleboard() {
+		NetworkTableInstance inst = NetworkTableInstance.getDefault();
+
+		headingCorrectionEntry =
+				drivebaseTab
+						.addPersistent("Heading Correction", true)
+						.withWidget(BuiltInWidgets.kToggleSwitch)
+						.withSize(2, 1)
+						.getEntry();
+		inst.addListener(
+				headingCorrectionEntry,
+				EnumSet.of(NetworkTableEvent.Kind.kValueAll),
+				event -> {
+					swerveDrive.setHeadingCorrection(event.valueData.value.getBoolean());
+				});
+
+		translationSpeedEntry =
+				drivebaseTab
+						.addPersistent("Translation Speed", 1.0)
+						.withWidget(BuiltInWidgets.kNumberSlider)
+						.withSize(2, 1)
+						.withProperties(Map.of("Min", 0.0))
+						.getEntry();
+		rotationSpeedEntry =
+				drivebaseTab
+						.addPersistent("Rotation Speed", 1.0)
+						.withWidget(BuiltInWidgets.kNumberSlider)
+						.withSize(2, 1)
+						.withProperties(Map.of("Min", 0.0))
+						.getEntry();
+		xWheelsEntry =
+				drivebaseTab
+						.add("X Wheels", xWheelsEnabled)
+						.withWidget(BuiltInWidgets.kBooleanBox)
+						.withSize(1, 1)
+						.getEntry();
 	}
 }
