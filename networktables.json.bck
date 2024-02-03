@@ -1,29 +1,29 @@
 [
-  {
-    "name": "/Shuffleboard/Drivebase/Heading Correction",
-    "type": "boolean",
-    "value": false,
-    "properties": {
-      "persistent": true,
-      "retained": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/Drivebase/Translation Speed",
-    "type": "double",
-    "value": 0.2662116040955631,
-    "properties": {
-      "persistent": true,
-      "retained": true
-    }
-  },
-  {
-    "name": "/Shuffleboard/Drivebase/Rotation Speed",
-    "type": "double",
-    "value": 1.0,
-    "properties": {
-      "persistent": true,
-      "retained": true
-    }
-  }
+{
+	"name": "/Shuffleboard/Drivebase/Heading Correction",
+	"type": "boolean",
+	"value": false,
+	"properties": {
+	"persistent": true,
+	"retained": true
+	}
+},
+{
+	"name": "/Shuffleboard/Drivebase/Translation Speed",
+	"type": "double",
+	"value": 0.2662116040955631,
+	"properties": {
+	"persistent": true,
+	"retained": true
+	}
+},
+{
+	"name": "/Shuffleboard/Drivebase/Rotation Speed",
+	"type": "double",
+	"value": 1.0,
+	"properties": {
+	"persistent": true,
+	"retained": true
+	}
+}
 ]

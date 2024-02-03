@@ -1,16 +1,9 @@
 package frc.team2412.robot.subsystems;
 
-import java.io.File;
-import java.util.EnumSet;
-import java.util.Map;
-import java.util.function.DoubleSupplier;
-import java.util.function.Supplier;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -29,6 +22,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2412.robot.Robot;
 import frc.team2412.robot.Robot.RobotType;
+import java.io.File;
+import java.util.EnumSet;
+import java.util.Map;
+import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 import swervelib.SwerveDrive;
 import swervelib.math.SwerveMath;
 import swervelib.parser.SwerveParser;
@@ -166,13 +164,16 @@ public class DrivebaseSubsystem extends SubsystemBase {
 					Rotation2d constrainedRotation =
 							Rotation2d.fromRotations(
 									SwerveMath.applyDeadband(rotation.get().getRotations(), true, JOYSTICK_DEADBAND)
-											* MAX_SPEED * rotationSpeedEntry.getDouble(1.0));
+											* MAX_SPEED
+											* rotationSpeedEntry.getDouble(1.0));
 					Translation2d constrainedTranslation =
 							new Translation2d(
 									SwerveMath.applyDeadband(forward.getAsDouble(), true, JOYSTICK_DEADBAND)
-											* MAX_SPEED * translationSpeedEntry.getDouble(1.0),
+											* MAX_SPEED
+											* translationSpeedEntry.getDouble(1.0),
 									SwerveMath.applyDeadband(strafe.getAsDouble(), true, JOYSTICK_DEADBAND)
-											* MAX_SPEED * translationSpeedEntry.getDouble(1.0));
+											* MAX_SPEED
+											* translationSpeedEntry.getDouble(1.0));
 					drive(constrainedTranslation, constrainedRotation, true);
 				});
 	}
@@ -230,23 +231,26 @@ public class DrivebaseSubsystem extends SubsystemBase {
 				event -> {
 					swerveDrive.setHeadingCorrection(event.valueData.value.getBoolean());
 				});
-		
-		translationSpeedEntry = drivebaseTab
-										.addPersistent("Translation Speed", 1.0)
-										.withWidget(BuiltInWidgets.kNumberSlider)
-										.withSize(2, 1)
-										.withProperties(Map.of("Min", 0.0))
-										.getEntry();
-		rotationSpeedEntry = drivebaseTab
-									.addPersistent("Rotation Speed", 1.0)
-									.withWidget(BuiltInWidgets.kNumberSlider)
-									.withSize(2, 1)
-									.withProperties(Map.of("Min", 0.0))
-									.getEntry();
-		xWheelsEntry = drivebaseTab
-								.add("X Wheels", xWheelsEnabled)
-								.withWidget(BuiltInWidgets.kBooleanBox)
-								.withSize(1, 1)
-								.getEntry();
+
+		translationSpeedEntry =
+				drivebaseTab
+						.addPersistent("Translation Speed", 1.0)
+						.withWidget(BuiltInWidgets.kNumberSlider)
+						.withSize(2, 1)
+						.withProperties(Map.of("Min", 0.0))
+						.getEntry();
+		rotationSpeedEntry =
+				drivebaseTab
+						.addPersistent("Rotation Speed", 1.0)
+						.withWidget(BuiltInWidgets.kNumberSlider)
+						.withSize(2, 1)
+						.withProperties(Map.of("Min", 0.0))
+						.getEntry();
+		xWheelsEntry =
+				drivebaseTab
+						.add("X Wheels", xWheelsEnabled)
+						.withWidget(BuiltInWidgets.kBooleanBox)
+						.withSize(1, 1)
+						.getEntry();
 	}
 }
