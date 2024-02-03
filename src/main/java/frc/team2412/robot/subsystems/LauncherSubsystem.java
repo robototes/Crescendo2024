@@ -104,7 +104,7 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherBottomMotor.set(speed);
 	}
 
-	public void launch(double speed){
+	public void launch(double speed) {
 		launcherTopMotor.set(speed);
 		launcherBottomMotor.set(speed);
 	}
