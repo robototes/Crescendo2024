@@ -6,12 +6,10 @@ import frc.team2412.robot.subsystems.LauncherSubsystem;
 // value when they keybind it multiple times.
 
 public class SetAngleLaunchCommand extends SequentialCommandGroup {
-	private final LauncherSubsystem launcherSubsystem;
 	private double launcherSpeed;
 	private double launcherAngle;
 
 	public SetAngleLaunchCommand(LauncherSubsystem launcherSubsystem, double speed, double angle) {
-		this.launcherSubsystem = launcherSubsystem;
 		launcherSpeed = speed;
 		launcherAngle = angle;
 		addCommands(
