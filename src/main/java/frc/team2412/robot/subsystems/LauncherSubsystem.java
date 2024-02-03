@@ -43,7 +43,7 @@ public class LauncherSubsystem extends SubsystemBase {
 
 	private final GenericEntry launcherAngleEntry =
 			Shuffleboard.getTab("Launcher")
-					.add("Launcher angle", getAngle())
+					.add("Launcher angle", 0)
 					.withSize(1, 1)
 					.withWidget(BuiltInWidgets.kTextView)
 					.getEntry();
