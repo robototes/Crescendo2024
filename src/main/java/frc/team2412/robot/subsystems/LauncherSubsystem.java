@@ -98,7 +98,7 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherBottomMotor.stopMotor();
 	}
 
-	public void shoot() {
+	public void launch() {
 		launcherTopMotor.set(launcherSpeedEntry.getDouble(SPEAKER_SHOOT_SPEED));
 		launcherBottomMotor.set(launcherSpeedEntry.getDouble(SPEAKER_SHOOT_SPEED));
 	}
