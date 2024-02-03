@@ -53,7 +53,7 @@ public class Robot extends TimedRobot {
 		if (CRANE_ADDRESS.exists()) return RobotType.CRANE;
 		if (!COMPETITION_ADDRESS.exists())
 			DriverStation.reportWarning(
-					"Code running on unknown MAC Address! Running competition code anyways", true);
+					"Code running on unknown MAC Address! Running competition code anyways", false);
 		return RobotType.COMPETITION;
 	}
 

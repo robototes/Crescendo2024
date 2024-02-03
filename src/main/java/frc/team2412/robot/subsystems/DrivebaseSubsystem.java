@@ -61,6 +61,9 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
 	// shuffleboard variables
 	private GenericEntry headingCorrectionEntry;
+	private GenericEntry translationSpeedEntry;
+	private GenericEntry rotationSpeedEntry;
+	private GenericEntry xWheelsEntry;
 
 	public DrivebaseSubsystem() {
 		initShuffleboard();
@@ -159,13 +162,13 @@ public class DrivebaseSubsystem extends SubsystemBase {
 					Rotation2d constrainedRotation =
 							Rotation2d.fromRotations(
 									SwerveMath.applyDeadband(rotation.get().getRotations(), true, JOYSTICK_DEADBAND)
-											* MAX_SPEED);
+											* MAX_SPEED * rotationSpeedEntry.getDouble(1.0));
 					Translation2d constrainedTranslation =
 							new Translation2d(
 									SwerveMath.applyDeadband(forward.getAsDouble(), true, JOYSTICK_DEADBAND)
-											* MAX_SPEED,
+											* MAX_SPEED * translationSpeedEntry.getDouble(1.0),
 									SwerveMath.applyDeadband(strafe.getAsDouble(), true, JOYSTICK_DEADBAND)
-											* MAX_SPEED);
+											* MAX_SPEED * translationSpeedEntry.getDouble(1.0));
 					drive(constrainedTranslation, constrainedRotation, true);
 				});
 	}
@@ -201,6 +204,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
 	public void toggleXWheels() {
 		xWheelsEnabled = !xWheelsEnabled;
+		xWheelsEntry.setBoolean(xWheelsEnabled);
 	}
 
 	private void initShuffleboard() {
@@ -218,5 +222,21 @@ public class DrivebaseSubsystem extends SubsystemBase {
 				event -> {
 					swerveDrive.setHeadingCorrection(event.valueData.value.getBoolean());
 				});
+		
+		translationSpeedEntry = drivebaseTab
+										.addPersistent("Translation Speed", 1.0)
+										.withWidget(BuiltInWidgets.kNumberSlider)
+										.withSize(2, 1)
+										.getEntry();
+		rotationSpeedEntry = drivebaseTab
+									.addPersistent("Rotation Speed", 1.0)
+									.withWidget(BuiltInWidgets.kNumberSlider)
+									.withSize(2, 1)
+									.getEntry();
+		xWheelsEntry = drivebaseTab
+								.add("X Wheels", xWheelsEnabled)
+								.withWidget(BuiltInWidgets.kBooleanBox)
+								.withSize(1, 1)
+								.getEntry();
 	}
 }
