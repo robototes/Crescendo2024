@@ -103,6 +103,11 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherTopMotor.set(speed);
 		launcherBottomMotor.set(speed);
 	}
+
+	public void launch(double speed){
+		launcherTopMotor.set(speed);
+		launcherBottomMotor.set(speed);
+	}
 	// returns the degrees of the angle of the launcher
 	public double getAngle() {
 		// get position returns a double in the form of rotations
