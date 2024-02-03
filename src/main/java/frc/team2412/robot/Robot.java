@@ -133,11 +133,4 @@ public class Robot extends TimedRobot {
 	public boolean isCompetition() {
 		return getRobotType() == RobotType.COMPETITION;
 	}
-
-	// Register auto commands
-	public void registerCommands() {
-		// parameters: Str command name, Command command
-
-		// NamedCommands.registerCommand(null, null);
-	}
 }
