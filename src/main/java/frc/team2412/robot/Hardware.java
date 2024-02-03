@@ -9,8 +9,9 @@ public class Hardware {
 
 	// climb [20 - 29]
 
-	// shooter [30 - 39]
-
+	// launcher [30 - 39]
+	public static final int LAUNCHER_TOP_MOTOR_ID = 30;
+	public static final int LAUNCHER_BOTTOM_MOTOR_ID = 31;
+	public static final int LAUNCHER_ANGLE_MOTOR_ID = 32;
 	// intake [40 - 49]
-
 }
