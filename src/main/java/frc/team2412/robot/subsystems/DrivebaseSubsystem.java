@@ -17,12 +17,14 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2412.robot.Robot;
 import frc.team2412.robot.Robot.RobotType;
 import java.io.File;
 import java.util.EnumSet;
+import java.util.Map;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 import swervelib.SwerveDrive;
@@ -38,12 +40,12 @@ public class DrivebaseSubsystem extends SubsystemBase {
 	private static final double MAX_SPEED =
 			Robot.getInstance().getRobotType() == RobotType.PRACTICE
 					? 2.0
-					: Robot.getInstance().getRobotType() == RobotType.CRANE ? 3.0 : 0.0;
+					: Robot.getInstance().getRobotType() == RobotType.CRANE ? 3.0 : 1.0;
 	// distance from center of the robot to the furthest module
 	private static final double DRIVEBASE_RADIUS =
 			Robot.getInstance().getRobotType() == RobotType.PRACTICE
 					? 0.305328701
-					: Robot.getInstance().getRobotType() == RobotType.CRANE ? 0.3937 : 0.0;
+					: Robot.getInstance().getRobotType() == RobotType.CRANE ? 0.3937 : 0.3;
 	private static final double JOYSTICK_DEADBAND = 0.05;
 	private static final double HEADING_CORRECTION_DEADBAND = 0.005;
 
@@ -61,6 +63,9 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
 	// shuffleboard variables
 	private GenericEntry headingCorrectionEntry;
+	private GenericEntry translationSpeedEntry;
+	private GenericEntry rotationSpeedEntry;
+	private GenericEntry xWheelsEntry;
 
 	public DrivebaseSubsystem() {
 		initShuffleboard();
@@ -119,7 +124,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
 		// LOW verbosity only sends field position, HIGH sends full drive data, MACHINE sends data
 		// viewable by AdvantageScope
-		SwerveDriveTelemetry.verbosity = TelemetryVerbosity.MACHINE;
+		SwerveDriveTelemetry.verbosity = TelemetryVerbosity.LOW;
 	}
 
 	/**
@@ -159,13 +164,16 @@ public class DrivebaseSubsystem extends SubsystemBase {
 					Rotation2d constrainedRotation =
 							Rotation2d.fromRotations(
 									SwerveMath.applyDeadband(rotation.get().getRotations(), true, JOYSTICK_DEADBAND)
-											* MAX_SPEED);
+											* MAX_SPEED
+											* rotationSpeedEntry.getDouble(1.0));
 					Translation2d constrainedTranslation =
 							new Translation2d(
 									SwerveMath.applyDeadband(forward.getAsDouble(), true, JOYSTICK_DEADBAND)
-											* MAX_SPEED,
+											* MAX_SPEED
+											* translationSpeedEntry.getDouble(1.0),
 									SwerveMath.applyDeadband(strafe.getAsDouble(), true, JOYSTICK_DEADBAND)
-											* MAX_SPEED);
+											* MAX_SPEED
+											* translationSpeedEntry.getDouble(1.0));
 					drive(constrainedTranslation, constrainedRotation, true);
 				});
 	}
@@ -201,6 +209,11 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
 	public void toggleXWheels() {
 		xWheelsEnabled = !xWheelsEnabled;
+		xWheelsEntry.setBoolean(xWheelsEnabled);
+	}
+
+	public Field2d getField() {
+		return swerveDrive.field;
 	}
 
 	private void initShuffleboard() {
@@ -218,5 +231,26 @@ public class DrivebaseSubsystem extends SubsystemBase {
 				event -> {
 					swerveDrive.setHeadingCorrection(event.valueData.value.getBoolean());
 				});
+
+		translationSpeedEntry =
+				drivebaseTab
+						.addPersistent("Translation Speed", 1.0)
+						.withWidget(BuiltInWidgets.kNumberSlider)
+						.withSize(2, 1)
+						.withProperties(Map.of("Min", 0.0))
+						.getEntry();
+		rotationSpeedEntry =
+				drivebaseTab
+						.addPersistent("Rotation Speed", 1.0)
+						.withWidget(BuiltInWidgets.kNumberSlider)
+						.withSize(2, 1)
+						.withProperties(Map.of("Min", 0.0))
+						.getEntry();
+		xWheelsEntry =
+				drivebaseTab
+						.add("X Wheels", xWheelsEnabled)
+						.withWidget(BuiltInWidgets.kBooleanBox)
+						.withSize(1, 1)
+						.getEntry();
 	}
 }
