@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2412.robot.Hardware;
 import frc.team2412.robot.util.SparkPIDWidget;
-
 import java.util.Map;
 
 public class LauncherSubsystem extends SubsystemBase {
@@ -79,17 +78,17 @@ public class LauncherSubsystem extends SubsystemBase {
 		// PID controllers
 		// Create launcherTopPIDController and launcherTopMotor]
 		launcherTopPIDController = launcherTopMotor.getPIDController();
-		launcherTopPIDController.setFeedbackDevice(
-				launcherTopEncoder);
+		launcherTopPIDController.setFeedbackDevice(launcherTopEncoder);
 		launcherBottomPIDController = launcherBottomMotor.getPIDController();
-		launcherBottomPIDController.setFeedbackDevice(
-				launcherBottomEncoder);
+		launcherBottomPIDController.setFeedbackDevice(launcherBottomEncoder);
 		launcherAnglePIDController = launcherAngleMotor.getPIDController();
-		launcherAnglePIDController.setFeedbackDevice(
-				launcherAngleEncoder);
-		Shuffleboard.getTab("Launcher").add(new SparkPIDWidget(launcherAnglePIDController,  "launcherAnglePIDController"));
-		Shuffleboard.getTab("Launcher").add(new SparkPIDWidget(launcherTopPIDController, "launcherTopPIDController"));
-		Shuffleboard.getTab("Launcher").add(new SparkPIDWidget(launcherBottomPIDController, "launcherBottomPIDController"));
+		launcherAnglePIDController.setFeedbackDevice(launcherAngleEncoder);
+		Shuffleboard.getTab("Launcher")
+				.add(new SparkPIDWidget(launcherAnglePIDController, "launcherAnglePIDController"));
+		Shuffleboard.getTab("Launcher")
+				.add(new SparkPIDWidget(launcherTopPIDController, "launcherTopPIDController"));
+		Shuffleboard.getTab("Launcher")
+				.add(new SparkPIDWidget(launcherBottomPIDController, "launcherBottomPIDController"));
 	}
 
 	public void configMotors() {
@@ -97,21 +96,16 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherBottomMotor.restoreFactoryDefaults();
 		launcherAngleMotor.restoreFactoryDefaults();
 		// idle mode (wow)
-		launcherTopMotor.setIdleMode(
-				IdleMode.kCoast);
-		launcherBottomMotor.setIdleMode(
-				IdleMode.kCoast);
-		launcherAngleMotor.setIdleMode(
-				IdleMode.kBrake);
+		launcherTopMotor.setIdleMode(IdleMode.kCoast);
+		launcherBottomMotor.setIdleMode(IdleMode.kCoast);
+		launcherAngleMotor.setIdleMode(IdleMode.kBrake);
 		// inveritng the bottom motor lmao
 		launcherBottomMotor.setInverted(true);
 
 		// current limit
 		launcherTopMotor.setSmartCurrentLimit(20);
-		launcherBottomMotor.setSmartCurrentLimit(
-				20);
-		launcherAngleMotor.setSmartCurrentLimit(
-				20);
+		launcherBottomMotor.setSmartCurrentLimit(20);
+		launcherAngleMotor.setSmartCurrentLimit(20);
 
 		launcherTopMotor.burnFlash();
 		launcherBottomMotor.burnFlash();
@@ -141,15 +135,12 @@ public class LauncherSubsystem extends SubsystemBase {
 	}
 
 	public void setAngle(double angle) {
-		launcherAnglePIDController.setReference(
-				Units.degreesToRotations(angle),
-				ControlType.kPosition);
+		launcherAnglePIDController.setReference(Units.degreesToRotations(angle), ControlType.kPosition);
 	}
 
 	@Override
 	public void periodic() {
 		launcherAngleEntry.setDouble(getAngle());
-		launcherSpeedEntry.setDouble(
-				launcherTopEncoder.getVelocity());
+		launcherSpeedEntry.setDouble(launcherTopEncoder.getVelocity());
 	}
 }
