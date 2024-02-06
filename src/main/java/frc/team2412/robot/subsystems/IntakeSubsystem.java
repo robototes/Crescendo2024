@@ -10,13 +10,13 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class IntakeSubsystem extends SubsystemBase {
 	public static final double INTAKE_OUT_SPEED = -0.7;
 	public static final double INTAKE_IN_SPEED = 0.3;
-	
+
 	public static final double INDEX_IN_SPEED = 0.3;
 	public static final double INDEX_OUT_SPEED = 0.3;
 
 	public static final double FEEDER_IN_SPEED = 0.3;
 	public static final double FEEDER_OUT_SPEED = 0.3;
-	
+
 	// 'skirt' intake
 	private final CANSparkFlex intakeMotorFront;
 	private final CANSparkFlex intakeMotorBack;
@@ -26,7 +26,7 @@ public class IntakeSubsystem extends SubsystemBase {
 	private final CANSparkFlex indexMotorTop;
 	private final CANSparkFlex indexMotorBottom;
 
-    private final CANSparkFlex feederMotor;
+	private final CANSparkFlex feederMotor;
 
 	public IntakeSubsystem() {
 
@@ -34,17 +34,17 @@ public class IntakeSubsystem extends SubsystemBase {
 		intakeMotorBack = new CANSparkFlex(INTAKE_MOTOR_BACK, MotorType.kBrushless);
 		intakeMotorLeft = new CANSparkFlex(INTAKE_MOTOR_LEFT, MotorType.kBrushless);
 		intakeMotorRight = new CANSparkFlex(INTAKE_MOTOR_RIGHT, MotorType.kBrushless);
-		
+
 		indexMotorTop = new CANSparkFlex(INDEX_MOTOR_TOP, MotorType.kBrushless);
 		indexMotorBottom = new CANSparkFlex(INDEX_MOTOR_BOTTOM, MotorType.kBrushless);
 
-        feederMotor = new CANSparkFlex(FEEDER_MOTOR, MotorType.kBrushless);
+		feederMotor = new CANSparkFlex(FEEDER_MOTOR, MotorType.kBrushless);
 
 		resetMotors();
 	}
 
 	public void resetMotors() {
-		//reset
+		// reset
 		intakeMotorFront.restoreFactoryDefaults();
 		intakeMotorBack.restoreFactoryDefaults();
 		intakeMotorLeft.restoreFactoryDefaults();
@@ -53,9 +53,9 @@ public class IntakeSubsystem extends SubsystemBase {
 		indexMotorTop.restoreFactoryDefaults();
 		indexMotorBottom.restoreFactoryDefaults();
 
-        feederMotor.restoreFactoryDefaults();
+		feederMotor.restoreFactoryDefaults();
 
-		//brake motors
+		// brake motors
 		intakeMotorFront.setIdleMode(IdleMode.kBrake);
 		intakeMotorBack.setIdleMode(IdleMode.kBrake);
 		intakeMotorLeft.setIdleMode(IdleMode.kBrake);
@@ -64,10 +64,9 @@ public class IntakeSubsystem extends SubsystemBase {
 		indexMotorTop.setIdleMode(IdleMode.kBrake);
 		indexMotorBottom.setIdleMode(IdleMode.kBrake);
 
-        feederMotor.setIdleMode(IdleMode.kBrake);
+		feederMotor.setIdleMode(IdleMode.kBrake);
 
-
-		//Invert motors
+		// Invert motors
 		intakeMotorFront.setInverted(true);
 		intakeMotorBack.setInverted(true);
 		intakeMotorLeft.setInverted(true);
@@ -76,7 +75,7 @@ public class IntakeSubsystem extends SubsystemBase {
 		indexMotorTop.setInverted(true);
 		indexMotorBottom.setInverted(true);
 
-		//Limit voltage for motors
+		// Limit voltage for motors
 		intakeMotorFront.setSmartCurrentLimit(20);
 		intakeMotorBack.setSmartCurrentLimit(20);
 		intakeMotorLeft.setSmartCurrentLimit(20);
@@ -85,9 +84,9 @@ public class IntakeSubsystem extends SubsystemBase {
 		indexMotorTop.setSmartCurrentLimit(20);
 		indexMotorBottom.setSmartCurrentLimit(20);
 
-        feederMotor.setSmartCurrentLimit(20);
-    
-		//save motor settings even while motor dies
+		feederMotor.setSmartCurrentLimit(20);
+
+		// save motor settings even while motor dies
 		intakeMotorFront.burnFlash();
 		intakeMotorBack.burnFlash();
 		intakeMotorLeft.burnFlash();
@@ -96,11 +95,10 @@ public class IntakeSubsystem extends SubsystemBase {
 		indexMotorTop.burnFlash();
 		indexMotorBottom.burnFlash();
 
-        feederMotor.burnFlash();
+		feederMotor.burnFlash();
 	}
 
-
-	//intake methods
+	// intake methods
 	public void intakeIn() {
 		intakeMotorFront.set(INTAKE_IN_SPEED);
 		intakeMotorLeft.set(INTAKE_IN_SPEED);
@@ -117,31 +115,30 @@ public class IntakeSubsystem extends SubsystemBase {
 
 	public void stopIntakeMotors() {
 		intakeMotorFront.set(0);
-        intakeMotorBack.set(0);
-        intakeMotorLeft.set(0);
-        intakeMotorRight.set(0);
-	}
-    
-
-	//index methods
-    public void indexIn() {
-	    indexMotorTop.set(INDEX_IN_SPEED);
-	    indexMotorBottom.set(INDEX_IN_SPEED);
+		intakeMotorBack.set(0);
+		intakeMotorLeft.set(0);
+		intakeMotorRight.set(0);
 	}
 
-    public void indexOut() {
-	    indexMotorTop.set(INDEX_OUT_SPEED);
-	    indexMotorBottom.set(INDEX_OUT_SPEED);
-	}
-	
-    public void stopIndexMotors() {
-	    indexMotorTop.set(0);
-	    indexMotorBottom.set(0);
+	// index methods
+	public void indexIn() {
+		indexMotorTop.set(INDEX_IN_SPEED);
+		indexMotorBottom.set(INDEX_IN_SPEED);
 	}
 
-	//feeder methods
-    public void feederIn() {
-	    feederMotor.set(FEEDER_IN_SPEED);
+	public void indexOut() {
+		indexMotorTop.set(INDEX_OUT_SPEED);
+		indexMotorBottom.set(INDEX_OUT_SPEED);
+	}
+
+	public void stopIndexMotors() {
+		indexMotorTop.set(0);
+		indexMotorBottom.set(0);
+	}
+
+	// feeder methods
+	public void feederIn() {
+		feederMotor.set(FEEDER_IN_SPEED);
 	}
 
 	public void feederOut() {
