@@ -9,10 +9,9 @@ public class SparkPIDWidget implements NTSendable {
 
 	public final SparkPIDController controller;
 
-	public SparkPIDWidget(SparkPIDController controller) {
+	public SparkPIDWidget(SparkPIDController controller, String name) {
 		this.controller = controller;
-
-		SendableRegistry.add(this, "Spark PID Controller");
+		SendableRegistry.add(this, name);
 	}
 
 	@Override

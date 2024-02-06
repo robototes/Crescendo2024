@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2412.robot.Hardware;
+import frc.team2412.robot.util.SparkPIDWidget;
+
 import java.util.Map;
 
 public class LauncherSubsystem extends SubsystemBase {
@@ -85,6 +87,9 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherAnglePIDController = launcherAngleMotor.getPIDController();
 		launcherAnglePIDController.setFeedbackDevice(
 				launcherAngleEncoder);
+		Shuffleboard.getTab("Launcher").add(new SparkPIDWidget(launcherAnglePIDController,  "launcherAnglePIDController"));
+		Shuffleboard.getTab("Launcher").add(new SparkPIDWidget(launcherTopPIDController, "launcherTopPIDController"));
+		Shuffleboard.getTab("Launcher").add(new SparkPIDWidget(launcherBottomPIDController, "launcherBottomPIDController"));
 	}
 
 	public void configMotors() {
