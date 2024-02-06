@@ -3,12 +3,12 @@ package swervelib.imu;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.Optional;
+import swervelib.telemetry.Alert;
 
 /** Communicates with the NavX as the IMU. */
 public class NavXSwerve extends SwerveIMU {
@@ -17,6 +17,10 @@ public class NavXSwerve extends SwerveIMU {
 	private AHRS gyro;
 	/** Offset for the NavX. */
 	private Rotation3d offset = new Rotation3d();
+	/** Inversion for the gyro */
+	private boolean invertedIMU = false;
+	/** An {@link Alert} for if there is an error instantiating the NavX. */
+	private Alert navXError;
 
 	/**
 	 * Constructor for the NavX swerve.
@@ -24,6 +28,7 @@ public class NavXSwerve extends SwerveIMU {
 	 * @param port Serial Port to connect to.
 	 */
 	public NavXSwerve(SerialPort.Port port) {
+		navXError = new Alert("IMU", "Error instantiating NavX.", Alert.AlertType.ERROR_TRACE);
 		try {
 			/* Communicate w/navX-MXP via the MXP SPI Bus.                                     */
 			/* Alternatively:  I2C.Port.kMXP, SerialPort.Port.kMXP or SerialPort.Port.kUSB     */
@@ -32,7 +37,8 @@ public class NavXSwerve extends SwerveIMU {
 			factoryDefault();
 			SmartDashboard.putData(gyro);
 		} catch (RuntimeException ex) {
-			DriverStation.reportError("Error instantiating navX:  " + ex.getMessage(), true);
+			navXError.setText("Error instantiating NavX: " + ex.getMessage());
+			navXError.set(true);
 		}
 	}
 
@@ -50,7 +56,8 @@ public class NavXSwerve extends SwerveIMU {
 			factoryDefault();
 			SmartDashboard.putData(gyro);
 		} catch (RuntimeException ex) {
-			DriverStation.reportError("Error instantiating navX:  " + ex.getMessage(), true);
+			navXError.setText("Error instantiating NavX: " + ex.getMessage());
+			navXError.set(true);
 		}
 	}
 
@@ -68,7 +75,8 @@ public class NavXSwerve extends SwerveIMU {
 			factoryDefault();
 			SmartDashboard.putData(gyro);
 		} catch (RuntimeException ex) {
-			DriverStation.reportError("Error instantiating navX:  " + ex.getMessage(), true);
+			navXError.setText("Error instantiating NavX: " + ex.getMessage());
+			navXError.set(true);
 		}
 	}
 
@@ -93,13 +101,22 @@ public class NavXSwerve extends SwerveIMU {
 	}
 
 	/**
+	 * Set the gyro to invert its default direction
+	 *
+	 * @param invertIMU invert gyro direction
+	 */
+	public void setInverted(boolean invertIMU) {
+		invertedIMU = invertIMU;
+	}
+
+	/**
 	 * Fetch the {@link Rotation3d} from the IMU without any zeroing. Robot relative.
 	 *
 	 * @return {@link Rotation3d} from the IMU.
 	 */
 	@Override
 	public Rotation3d getRawRotation3d() {
-		return gyro.getRotation3d();
+		return invertedIMU ? gyro.getRotation3d().unaryMinus() : gyro.getRotation3d();
 	}
 
 	/**
