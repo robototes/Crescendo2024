@@ -19,10 +19,16 @@ import java.util.Map;
 public class LauncherSubsystem extends SubsystemBase {
 	// CONSTANTS
 	// MOTOR SPEED VALUES
+	// max Free Speed: 6784 RPM
 	public static final double SPEAKER_SHOOT_SPEED = 0.5;
 	public static final double AMP_SHOOT_SPEED = 0.2;
 	public static final double ANGLE_CHANGE_SPEED = 0.15;
 	public static final double ANGLE_TOLERANCE = 0.5;
+
+	// RPM equivalents of the above values
+	public static final int SPEAKER_SHOOT_SPEED_RPM = 3392; // 50%
+	public static final int AMP_SHOOT_SPEED_RPM = 1356; // 20%
+	public static final double ANGLE_CHANGE_SPEED_RPM = 1017; // 15%
 
 	// HARDWARE
 	private final CANSparkFlex launcherTopMotor;
@@ -32,13 +38,15 @@ public class LauncherSubsystem extends SubsystemBase {
 	private final RelativeEncoder launcherBottomEncoder;
 	private final SparkAbsoluteEncoder launcherAngleEncoder;
 	private final SparkPIDController launcherAnglePIDController;
+	private final SparkPIDController launcherTopPIDController;
+	private final SparkPIDController launcherBottomPIDController;
 
 	private final GenericEntry setLauncherSpeedEntry =
 			Shuffleboard.getTab("Launcher")
-					.addPersistent("Launcher Speed setpoint", SPEAKER_SHOOT_SPEED)
-					.withSize(2, 1)
+					.addPersistent("Launcher Speed setpoint", SPEAKER_SHOOT_SPEED_RPM)
+					.withSize(3, 1)
 					.withWidget(BuiltInWidgets.kNumberSlider)
-					.withProperties(Map.of("Min", -1, "Max", 1))
+					.withProperties(Map.of("Min", -6784, "Max", 6784))
 					.getEntry();
 
 	private final GenericEntry launcherAngleEntry =
@@ -67,8 +75,16 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherAngleEncoder = launcherAngleMotor.getAbsoluteEncoder(Type.kDutyCycle);
 
 		// PID controllers
+		// Create launcherTopPIDController and launcherTopMotor]
+		launcherTopPIDController = launcherTopMotor.getPIDController();
+		launcherTopPIDController.setFeedbackDevice(
+				launcherTopEncoder); // convert to set reference using RPM velocity value
+		launcherBottomPIDController = launcherBottomMotor.getPIDController();
+		launcherBottomPIDController.setFeedbackDevice(
+				launcherBottomEncoder); // convert to set reference using RPM velocity value
 		launcherAnglePIDController = launcherAngleMotor.getPIDController();
-		launcherAnglePIDController.setFeedbackDevice(launcherAngleEncoder);
+		launcherAnglePIDController.setFeedbackDevice(
+				launcherAngleEncoder); // convert to set reference using RPM velocity value
 	}
 
 	public void configMotors() {
@@ -76,16 +92,21 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherBottomMotor.restoreFactoryDefaults();
 		launcherAngleMotor.restoreFactoryDefaults();
 		// idle mode (wow)
-		launcherTopMotor.setIdleMode(IdleMode.kCoast);
-		launcherBottomMotor.setIdleMode(IdleMode.kCoast);
-		launcherAngleMotor.setIdleMode(IdleMode.kBrake);
+		launcherTopMotor.setIdleMode(
+				IdleMode.kCoast); // convert to set reference using RPM velocity value
+		launcherBottomMotor.setIdleMode(
+				IdleMode.kCoast); // convert to set reference using RPM velocity value
+		launcherAngleMotor.setIdleMode(
+				IdleMode.kBrake); // convert to set reference using RPM velocity value
 		// inveritng the bottom motor lmao
-		launcherBottomMotor.setInverted(true);
+		launcherBottomMotor.setInverted(true); // convert to set reference using RPM velocity value
 
 		// current limit
-		launcherTopMotor.setSmartCurrentLimit(20);
-		launcherBottomMotor.setSmartCurrentLimit(20);
-		launcherAngleMotor.setSmartCurrentLimit(20);
+		launcherTopMotor.setSmartCurrentLimit(20); // convert to set reference using RPM velocity value
+		launcherBottomMotor.setSmartCurrentLimit(
+				20); // convert to set reference using RPM velocity value
+		launcherAngleMotor.setSmartCurrentLimit(
+				20); // convert to set reference using RPM velocity value
 
 		launcherTopMotor.burnFlash();
 		launcherBottomMotor.burnFlash();
@@ -97,16 +118,16 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherTopMotor.stopMotor();
 		launcherBottomMotor.stopMotor();
 	}
-
+	// uses the value from the entry
 	public void launch() {
 		double speed = setLauncherSpeedEntry.getDouble(SPEAKER_SHOOT_SPEED);
-		launcherTopMotor.set(speed);
-		launcherBottomMotor.set(speed);
+		launcherTopPIDController.setReference(speed, ControlType.kVelocity);
+		launcherBottomPIDController.setReference(speed, ControlType.kVelocity);
 	}
-
+	// used for presets
 	public void launch(double speed) {
-		launcherTopMotor.set(speed);
-		launcherBottomMotor.set(speed);
+		launcherTopPIDController.setReference(speed, ControlType.kVelocity);
+		launcherBottomPIDController.setReference(speed, ControlType.kVelocity);
 	}
 	// returns the degrees of the angle of the launcher
 	public double getAngle() {
@@ -115,13 +136,16 @@ public class LauncherSubsystem extends SubsystemBase {
 	}
 
 	public void setAngle(double angle) {
-		launcherAnglePIDController.setReference(Units.degreesToRotations(angle), ControlType.kPosition);
+		launcherAnglePIDController.setReference(
+				Units.degreesToRotations(angle),
+				ControlType.kPosition); // convert to set reference using RPM velocity value
 	}
 
 	@Override
 	public void periodic() {
 		// .get will be replaced with .getVelocity once PID is established for flywheels :C
-		launcherAngleEntry.setDouble(getAngle());
-		launcherSpeedEntry.setDouble(launcherTopMotor.get());
+		launcherAngleEntry.setDouble(getAngle()); // convert to set reference using RPM velocity value
+		launcherSpeedEntry.setDouble(
+				launcherTopEncoder.getVelocity()); // convert to set reference using RPM velocity value
 	}
 }
