@@ -19,17 +19,14 @@ import java.util.Map;
 
 public class LauncherSubsystem extends SubsystemBase {
 	// CONSTANTS
-	// MOTOR SPEED VALUES
+	// MOTOR VALUES
 	// max Free Speed: 6784 RPM
-	public static final double SPEAKER_SHOOT_SPEED = 0.5;
-	public static final double AMP_SHOOT_SPEED = 0.2;
-	public static final double ANGLE_CHANGE_SPEED = 0.15;
 	public static final double ANGLE_TOLERANCE = 0.5;
-
-	// RPM equivalents of the above values
+	// RPM
 	public static final int SPEAKER_SHOOT_SPEED_RPM = 3392; // 50%
-	public static final int AMP_SHOOT_SPEED_RPM = 1356; // 20%
-	public static final double ANGLE_CHANGE_SPEED_RPM = 1017; // 15%
+	//3392 RPM = 50% Speed
+	//1356 RPM = 20% Speed
+	//1017 RPM = 15% Speed
 
 	// HARDWARE
 	private final CANSparkFlex launcherTopMotor;
@@ -119,7 +116,7 @@ public class LauncherSubsystem extends SubsystemBase {
 	}
 	// uses the value from the entry
 	public void launch() {
-		double speed = setLauncherSpeedEntry.getDouble(SPEAKER_SHOOT_SPEED);
+		double speed = setLauncherSpeedEntry.getDouble(SPEAKER_SHOOT_SPEED_RPM);
 		launcherTopPIDController.setReference(speed, ControlType.kVelocity);
 		launcherBottomPIDController.setReference(speed, ControlType.kVelocity);
 	}
