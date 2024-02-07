@@ -24,9 +24,9 @@ public class LauncherSubsystem extends SubsystemBase {
 	public static final double ANGLE_TOLERANCE = 0.5;
 	// RPM
 	public static final int SPEAKER_SHOOT_SPEED_RPM = 3392; // 50%
-	//3392 RPM = 50% Speed
-	//1356 RPM = 20% Speed
-	//1017 RPM = 15% Speed
+	// 3392 RPM = 50% Speed
+	// 1356 RPM = 20% Speed
+	// 1017 RPM = 15% Speed
 
 	// HARDWARE
 	private final CANSparkFlex launcherTopMotor;
