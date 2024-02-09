@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.team2412.robot.commands.launcher.SetAngleLaunchCommand;
+import frc.team2412.robot.subsystems.LauncherSubsystem;
 
 public class Controls {
 	public static class ControlConstants {
@@ -34,6 +35,10 @@ public class Controls {
 		driveController = new CommandXboxController(CONTROLLER_PORT);
 		codriveController = new CommandXboxController(CODRIVER_CONTROLLER_PORT);
 		this.s = s;
+		launcherAmpPresetButton = codriveController.povDown();
+		launcherSubwooferPresetButton = codriveController.povRight();
+		launcherPodiumPresetButton = codriveController.povLeft();
+		launcherTrapPresetButton = codriveController.povUp();
 
 		if (DRIVEBASE_ENABLED) {
 			bindDrivebaseControls();
@@ -42,10 +47,6 @@ public class Controls {
 		if (LAUNCHER_ENABLED) {
 			bindLauncherControls();
 		}
-		launcherAmpPresetButton = codriveController.povDown();
-		launcherSubwooferPresetButton = codriveController.povRight();
-		launcherPodiumPresetButton = codriveController.povLeft();
-		launcherTrapPresetButton = codriveController.povUp();
 	}
 
 	private void bindDrivebaseControls() {
@@ -61,7 +62,11 @@ public class Controls {
 	}
 
 	private void bindLauncherControls() {
-		launcherPodiumPresetButton.onTrue(new SetAngleLaunchCommand(s.launcherSubsystem, 3392, 75));
-		launcherSubwooferPresetButton.onTrue(new SetAngleLaunchCommand(s.launcherSubsystem, 3392, 54));
+		launcherPodiumPresetButton.onTrue(
+				new SetAngleLaunchCommand(
+						s.launcherSubsystem, LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM, 39));
+		launcherSubwooferPresetButton.onTrue(
+				new SetAngleLaunchCommand(
+						s.launcherSubsystem, LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM, 54));
 	}
 }
