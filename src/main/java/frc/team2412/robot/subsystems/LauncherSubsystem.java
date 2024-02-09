@@ -19,8 +19,12 @@ import java.util.Map;
 
 public class LauncherSubsystem extends SubsystemBase {
 	// CONSTANTS
+	//ANGLE VALUES
+	public static final int SUBWOOFER_AIM_ANGLE = 54;
+	public static final int PODIUM_AIM_ANGLE = 39;
 	// MOTOR VALUES
 	// max Free Speed: 6784 RPM
+	private static final int MAX_FREE_SPEED_RPM = 6784;
 	public static final double ANGLE_TOLERANCE = 0.5;
 	// RPM
 	public static final int SPEAKER_SHOOT_SPEED_RPM = 3392; // 50%
@@ -44,7 +48,7 @@ public class LauncherSubsystem extends SubsystemBase {
 					.addPersistent("Launcher Speed setpoint", SPEAKER_SHOOT_SPEED_RPM)
 					.withSize(3, 1)
 					.withWidget(BuiltInWidgets.kNumberSlider)
-					.withProperties(Map.of("Min", -6784, "Max", 6784))
+					.withProperties(Map.of("Min", -MAX_FREE_SPEED_RPM, "Max", MAX_FREE_SPEED_RPM))
 					.getEntry();
 
 	private final GenericEntry launcherAngleEntry =
@@ -107,10 +111,25 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherTopMotor.burnFlash();
 		launcherBottomMotor.burnFlash();
 		launcherAngleMotor.burnFlash();
-	}
 
-	// stop launcher motors method
-	public void stopLauncher() {
+		//PID
+		launcherAnglePIDController.setP(0.1);
+		launcherAnglePIDController.setI(0);
+		launcherAnglePIDController.setD(0);
+		launcherAnglePIDController.setFF(0);
+
+		launcherTopPIDController.setP(0.1);
+		launcherTopPIDController.setI(0);
+		launcherTopPIDController.setD(0);
+		launcherTopPIDController.setFF(0);
+		
+		launcherBottomPIDController.setP(0.1);
+		launcherBottomPIDController.setI(0);
+		launcherBottomPIDController.setD(0);
+		launcherBottomPIDController.setFF(0);
+	}
+		// stop launcher motors method
+		public void stopLauncher() {
 		launcherTopMotor.stopMotor();
 		launcherBottomMotor.stopMotor();
 	}

@@ -64,9 +64,9 @@ public class Controls {
 	private void bindLauncherControls() {
 		launcherPodiumPresetButton.onTrue(
 				new SetAngleLaunchCommand(
-						s.launcherSubsystem, LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM, 39));
+						s.launcherSubsystem, LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM, LauncherSubsystem.PODIUM_AIM_ANGLE));
 		launcherSubwooferPresetButton.onTrue(
 				new SetAngleLaunchCommand(
-						s.launcherSubsystem, LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM, 54));
+						s.launcherSubsystem, LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM, LauncherSubsystem.SUBWOOFER_AIM_ANGLE));
 	}
 }
