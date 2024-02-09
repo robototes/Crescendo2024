@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.util.Map;
 
 public class IntakeSubsystem extends SubsystemBase {
+	// Constants
 	public static final double INTAKE_IN_SPEED = 0.3;
 	public static final double INTAKE_OUT_SPEED = -0.7;
 
@@ -21,7 +22,8 @@ public class IntakeSubsystem extends SubsystemBase {
 	public static final double FEEDER_OUT_SPEED = -0.3;
 
 	public static final double SPEAKER_SHOOT_SPEED = 0.5;
-	// 'skirt' intake
+
+	// Motors
 	private final CANSparkFlex intakeMotorFront;
 	private final CANSparkFlex intakeMotorBack;
 	private final CANSparkFlex intakeMotorLeft;
@@ -31,6 +33,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
 	private final CANSparkFlex feederMotor;
 
+	// Shuffleboard
 	private final GenericEntry setIntakeSpeedEntry =
 			Shuffleboard.getTab("Intake")
 					.addPersistent("Intake speed - ", INTAKE_IN_SPEED)
@@ -39,11 +42,11 @@ public class IntakeSubsystem extends SubsystemBase {
 					.getEntry();
 
 	private final GenericEntry setIndexSpeedEntry =
-			Shuffleboard.getTab("Index").add("Index speed - ", INDEX_IN_SPEED).withSize(1, 1).getEntry();
-			
+			Shuffleboard.getTab("Intake").add("Index speed - ", INDEX_IN_SPEED).withSize(1, 1).getEntry();
+
 	private final GenericEntry setFeederSpeedEntry =
-			Shuffleboard.getTab("Feeder - ")
-					.add("Feeder Speed", FEEDER_IN_SPEED)
+			Shuffleboard.getTab("Intake")
+					.add("Feeder Speed - ", FEEDER_IN_SPEED)
 					.withSize(1, 1)
 					.getEntry();
 
