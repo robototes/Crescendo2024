@@ -33,7 +33,7 @@ public class Subsystems {
 		} else {
 			launcherSubsystem = null;
 		}
-		if (INTAKE_ENABLED){
+		if (INTAKE_ENABLED) {
 			intakeSubsystem = new IntakeSubsystem();
 		} else {
 			intakeSubsystem = null;
