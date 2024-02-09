@@ -19,7 +19,7 @@ import java.util.Map;
 
 public class LauncherSubsystem extends SubsystemBase {
 	// CONSTANTS
-	//ANGLE VALUES
+	// ANGLE VALUES
 	public static final int SUBWOOFER_AIM_ANGLE = 54;
 	public static final int PODIUM_AIM_ANGLE = 39;
 	// MOTOR VALUES
@@ -112,7 +112,7 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherBottomMotor.burnFlash();
 		launcherAngleMotor.burnFlash();
 
-		//PID
+		// PID
 		launcherAnglePIDController.setP(0.1);
 		launcherAnglePIDController.setI(0);
 		launcherAnglePIDController.setD(0);
@@ -122,14 +122,14 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherTopPIDController.setI(0);
 		launcherTopPIDController.setD(0);
 		launcherTopPIDController.setFF(0);
-		
+
 		launcherBottomPIDController.setP(0.1);
 		launcherBottomPIDController.setI(0);
 		launcherBottomPIDController.setD(0);
 		launcherBottomPIDController.setFF(0);
 	}
-		// stop launcher motors method
-		public void stopLauncher() {
+	// stop launcher motors method
+	public void stopLauncher() {
 		launcherTopMotor.stopMotor();
 		launcherBottomMotor.stopMotor();
 	}
