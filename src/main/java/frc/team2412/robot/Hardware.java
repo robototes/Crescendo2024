@@ -17,13 +17,9 @@ public class Hardware {
 	public static final int INTAKE_MOTOR_LEFT = 42;
 	public static final int INTAKE_MOTOR_RIGHT = 43;
 
-	public static final int INJEST_MOTOR_LEFT = 44;
-	public static final int INJEST_MOTOR_RIGHT = 45;
+	public static final int INDEX_MOTOR = 44;
 
-	public static final int INDEX_MOTOR_TOP = 46;
-	public static final int INDEX_MOTOR_BOTTOM = 48;
-
-	public static final int FEEDER_MOTOR = 49;
+	public static final int FEEDER_MOTOR = 45;
 
 	// launcher [30 - 39]
 	public static final int LAUNCHER_TOP_MOTOR_ID = 30;
