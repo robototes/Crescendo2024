@@ -3,6 +3,7 @@ package frc.team2412.robot;
 import static frc.team2412.robot.Subsystems.SubsystemConstants.*;
 
 import frc.team2412.robot.subsystems.DrivebaseSubsystem;
+import frc.team2412.robot.subsystems.IntakeSubsystem;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
 
 public class Subsystems {
@@ -20,6 +21,7 @@ public class Subsystems {
 
 	public final DrivebaseSubsystem drivebaseSubsystem;
 	public final LauncherSubsystem launcherSubsystem;
+	public final IntakeSubsystem intakeSubsystem;
 
 	public Subsystems() {
 		// initialize subsystems here (wow thats wild)
@@ -30,6 +32,11 @@ public class Subsystems {
 			launcherSubsystem = new LauncherSubsystem();
 		} else {
 			launcherSubsystem = null;
+		}
+		if (INTAKE_ENABLED){
+			intakeSubsystem = new IntakeSubsystem();
+		} else {
+			intakeSubsystem = null;
 		}
 	}
 }

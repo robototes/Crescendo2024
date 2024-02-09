@@ -40,6 +40,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
 	private final GenericEntry setIndexSpeedEntry =
 			Shuffleboard.getTab("Index").add("Index speed - ", INDEX_IN_SPEED).withSize(1, 1).getEntry();
+			
 	private final GenericEntry setFeederSpeedEntry =
 			Shuffleboard.getTab("Feeder - ")
 					.add("Feeder Speed", FEEDER_IN_SPEED)
