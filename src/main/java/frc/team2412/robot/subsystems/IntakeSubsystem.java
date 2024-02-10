@@ -4,8 +4,8 @@ import static frc.team2412.robot.Hardware.*;
 
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkFlex;
-import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.CANSparkMax;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -63,19 +63,19 @@ public class IntakeSubsystem extends SubsystemBase {
 	}
 
 	// commented out since we have two motor types now
-	//private void configureMotor(CANSparkFlex motor) {
+	// private void configureMotor(CANSparkFlex motor) {
 	//	motor.restoreFactoryDefaults();
 	//	motor.setIdleMode(IdleMode.kBrake);
 	//	motor.setSmartCurrentLimit(20);
 	//	motor.burnFlash();
-	//}
+	// }
 
 	private void resetMotors() {
 		intakeMotorFront.restoreFactoryDefaults();
 		intakeMotorFront.setIdleMode(IdleMode.kBrake);
 		intakeMotorFront.setSmartCurrentLimit(20);
 		intakeMotorFront.burnFlash();
-		
+
 		intakeMotorBack.restoreFactoryDefaults();
 		intakeMotorBack.setIdleMode(IdleMode.kBrake);
 		intakeMotorBack.setSmartCurrentLimit(20);
@@ -98,7 +98,7 @@ public class IntakeSubsystem extends SubsystemBase {
 		indexMotor.setIdleMode(IdleMode.kBrake);
 		indexMotor.setSmartCurrentLimit(20);
 		indexMotor.burnFlash();
-		
+
 		feederMotor.restoreFactoryDefaults();
 		feederMotor.setIdleMode(IdleMode.kBrake);
 		feederMotor.setSmartCurrentLimit(20);
