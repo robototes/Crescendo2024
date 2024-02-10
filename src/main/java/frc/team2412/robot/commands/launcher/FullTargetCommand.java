@@ -6,7 +6,7 @@ import frc.team2412.robot.subsystems.LauncherSubsystem;
 
 public class FullTargetCommand {
 
-    private final Pose2d SPEAKER_POSE = 0.0;    
+    private final Pose2d SPEAKER_POSE = 0.0;    // set later
 
     private double angle;
     private double rpm;
@@ -16,7 +16,7 @@ public class FullTargetCommand {
     LauncherSubsystem launcherSubsystem;
     public FullTargetCommand(){
         robotPose = drivebaseSubsystem.getPose();
-
+        robotPose
 
     }
 }
