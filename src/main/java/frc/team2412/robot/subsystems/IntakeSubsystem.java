@@ -2,6 +2,7 @@ package frc.team2412.robot.subsystems;
 
 import static frc.team2412.robot.Hardware.*;
 
+import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -62,47 +63,25 @@ public class IntakeSubsystem extends SubsystemBase {
 		resetMotors();
 	}
 
-	// commented out since we have two motor types now
-	// private void configureMotor(CANSparkFlex motor) {
-	//	motor.restoreFactoryDefaults();
-	//	motor.setIdleMode(IdleMode.kBrake);
-	//	motor.setSmartCurrentLimit(20);
-	//	motor.burnFlash();
-	// }
+	private void configureMotor(CANSparkBase motor) {
+		motor.restoreFactoryDefaults();
+		motor.setIdleMode(IdleMode.kBrake);
+		motor.setSmartCurrentLimit(20);
+		motor.burnFlash();
+	}
 
 	private void resetMotors() {
-		intakeMotorFront.restoreFactoryDefaults();
-		intakeMotorFront.setIdleMode(IdleMode.kBrake);
-		intakeMotorFront.setSmartCurrentLimit(20);
-		intakeMotorFront.burnFlash();
+		configureMotor(intakeMotorFront);
+		configureMotor(intakeMotorBack);
+		configureMotor(intakeMotorLeft);
+		configureMotor(intakeMotorRight);
 
-		intakeMotorBack.restoreFactoryDefaults();
-		intakeMotorBack.setIdleMode(IdleMode.kBrake);
-		intakeMotorBack.setSmartCurrentLimit(20);
-		intakeMotorBack.burnFlash();
 		intakeMotorBack.follow(intakeMotorFront);
-
-		intakeMotorLeft.restoreFactoryDefaults();
-		intakeMotorLeft.setIdleMode(IdleMode.kBrake);
-		intakeMotorLeft.setSmartCurrentLimit(20);
-		intakeMotorLeft.burnFlash();
 		intakeMotorLeft.follow(intakeMotorFront);
-
-		intakeMotorRight.restoreFactoryDefaults();
-		intakeMotorRight.setIdleMode(IdleMode.kBrake);
-		intakeMotorRight.setSmartCurrentLimit(20);
-		intakeMotorRight.burnFlash();
 		intakeMotorRight.follow(intakeMotorFront);
 
-		indexMotor.restoreFactoryDefaults();
-		indexMotor.setIdleMode(IdleMode.kBrake);
-		indexMotor.setSmartCurrentLimit(20);
-		indexMotor.burnFlash();
-
-		feederMotor.restoreFactoryDefaults();
-		feederMotor.setIdleMode(IdleMode.kBrake);
-		feederMotor.setSmartCurrentLimit(20);
-		feederMotor.burnFlash();
+		configureMotor(indexMotor);
+		configureMotor(feederMotor);
 	}
 
 	// intake methods
