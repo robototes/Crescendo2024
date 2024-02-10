@@ -81,6 +81,10 @@ public class DrivebaseSubsystem extends SubsystemBase {
 				swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "craneswerve");
 				System.out.println("Running crane swerve");
 				break;
+			case BONK:
+				swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "bonkswerve");
+				System.out.println("Running bonk swerve");
+				break;
 			case COMPETITION:
 			default:
 				swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "swerve");
