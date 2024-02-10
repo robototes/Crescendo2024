@@ -16,7 +16,7 @@ public class FullTargetCommand {
     LauncherSubsystem launcherSubsystem;
     public FullTargetCommand(){
         robotPose = drivebaseSubsystem.getPose();
-        robotPose
+        robotPose.relativeTo(SPEAKER_POSE);
 
     }
 }
