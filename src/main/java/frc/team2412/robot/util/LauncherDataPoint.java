@@ -12,11 +12,11 @@ public class LauncherDataPoint {
         }
     };
 
-    public final double distance;
+    public final double angle;
     public final double rpm;
 
-    public LauncherDataPoint(double distance, double rpm) {
-        this.distance = distance;
+    public LauncherDataPoint(double angle, double rpm) {
+        this.angle = angle;
         this.rpm = rpm;
     }
     
