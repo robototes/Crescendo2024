@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2412.robot.Hardware;
 import frc.team2412.robot.util.SparkPIDWidget;
 import java.util.Map;
+import java.util.function.DoubleSupplier;
 
 public class LauncherSubsystem extends SubsystemBase {
 	// CONSTANTS
@@ -150,8 +151,8 @@ public class LauncherSubsystem extends SubsystemBase {
 		return Units.rotationsToDegrees(launcherAngleEncoder.getPosition());
 	}
 
-	public void setAngle(double angle) {
-		launcherAnglePIDController.setReference(Units.degreesToRotations(angle), ControlType.kPosition);
+	public void setAngle(double launcherAngle) {
+		launcherAnglePIDController.setReference(Units.degreesToRotations(launcherAngle), ControlType.kPosition);
 	}
 
 	@Override

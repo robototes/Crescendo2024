@@ -1,5 +1,6 @@
 package frc.team2412.robot.commands.diagnostic;
 
+import edu.wpi.first.units.Angle;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team2412.robot.commands.launcher.SetAngleCommand;
 import frc.team2412.robot.commands.launcher.SetLaunchSpeedCommand;
@@ -14,9 +15,8 @@ public class LauncherDiagnosticCommand extends SequentialCommandGroup {
 		this.launcherSubsystem = launcherSubsystem;
 		this.Angle = launcherSubsystem.getAngle();
 		addCommands(
-				new SetAngleCommand(launcherSubsystem, 45),
-				new SetAngleCommand(launcherSubsystem, Angle),
-				new SetLaunchSpeedCommand(launcherSubsystem, 100),
-				new StopLauncherCommand(launcherSubsystem));
+				new SetAngleCommand(launcherSubsystem, () -> 45).withTimeout(2),
+				new SetAngleCommand(launcherSubsystem, () -> Angle).withTimeout(2),
+				new SetLaunchSpeedCommand(launcherSubsystem, () -> 100).withTimeout(2));
 	}
 }
