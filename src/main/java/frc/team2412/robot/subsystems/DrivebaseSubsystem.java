@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2412.robot.Robot;
 import frc.team2412.robot.Robot.RobotType;
@@ -60,6 +61,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 	private final ShuffleboardTab drivebaseTab = Shuffleboard.getTab("Drivebase");
 
 	private boolean xWheelsEnabled = true;
+	private Rotation2d rotationSetpoint;
 
 	// shuffleboard variables
 	private GenericEntry headingCorrectionEntry;
@@ -145,6 +147,10 @@ public class DrivebaseSubsystem extends SubsystemBase {
 		// if we're requesting the robot to stay still, lock wheels in X formation
 		if (translation.getNorm() == 0 && rotation.getRotations() == 0 && xWheelsEnabled) {
 			swerveDrive.lockPose();
+		}
+		if (rotationSetpoint != null) {
+			swerveDrive.drive(
+					translation.unaryMinus(), rotationSetpoint.getRadians(), fieldOriented, false);
 		} else {
 			swerveDrive.drive(translation.unaryMinus(), rotation.getRadians(), fieldOriented, false);
 		}
@@ -179,20 +185,29 @@ public class DrivebaseSubsystem extends SubsystemBase {
 				});
 	}
 
-	public Command rotateToAngle(Rotation2d angle) {
-		return this.run(
+	// this might need to be put in its own file due to complexity
+	public Command rotateToAngle(Supplier<Rotation2d> angle, boolean endWhenAligned) {
+		Command alignCommand =
+				Commands.runEnd(
 						() -> {
-							drive(
-									new Translation2d(),
+							rotationSetpoint =
 									Rotation2d.fromRadians(
 											swerveDrive
 													.getSwerveController()
 													.headingCalculate(
-															swerveDrive.getOdometryHeading().getRadians(), angle.getRadians())),
-									true);
-						})
-				.until(() -> Math.abs(swerveDrive.getOdometryHeading().minus(angle).getRotations()) < 0.01)
-				.withTimeout(2.0);
+															swerveDrive.getOdometryHeading().getRadians(),
+															angle.get().getRadians()));
+						},
+						() -> {
+							rotationSetpoint = null;
+						});
+
+		if (endWhenAligned)
+			return alignCommand.until(
+					() ->
+							Math.abs(swerveDrive.getOdometryHeading().minus(angle.get()).getRotations())
+									< HEADING_CORRECTION_DEADBAND);
+		return alignCommand;
 	}
 
 	public ChassisSpeeds getRobotSpeeds() {
