@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 2.36618971824646,
-      "y": 5.244966506958008
+      "x": 0.4,
+      "y": 7.0
     },
-    "rotation": -5.172484874741677e-29
+    "rotation": 0
   },
   "command": {
     "type": "sequential",
@@ -14,12 +14,12 @@
         {
           "type": "path",
           "data": {
-            "pathName": "crane-saturday"
+            "pathName": "bonkFastRotateForward"
           }
         }
       ]
     }
   },
   "folder": null,
-  "choreoAuto": true
+  "choreoAuto": false
 }

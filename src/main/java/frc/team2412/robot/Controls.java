@@ -45,6 +45,6 @@ public class Controls {
 	}
 
 	private void bindChoreoControls() {
-		driveController.b().onTrue(ChoreoHandler.getChoreoCommand("testPath"));
+		driveController.b().onTrue(ChoreoHandler.getChoreoCommand("juke"));
 	}
 }

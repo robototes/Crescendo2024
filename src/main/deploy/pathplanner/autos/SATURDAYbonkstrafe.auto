@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.5581104755401611,
-      "y": 6.438670635223389
+      "x": 0.4,
+      "y": 7.0
     },
-    "rotation": -6.772119592579196e-33
+    "rotation": 90.0
   },
   "command": {
     "type": "sequential",
@@ -14,12 +14,12 @@
         {
           "type": "path",
           "data": {
-            "pathName": "testPath"
+            "pathName": "bonkStrafe"
           }
         }
       ]
     }
   },
   "folder": null,
-  "choreoAuto": true
+  "choreoAuto": false
 }

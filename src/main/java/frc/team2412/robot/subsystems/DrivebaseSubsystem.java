@@ -72,13 +72,6 @@ public class DrivebaseSubsystem extends SubsystemBase {
 	private GenericEntry rotationSpeedEntry;
 	private GenericEntry xWheelsEntry;
 
-	private GenericEntry autoTranslationPEntry;
-	private GenericEntry autoTranslationIEntry;
-	private GenericEntry autoTranslationDEntry;
-	private GenericEntry autoRotationPEntry;
-	private GenericEntry autoRotationIEntry;
-	private GenericEntry autoRotationDEntry;
-
 	public DrivebaseSubsystem() {
 		initShuffleboard();
 
@@ -264,86 +257,8 @@ public class DrivebaseSubsystem extends SubsystemBase {
 						.withWidget(BuiltInWidgets.kBooleanBox)
 						.withSize(1, 1)
 						.getEntry();
-
-		autoTranslationPEntry =
-				drivebaseTab
-						.add("Translation P", AUTO_TRANSLATION_PID.kP)
-						.withSize(1, 1)
-						.withProperties(Map.of("Min", 0.0))
-						.withPosition(3, 1)
-						.getEntry();
-
-		autoTranslationIEntry =
-				drivebaseTab
-						.add("Translation I", AUTO_TRANSLATION_PID.kI)
-						.withSize(1, 1)
-						.withProperties(Map.of("Min", 0.0))
-						.withPosition(3, 2)
-						.getEntry();
-
-		autoTranslationDEntry =
-				drivebaseTab
-						.add("Translation D", AUTO_TRANSLATION_PID.kD)
-						.withSize(1, 1)
-						.withProperties(Map.of("Min", 0.0))
-						.withPosition(3, 3)
-						.getEntry();
-
-		autoRotationPEntry =
-				drivebaseTab
-						.add("Rotation P", AUTO_TRANSLATION_PID.kP)
-						.withSize(1, 1)
-						.withProperties(Map.of("Min", 0.0))
-						.withPosition(4, 1)
-						.getEntry();
-
-		autoRotationIEntry =
-				drivebaseTab
-						.add("Rotation I", AUTO_TRANSLATION_PID.kI)
-						.withSize(1, 1)
-						.withProperties(Map.of("Min", 0.0))
-						.withPosition(4, 2)
-						.getEntry();
-
-		autoRotationDEntry =
-				drivebaseTab
-						.add("Rotation D", AUTO_TRANSLATION_PID.kD)
-						.withSize(1, 1)
-						.withProperties(Map.of("Min", 0.0))
-						.withPosition(4, 3)
-						.getEntry();
 	}
 
 	@Override
-	public void periodic() {
-
-		PIDConstants translationPIDConstants =
-				new PIDConstants(
-						autoTranslationPEntry.getDouble(AUTO_TRANSLATION_PID.kP),
-						autoTranslationIEntry.getDouble(AUTO_TRANSLATION_PID.kI),
-						autoTranslationDEntry.getDouble(AUTO_TRANSLATION_PID.kD));
-
-		PIDConstants rotationPIDConstants =
-				new PIDConstants(
-						autoRotationPEntry.getDouble(AUTO_TRANSLATION_PID.kP),
-						autoRotationIEntry.getDouble(AUTO_TRANSLATION_PID.kI),
-						autoRotationDEntry.getDouble(AUTO_TRANSLATION_PID.kD));
-
-		AutoBuilder.configureHolonomic(
-				this::getPose,
-				this::setPose,
-				this::getRobotSpeeds,
-				this::drive,
-				new HolonomicPathFollowerConfig(
-						translationPIDConstants,
-						rotationPIDConstants,
-						MAX_AUTO_SPEED,
-						DRIVEBASE_RADIUS,
-						new ReplanningConfig()),
-				() ->
-						DriverStation.getAlliance()
-								.get()
-								.equals(Alliance.Red), // flip path if on the red alliance
-				this);
-	}
+	public void periodic() {}
 }

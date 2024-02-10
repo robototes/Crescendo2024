@@ -66,6 +66,7 @@ public class Robot extends TimedRobot {
 		subsystems = new Subsystems();
 		controls = new Controls(subsystems);
 
+		System.out.println("Auto paths: " + AutoBuilder.getAllAutoNames());
 		autoChooser = AutoBuilder.buildAutoChooser();
 		SmartDashboard.putData("Auto Chooser", autoChooser);
 		SmartDashboard.putString("current bot", getTypeFromAddress().toString());
