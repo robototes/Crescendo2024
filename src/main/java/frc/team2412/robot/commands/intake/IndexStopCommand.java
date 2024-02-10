@@ -13,6 +13,6 @@ public class IndexStopCommand extends Command {
 
 	@Override
 	public void initialize() {
-		intakeSubsystem.indexOut();
+		intakeSubsystem.indexStop();
 	}
 }
