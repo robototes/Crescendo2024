@@ -89,8 +89,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
 	// intake methods
 	public void intakeIn() {
-		intakeMotorFront.set(INTAKE_IN_SPEED);
-		setIntakeInSpeedEntry.getDouble(INTAKE_IN_SPEED);
+		intakeMotorFront.set(setIntakeInSpeedEntry.getDouble(INTAKE_IN_SPEED));
 	}
 
 	public void intakeOut() {
@@ -103,8 +102,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
 	// index methods
 	public void indexIn() {
-		indexMotor.set(INDEX_IN_SPEED);
-		setIndexInSpeedEntry.getDouble(INDEX_IN_SPEED);
+		indexMotor.set(setIndexInSpeedEntry.getDouble(INDEX_IN_SPEED));
 	}
 
 	public void indexOut() {
@@ -117,8 +115,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
 	// feeder methods
 	public void feederIn() {
-		feederMotor.set(FEEDER_IN_SPEED);
-		setFeederInSpeedEntry.getDouble(FEEDER_IN_SPEED);
+		feederMotor.set(setFeederInSpeedEntry.getDouble(FEEDER_IN_SPEED));
 	}
 
 	public void feederOut() {
