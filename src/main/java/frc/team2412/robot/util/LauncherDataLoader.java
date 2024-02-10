@@ -7,7 +7,7 @@ public class LauncherDataLoader {
 
     private static final String CSV_DATA_PATH = "launcher_data.csv";
 
-    public InterpolatingTreeMap<Double, LauncherDataPoint> fromCSV() {
+    public static InterpolatingTreeMap<Double, LauncherDataPoint> fromCSV() {
         InterpolatingTreeMap<Double, LauncherDataPoint> map = new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), LauncherDataPoint.INTERPOLATOR);
 
         // TODO: make this actually use the csv file
