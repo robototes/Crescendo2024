@@ -146,7 +146,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 		if (translation.getNorm() == 0 && rotation.getRotations() == 0 && xWheelsEnabled) {
 			swerveDrive.lockPose();
 		} else {
-			swerveDrive.drive(translation.unaryMinus(), -rotation.getRadians(), fieldOriented, false);
+			swerveDrive.drive(translation.unaryMinus(), rotation.getRadians(), fieldOriented, false);
 		}
 	}
 
@@ -165,7 +165,8 @@ public class DrivebaseSubsystem extends SubsystemBase {
 							Rotation2d.fromRotations(
 									SwerveMath.applyDeadband(rotation.get().getRotations(), true, JOYSTICK_DEADBAND)
 											* MAX_SPEED
-											* rotationSpeedEntry.getDouble(1.0));
+											* rotationSpeedEntry.getDouble(1.0)
+											* -1);
 					Translation2d constrainedTranslation =
 							new Translation2d(
 									SwerveMath.applyDeadband(forward.getAsDouble(), true, JOYSTICK_DEADBAND)
@@ -176,6 +177,22 @@ public class DrivebaseSubsystem extends SubsystemBase {
 											* translationSpeedEntry.getDouble(1.0));
 					drive(constrainedTranslation, constrainedRotation, true);
 				});
+	}
+
+	public Command rotateToAngle(Rotation2d angle) {
+		return this.run(
+						() -> {
+							drive(
+									new Translation2d(),
+									Rotation2d.fromRadians(
+											swerveDrive
+													.getSwerveController()
+													.headingCalculate(
+															swerveDrive.getOdometryHeading().getRadians(), angle.getRadians())),
+									true);
+						})
+				.until(() -> Math.abs(swerveDrive.getOdometryHeading().minus(angle).getRotations()) < 0.01)
+				.withTimeout(2.0);
 	}
 
 	public ChassisSpeeds getRobotSpeeds() {
@@ -248,9 +265,10 @@ public class DrivebaseSubsystem extends SubsystemBase {
 						.getEntry();
 		xWheelsEntry =
 				drivebaseTab
-						.add("X Wheels", xWheelsEnabled)
+						.addPersistent("X Wheels", xWheelsEnabled)
 						.withWidget(BuiltInWidgets.kBooleanBox)
 						.withSize(1, 1)
 						.getEntry();
+		xWheelsEnabled = xWheelsEntry.getBoolean(true);
 	}
 }

@@ -40,5 +40,8 @@ public class Controls {
 								() -> Rotation2d.fromRotations(driveController.getRightX())));
 		driveController.start().onTrue(new InstantCommand(s.drivebaseSubsystem::resetGyro));
 		driveController.rightStick().onTrue(new InstantCommand(s.drivebaseSubsystem::toggleXWheels));
+		driveController
+				.leftStick()
+				.onTrue(s.drivebaseSubsystem.rotateToAngle(Rotation2d.fromDegrees(0)));
 	}
 }
