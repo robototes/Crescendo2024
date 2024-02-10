@@ -12,13 +12,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.team2412.robot.util.MACAddress;
+import frc.team2412.robot.util.MatchDashboard;
 
 public class Robot extends TimedRobot {
 	/** Singleton Stuff */
 	private static Robot instance = null;
 
-	enum RobotType {
+	public enum RobotType {
 		COMPETITION,
+		CRANE,
 		PRACTICE;
 	}
 
@@ -30,8 +32,9 @@ public class Robot extends TimedRobot {
 	private final RobotType robotType;
 	public Controls controls;
 	public Subsystems subsystems;
+	public MatchDashboard dashboard;
 
-	private SendableChooser<Command> autoChooser;
+	public SendableChooser<Command> autoChooser;
 
 	protected Robot(RobotType type) {
 		// non public for singleton. Protected so test class can subclass
@@ -43,14 +46,17 @@ public class Robot extends TimedRobot {
 		this(getTypeFromAddress());
 	}
 
-	public static final MACAddress COMPETITION_ADDRESS = MACAddress.of(0x33, 0x9d, 0xd1);
+	public static final MACAddress COMPETITION_ADDRESS = MACAddress.of(0x00, 0x00, 0x00);
+	public static final MACAddress CRANE_ADDRESS = MACAddress.of(0x33, 0x9d, 0xd1);
 	public static final MACAddress PRACTICE_ADDRESS = MACAddress.of(0x33, 0x9D, 0xE7);
 
 	private static RobotType getTypeFromAddress() {
 		if (PRACTICE_ADDRESS.exists()) return RobotType.PRACTICE;
-		else {
-			return RobotType.COMPETITION;
-		}
+		if (CRANE_ADDRESS.exists()) return RobotType.CRANE;
+		if (!COMPETITION_ADDRESS.exists())
+			DriverStation.reportWarning(
+					"Code running on unknown MAC Address! Running competition code anyways", false);
+		return RobotType.COMPETITION;
 	}
 
 	@Override
@@ -61,7 +67,6 @@ public class Robot extends TimedRobot {
 		controls = new Controls(subsystems);
 
 		autoChooser = AutoBuilder.buildAutoChooser();
-		SmartDashboard.putData("Auto Chooser", autoChooser);
 
 		Shuffleboard.startRecording();
 
@@ -82,6 +87,8 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putData(CommandScheduler.getInstance());
 
 		DriverStation.silenceJoystickConnectionWarning(true);
+
+		dashboard = new MatchDashboard(subsystems);
 	}
 
 	@Override
