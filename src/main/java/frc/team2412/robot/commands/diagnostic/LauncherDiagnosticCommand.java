@@ -20,7 +20,8 @@ public class LauncherDiagnosticCommand extends SequentialCommandGroup {
 				new SetAngleCommand(launcherSubsystem, 90),
 				new WaitCommand(1),
 				new SetAngleCommand(launcherSubsystem, Angle),
-				new SetLaunchSpeedCommand(launcherSubsystem, 100).withTimeout(3),
+				new SetLaunchSpeedCommand(launcherSubsystem, 100),
+				new WaitCommand(5),
 				new StopLauncherCommand(launcherSubsystem));
 	}
 }
