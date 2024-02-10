@@ -6,12 +6,12 @@ import static frc.team2412.robot.Subsystems.SubsystemConstants.DRIVEBASE_ENABLED
 import static frc.team2412.robot.Subsystems.SubsystemConstants.LIMELIGHT_ENABLED;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.team2412.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.team2412.robot.commands.limelight.GetWithinDistanceCommand;
+import frc.team2412.robot.subsystems.*;
 
 public class Controls {
 	public static class ControlConstants {
@@ -37,7 +37,6 @@ public class Controls {
 		if (LIMELIGHT_ENABLED) {
 			bindLimelightControls();
 		}
-
 	}
 
 	private void bindDrivebaseControls() {
