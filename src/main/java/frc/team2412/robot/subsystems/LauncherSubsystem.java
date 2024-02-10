@@ -146,7 +146,7 @@ public class LauncherSubsystem extends SubsystemBase {
 	}
 	// returns the degrees of the angle of the launcher
 	public double getAngle() {
-		// get position returns a double in the form of rotations per minute
+		// get position returns a double in the form of rotations
 		return Units.rotationsToDegrees(launcherAngleEncoder.getPosition());
 	}
 
