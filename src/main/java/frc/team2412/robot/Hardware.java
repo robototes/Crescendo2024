@@ -23,4 +23,9 @@ public class Hardware {
 	public static final int INDEX_MOTOR = 44;
 
 	public static final int FEEDER_MOTOR = 45;
+
+	// intake sensors  (Digital IO)
+	public static final int INTAKE_SENSOR = 0;
+	public static final int INDEX_SENSOR = 1;
+	public static final int FEEDER_SENSOR = 2;
 }

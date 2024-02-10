@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.util.Map;
@@ -32,6 +33,11 @@ public class IntakeSubsystem extends SubsystemBase {
 	private final CANSparkFlex indexMotor;
 
 	private final CANSparkFlex feederMotor;
+
+	// Sensors
+	private final DigitalInput intakeSensor;
+	private final DigitalInput indexSensor;
+	private final DigitalInput feederSensor;
 
 	// Shuffleboard
 	private final GenericEntry setIntakeInSpeedEntry =
@@ -62,6 +68,10 @@ public class IntakeSubsystem extends SubsystemBase {
 		indexMotor = new CANSparkFlex(INDEX_MOTOR, MotorType.kBrushless);
 
 		feederMotor = new CANSparkFlex(FEEDER_MOTOR, MotorType.kBrushless);
+
+		intakeSensor = new DigitalInput(INTAKE_SENSOR);
+		indexSensor = new DigitalInput(INDEX_SENSOR);
+		feederSensor = new DigitalInput(FEEDER_SENSOR);
 
 		resetMotors();
 	}
@@ -124,5 +134,18 @@ public class IntakeSubsystem extends SubsystemBase {
 
 	public void feederStop() {
 		feederMotor.set(0);
+	}
+
+	// sensor methods
+	public boolean intakeSensor() {
+		return intakeSensor.get();
+	}
+
+	public boolean indexSensor() {
+		return indexSensor.get();
+	}
+
+	public boolean feederSensor() {
+		return feederSensor.get();
 	}
 }

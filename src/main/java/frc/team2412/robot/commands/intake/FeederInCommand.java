@@ -15,4 +15,14 @@ public class FeederInCommand extends Command {
 	public void initialize() {
 		intakeSubsystem.feederIn();
 	}
+
+	@Override
+	public void end(boolean interrupted) {
+		intakeSubsystem.feederStop();
+	}
+
+	@Override
+	public boolean isFinished() {
+		return intakeSubsystem.feederSensor();
+	}
 }
