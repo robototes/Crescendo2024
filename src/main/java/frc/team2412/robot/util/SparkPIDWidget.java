@@ -11,7 +11,6 @@ public class SparkPIDWidget implements NTSendable {
 
 	public SparkPIDWidget(SparkPIDController controller, String name) {
 		this.controller = controller;
-
 		SendableRegistry.add(this, name);
 	}
 
