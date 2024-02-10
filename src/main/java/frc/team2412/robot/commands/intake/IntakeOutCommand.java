@@ -15,4 +15,9 @@ public class IntakeOutCommand extends Command {
 	public void initialize() {
 		intakeSubsystem.intakeOut();
 	}
+
+	@Override
+	public boolean isFinished() {
+		return false;
+	}
 }

@@ -30,7 +30,8 @@ public class IntakeSubsystem extends SubsystemBase {
 	private final CANSparkMax intakeMotorLeft;
 	private final CANSparkMax intakeMotorRight;
 
-	private final CANSparkFlex indexMotor;
+	private final CANSparkFlex indexMotorLower;
+	private final CANSparkFlex indexMotorUpper;
 
 	private final CANSparkFlex feederMotor;
 
@@ -65,7 +66,8 @@ public class IntakeSubsystem extends SubsystemBase {
 		intakeMotorLeft = new CANSparkMax(INTAKE_MOTOR_LEFT, MotorType.kBrushless);
 		intakeMotorRight = new CANSparkMax(INTAKE_MOTOR_RIGHT, MotorType.kBrushless);
 
-		indexMotor = new CANSparkFlex(INDEX_MOTOR, MotorType.kBrushless);
+		indexMotorLower = new CANSparkFlex(INDEX_MOTOR_LOWER, MotorType.kBrushless);
+		indexMotorUpper = new CANSparkFlex(INDEX_MOTOR_UPPER, MotorType.kBrushless);
 
 		feederMotor = new CANSparkFlex(FEEDER_MOTOR, MotorType.kBrushless);
 
@@ -88,12 +90,14 @@ public class IntakeSubsystem extends SubsystemBase {
 		configureMotor(intakeMotorBack);
 		configureMotor(intakeMotorLeft);
 		configureMotor(intakeMotorRight);
-
 		intakeMotorBack.follow(intakeMotorFront);
 		intakeMotorLeft.follow(intakeMotorFront);
 		intakeMotorRight.follow(intakeMotorFront);
 
-		configureMotor(indexMotor);
+		configureMotor(indexMotorLower);
+		configureMotor(indexMotorUpper);
+		indexMotorLower.follow(indexMotorUpper);
+
 		configureMotor(feederMotor);
 	}
 
@@ -112,15 +116,15 @@ public class IntakeSubsystem extends SubsystemBase {
 
 	// index methods
 	public void indexIn() {
-		indexMotor.set(setIndexInSpeedEntry.getDouble(INDEX_IN_SPEED));
+		indexMotorUpper.set(setIndexInSpeedEntry.getDouble(INDEX_IN_SPEED));
 	}
 
 	public void indexOut() {
-		indexMotor.set(INDEX_OUT_SPEED);
+		indexMotorUpper.set(INDEX_OUT_SPEED);
 	}
 
 	public void indexStop() {
-		indexMotor.set(0);
+		indexMotorUpper.set(0);
 	}
 
 	// feeder methods

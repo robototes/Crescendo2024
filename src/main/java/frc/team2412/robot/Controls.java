@@ -3,13 +3,24 @@ package frc.team2412.robot;
 import static frc.team2412.robot.Controls.ControlConstants.CODRIVER_CONTROLLER_PORT;
 import static frc.team2412.robot.Controls.ControlConstants.CONTROLLER_PORT;
 import static frc.team2412.robot.Subsystems.SubsystemConstants.DRIVEBASE_ENABLED;
+import static frc.team2412.robot.Subsystems.SubsystemConstants.INTAKE_ENABLED;
 import static frc.team2412.robot.Subsystems.SubsystemConstants.LAUNCHER_ENABLED;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.team2412.robot.commands.intake.FeederInCommand;
+import frc.team2412.robot.commands.intake.FeederOutCommand;
+import frc.team2412.robot.commands.intake.FeederStopCommand;
+import frc.team2412.robot.commands.intake.IndexInCommand;
+import frc.team2412.robot.commands.intake.IndexOutCommand;
+import frc.team2412.robot.commands.intake.IndexStopCommand;
+import frc.team2412.robot.commands.intake.IntakeInCommand;
+import frc.team2412.robot.commands.intake.IntakeOutCommand;
+import frc.team2412.robot.commands.intake.IntakeStopCommand;
 import frc.team2412.robot.commands.launcher.SetAngleLaunchCommand;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
 
@@ -21,11 +32,11 @@ public class Controls {
 
 	private final CommandXboxController driveController;
 	private final CommandXboxController codriveController;
-
+	private final Trigger codriveIntakeInButton;
+	private final Trigger codriveIntakeStopButton;
+	private final Trigger codriveIntakeSpitButton;
 	private final Subsystems s;
-
 	// Launcher
-
 	private final Trigger launcherAmpPresetButton;
 	private final Trigger launcherSubwooferPresetButton;
 	private final Trigger launcherPodiumPresetButton;
@@ -39,16 +50,22 @@ public class Controls {
 		launcherSubwooferPresetButton = codriveController.povRight();
 		launcherPodiumPresetButton = codriveController.povLeft();
 		launcherTrapPresetButton = codriveController.povUp();
-
+		// intake buttons (may change later)
+		codriveIntakeInButton = codriveController.x();
+		codriveIntakeStopButton = codriveController.b();
+		codriveIntakeSpitButton = codriveController.y();
 		if (DRIVEBASE_ENABLED) {
 			bindDrivebaseControls();
 		}
-
 		if (LAUNCHER_ENABLED) {
 			bindLauncherControls();
 		}
+		if (INTAKE_ENABLED) {
+			bindIntakeControls();
+		}
 	}
 
+	// drivebase
 	private void bindDrivebaseControls() {
 		CommandScheduler.getInstance()
 				.setDefaultCommand(
@@ -59,6 +76,28 @@ public class Controls {
 								() -> Rotation2d.fromRotations(driveController.getRightX())));
 		driveController.start().onTrue(new InstantCommand(s.drivebaseSubsystem::resetGyro));
 		driveController.rightStick().onTrue(new InstantCommand(s.drivebaseSubsystem::toggleXWheels));
+	}
+
+	// intake controls
+	private void bindIntakeControls() {
+		// later on set default command to check sensing notes
+		CommandScheduler.getInstance()
+				.setDefaultCommand(s.intakeSubsystem, new IntakeStopCommand(s.intakeSubsystem));
+		codriveIntakeInButton.onTrue(
+				Commands.race(
+						new IntakeInCommand(s.intakeSubsystem),
+						new IndexInCommand(s.intakeSubsystem),
+						new FeederInCommand(s.intakeSubsystem)));
+		codriveIntakeStopButton.onTrue(
+				Commands.parallel(
+						new IntakeStopCommand(s.intakeSubsystem),
+						new IndexStopCommand(s.intakeSubsystem),
+						new FeederStopCommand(s.intakeSubsystem)));
+		codriveIntakeSpitButton.onTrue(
+				Commands.parallel(
+						new IntakeOutCommand(s.intakeSubsystem),
+						new IndexOutCommand(s.intakeSubsystem),
+						new FeederOutCommand(s.intakeSubsystem)));
 	}
 
 	private void bindLauncherControls() {
