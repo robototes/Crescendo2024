@@ -15,9 +15,4 @@ public class FeederOutCommand extends Command {
 	public void initialize() {
 		intakeSubsystem.feederOut();
 	}
-
-	@Override
-	public boolean isFinished() {
-		return false;
-	}
 }

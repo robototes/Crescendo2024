@@ -36,7 +36,6 @@ public class IntakeSubsystem extends SubsystemBase {
 	private final CANSparkFlex feederMotor;
 
 	// Sensors
-	private final DigitalInput intakeSensor;
 	private final DigitalInput indexSensor;
 	private final DigitalInput feederSensor;
 
@@ -71,7 +70,6 @@ public class IntakeSubsystem extends SubsystemBase {
 
 		feederMotor = new CANSparkFlex(FEEDER_MOTOR, MotorType.kBrushless);
 
-		intakeSensor = new DigitalInput(INTAKE_SENSOR);
 		indexSensor = new DigitalInput(INDEX_SENSOR);
 		feederSensor = new DigitalInput(FEEDER_SENSOR);
 
@@ -141,10 +139,6 @@ public class IntakeSubsystem extends SubsystemBase {
 	}
 
 	// sensor methods
-	public boolean intakeSensor() {
-		return intakeSensor.get();
-	}
-
 	public boolean indexSensor() {
 		return indexSensor.get();
 	}

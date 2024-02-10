@@ -32,20 +32,24 @@ public class Controls {
 
 	private final CommandXboxController driveController;
 	private final CommandXboxController codriveController;
+
+	// Intake
 	private final Trigger codriveIntakeInButton;
 	private final Trigger codriveIntakeStopButton;
 	private final Trigger codriveIntakeSpitButton;
-	private final Subsystems s;
 	// Launcher
 	private final Trigger launcherAmpPresetButton;
 	private final Trigger launcherSubwooferPresetButton;
 	private final Trigger launcherPodiumPresetButton;
 	private final Trigger launcherTrapPresetButton;
 
+	private final Subsystems s;
+
 	public Controls(Subsystems s) {
 		driveController = new CommandXboxController(CONTROLLER_PORT);
 		codriveController = new CommandXboxController(CODRIVER_CONTROLLER_PORT);
 		this.s = s;
+
 		launcherAmpPresetButton = codriveController.povDown();
 		launcherSubwooferPresetButton = codriveController.povRight();
 		launcherPodiumPresetButton = codriveController.povLeft();
@@ -54,6 +58,7 @@ public class Controls {
 		codriveIntakeInButton = codriveController.x();
 		codriveIntakeStopButton = codriveController.b();
 		codriveIntakeSpitButton = codriveController.y();
+
 		if (DRIVEBASE_ENABLED) {
 			bindDrivebaseControls();
 		}
