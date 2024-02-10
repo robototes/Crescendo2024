@@ -134,6 +134,7 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherTopMotor.stopMotor();
 		launcherBottomMotor.stopMotor();
 	}
+
 	// uses the value from the entry
 	public void launch() {
 		double speed = setLauncherSpeedEntry.getDouble(SPEAKER_SHOOT_SPEED_RPM);
