@@ -42,7 +42,10 @@ public class IntakeSubsystem extends SubsystemBase {
 					.getEntry();
 
 	private final GenericEntry setIndexInSpeedEntry =
-			Shuffleboard.getTab("Intake").add("Index in speed - ", INDEX_IN_SPEED).withSize(1, 1).getEntry();
+			Shuffleboard.getTab("Intake")
+					.add("Index in speed - ", INDEX_IN_SPEED)
+					.withSize(1, 1)
+					.getEntry();
 
 	private final GenericEntry setFeederInSpeedEntry =
 			Shuffleboard.getTab("Intake")
@@ -95,7 +98,7 @@ public class IntakeSubsystem extends SubsystemBase {
 	}
 
 	public void intakeStop() {
-		intakeMotorFront.set(0);		
+		intakeMotorFront.set(0);
 	}
 
 	// index methods
