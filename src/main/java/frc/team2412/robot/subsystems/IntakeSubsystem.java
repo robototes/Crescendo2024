@@ -34,19 +34,19 @@ public class IntakeSubsystem extends SubsystemBase {
 	private final CANSparkFlex feederMotor;
 
 	// Shuffleboard
-	private final GenericEntry setIntakeSpeedEntry =
+	private final GenericEntry setIntakeInSpeedEntry =
 			Shuffleboard.getTab("Intake")
-					.addPersistent("Intake speed - ", INTAKE_IN_SPEED)
+					.addPersistent("Intake in speed - ", INTAKE_IN_SPEED)
 					.withSize(2, 1)
 					.withProperties(Map.of("Min", -1, "Max", 1))
 					.getEntry();
 
-	private final GenericEntry setIndexSpeedEntry =
-			Shuffleboard.getTab("Intake").add("Index speed - ", INDEX_IN_SPEED).withSize(1, 1).getEntry();
+	private final GenericEntry setIndexInSpeedEntry =
+			Shuffleboard.getTab("Intake").add("Index in speed - ", INDEX_IN_SPEED).withSize(1, 1).getEntry();
 
-	private final GenericEntry setFeederSpeedEntry =
+	private final GenericEntry setFeederInSpeedEntry =
 			Shuffleboard.getTab("Intake")
-					.add("Feeder Speed - ", FEEDER_IN_SPEED)
+					.add("Feeder in speed - ", FEEDER_IN_SPEED)
 					.withSize(1, 1)
 					.getEntry();
 
@@ -87,6 +87,7 @@ public class IntakeSubsystem extends SubsystemBase {
 	// intake methods
 	public void intakeIn() {
 		intakeMotorFront.set(INTAKE_IN_SPEED);
+		setIntakeInSpeedEntry.getDouble(INTAKE_IN_SPEED);
 	}
 
 	public void intakeOut() {
@@ -94,12 +95,13 @@ public class IntakeSubsystem extends SubsystemBase {
 	}
 
 	public void intakeStop() {
-		intakeMotorFront.set(0);
+		intakeMotorFront.set(0);		
 	}
 
 	// index methods
 	public void indexIn() {
 		indexMotor.set(INDEX_IN_SPEED);
+		setIndexInSpeedEntry.getDouble(INDEX_IN_SPEED);
 	}
 
 	public void indexOut() {
@@ -113,6 +115,7 @@ public class IntakeSubsystem extends SubsystemBase {
 	// feeder methods
 	public void feederIn() {
 		feederMotor.set(FEEDER_IN_SPEED);
+		setFeederInSpeedEntry.getDouble(FEEDER_IN_SPEED);
 	}
 
 	public void feederOut() {
