@@ -21,13 +21,11 @@ public class IntakeSubsystem extends SubsystemBase {
 	public static final double FEEDER_IN_SPEED = 0.3;
 	public static final double FEEDER_OUT_SPEED = -0.3;
 
-	public static final double SPEAKER_SHOOT_SPEED = 0.5;
-
 	// Motors
-	private final CANSparkFlex intakeMotorFront;
-	private final CANSparkFlex intakeMotorBack;
-	private final CANSparkFlex intakeMotorLeft;
-	private final CANSparkFlex intakeMotorRight;
+	private final CANSparkMax intakeMotorFront;
+	private final CANSparkMax intakeMotorBack;
+	private final CANSparkMax intakeMotorLeft;
+	private final CANSparkMax intakeMotorRight;
 
 	private final CANSparkFlex indexMotor;
 
@@ -51,10 +49,10 @@ public class IntakeSubsystem extends SubsystemBase {
 					.getEntry();
 
 	public IntakeSubsystem() {
-		intakeMotorFront = new CANSparkFlex(INTAKE_MOTOR_FRONT, MotorType.kBrushless);
-		intakeMotorBack = new CANSparkFlex(INTAKE_MOTOR_BACK, MotorType.kBrushless);
-		intakeMotorLeft = new CANSparkFlex(INTAKE_MOTOR_LEFT, MotorType.kBrushless);
-		intakeMotorRight = new CANSparkFlex(INTAKE_MOTOR_RIGHT, MotorType.kBrushless);
+		intakeMotorFront = new CANSparkMax(INTAKE_MOTOR_FRONT, MotorType.kBrushless);
+		intakeMotorBack = new CANSparkMax(INTAKE_MOTOR_BACK, MotorType.kBrushless);
+		intakeMotorLeft = new CANSparkMax(INTAKE_MOTOR_LEFT, MotorType.kBrushless);
+		intakeMotorRight = new CANSparkMax(INTAKE_MOTOR_RIGHT, MotorType.kBrushless);
 
 		indexMotor = new CANSparkFlex(INDEX_MOTOR, MotorType.kBrushless);
 
@@ -63,25 +61,47 @@ public class IntakeSubsystem extends SubsystemBase {
 		resetMotors();
 	}
 
-	public void configureMotor(CANSparkFlex motor) {
-		motor.restoreFactoryDefaults();
-		motor.setIdleMode(IdleMode.kBrake);
-		motor.setSmartCurrentLimit(20);
-		motor.burnFlash();
-	}
+	// commented out since we have two motor types now
+	//private void configureMotor(CANSparkFlex motor) {
+	//	motor.restoreFactoryDefaults();
+	//	motor.setIdleMode(IdleMode.kBrake);
+	//	motor.setSmartCurrentLimit(20);
+	//	motor.burnFlash();
+	//}
 
-	public void resetMotors() {
-		configureMotor(intakeMotorFront);
-		configureMotor(intakeMotorBack);
-		configureMotor(intakeMotorLeft);
-		configureMotor(intakeMotorRight);
-
+	private void resetMotors() {
+		intakeMotorFront.restoreFactoryDefaults();
+		intakeMotorFront.setIdleMode(IdleMode.kBrake);
+		intakeMotorFront.setSmartCurrentLimit(20);
+		intakeMotorFront.burnFlash();
+		
+		intakeMotorBack.restoreFactoryDefaults();
+		intakeMotorBack.setIdleMode(IdleMode.kBrake);
+		intakeMotorBack.setSmartCurrentLimit(20);
+		intakeMotorBack.burnFlash();
 		intakeMotorBack.follow(intakeMotorFront);
+
+		intakeMotorLeft.restoreFactoryDefaults();
+		intakeMotorLeft.setIdleMode(IdleMode.kBrake);
+		intakeMotorLeft.setSmartCurrentLimit(20);
+		intakeMotorLeft.burnFlash();
 		intakeMotorLeft.follow(intakeMotorFront);
+
+		intakeMotorRight.restoreFactoryDefaults();
+		intakeMotorRight.setIdleMode(IdleMode.kBrake);
+		intakeMotorRight.setSmartCurrentLimit(20);
+		intakeMotorRight.burnFlash();
 		intakeMotorRight.follow(intakeMotorFront);
 
-		configureMotor(indexMotor);
-		configureMotor(feederMotor);
+		indexMotor.restoreFactoryDefaults();
+		indexMotor.setIdleMode(IdleMode.kBrake);
+		indexMotor.setSmartCurrentLimit(20);
+		indexMotor.burnFlash();
+		
+		feederMotor.restoreFactoryDefaults();
+		feederMotor.setIdleMode(IdleMode.kBrake);
+		feederMotor.setSmartCurrentLimit(20);
+		feederMotor.burnFlash();
 	}
 
 	// intake methods
@@ -90,7 +110,7 @@ public class IntakeSubsystem extends SubsystemBase {
 	}
 
 	public void intakeOut() {
-		intakeMotorFront.set(INTAKE_IN_SPEED);
+		intakeMotorFront.set(INTAKE_OUT_SPEED);
 	}
 
 	public void intakeStop() {
