@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 public class LimelightSubsystem extends SubsystemBase {
@@ -171,18 +170,17 @@ public class LimelightSubsystem extends SubsystemBase {
 	}
 
 	public Command getWithinDistance(Pose2d currentPose, DrivebaseSubsystem drivebaseSubsystem) {
-		final DoubleSupplier returnZero = () -> 0.0;
 		final Supplier<Rotation2d> returnTurn = () -> Rotation2d.fromDegrees(getHorizontalOffset());
-		final DoubleSupplier returnDrive = () -> Math.abs(turnPower()) / 2;
+		final Supplier<Rotation2d> returnZeroRotation = () -> Rotation2d.fromDegrees(0);
 		Command moveCommand;
 		Pose2d targetPose;
 		if (hasTargets()) {
 			targetPose = getTargetPose(currentPose);
-			moveCommand = new DrivebaseSubsystem().driveJoystick(returnZero, returnZero, returnTurn);
+			moveCommand = drivebaseSubsystem.rotateToAngle(returnTurn, true);
 
 		} else {
 			targetPose = currentPose;
-			moveCommand = new DrivebaseSubsystem().driveJoystick(returnZero, returnZero, returnTurn);
+			moveCommand = drivebaseSubsystem.rotateToAngle(returnZeroRotation, true);
 		}
 
 		// create path
