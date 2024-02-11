@@ -9,10 +9,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.team2412.robot.util.ChoreoHandler;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.team2412.robot.commands.launcher.SetAngleLaunchCommand;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
+import frc.team2412.robot.util.ChoreoHandler;
 
 public class Controls {
 	public static class ControlConstants {
@@ -62,6 +62,7 @@ public class Controls {
 		driveController.start().onTrue(new InstantCommand(s.drivebaseSubsystem::resetGyro));
 		driveController.rightStick().onTrue(new InstantCommand(s.drivebaseSubsystem::toggleXWheels));
 	}
+
 	private void bindLauncherControls() {
 		launcherPodiumPresetButton.onTrue(
 				new SetAngleLaunchCommand(
@@ -75,9 +76,7 @@ public class Controls {
 						LauncherSubsystem.SUBWOOFER_AIM_ANGLE));
 	}
 
-	
 	private void bindChoreoControls() {
 		driveController.b().onTrue(ChoreoHandler.getChoreoCommand("juke"));
-
 	}
 }
