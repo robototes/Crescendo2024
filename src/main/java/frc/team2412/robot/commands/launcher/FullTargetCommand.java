@@ -1,14 +1,14 @@
 package frc.team2412.robot.commands.launcher;
 
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-
-import java.io.File;
-
-import edu.wpi.first.math.geometry.Pose2d;
 import frc.team2412.robot.subsystems.DrivebaseSubsystem;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
 import frc.team2412.robot.util.LauncherDataLoader;
@@ -36,7 +36,7 @@ public class FullTargetCommand extends Command{
         this.drivebaseSubsystem = drivebaseSubsystem;
         setAngleLaunchCommand = new SetAngleLaunchCommand(launcherSubsystem, () -> rpm, () -> angle);
         rotateToAngle = drivebaseSubsystem.rotateToAngle(() -> yawAngle, false);
-        launcherData = LauncherDataLoader.fromCSV(new File(Filesystem.getDeployDirectory(), "launcher_data.csv"));
+        launcherData = LauncherDataLoader.fromCSV(FileSystems.getDefault().getPath(Filesystem.getDeployDirectory().getPath(), "launcher_data.csv"));
     }
 
     @Override

@@ -1,14 +1,24 @@
 package frc.team2412.robot.util;
 
-import java.io.File;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
 
 public class LauncherDataLoader {
 
-    public static InterpolatingTreeMap<Double, LauncherDataPoint> fromCSV(File file) {
+    public static InterpolatingTreeMap<Double, LauncherDataPoint> fromCSV(Path path) {
         InterpolatingTreeMap<Double, LauncherDataPoint> map = new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), LauncherDataPoint.INTERPOLATOR);
+
+        try {
+            BufferedReader reader = Files.newBufferedReader(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
 
         // TODO: make this actually use the csv file
 
