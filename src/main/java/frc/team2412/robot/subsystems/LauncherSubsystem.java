@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2412.robot.Hardware;
 import frc.team2412.robot.util.SparkPIDWidget;
 import java.util.Map;
-import java.util.function.DoubleSupplier;
 
 public class LauncherSubsystem extends SubsystemBase {
 	// CONSTANTS
