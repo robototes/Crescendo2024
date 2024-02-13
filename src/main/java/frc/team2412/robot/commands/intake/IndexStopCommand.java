@@ -15,4 +15,8 @@ public class IndexStopCommand extends Command {
 	public void initialize() {
 		intakeSubsystem.indexStop();
 	}
+
+	public boolean isFinished() {
+		return true;
+	}
 }

@@ -15,4 +15,14 @@ public class IndexInCommand extends Command {
 	public void initialize() {
 		intakeSubsystem.indexIn();
 	}
+
+	@Override
+	public void end(boolean interrupted) {
+		intakeSubsystem.feederStop();
+	}
+
+	@Override
+	public boolean isFinished() {
+		return intakeSubsystem.getFeederSensor();
+	}
 }

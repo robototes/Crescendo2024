@@ -59,6 +59,18 @@ public class IntakeSubsystem extends SubsystemBase {
 					.withSize(1, 1)
 					.getEntry();
 
+	private final GenericEntry getIndexSensorEntry =
+			Shuffleboard.getTab("Intake")
+					.add("Index Sensor - ", getIndexSensor())
+					.withSize(1, 1)
+					.getEntry();
+
+	private final GenericEntry getFeederSensorEntry =
+			Shuffleboard.getTab("Intake")
+					.add("Index Sensor - ", getIndexSensor())
+					.withSize(1, 1)
+					.getEntry();
+
 	public IntakeSubsystem() {
 		intakeMotorFront = new CANSparkMax(INTAKE_MOTOR_FRONT, MotorType.kBrushless);
 		intakeMotorBack = new CANSparkMax(INTAKE_MOTOR_BACK, MotorType.kBrushless);
@@ -139,11 +151,11 @@ public class IntakeSubsystem extends SubsystemBase {
 	}
 
 	// sensor methods
-	public boolean indexSensor() {
+	public boolean getIndexSensor() {
 		return indexSensor.get();
 	}
 
-	public boolean feederSensor() {
+	public boolean getFeederSensor() {
 		return feederSensor.get();
 	}
 }

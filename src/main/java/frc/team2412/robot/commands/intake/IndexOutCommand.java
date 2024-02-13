@@ -15,4 +15,8 @@ public class IndexOutCommand extends Command {
 	public void initialize() {
 		intakeSubsystem.indexOut();
 	}
+
+	public boolean isFinished() {
+		return true;
+	}
 }
