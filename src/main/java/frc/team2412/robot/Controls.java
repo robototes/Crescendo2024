@@ -67,12 +67,12 @@ public class Controls {
 		launcherPodiumPresetButton.onTrue(
 				new SetAngleLaunchCommand(
 						s.launcherSubsystem,
-						() ->LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
-						() ->LauncherSubsystem.PODIUM_AIM_ANGLE));
+						() -> LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
+						() -> LauncherSubsystem.PODIUM_AIM_ANGLE));
 		launcherSubwooferPresetButton.onTrue(
 				new SetAngleLaunchCommand(
 						s.launcherSubsystem,
 						() -> LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
-						() ->LauncherSubsystem.SUBWOOFER_AIM_ANGLE));
+						() -> LauncherSubsystem.SUBWOOFER_AIM_ANGLE));
 	}
 }

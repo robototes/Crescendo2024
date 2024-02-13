@@ -152,7 +152,8 @@ public class LauncherSubsystem extends SubsystemBase {
 	}
 
 	public void setAngle(double launcherAngle) {
-		launcherAnglePIDController.setReference(Units.degreesToRotations(launcherAngle), ControlType.kPosition);
+		launcherAnglePIDController.setReference(
+				Units.degreesToRotations(launcherAngle), ControlType.kPosition);
 	}
 
 	@Override

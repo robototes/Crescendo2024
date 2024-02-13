@@ -1,9 +1,8 @@
 package frc.team2412.robot.commands.launcher;
 
-import java.util.function.DoubleSupplier;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
+import java.util.function.DoubleSupplier;
 // this command activates the launcher
 
 public class SetLaunchSpeedCommand extends Command {
@@ -20,9 +19,9 @@ public class SetLaunchSpeedCommand extends Command {
 	public void execute() {
 		launcherSubsystem.launch(launcherSpeed.getAsDouble());
 	}
-	
+
 	@Override
-	public void end(boolean Interrupted){
+	public void end(boolean Interrupted) {
 		launcherSubsystem.stopLauncher();
 	}
 

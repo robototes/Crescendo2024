@@ -1,10 +1,9 @@
 package frc.team2412.robot.commands.launcher;
 
-import java.util.function.DoubleSupplier;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
+import java.util.function.DoubleSupplier;
 // this command adjusts the angle to a value that is input by the user.
 
 public class SetAngleCommand extends Command {
@@ -25,6 +24,8 @@ public class SetAngleCommand extends Command {
 	@Override
 	public boolean isFinished() {
 		return (MathUtil.isNear(
-				launcherAngle.getAsDouble(), launcherSubsystem.getAngle(), LauncherSubsystem.ANGLE_TOLERANCE));
+				launcherAngle.getAsDouble(),
+				launcherSubsystem.getAngle(),
+				LauncherSubsystem.ANGLE_TOLERANCE));
 	}
 }

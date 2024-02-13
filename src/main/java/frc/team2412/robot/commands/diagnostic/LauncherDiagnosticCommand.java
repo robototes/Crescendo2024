@@ -2,10 +2,8 @@ package frc.team2412.robot.commands.diagnostic;
 
 import edu.wpi.first.units.Angle;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.team2412.robot.commands.launcher.SetAngleCommand;
 import frc.team2412.robot.commands.launcher.SetLaunchSpeedCommand;
-import frc.team2412.robot.commands.launcher.StopLauncherCommand;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
 
 public class LauncherDiagnosticCommand extends SequentialCommandGroup {

@@ -1,11 +1,8 @@
 package frc.team2412.robot;
 
-import java.nio.file.FileSystems;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -14,7 +11,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.team2412.robot.util.LauncherDataLoader;
 import frc.team2412.robot.util.MACAddress;
 import frc.team2412.robot.util.MatchDashboard;
 
