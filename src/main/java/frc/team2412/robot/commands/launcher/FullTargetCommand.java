@@ -1,6 +1,7 @@
 package frc.team2412.robot.commands.launcher;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.struct.Pose2dStruct;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -17,7 +18,7 @@ import frc.team2412.robot.util.LauncherDataPoint;
 
 public class FullTargetCommand extends Command{
 
-    private final Pose2d SPEAKER_POSE;    // set later
+    private final Pose2d SPEAKER_POSE = new Pose2d(0.0, 5.55, Rotation2d.fromRotations(0));    // set later
 
     private Rotation2d yawAngle;
     private double angle;
