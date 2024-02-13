@@ -16,8 +16,7 @@ import frc.team2412.robot.util.LauncherDataPoint;
 
 public class FullTargetCommand extends Command{
 
-    private final Pose2d SPEAKER_POSE = new Pose2d(0.0, 5.55, Rotation2d.fromRotations(0));    // set later
-
+    private final Pose2d SPEAKER_POSE = new Pose2d(0.0, 5.55, Rotation2d.fromRotations(0)); 
     private Rotation2d yawAngle;
     private double angle;
     private double rpm;
@@ -25,7 +24,8 @@ public class FullTargetCommand extends Command{
     private Pose2d relativeSpeaker;
     private double distance;
     private LauncherDataPoint dataPoint;
-    private Command setAngleLaunchCommand;
+    private Command setAngleCommand;
+    private Command setLaunchSpeedCommand;
     private Command rotateToAngle;
     private InterpolatingTreeMap<Double, LauncherDataPoint> launcherData;
 
@@ -34,14 +34,16 @@ public class FullTargetCommand extends Command{
     public FullTargetCommand(LauncherSubsystem launcherSubsystem, DrivebaseSubsystem drivebaseSubsystem){
         this.launcherSubsystem = launcherSubsystem;
         this.drivebaseSubsystem = drivebaseSubsystem;
-        setAngleLaunchCommand = new SetAngleLaunchCommand(launcherSubsystem, () -> rpm, () -> angle);
+        setLaunchSpeedCommand = new SetLaunchSpeedCommand(launcherSubsystem, () -> rpm);
+        setAngleCommand = new SetAngleCommand(launcherSubsystem, () -> angle);
         rotateToAngle = drivebaseSubsystem.rotateToAngle(() -> yawAngle, false);
         launcherData = LauncherDataLoader.fromCSV(new File(Filesystem.getDeployDirectory(), "launcher_data.csv"));
     }
 
     @Override
     public void initialize(){
-        CommandScheduler.getInstance().schedule(setAngleLaunchCommand);
+        CommandScheduler.getInstance().schedule(setAngleCommand);
+        CommandScheduler.getInstance().schedule(setLaunchSpeedCommand);
         CommandScheduler.getInstance().schedule(rotateToAngle);
     }
 
@@ -59,6 +61,7 @@ public class FullTargetCommand extends Command{
     @Override
     public void end(boolean interrupted){
         rotateToAngle.cancel();
-        setAngleLaunchCommand.cancel();
+        setLaunchSpeedCommand.cancel();
+        setAngleCommand.cancel();
     }
 }
