@@ -1,6 +1,7 @@
 package frc.team2412.robot.commands.launcher;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -26,6 +27,7 @@ public class FullTargetCommand extends Command{
     private LauncherDataPoint dataPoint;
     private Command setAngleLaunchCommand;
     private Command rotateToAngle;
+    private InterpolatingTreeMap<Double, LauncherDataPoint> launcherData;
 
     DrivebaseSubsystem drivebaseSubsystem;
     LauncherSubsystem launcherSubsystem;
@@ -33,25 +35,25 @@ public class FullTargetCommand extends Command{
         this.launcherSubsystem = launcherSubsystem;
         this.drivebaseSubsystem = drivebaseSubsystem;
         setAngleLaunchCommand = new SetAngleLaunchCommand(launcherSubsystem, () -> rpm, () -> angle);
-        rotateToAngle = drivebaseSubsystem.rotateToAngle(() -> yawAngle, true);
+        rotateToAngle = drivebaseSubsystem.rotateToAngle(() -> yawAngle, false);
+        launcherData = LauncherDataLoader.fromCSV(new File(Filesystem.getDeployDirectory(), "launcher_data.csv"));
     }
-
 
     @Override
     public void initialize(){
         CommandScheduler.getInstance().schedule(setAngleLaunchCommand);
+        CommandScheduler.getInstance().schedule(rotateToAngle);
     }
+
     @Override
     public void execute(){
         robotPose = drivebaseSubsystem.getPose();
         relativeSpeaker = robotPose.relativeTo(SPEAKER_POSE);
         yawAngle = Rotation2d.fromRadians(Math.atan2(relativeSpeaker.getY(), relativeSpeaker.getX()));      
         distance = relativeSpeaker.getTranslation().getNorm();  
-        dataPoint = LauncherDataLoader.fromCSV(new File(Filesystem.getDeployDirectory(), "launcher_data.csv")).get(distance);
+        dataPoint = launcherData.get(distance);
         rpm = dataPoint.rpm;
         angle = dataPoint.angle;
-
-
     }
 
     @Override
