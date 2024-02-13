@@ -60,7 +60,6 @@ public class Controls {
 								() -> Rotation2d.fromRotations(driveController.getRightX())));
 		driveController.start().onTrue(new InstantCommand(s.drivebaseSubsystem::resetGyro));
 		driveController.rightStick().onTrue(new InstantCommand(s.drivebaseSubsystem::toggleXWheels));
-		driveController.leftBumper().whileTrue(new FullTargetCommand(null, s.drivebaseSubsystem));
 	}
 
 	private void bindLauncherControls() {

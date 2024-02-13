@@ -4,7 +4,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.team2412.robot.subsystems.DrivebaseSubsystem;
@@ -24,8 +23,8 @@ public class FullTargetCommand extends Command {
 	private Pose2d relativeSpeaker;
 	private double distance;
 	private LauncherDataPoint dataPoint;
-	// private Command setAngleCommand;
-	// private Command setLaunchSpeedCommand;
+	private Command setAngleCommand;
+	private Command setLaunchSpeedCommand;
 	private Command rotateToAngle;
 	private InterpolatingTreeMap<Double, LauncherDataPoint> launcherData;
 
@@ -36,8 +35,8 @@ public class FullTargetCommand extends Command {
 			LauncherSubsystem launcherSubsystem, DrivebaseSubsystem drivebaseSubsystem) {
 		this.launcherSubsystem = launcherSubsystem;
 		this.drivebaseSubsystem = drivebaseSubsystem;
-		// setLaunchSpeedCommand = new SetLaunchSpeedCommand(launcherSubsystem, () -> rpm);
-		// setAngleCommand = new SetAngleCommand(launcherSubsystem, () -> angle);
+		setLaunchSpeedCommand = new SetLaunchSpeedCommand(launcherSubsystem, () -> rpm);
+		setAngleCommand = new SetAngleCommand(launcherSubsystem, () -> angle);
 		rotateToAngle = drivebaseSubsystem.rotateToAngle(() -> yawAngle, false);
 		launcherData =
 				LauncherDataLoader.fromCSV(
@@ -47,8 +46,8 @@ public class FullTargetCommand extends Command {
 
 	@Override
 	public void initialize() {
-		// CommandScheduler.getInstance().schedule(setAngleCommand);
-		// CommandScheduler.getInstance().schedule(setLaunchSpeedCommand);
+		CommandScheduler.getInstance().schedule(setAngleCommand);
+		CommandScheduler.getInstance().schedule(setLaunchSpeedCommand);
 		CommandScheduler.getInstance().schedule(rotateToAngle);
 	}
 
@@ -56,19 +55,19 @@ public class FullTargetCommand extends Command {
 	public void execute() {
 		robotPose = drivebaseSubsystem.getPose();
 		relativeSpeaker = robotPose.relativeTo(SPEAKER_POSE);
-		yawAngle = Rotation2d.fromRadians(-Math.atan2(relativeSpeaker.getY(), relativeSpeaker.getX()));
+		yawAngle =
+				Rotation2d.fromRadians(
+						Math.atan2(relativeSpeaker.getY(), relativeSpeaker.getX()) + Math.PI);
 		distance = relativeSpeaker.getTranslation().getNorm();
 		dataPoint = launcherData.get(distance);
 		rpm = dataPoint.rpm;
 		angle = dataPoint.angle;
-
-		SmartDashboard.putNumber("rpm setpoint", rpm);
 	}
 
 	@Override
 	public void end(boolean interrupted) {
 		rotateToAngle.cancel();
-		// setLaunchSpeedCommand.cancel();
-		// setAngleCommand.cancel();
+		setLaunchSpeedCommand.cancel();
+		setAngleCommand.cancel();
 	}
 }
