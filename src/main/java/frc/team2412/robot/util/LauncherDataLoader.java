@@ -1,13 +1,13 @@
 package frc.team2412.robot.util;
 
+import java.io.File;
+
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
 
 public class LauncherDataLoader {
 
-    private static final String CSV_DATA_PATH = "launcher_data.csv";
-
-    public static InterpolatingTreeMap<Double, LauncherDataPoint> fromCSV() {
+    public static InterpolatingTreeMap<Double, LauncherDataPoint> fromCSV(File file) {
         InterpolatingTreeMap<Double, LauncherDataPoint> map = new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), LauncherDataPoint.INTERPOLATOR);
 
         // TODO: make this actually use the csv file
