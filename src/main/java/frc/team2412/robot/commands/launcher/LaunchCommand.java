@@ -16,7 +16,7 @@ public class LaunchCommand extends Command {
 
 	@Override
 	public void initialize() {
-		IntakeSubsystem.feederOut();
+		IntakeSubsystem.feederIn();
 		launcherSubsystem.launch();
 	}
 
