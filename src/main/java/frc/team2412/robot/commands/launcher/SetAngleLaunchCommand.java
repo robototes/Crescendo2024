@@ -1,17 +1,14 @@
 package frc.team2412.robot.commands.launcher;
 
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
-import java.util.function.DoubleSupplier;
-// this command can be used as a preset in controls, allowing the user to input a speed and angle
-// value when they keybind it multiple times.
 
-public class SetAngleLaunchCommand extends SequentialCommandGroup {
-	private DoubleSupplier launcherSpeed;
-	private DoubleSupplier launcherAngle;
+public class SetAngleLaunchCommand extends ParallelCommandGroup {
+	private double launcherSpeed;
+	private double launcherAngle;
 
 	public SetAngleLaunchCommand(
-			LauncherSubsystem launcherSubsystem, DoubleSupplier speed, DoubleSupplier angle) {
+			LauncherSubsystem launcherSubsystem, double speed, double angle) {
 		launcherSpeed = speed;
 		launcherAngle = angle;
 		addCommands(

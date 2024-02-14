@@ -110,7 +110,8 @@ public class LauncherDataLoader {
 			return map;
 		} catch (IOException e) {
 			e.printStackTrace();
-			return null;
+			map.put(0., new LauncherDataPoint(70, 2000)); // TODO: figure out the subwoofer data points and enter them here
+			return map;
 		}
 	}
 }
