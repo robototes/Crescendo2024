@@ -46,7 +46,6 @@ public class FullTargetCommand extends Command {
 	@Override
 	public void initialize() {
 		CommandScheduler.getInstance().schedule(yawAlignmentCommand);
-		launcherSubsystem.stopLauncher();
 	}
 
 	@Override
@@ -59,10 +58,12 @@ public class FullTargetCommand extends Command {
 		double distance = relativeSpeaker.getTranslation().getNorm();
 		LauncherDataPoint dataPoint = LAUNCHER_DATA.get(distance);
 		if (launch.getAsBoolean()) {
-			launcherSubsystem.setAngle(dataPoint.angle);
-			launcherSubsystem.launch(dataPoint.rpm);
-			controls.vibrateDriveController(0.0);
-		} else if (MathUtil.isNear(
+			// move feeder motors
+		} else {
+			// stop feeder motors
+		}
+		
+		if (MathUtil.isNear(
 				yawTarget.getRadians(),
 				drivebaseSubsystem.getPose().getRotation().getRadians(),
 				YAW_TARGET_VIBRATION_TOLERANCE)) {
