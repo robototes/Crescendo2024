@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2412.robot.Robot;
 import frc.team2412.robot.Robot.RobotType;
@@ -38,14 +39,18 @@ public class DrivebaseSubsystem extends SubsystemBase {
 	// SWERVE CONSTANTS (that aren't in deploy dir)
 
 	private static final double MAX_SPEED =
-			Robot.getInstance().getRobotType() == RobotType.PRACTICE
+			Robot.getInstance().getRobotType() == RobotType.BONK
 					? 2.0
-					: Robot.getInstance().getRobotType() == RobotType.CRANE ? 3.0 : 1.0;
+					: Robot.getInstance().getRobotType() == RobotType.CRANE
+							? 3.0
+							: Robot.getInstance().getRobotType() == RobotType.PRACTICE ? 4.0 : 1.0;
 	// distance from center of the robot to the furthest module
 	private static final double DRIVEBASE_RADIUS =
-			Robot.getInstance().getRobotType() == RobotType.PRACTICE
+			Robot.getInstance().getRobotType() == RobotType.BONK
 					? 0.305328701
-					: Robot.getInstance().getRobotType() == RobotType.CRANE ? 0.3937 : 0.3;
+					: Robot.getInstance().getRobotType() == RobotType.CRANE
+							? 0.3937
+							: Robot.getInstance().getRobotType() == RobotType.PRACTICE ? 0.3 : 0.3;
 	private static final double JOYSTICK_DEADBAND = 0.05;
 	private static final double HEADING_CORRECTION_DEADBAND = 0.005;
 
@@ -60,6 +65,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 	private final ShuffleboardTab drivebaseTab = Shuffleboard.getTab("Drivebase");
 
 	private boolean xWheelsEnabled = true;
+	private Rotation2d rotationSetpoint;
 
 	// shuffleboard variables
 	private GenericEntry headingCorrectionEntry;
@@ -80,6 +86,10 @@ public class DrivebaseSubsystem extends SubsystemBase {
 			case CRANE:
 				swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "craneswerve");
 				System.out.println("Running crane swerve");
+				break;
+			case BONK:
+				swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "bonkswerve");
+				System.out.println("Running bonk swerve");
 				break;
 			case COMPETITION:
 			default:
@@ -124,7 +134,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
 		// LOW verbosity only sends field position, HIGH sends full drive data, MACHINE sends data
 		// viewable by AdvantageScope
-		SwerveDriveTelemetry.verbosity = TelemetryVerbosity.LOW;
+		SwerveDriveTelemetry.verbosity = TelemetryVerbosity.MACHINE;
 	}
 
 	/**
@@ -145,8 +155,12 @@ public class DrivebaseSubsystem extends SubsystemBase {
 		// if we're requesting the robot to stay still, lock wheels in X formation
 		if (translation.getNorm() == 0 && rotation.getRotations() == 0 && xWheelsEnabled) {
 			swerveDrive.lockPose();
+		}
+		if (rotationSetpoint != null) {
+			swerveDrive.drive(
+					translation.unaryMinus(), rotationSetpoint.getRadians(), fieldOriented, false);
 		} else {
-			swerveDrive.drive(translation.unaryMinus(), -rotation.getRadians(), fieldOriented, false);
+			swerveDrive.drive(translation.unaryMinus(), rotation.getRadians(), fieldOriented, false);
 		}
 	}
 
@@ -165,7 +179,8 @@ public class DrivebaseSubsystem extends SubsystemBase {
 							Rotation2d.fromRotations(
 									SwerveMath.applyDeadband(rotation.get().getRotations(), true, JOYSTICK_DEADBAND)
 											* MAX_SPEED
-											* rotationSpeedEntry.getDouble(1.0));
+											* rotationSpeedEntry.getDouble(1.0)
+											* -1);
 					Translation2d constrainedTranslation =
 							new Translation2d(
 									SwerveMath.applyDeadband(forward.getAsDouble(), true, JOYSTICK_DEADBAND)
@@ -176,6 +191,31 @@ public class DrivebaseSubsystem extends SubsystemBase {
 											* translationSpeedEntry.getDouble(1.0));
 					drive(constrainedTranslation, constrainedRotation, true);
 				});
+	}
+
+	// this might need to be put in its own file due to complexity
+	public Command rotateToAngle(Supplier<Rotation2d> angle, boolean endWhenAligned) {
+		Command alignCommand =
+				Commands.runEnd(
+						() -> {
+							rotationSetpoint =
+									Rotation2d.fromRadians(
+											swerveDrive
+													.getSwerveController()
+													.headingCalculate(
+															swerveDrive.getOdometryHeading().getRadians(),
+															angle.get().getRadians()));
+						},
+						() -> {
+							rotationSetpoint = null;
+						});
+
+		if (endWhenAligned)
+			return alignCommand.until(
+					() ->
+							Math.abs(swerveDrive.getOdometryHeading().minus(angle.get()).getRotations())
+									< HEADING_CORRECTION_DEADBAND);
+		return alignCommand;
 	}
 
 	public ChassisSpeeds getRobotSpeeds() {
@@ -248,9 +288,10 @@ public class DrivebaseSubsystem extends SubsystemBase {
 						.getEntry();
 		xWheelsEntry =
 				drivebaseTab
-						.add("X Wheels", xWheelsEnabled)
+						.addPersistent("X Wheels", xWheelsEnabled)
 						.withWidget(BuiltInWidgets.kBooleanBox)
 						.withSize(1, 1)
 						.getEntry();
+		xWheelsEnabled = xWheelsEntry.getBoolean(true);
 	}
 }
