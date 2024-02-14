@@ -63,12 +63,15 @@ public class FullTargetCommand extends Command {
 		double distance = relativeSpeaker.getTranslation().getNorm();
 		LauncherDataPoint dataPoint = LAUNCHER_DATA.get(distance);
 
+		launcherSubsystem.setAngle(dataPoint.angle);
+		launcherSubsystem.launch(dataPoint.rpm);
+
 		if (launch.getAsBoolean()) {
 			intakeSubsystem.feederIn();
 		} else {
 			intakeSubsystem.feederStop();
 		}
-		
+
 		if (MathUtil.isNear(
 				yawTarget.getRadians(),
 				drivebaseSubsystem.getPose().getRotation().getRadians(),
