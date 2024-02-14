@@ -8,19 +8,12 @@ import static frc.team2412.robot.Subsystems.SubsystemConstants.LAUNCHER_ENABLED;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.team2412.robot.commands.intake.FeederInCommand;
-import frc.team2412.robot.commands.intake.FeederOutCommand;
-import frc.team2412.robot.commands.intake.FeederStopCommand;
-import frc.team2412.robot.commands.intake.IndexInCommand;
-import frc.team2412.robot.commands.intake.IndexOutCommand;
-import frc.team2412.robot.commands.intake.IndexStopCommand;
-import frc.team2412.robot.commands.intake.IntakeInCommand;
-import frc.team2412.robot.commands.intake.IntakeOutCommand;
-import frc.team2412.robot.commands.intake.IntakeStopCommand;
+import frc.team2412.robot.commands.intake.AllInCommand;
+import frc.team2412.robot.commands.intake.AllOutCommand;
+import frc.team2412.robot.commands.intake.AllStopCommand;
 import frc.team2412.robot.commands.launcher.SetAngleLaunchCommand;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
 
@@ -85,24 +78,11 @@ public class Controls {
 
 	// intake controls
 	private void bindIntakeControls() {
-		// later on set default command to check sensing notes
-		CommandScheduler.getInstance()
-				.setDefaultCommand(s.intakeSubsystem, new IntakeStopCommand(s.intakeSubsystem));
-		codriveIntakeInButton.onTrue(
-				Commands.race(
-						new IntakeInCommand(s.intakeSubsystem),
-						new IndexInCommand(s.intakeSubsystem),
-						new FeederInCommand(s.intakeSubsystem)));
-		codriveIntakeStopButton.onTrue(
-				Commands.parallel(
-						new IntakeStopCommand(s.intakeSubsystem),
-						new IndexStopCommand(s.intakeSubsystem),
-						new FeederStopCommand(s.intakeSubsystem)));
-		codriveIntakeSpitButton.onTrue(
-				Commands.parallel(
-						new IntakeOutCommand(s.intakeSubsystem),
-						new IndexOutCommand(s.intakeSubsystem),
-						new FeederOutCommand(s.intakeSubsystem)));
+		// CommandScheduler.getInstance()
+		// 		.setDefaultCommand(s.intakeSubsystem, new IntakeStopCommand(s.intakeSubsystem));
+		codriveIntakeInButton.onTrue(new AllInCommand(s.intakeSubsystem));
+		codriveIntakeStopButton.onTrue(new AllStopCommand(s.intakeSubsystem));
+		codriveIntakeSpitButton.onTrue(new AllOutCommand(s.intakeSubsystem));
 	}
 
 	private void bindLauncherControls() {

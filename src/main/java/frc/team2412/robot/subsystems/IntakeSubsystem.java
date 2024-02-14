@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkMax;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.util.Map;
 
@@ -59,18 +60,6 @@ public class IntakeSubsystem extends SubsystemBase {
 					.withSize(1, 1)
 					.getEntry();
 
-	private final GenericEntry getIndexSensorEntry =
-			Shuffleboard.getTab("Intake")
-					.add("Index Sensor - ", getIndexSensor())
-					.withSize(1, 1)
-					.getEntry();
-
-	private final GenericEntry getFeederSensorEntry =
-			Shuffleboard.getTab("Intake")
-					.add("Index Sensor - ", getIndexSensor())
-					.withSize(1, 1)
-					.getEntry();
-
 	public IntakeSubsystem() {
 		intakeMotorFront = new CANSparkMax(INTAKE_MOTOR_FRONT, MotorType.kBrushless);
 		intakeMotorBack = new CANSparkMax(INTAKE_MOTOR_BACK, MotorType.kBrushless);
@@ -86,6 +75,10 @@ public class IntakeSubsystem extends SubsystemBase {
 		feederSensor = new DigitalInput(FEEDER_SENSOR);
 
 		resetMotors();
+
+		ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Intake");
+		shuffleboardTab.addBoolean("Index Sensor - ", indexSensor::get).withSize(1, 1);
+		shuffleboardTab.addBoolean("Feeder Sensor - ", feederSensor::get).withSize(1, 1);
 	}
 
 	private void configureMotor(CANSparkBase motor) {
