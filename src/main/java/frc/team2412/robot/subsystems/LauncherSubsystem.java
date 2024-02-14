@@ -152,6 +152,7 @@ public class LauncherSubsystem extends SubsystemBase {
 
 	public void setAngle(double angle) {
 		launcherAnglePIDController.setReference(Units.degreesToRotations(angle), ControlType.kPosition);
+		System.out.println("Setting Angle!");
 	}
 
 	public boolean isAtTargetSpeed() {

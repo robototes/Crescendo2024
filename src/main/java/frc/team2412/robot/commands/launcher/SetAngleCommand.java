@@ -17,6 +17,8 @@ public class SetAngleCommand extends Command {
 
 	@Override
 	public void initialize() {
+		System.out.println("Setting Angle!");
+
 		launcherSubsystem.setAngle(launcherAngle);
 	}
 
