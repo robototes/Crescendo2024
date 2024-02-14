@@ -1,8 +1,5 @@
 package frc.team2412.robot.commands.launcher;
 
-import java.nio.file.FileSystems;
-import java.util.function.BooleanSupplier;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -16,6 +13,8 @@ import frc.team2412.robot.subsystems.DrivebaseSubsystem;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
 import frc.team2412.robot.util.LauncherDataLoader;
 import frc.team2412.robot.util.LauncherDataPoint;
+import java.nio.file.FileSystems;
+import java.util.function.BooleanSupplier;
 
 public class FullTargetCommand extends Command {
 
@@ -35,7 +34,9 @@ public class FullTargetCommand extends Command {
 	private BooleanSupplier launch;
 
 	public FullTargetCommand(
-			LauncherSubsystem launcherSubsystem, DrivebaseSubsystem drivebaseSubsystem, BooleanSupplier launch) {
+			LauncherSubsystem launcherSubsystem,
+			DrivebaseSubsystem drivebaseSubsystem,
+			BooleanSupplier launch) {
 		this.launcherSubsystem = launcherSubsystem;
 		this.drivebaseSubsystem = drivebaseSubsystem;
 		this.launch = launch;
@@ -61,7 +62,10 @@ public class FullTargetCommand extends Command {
 			launcherSubsystem.setAngle(dataPoint.angle);
 			launcherSubsystem.launch(dataPoint.rpm);
 			controls.vibrateDriveController(0.0);
-		} else if (MathUtil.isNear(yawTarget.getRadians(), drivebaseSubsystem.getPose().getRotation().getRadians(), YAW_TARGET_VIBRATION_TOLERANCE)) {
+		} else if (MathUtil.isNear(
+				yawTarget.getRadians(),
+				drivebaseSubsystem.getPose().getRotation().getRadians(),
+				YAW_TARGET_VIBRATION_TOLERANCE)) {
 			controls.vibrateDriveController(1.0);
 		} else {
 			controls.vibrateDriveController(0.0);
