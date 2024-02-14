@@ -14,6 +14,7 @@ public class SetAngleLaunchCommand extends SequentialCommandGroup {
 		launcherAngle = angle;
 		addCommands(
 				new SetAngleCommand(launcherSubsystem, launcherAngle),
+				new waitCommand(2),
 				new SetLaunchSpeedCommand(launcherSubsystem, launcherSpeed));
 	}
 }
