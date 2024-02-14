@@ -154,6 +154,10 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherAnglePIDController.setReference(Units.degreesToRotations(angle), ControlType.kPosition);
 	}
 
+	public boolean isAtTargetSpeed(){
+		return (setLauncherSpeedEntry.getDouble(0) ==	 launcherSpeedEntry.getDouble(SPEAKER_SHOOT_SPEED_RPM));
+	}
+
 	@Override
 	public void periodic() {
 		launcherAngleEntry.setDouble(getAngle());

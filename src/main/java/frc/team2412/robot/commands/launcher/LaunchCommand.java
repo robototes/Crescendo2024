@@ -16,21 +16,18 @@ public class LaunchCommand extends Command {
 
     @Override
     public void initialize() {
-        intakeSubsystem.feederOut();
-        launcherSubsystem.launch;
+        IntakeSubsystem.feederOut();
+        launcherSubsystem.launch();
     }
 
     @Override
     public boolean isFinished() {
-        return launcherSubsystem.areFlywheelsAtTargetSpeed();
+        return true;
     }
 
     @Override
-    public void end() {
-        while (!launcherSubsystem.areFlywheelsAtTargetSpeed()) {
-        }
-        launcherSubsystem.launchBall();
-        IntakeSubsystem.stop();
-        launcherSubsystem.stopFlywheels();
+    public void end(boolean interrupted) {
+        IntakeSubsystem.feederStop();
+        launcherSubsystem.stopLauncher();
     }
 }
