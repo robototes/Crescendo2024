@@ -15,17 +15,12 @@ public class SetLaunchSpeedCommand extends Command {
 	}
 
 	@Override
-	public void execute() {
+	public void initialize() {
 		launcherSubsystem.launch(launcherSpeed);
 	}
 
 	@Override
-	public void end(boolean Interrupted) {
-		launcherSubsystem.stopLauncher();
-	}
-
-	@Override
 	public boolean isFinished() {
-		return false;
+		return true;
 	}
 }
