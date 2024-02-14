@@ -7,8 +7,7 @@ public class SetAngleLaunchCommand extends ParallelCommandGroup {
 	private double launcherSpeed;
 	private double launcherAngle;
 
-	public SetAngleLaunchCommand(
-			LauncherSubsystem launcherSubsystem, double speed, double angle) {
+	public SetAngleLaunchCommand(LauncherSubsystem launcherSubsystem, double speed, double angle) {
 		launcherSpeed = speed;
 		launcherAngle = angle;
 		addCommands(

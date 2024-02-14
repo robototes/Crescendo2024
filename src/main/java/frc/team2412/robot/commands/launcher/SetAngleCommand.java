@@ -23,8 +23,6 @@ public class SetAngleCommand extends Command {
 	@Override
 	public boolean isFinished() {
 		return (MathUtil.isNear(
-				launcherAngle,
-				launcherSubsystem.getAngle(),
-				LauncherSubsystem.ANGLE_TOLERANCE));
+				launcherAngle, launcherSubsystem.getAngle(), LauncherSubsystem.ANGLE_TOLERANCE));
 	}
 }

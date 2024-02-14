@@ -18,14 +18,14 @@ public class LauncherDataLoader {
 		InterpolatingTreeMap<Double, LauncherDataPoint> map =
 				new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), LauncherDataPoint.INTERPOLATOR);
 
-		try {
-			BufferedReader reader = Files.newBufferedReader(path);
-			BufferedWriter debugWriter =
-					Files.newBufferedWriter(
-							FileSystems.getDefault()
-									.getPath(Filesystem.getOperatingDirectory().getPath(), "logs/CSVInterpreter.log"),
-							StandardOpenOption.CREATE,
-							StandardOpenOption.WRITE);
+		try (BufferedReader reader = Files.newBufferedReader(path);
+				BufferedWriter debugWriter =
+						Files.newBufferedWriter(
+								FileSystems.getDefault()
+										.getPath(
+												Filesystem.getOperatingDirectory().getPath(), "logs/CSVInterpreter.log"),
+								StandardOpenOption.CREATE,
+								StandardOpenOption.WRITE); ) {
 
 			String line;
 			int lineNumber = 0;
@@ -110,7 +110,10 @@ public class LauncherDataLoader {
 			return map;
 		} catch (IOException e) {
 			e.printStackTrace();
-			map.put(0., new LauncherDataPoint(70, 2000)); // TODO: figure out the subwoofer data points and enter them here
+			map.put(
+					0.,
+					new LauncherDataPoint(
+							70, 2000)); // TODO: figure out the subwoofer data points and enter them here
 			return map;
 		}
 	}

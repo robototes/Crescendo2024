@@ -14,11 +14,13 @@ import java.nio.file.FileSystems;
 
 public class FullTargetCommand extends Command {
 
-	private final static InterpolatingTreeMap<Double, LauncherDataPoint> LAUNCHER_DATA = LauncherDataLoader.fromCSV(
-		FileSystems.getDefault()
-				.getPath(Filesystem.getDeployDirectory().getPath(), "launcher_data.csv"));;
+	private static final InterpolatingTreeMap<Double, LauncherDataPoint> LAUNCHER_DATA =
+			LauncherDataLoader.fromCSV(
+					FileSystems.getDefault()
+							.getPath(Filesystem.getDeployDirectory().getPath(), "launcher_data.csv"));
+	;
 	private final Pose2d SPEAKER_POSE = new Pose2d(0.0, 5.55, Rotation2d.fromRotations(0));
-	
+
 	private DrivebaseSubsystem drivebaseSubsystem;
 	private LauncherSubsystem launcherSubsystem;
 	private Command yawAlignmentCommand;
@@ -28,7 +30,7 @@ public class FullTargetCommand extends Command {
 			LauncherSubsystem launcherSubsystem, DrivebaseSubsystem drivebaseSubsystem) {
 		this.launcherSubsystem = launcherSubsystem;
 		this.drivebaseSubsystem = drivebaseSubsystem;
-		yawAlignmentCommand = drivebaseSubsystem.rotateToAngle(() -> yawTarget, false);				
+		yawAlignmentCommand = drivebaseSubsystem.rotateToAngle(() -> yawTarget, false);
 	}
 
 	@Override
