@@ -6,6 +6,7 @@ import static frc.team2412.robot.Subsystems.SubsystemConstants.DRIVEBASE_ENABLED
 import static frc.team2412.robot.Subsystems.SubsystemConstants.LAUNCHER_ENABLED;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -72,5 +73,9 @@ public class Controls {
 						s.launcherSubsystem,
 						LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
 						LauncherSubsystem.SUBWOOFER_AIM_ANGLE));
+	}
+
+	public void vibrateDriveController(double vibration) {
+		driveController.getHID().setRumble(RumbleType.kBothRumble, vibration);
 	}
 }
