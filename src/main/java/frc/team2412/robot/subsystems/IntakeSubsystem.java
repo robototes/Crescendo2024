@@ -8,20 +8,22 @@ import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.util.Map;
 
 public class IntakeSubsystem extends SubsystemBase {
 	// Constants
 	public static final double INTAKE_IN_SPEED = 0.3;
-	public static final double INTAKE_OUT_SPEED = -0.7;
+	public static final double INTAKE_REVERSE_SPEED = -0.7;
 
 	public static final double INDEX_IN_SPEED = 0.3;
-	public static final double INDEX_OUT_SPEED = -0.3;
+	public static final double INDEX_REVERSE_SPEED = -0.3;
 
 	public static final double FEEDER_IN_SPEED = 0.3;
-	public static final double FEEDER_OUT_SPEED = -0.3;
+	public static final double FEEDER_REVERSE_SPEED = -0.3;
 
 	// Motors
 	private final CANSparkMax intakeMotorFront;
@@ -29,9 +31,14 @@ public class IntakeSubsystem extends SubsystemBase {
 	private final CANSparkMax intakeMotorLeft;
 	private final CANSparkMax intakeMotorRight;
 
-	private final CANSparkFlex indexMotor;
+	private final CANSparkFlex indexMotorLower;
+	private final CANSparkFlex indexMotorUpper;
 
 	private final CANSparkFlex feederMotor;
+
+	// Sensors
+	private final DigitalInput indexSensor;
+	private final DigitalInput feederSensor;
 
 	// Shuffleboard
 	private final GenericEntry setIntakeInSpeedEntry =
@@ -59,11 +66,19 @@ public class IntakeSubsystem extends SubsystemBase {
 		intakeMotorLeft = new CANSparkMax(INTAKE_MOTOR_LEFT, MotorType.kBrushless);
 		intakeMotorRight = new CANSparkMax(INTAKE_MOTOR_RIGHT, MotorType.kBrushless);
 
-		indexMotor = new CANSparkFlex(INDEX_MOTOR, MotorType.kBrushless);
+		indexMotorLower = new CANSparkFlex(INDEX_MOTOR_LOWER, MotorType.kBrushless);
+		indexMotorUpper = new CANSparkFlex(INDEX_MOTOR_UPPER, MotorType.kBrushless);
 
 		feederMotor = new CANSparkFlex(FEEDER_MOTOR, MotorType.kBrushless);
 
+		indexSensor = new DigitalInput(INDEX_SENSOR);
+		feederSensor = new DigitalInput(FEEDER_SENSOR);
+
 		resetMotors();
+
+		ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Intake");
+		shuffleboardTab.addBoolean("Index Sensor - ", indexSensor::get).withSize(1, 1);
+		shuffleboardTab.addBoolean("Feeder Sensor - ", feederSensor::get).withSize(1, 1);
 	}
 
 	private void configureMotor(CANSparkBase motor) {
@@ -78,12 +93,14 @@ public class IntakeSubsystem extends SubsystemBase {
 		configureMotor(intakeMotorBack);
 		configureMotor(intakeMotorLeft);
 		configureMotor(intakeMotorRight);
-
 		intakeMotorBack.follow(intakeMotorFront);
 		intakeMotorLeft.follow(intakeMotorFront);
 		intakeMotorRight.follow(intakeMotorFront);
 
-		configureMotor(indexMotor);
+		configureMotor(indexMotorLower);
+		configureMotor(indexMotorUpper);
+		indexMotorLower.follow(indexMotorUpper);
+
 		configureMotor(feederMotor);
 	}
 
@@ -92,8 +109,8 @@ public class IntakeSubsystem extends SubsystemBase {
 		intakeMotorFront.set(setIntakeInSpeedEntry.getDouble(INTAKE_IN_SPEED));
 	}
 
-	public void intakeOut() {
-		intakeMotorFront.set(INTAKE_OUT_SPEED);
+	public void intakeReverse() {
+		intakeMotorFront.set(INTAKE_REVERSE_SPEED);
 	}
 
 	public void intakeStop() {
@@ -102,15 +119,15 @@ public class IntakeSubsystem extends SubsystemBase {
 
 	// index methods
 	public void indexIn() {
-		indexMotor.set(setIndexInSpeedEntry.getDouble(INDEX_IN_SPEED));
+		indexMotorUpper.set(setIndexInSpeedEntry.getDouble(INDEX_IN_SPEED));
 	}
 
-	public void indexOut() {
-		indexMotor.set(INDEX_OUT_SPEED);
+	public void indexReverse() {
+		indexMotorUpper.set(INDEX_REVERSE_SPEED);
 	}
 
 	public void indexStop() {
-		indexMotor.set(0);
+		indexMotorUpper.set(0);
 	}
 
 	// feeder methods
@@ -118,11 +135,20 @@ public class IntakeSubsystem extends SubsystemBase {
 		feederMotor.set(setFeederInSpeedEntry.getDouble(FEEDER_IN_SPEED));
 	}
 
-	public void feederOut() {
-		feederMotor.set(FEEDER_OUT_SPEED);
+	public void feederReverse() {
+		feederMotor.set(FEEDER_REVERSE_SPEED);
 	}
 
 	public void feederStop() {
 		feederMotor.set(0);
+	}
+
+	// sensor methods
+	public boolean getIndexSensor() {
+		return indexSensor.get();
+	}
+
+	public boolean getFeederSensor() {
+		return feederSensor.get();
 	}
 }
