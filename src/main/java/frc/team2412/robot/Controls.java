@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.team2412.robot.commands.intake.AllInCommand;
-import frc.team2412.robot.commands.intake.AllOutCommand;
+import frc.team2412.robot.commands.intake.AllReverseCommand;
 import frc.team2412.robot.commands.intake.AllStopCommand;
 import frc.team2412.robot.commands.launcher.SetAngleLaunchCommand;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
@@ -29,10 +29,10 @@ public class Controls {
 	// Intake
 	private final Trigger driveIntakeInButton;
 	private final Trigger driveIntakeStopButton;
-	private final Trigger driveIntakeSpitButton;
+	private final Trigger driveIntakeReverseButton;
 	private final Trigger codriveIntakeInButton;
 	private final Trigger codriveIntakeStopButton;
-	private final Trigger codriveIntakeSpitButton;
+	private final Trigger codriveIntakeReverseButton;
 	// Launcher
 	private final Trigger launcherAmpPresetButton;
 	private final Trigger launcherSubwooferPresetButton;
@@ -53,10 +53,10 @@ public class Controls {
 		// intake controls (confirmed with driveteam)
 		driveIntakeInButton = driveController.x();
 		driveIntakeStopButton = driveController.b();
-		driveIntakeSpitButton = driveController.y();
+		driveIntakeReverseButton = driveController.y();
 		codriveIntakeInButton = codriveController.povLeft();
 		codriveIntakeStopButton = codriveController.povRight();
-		codriveIntakeSpitButton = codriveController.povUp();
+		codriveIntakeReverseButton = codriveController.povUp();
 
 		if (DRIVEBASE_ENABLED) {
 			bindDrivebaseControls();
@@ -88,10 +88,10 @@ public class Controls {
 		// 		.setDefaultCommand(s.intakeSubsystem, new IntakeStopCommand(s.intakeSubsystem));
 		driveIntakeInButton.onTrue(new AllInCommand(s.intakeSubsystem));
 		driveIntakeStopButton.onTrue(new AllStopCommand(s.intakeSubsystem));
-		driveIntakeSpitButton.onTrue(new AllOutCommand(s.intakeSubsystem));
+		driveIntakeReverseButton.onTrue(new AllReverseCommand(s.intakeSubsystem));
 		codriveIntakeInButton.onTrue(new AllInCommand(s.intakeSubsystem));
 		codriveIntakeStopButton.onTrue(new AllStopCommand(s.intakeSubsystem));
-		codriveIntakeSpitButton.onTrue(new AllOutCommand(s.intakeSubsystem));
+		codriveIntakeReverseButton.onTrue(new AllReverseCommand(s.intakeSubsystem));
 	}
 
 	private void bindLauncherControls() {

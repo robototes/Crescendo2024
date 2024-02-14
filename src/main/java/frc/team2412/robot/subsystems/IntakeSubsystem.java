@@ -17,13 +17,13 @@ import java.util.Map;
 public class IntakeSubsystem extends SubsystemBase {
 	// Constants
 	public static final double INTAKE_IN_SPEED = 0.3;
-	public static final double INTAKE_OUT_SPEED = -0.7;
+	public static final double INTAKE_REVERSE_SPEED = -0.7;
 
 	public static final double INDEX_IN_SPEED = 0.3;
-	public static final double INDEX_OUT_SPEED = -0.3;
+	public static final double INDEX_REVERSE_SPEED = -0.3;
 
 	public static final double FEEDER_IN_SPEED = 0.3;
-	public static final double FEEDER_OUT_SPEED = -0.3;
+	public static final double FEEDER_REVERSE_SPEED = -0.3;
 
 	// Motors
 	private final CANSparkMax intakeMotorFront;
@@ -109,8 +109,8 @@ public class IntakeSubsystem extends SubsystemBase {
 		intakeMotorFront.set(setIntakeInSpeedEntry.getDouble(INTAKE_IN_SPEED));
 	}
 
-	public void intakeOut() {
-		intakeMotorFront.set(INTAKE_OUT_SPEED);
+	public void intakeReverse() {
+		intakeMotorFront.set(INTAKE_REVERSE_SPEED);
 	}
 
 	public void intakeStop() {
@@ -122,8 +122,8 @@ public class IntakeSubsystem extends SubsystemBase {
 		indexMotorUpper.set(setIndexInSpeedEntry.getDouble(INDEX_IN_SPEED));
 	}
 
-	public void indexOut() {
-		indexMotorUpper.set(INDEX_OUT_SPEED);
+	public void indexReverse() {
+		indexMotorUpper.set(INDEX_REVERSE_SPEED);
 	}
 
 	public void indexStop() {
@@ -135,8 +135,8 @@ public class IntakeSubsystem extends SubsystemBase {
 		feederMotor.set(setFeederInSpeedEntry.getDouble(FEEDER_IN_SPEED));
 	}
 
-	public void feederOut() {
-		feederMotor.set(FEEDER_OUT_SPEED);
+	public void feederReverse() {
+		feederMotor.set(FEEDER_REVERSE_SPEED);
 	}
 
 	public void feederStop() {
