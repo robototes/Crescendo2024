@@ -27,6 +27,9 @@ public class Controls {
 	private final CommandXboxController codriveController;
 
 	// Intake
+	private final Trigger driveIntakeInButton;
+	private final Trigger driveIntakeStopButton;
+	private final Trigger driveIntakeSpitButton;
 	private final Trigger codriveIntakeInButton;
 	private final Trigger codriveIntakeStopButton;
 	private final Trigger codriveIntakeSpitButton;
@@ -47,10 +50,13 @@ public class Controls {
 		launcherSubwooferPresetButton = codriveController.povRight();
 		launcherPodiumPresetButton = codriveController.povLeft();
 		launcherTrapPresetButton = codriveController.povUp();
-		// intake buttons (may change later)
-		codriveIntakeInButton = codriveController.x();
-		codriveIntakeStopButton = codriveController.b();
-		codriveIntakeSpitButton = codriveController.y();
+		// intake controls (confirmed with driveteam)
+		driveIntakeInButton = driveController.x();
+		driveIntakeStopButton = driveController.b();
+		driveIntakeSpitButton = driveController.y();
+		codriveIntakeInButton = codriveController.povLeft();
+		codriveIntakeStopButton = codriveController.povRight();
+		codriveIntakeSpitButton = codriveController.povUp();
 
 		if (DRIVEBASE_ENABLED) {
 			bindDrivebaseControls();
@@ -80,6 +86,9 @@ public class Controls {
 	private void bindIntakeControls() {
 		// CommandScheduler.getInstance()
 		// 		.setDefaultCommand(s.intakeSubsystem, new IntakeStopCommand(s.intakeSubsystem));
+		driveIntakeInButton.onTrue(new AllInCommand(s.intakeSubsystem));
+		driveIntakeStopButton.onTrue(new AllStopCommand(s.intakeSubsystem));
+		driveIntakeSpitButton.onTrue(new AllOutCommand(s.intakeSubsystem));
 		codriveIntakeInButton.onTrue(new AllInCommand(s.intakeSubsystem));
 		codriveIntakeStopButton.onTrue(new AllStopCommand(s.intakeSubsystem));
 		codriveIntakeSpitButton.onTrue(new AllOutCommand(s.intakeSubsystem));
