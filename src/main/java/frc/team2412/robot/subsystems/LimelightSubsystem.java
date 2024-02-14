@@ -11,7 +11,8 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import java.util.function.Supplier;
+import frc.team2412.robot.commands.drivebase.DriveCommand;
+import java.util.function.DoubleSupplier;
 
 public class LimelightSubsystem extends SubsystemBase {
 
@@ -50,6 +51,8 @@ public class LimelightSubsystem extends SubsystemBase {
 		networkTable = NetworkTableInstance.getDefault().getTable("limelight");
 		ShuffleboardTab limelightTab = Shuffleboard.getTab("Limelight");
 
+		setPipeline();
+
 		limelightTab.addBoolean("hasTarget", this::hasTargets).withPosition(0, 0).withSize(1, 1);
 		limelightTab
 				.addDouble("Horizontal Offset", this::getHorizontalOffset)
@@ -69,7 +72,7 @@ public class LimelightSubsystem extends SubsystemBase {
 				.withPosition(4, 0)
 				.withSize(1, 1);
 		limelightTab
-				.addDouble("Limelight Based Turn Power - TEST ", this::turnPower)
+				.addDouble("Limelight Based Turn Power - TEST ", this::turnPowerExp)
 				.withPosition(5, 0)
 				.withSize(1, 1);
 		limelightTab
@@ -81,6 +84,10 @@ public class LimelightSubsystem extends SubsystemBase {
 				.addString("Target Pose ", this::getTargetPoseString)
 				.withPosition(0, 2)
 				.withSize(4, 1);
+	}
+
+	public void setPipeline() {
+		networkTable.getEntry("pipeline").setNumber(2);
 	}
 
 	// METHODS
@@ -123,12 +130,24 @@ public class LimelightSubsystem extends SubsystemBase {
 		return (8.25 * focal_length) / getBoxWidth();
 	}
 
-	public double turnPower() {
+	public double turnPowerExp() {
+		if(getHorizontalOffset() >= 10){
 		return MathUtil.clamp(
 				(Math.signum(getHorizontalOffset())
-						* (Math.pow(Math.abs(getHorizontalOffset()), 1.8) / 100)),
-				-1.5,
-				1.5);
+						* (Math.pow(Math.abs(getHorizontalOffset()), 1.8) / 0.2)),
+				-0.25,
+				0.25);
+		}else{
+			return 0.0;
+		}
+	}
+	
+	public double turnPowerLin() {
+		if(getHorizontalOffset() >= 3.0){
+			return MathUtil.clamp(0.04*getHorizontalOffset(), -0.25, 0.25);
+		}else{
+			return 0.0;
+		}
 	}
 
 	// tan(degree) * distance = sideways distance
@@ -169,22 +188,24 @@ public class LimelightSubsystem extends SubsystemBase {
 		return (getDistanceFromTarget() <= GOAL_DISTANCE_FROM_TARGET);
 	}
 
-	public Command getWithinDistance(Pose2d currentPose, DrivebaseSubsystem drivebaseSubsystem) {
-		final Supplier<Rotation2d> returnTurn = () -> Rotation2d.fromDegrees(getHorizontalOffset());
-		final Supplier<Rotation2d> returnZeroRotation = () -> Rotation2d.fromDegrees(0);
+	public Command getWithinDistance(DrivebaseSubsystem drivebaseSubsystem) {
+		final DoubleSupplier returnTurn = () -> turnPowerExp();
+		final DoubleSupplier returnZero = () -> 0.0;
 		Command moveCommand;
 		Pose2d targetPose;
 		if (hasTargets()) {
-			targetPose = getTargetPose(currentPose);
-			moveCommand = drivebaseSubsystem.rotateToAngle(returnTurn, true);
+			System.out.println("has targets");
+			moveCommand =
+					new DriveCommand(drivebaseSubsystem, returnZero, returnZero, returnTurn, returnZero);
 
 		} else {
-			targetPose = currentPose;
-			moveCommand = drivebaseSubsystem.rotateToAngle(returnZeroRotation, true);
+			System.out.println("hasn't targets");
+			moveCommand =
+					new DriveCommand(drivebaseSubsystem, returnZero, returnZero, returnZero, returnZero);
 		}
 
 		// create path
-
+		System.out.println("return movecommand");
 		return moveCommand;
 	}
 

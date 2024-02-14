@@ -10,8 +10,6 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.team2412.robot.commands.limelight.GetWithinDistanceCommand;
-import frc.team2412.robot.subsystems.*;
 
 public class Controls {
 	public static class ControlConstants {
@@ -61,13 +59,12 @@ public class Controls {
 								driveController::getLeftY,
 								driveController::getLeftX,
 								() -> Rotation2d.fromRotations(driveController.getRightX())));
-		driveController.start().onTrue(new InstantCommand(s.drivebaseSubsystem::resetGyro));
+		// driveController.start().onTrue(new InstantCommand(s.drivebaseSubsystem::resetGyro));
 		driveController.rightStick().onTrue(new InstantCommand(s.drivebaseSubsystem::toggleXWheels));
 	}
 
 	public void bindLimelightControls() {
-		getWithinDistanceTrigger.onTrue(
-				new GetWithinDistanceCommand(s.limelightSubsystem, s.drivebaseSubsystem));
+		getWithinDistanceTrigger.onTrue(s.limelightSubsystem.getWithinDistance(s.drivebaseSubsystem));
 		/*private void bindLauncherControls() {
 			launcherPodiumPresetButton.onTrue(
 					new SetAngleLaunchCommand(

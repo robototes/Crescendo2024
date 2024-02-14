@@ -1,9 +1,5 @@
-package frc.team2412.robot.commands.limelight;
+/*package frc.team2412.robot.commands.limelight;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj2.command.Command;
-import frc.team2412.robot.subsystems.DrivebaseSubsystem;
-import frc.team2412.robot.subsystems.LimelightSubsystem;
 
 public class GetWithinDistanceCommand extends Command {
 
@@ -27,7 +23,7 @@ public class GetWithinDistanceCommand extends Command {
 	public void initialize() {
 		currentPose = drivebaseSubsystem.getPose();
 		getToPositionCommand = limelightSubsystem.getWithinDistance(currentPose, drivebaseSubsystem);
-		limelightSubsystem.getWithinDistance(currentPose, drivebaseSubsystem);
+		// limelightSubsystem.getWithinDistance(currentPose, drivebaseSubsystem);
 		getToPositionCommand.initialize();
 	}
 
@@ -42,6 +38,6 @@ public class GetWithinDistanceCommand extends Command {
 
 	@Override
 	public boolean isFinished() {
+		System.out.println("within distance");
 		return limelightSubsystem.isWithinDistance();
-	}
-}
+	}*/

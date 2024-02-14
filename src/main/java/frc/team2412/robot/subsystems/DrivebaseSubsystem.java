@@ -156,6 +156,20 @@ public class DrivebaseSubsystem extends SubsystemBase {
 		}
 	}
 
+	public void driveWithDoubleSupplierTurn(
+			Translation2d translation, Supplier<Double> rotation, boolean fieldOriented) {
+		// if we're requesting the robot to stay still, lock wheels in X formation
+		if (translation.getNorm() == 0 && rotation.get() == 0.0 && xWheelsEnabled) {
+			swerveDrive.lockPose();
+		}
+		if (rotationSetpoint != null) {
+			swerveDrive.drive(
+					translation.unaryMinus(), rotationSetpoint.getRadians(), fieldOriented, false);
+		} else {
+			swerveDrive.drive(translation.unaryMinus(), rotation.get(), fieldOriented, false);
+		}
+	}
+
 	/**
 	 * Drives the robot using joystick inputs
 	 *
@@ -183,6 +197,14 @@ public class DrivebaseSubsystem extends SubsystemBase {
 											* translationSpeedEntry.getDouble(1.0));
 					drive(constrainedTranslation, constrainedRotation, true);
 				});
+	}
+
+	public void simpleDrive(double forward, double strafe, Rotation2d rotation) {
+
+		ChassisSpeeds chassisSpeeds = new ChassisSpeeds(0, 0, 0);
+		chassisSpeeds = new ChassisSpeeds(forward, -strafe, rotation.getRadians());
+
+		drive(chassisSpeeds);
 	}
 
 	// this might need to be put in its own file due to complexity
