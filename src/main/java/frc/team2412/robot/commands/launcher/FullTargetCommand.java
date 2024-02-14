@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.team2412.robot.Controls;
 import frc.team2412.robot.Robot;
 import frc.team2412.robot.subsystems.DrivebaseSubsystem;
+import frc.team2412.robot.subsystems.IntakeSubsystem;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
 import frc.team2412.robot.util.LauncherDataLoader;
 import frc.team2412.robot.util.LauncherDataPoint;
@@ -29,15 +30,18 @@ public class FullTargetCommand extends Command {
 
 	private DrivebaseSubsystem drivebaseSubsystem;
 	private LauncherSubsystem launcherSubsystem;
+	private IntakeSubsystem intakeSubsystem;
 	private Command yawAlignmentCommand;
 	private Rotation2d yawTarget;
 	private BooleanSupplier launch;
 
 	public FullTargetCommand(
 			LauncherSubsystem launcherSubsystem,
+			IntakeSubsystem intakeSubsystem,
 			DrivebaseSubsystem drivebaseSubsystem,
 			BooleanSupplier launch) {
 		this.launcherSubsystem = launcherSubsystem;
+		this.intakeSubsystem = intakeSubsystem;
 		this.drivebaseSubsystem = drivebaseSubsystem;
 		this.launch = launch;
 		yawAlignmentCommand = drivebaseSubsystem.rotateToAngle(() -> yawTarget, false);
@@ -46,6 +50,7 @@ public class FullTargetCommand extends Command {
 	@Override
 	public void initialize() {
 		CommandScheduler.getInstance().schedule(yawAlignmentCommand);
+		intakeSubsystem.feederStop();
 	}
 
 	@Override
@@ -57,10 +62,11 @@ public class FullTargetCommand extends Command {
 						Math.atan2(relativeSpeaker.getY(), relativeSpeaker.getX()) + Math.PI);
 		double distance = relativeSpeaker.getTranslation().getNorm();
 		LauncherDataPoint dataPoint = LAUNCHER_DATA.get(distance);
+
 		if (launch.getAsBoolean()) {
-			// move feeder motors
+			intakeSubsystem.feederIn();
 		} else {
-			// stop feeder motors
+			intakeSubsystem.feederStop();
 		}
 		
 		if (MathUtil.isNear(
@@ -77,6 +83,7 @@ public class FullTargetCommand extends Command {
 	public void end(boolean interrupted) {
 		yawAlignmentCommand.cancel();
 		launcherSubsystem.stopLauncher();
+		intakeSubsystem.feederStop();
 		controls.vibrateDriveController(0.0);
 	}
 }
