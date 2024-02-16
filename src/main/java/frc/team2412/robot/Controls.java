@@ -8,12 +8,19 @@ import static frc.team2412.robot.Subsystems.SubsystemConstants.LAUNCHER_ENABLED;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.team2412.robot.commands.intake.AllInCommand;
-import frc.team2412.robot.commands.intake.AllReverseCommand;
-import frc.team2412.robot.commands.intake.AllStopCommand;
+import frc.team2412.robot.commands.intake.FeederInCommand;
+import frc.team2412.robot.commands.intake.FeederStopCommand;
+import frc.team2412.robot.commands.intake.IndexInCommand;
+import frc.team2412.robot.commands.intake.FeederReverseCommand;
+import frc.team2412.robot.commands.intake.IndexReverseCommand;
+import frc.team2412.robot.commands.intake.IndexStopCommand;
+import frc.team2412.robot.commands.intake.IntakeInCommand;
+import frc.team2412.robot.commands.intake.IntakeReverseCommand;
+import frc.team2412.robot.commands.intake.IntakeStopCommand;
 import frc.team2412.robot.commands.launcher.SetAngleLaunchCommand;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
 
@@ -29,10 +36,10 @@ public class Controls {
 	// Intake
 	private final Trigger driveIntakeInButton;
 	private final Trigger driveIntakeStopButton;
-	private final Trigger driveIntakeReverseButton;
+	private final Trigger driveIntakeSpitButton;
 	private final Trigger codriveIntakeInButton;
 	private final Trigger codriveIntakeStopButton;
-	private final Trigger codriveIntakeReverseButton;
+	private final Trigger codriveIntakeSpitButton;
 	// Launcher
 	private final Trigger launcherAmpPresetButton;
 	private final Trigger launcherSubwooferPresetButton;
@@ -50,13 +57,13 @@ public class Controls {
 		launcherSubwooferPresetButton = codriveController.povRight();
 		launcherPodiumPresetButton = codriveController.povLeft();
 		launcherTrapPresetButton = codriveController.povUp();
-		// intake controls (confirmed with driveteam)
-		driveIntakeInButton = driveController.x();
-		driveIntakeStopButton = driveController.b();
-		driveIntakeReverseButton = driveController.y();
-		codriveIntakeInButton = codriveController.povLeft();
-		codriveIntakeStopButton = codriveController.povRight();
-		codriveIntakeReverseButton = codriveController.povUp();
+		// intake buttons (may change later)
+		driveIntakeInButton = codriveController.povLeft();
+		driveIntakeStopButton = codriveController.povRight();
+		driveIntakeSpitButton = codriveController.povUp();
+		codriveIntakeInButton = codriveController.x();
+		codriveIntakeStopButton = codriveController.b();
+		codriveIntakeSpitButton = codriveController.y();
 
 		if (DRIVEBASE_ENABLED) {
 			bindDrivebaseControls();
@@ -82,18 +89,7 @@ public class Controls {
 		driveController.rightStick().onTrue(new InstantCommand(s.drivebaseSubsystem::toggleXWheels));
 	}
 
-	// intake controls
-	private void bindIntakeControls() {
-		// CommandScheduler.getInstance()
-		// 		.setDefaultCommand(s.intakeSubsystem, new IntakeStopCommand(s.intakeSubsystem));
-		driveIntakeInButton.onTrue(new AllInCommand(s.intakeSubsystem));
-		driveIntakeStopButton.onTrue(new AllStopCommand(s.intakeSubsystem));
-		driveIntakeReverseButton.onTrue(new AllReverseCommand(s.intakeSubsystem));
-		codriveIntakeInButton.onTrue(new AllInCommand(s.intakeSubsystem));
-		codriveIntakeStopButton.onTrue(new AllStopCommand(s.intakeSubsystem));
-		codriveIntakeReverseButton.onTrue(new AllReverseCommand(s.intakeSubsystem));
-	}
-
+	// launcher controls
 	private void bindLauncherControls() {
 		launcherPodiumPresetButton.onTrue(
 				new SetAngleLaunchCommand(
@@ -105,5 +101,27 @@ public class Controls {
 						s.launcherSubsystem,
 						LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
 						LauncherSubsystem.SUBWOOFER_AIM_ANGLE));
+	}
+
+	// intake controls
+	private void bindIntakeControls() {
+		// later on set default command to check sensing notes
+		CommandScheduler.getInstance()
+				.setDefaultCommand(s.intakeSubsystem, new IntakeStopCommand(s.intakeSubsystem));
+		codriveIntakeInButton.onTrue(
+				Commands.parallel(
+						new IntakeInCommand(s.intakeSubsystem),
+						new IndexInCommand(s.intakeSubsystem),
+						new FeederInCommand(s.intakeSubsystem)));
+		codriveIntakeStopButton.onTrue(
+				Commands.parallel(
+						new IntakeStopCommand(s.intakeSubsystem),
+						new IndexStopCommand(s.intakeSubsystem),
+						new FeederStopCommand(s.intakeSubsystem)));
+		codriveIntakeSpitButton.onTrue(
+				Commands.parallel(
+						new IntakeReverseCommand(s.intakeSubsystem),
+						new IndexReverseCommand(s.intakeSubsystem),
+						new FeederReverseCommand(s.intakeSubsystem)));
 	}
 }
