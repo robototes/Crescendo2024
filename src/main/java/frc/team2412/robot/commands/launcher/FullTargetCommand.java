@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.team2412.robot.Controls;
-import frc.team2412.robot.Robot;
 import frc.team2412.robot.subsystems.DrivebaseSubsystem;
 import frc.team2412.robot.subsystems.IntakeSubsystem;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
@@ -23,7 +22,7 @@ public class FullTargetCommand extends Command {
 			LauncherDataLoader.fromCSV(
 					FileSystems.getDefault()
 							.getPath(Filesystem.getDeployDirectory().getPath(), "launcher_data.csv"));
-	private static final float YAW_TARGET_VIBRATION_TOLERANCE = 3; // degrees
+	private static final double YAW_TARGET_VIBRATION_TOLERANCE = 3; // degrees
 	private final Pose2d SPEAKER_POSE = new Pose2d(0.0, 5.55, Rotation2d.fromRotations(0));
 
 	private DrivebaseSubsystem drivebaseSubsystem;
@@ -38,10 +37,12 @@ public class FullTargetCommand extends Command {
 			LauncherSubsystem launcherSubsystem,
 			IntakeSubsystem intakeSubsystem,
 			DrivebaseSubsystem drivebaseSubsystem,
+			Controls controls,
 			BooleanSupplier launch) {
 		this.launcherSubsystem = launcherSubsystem;
 		this.intakeSubsystem = intakeSubsystem;
 		this.drivebaseSubsystem = drivebaseSubsystem;
+		this.controls = controls;
 		this.launch = launch;
 		yawAlignmentCommand = drivebaseSubsystem.rotateToAngle(() -> yawTarget, false);
 
@@ -52,8 +53,6 @@ public class FullTargetCommand extends Command {
 	public void initialize() {
 		CommandScheduler.getInstance().schedule(yawAlignmentCommand);
 		intakeSubsystem.feederStop();
-		Robot robot = Robot.getInstance();
-		controls = robot.controls;
 	}
 
 	@Override

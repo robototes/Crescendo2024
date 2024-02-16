@@ -78,7 +78,8 @@ public class Controls {
 									s.launcherSubsystem,
 									s.intakeSubsystem,
 									s.drivebaseSubsystem,
-									() -> driveController.rightBumper().getAsBoolean()));
+									this,
+									driveController.rightBumper()));
 		}
 	}
 
