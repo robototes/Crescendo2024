@@ -2,6 +2,7 @@ package frc.team2412.robot.subsystems;
 
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
+import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
@@ -107,6 +108,9 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherTopMotor.setSmartCurrentLimit(20);
 		launcherBottomMotor.setSmartCurrentLimit(20);
 		launcherAngleMotor.setSmartCurrentLimit(20);
+
+		launcherAngleMotor.setSoftLimit(CANSparkBase.SoftLimitDirection.kForward, 100);
+		launcherAngleMotor.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, 2);
 
 		launcherTopMotor.burnFlash();
 		launcherBottomMotor.burnFlash();

@@ -7,6 +7,7 @@ import static frc.team2412.robot.Subsystems.SubsystemConstants.INTAKE_ENABLED;
 import static frc.team2412.robot.Subsystems.SubsystemConstants.LAUNCHER_ENABLED;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -102,7 +103,7 @@ public class Controls {
 		CommandScheduler.getInstance()
 				.setDefaultCommand(
 						s.launcherSubsystem,
-						new SetAngleCommand(s.launcherSubsystem, codriveController::getLeftY));
+						new SetAngleCommand(s.launcherSubsystem, () -> Units.rotationsToDegrees(codriveController.getLeftY())));
 		// launcherPodiumPresetButton.onTrue(
 		//		new SetAngleLaunchCommand(
 		//				s.launcherSubsystem,
