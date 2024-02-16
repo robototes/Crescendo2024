@@ -23,10 +23,8 @@ public class FullTargetCommand extends Command {
 			LauncherDataLoader.fromCSV(
 					FileSystems.getDefault()
 							.getPath(Filesystem.getDeployDirectory().getPath(), "launcher_data.csv"));
-	;
 	private static final float YAW_TARGET_VIBRATION_TOLERANCE = 3; // degrees
 	private final Pose2d SPEAKER_POSE = new Pose2d(0.0, 5.55, Rotation2d.fromRotations(0));
-	private final Controls controls = Robot.getInstance().controls;
 
 	private DrivebaseSubsystem drivebaseSubsystem;
 	private LauncherSubsystem launcherSubsystem;
@@ -34,6 +32,7 @@ public class FullTargetCommand extends Command {
 	private Command yawAlignmentCommand;
 	private Rotation2d yawTarget;
 	private BooleanSupplier launch;
+	private Controls controls;
 
 	public FullTargetCommand(
 			LauncherSubsystem launcherSubsystem,
@@ -51,6 +50,8 @@ public class FullTargetCommand extends Command {
 	public void initialize() {
 		CommandScheduler.getInstance().schedule(yawAlignmentCommand);
 		intakeSubsystem.feederStop();
+		Robot robot = Robot.getInstance();
+		controls = robot.controls;
 	}
 
 	@Override
@@ -73,8 +74,8 @@ public class FullTargetCommand extends Command {
 		}
 
 		if (MathUtil.isNear(
-				yawTarget.getRadians(),
-				drivebaseSubsystem.getPose().getRotation().getRadians(),
+				yawTarget.getDegrees(),
+				drivebaseSubsystem.getPose().getRotation().getDegrees(),
 				YAW_TARGET_VIBRATION_TOLERANCE)) {
 			controls.vibrateDriveController(1.0);
 		} else {
