@@ -7,6 +7,7 @@ import static frc.team2412.robot.Subsystems.SubsystemConstants.INTAKE_ENABLED;
 import static frc.team2412.robot.Subsystems.SubsystemConstants.LAUNCHER_ENABLED;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -15,6 +16,9 @@ import frc.team2412.robot.commands.intake.AllInCommand;
 import frc.team2412.robot.commands.intake.AllReverseCommand;
 import frc.team2412.robot.commands.intake.AllStopCommand;
 import frc.team2412.robot.commands.intake.FeederInCommand;
+import frc.team2412.robot.commands.launcher.SetAngleCommand;
+import frc.team2412.robot.commands.launcher.SetLaunchSpeedCommand;
+import frc.team2412.robot.subsystems.LauncherSubsystem;
 
 public class Controls {
 	public static class ControlConstants {
@@ -65,7 +69,7 @@ public class Controls {
 			bindLauncherControls();
 		}
 		if (LAUNCHER_ENABLED && INTAKE_ENABLED) {
-			bindLaunchCommand();
+			bindLauncherIntakeCommand();
 		}
 		if (INTAKE_ENABLED) {
 			bindIntakeControls();
@@ -98,6 +102,7 @@ public class Controls {
 	}
 
 	private void bindLauncherControls() {
+		CommandScheduler.getInstance().setDefaultCommand(s.launcherSubsystem,  new SetAngleCommand(s.launcherSubsystem, codriveController::getLeftY));
 		// launcherPodiumPresetButton.onTrue(
 		//		new SetAngleLaunchCommand(
 		//				s.launcherSubsystem,
@@ -108,9 +113,10 @@ public class Controls {
 		//				s.launcherSubsystem,
 		//				LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
 		//				LauncherSubsystem.SUBWOOFER_AIM_ANGLE));
+		
 	}
 
-	private void bindLaunchCommand() {
+	private void bindLauncherIntakeCommand() {
 		launcherLaunchButton.whileTrue(new FeederInCommand(s.intakeSubsystem));
 	}
 }

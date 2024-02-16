@@ -1,5 +1,7 @@
 package frc.team2412.robot.commands.launcher;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
@@ -7,9 +9,9 @@ import frc.team2412.robot.subsystems.LauncherSubsystem;
 
 public class SetAngleCommand extends Command {
 	private final LauncherSubsystem launcherSubsystem;
-	private final double launcherAngle;
+	private final DoubleSupplier launcherAngle;
 
-	public SetAngleCommand(LauncherSubsystem launcherSubsystem, double angle) {
+	public SetAngleCommand(LauncherSubsystem launcherSubsystem, DoubleSupplier angle) {
 		this.launcherSubsystem = launcherSubsystem;
 		this.launcherAngle = angle;
 		addRequirements(launcherSubsystem);
@@ -17,12 +19,12 @@ public class SetAngleCommand extends Command {
 
 	@Override
 	public void initialize() {
-		launcherSubsystem.setAngle(launcherAngle);
+		launcherSubsystem.setAngle(launcherAngle.getAsDouble());
 	}
 
 	@Override
 	public boolean isFinished() {
 		return (MathUtil.isNear(
-				launcherAngle, launcherSubsystem.getAngle(), LauncherSubsystem.ANGLE_TOLERANCE));
+				launcherAngle.getAsDouble(), launcherSubsystem.getAngle(), LauncherSubsystem.ANGLE_TOLERANCE));
 	}
 }
