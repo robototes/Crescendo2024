@@ -65,9 +65,6 @@ public class Controls {
 		if (LAUNCHER_ENABLED) {
 			bindLauncherControls();
 		}
-		if (LAUNCHER_ENABLED && INTAKE_ENABLED) {
-			bindLauncherIntakeCommand();
-		}
 		if (INTAKE_ENABLED) {
 			bindIntakeControls();
 		}
@@ -96,6 +93,10 @@ public class Controls {
 		codriveIntakeInButton.onTrue(new AllInCommand(s.intakeSubsystem));
 		codriveIntakeStopButton.onTrue(new AllStopCommand(s.intakeSubsystem));
 		codriveIntakeReverseButton.onTrue(new AllReverseCommand(s.intakeSubsystem));
+
+		//feeder shoot note out 
+		launcherLaunchButton.whileTrue(new FeederInCommand(s.intakeSubsystem));
+
 	}
 
 	private void bindLauncherControls() {
@@ -116,7 +117,4 @@ public class Controls {
 
 	}
 
-	private void bindLauncherIntakeCommand() {
-		launcherLaunchButton.whileTrue(new FeederInCommand(s.intakeSubsystem));
-	}
 }
