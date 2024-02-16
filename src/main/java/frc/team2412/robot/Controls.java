@@ -14,7 +14,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.team2412.robot.commands.intake.AllInCommand;
 import frc.team2412.robot.commands.intake.AllReverseCommand;
 import frc.team2412.robot.commands.intake.AllStopCommand;
-import frc.team2412.robot.commands.launcher.LaunchCommand;
+import frc.team2412.robot.commands.intake.FeederInCommand;
+;
 
 public class Controls {
 	public static class ControlConstants {
@@ -111,6 +112,6 @@ public class Controls {
 	}
 
 	private void bindLaunchCommand() {
-		launcherLaunchButton.whileTrue(new LaunchCommand(s.launcherSubsystem, s.intakeSubsystem));
+		launcherLaunchButton.whileTrue(new FeederInCommand(s.intakeSubsystem));
 	}
 }
