@@ -64,6 +64,9 @@ public class Controls {
 		if (LAUNCHER_ENABLED) {
 			bindLauncherControls();
 		}
+		if (LAUNCHER_ENABLED && INTAKE_ENABLED) {
+			bindLaunchCommand();
+		}
 		if (INTAKE_ENABLED) {
 			bindIntakeControls();
 		}
@@ -105,6 +108,10 @@ public class Controls {
 		//				s.launcherSubsystem,
 		//				LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
 		//				LauncherSubsystem.SUBWOOFER_AIM_ANGLE));
+		launcherLaunchButton.whileTrue(new LaunchCommand(s.launcherSubsystem, s.intakeSubsystem));
+	}
+
+	private void bindLaunchCommand() {
 		launcherLaunchButton.whileTrue(new LaunchCommand(s.launcherSubsystem, s.intakeSubsystem));
 	}
 }

@@ -6,17 +6,17 @@ import frc.team2412.robot.subsystems.LauncherSubsystem;
 
 public class LaunchCommand extends Command {
 	private final LauncherSubsystem launcherSubsystem;
-	private final IntakeSubsystem IntakeSubsystem;
+	private final IntakeSubsystem intakeSubsystem;
 
 	public LaunchCommand(LauncherSubsystem launcherSubsystem, IntakeSubsystem IntakeSubsystem) {
 		this.launcherSubsystem = launcherSubsystem;
-		this.IntakeSubsystem = IntakeSubsystem;
+		this.intakeSubsystem = IntakeSubsystem;
 		addRequirements(launcherSubsystem, IntakeSubsystem);
 	}
 
 	@Override
 	public void initialize() {
-		IntakeSubsystem.feederIn();
+		intakeSubsystem.feederIn();
 		launcherSubsystem.launch();
 	}
 
@@ -27,7 +27,7 @@ public class LaunchCommand extends Command {
 
 	@Override
 	public void end(boolean interrupted) {
-		IntakeSubsystem.feederStop();
+		intakeSubsystem.feederStop();
 		launcherSubsystem.stopLauncher();
 	}
 }
