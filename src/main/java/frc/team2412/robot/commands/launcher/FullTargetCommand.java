@@ -5,9 +5,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.team2412.robot.Controls;
@@ -26,7 +25,10 @@ public class FullTargetCommand extends Command {
 					FileSystems.getDefault()
 							.getPath(Filesystem.getDeployDirectory().getPath(), "launcher_data.csv"));
 	private static final double YAW_TARGET_VIBRATION_TOLERANCE = 3; // degrees
-	private final Pose2d SPEAKER_POSE = DriverStation.getAlliance().get().equals(Alliance.Blue) ? new Pose2d(0.0, 5.55, Rotation2d.fromRotations(0)) : new Pose2d(16.5, 5.55, Rotation2d.fromRotations(0));
+	private final Pose2d SPEAKER_POSE =
+			DriverStation.getAlliance().get().equals(Alliance.Blue)
+					? new Pose2d(0.0, 5.55, Rotation2d.fromRotations(0))
+					: new Pose2d(16.5, 5.55, Rotation2d.fromRotations(0));
 
 	private DrivebaseSubsystem drivebaseSubsystem;
 	private LauncherSubsystem launcherSubsystem;
