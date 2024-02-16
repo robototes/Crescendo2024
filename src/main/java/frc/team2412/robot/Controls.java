@@ -103,7 +103,8 @@ public class Controls {
 		CommandScheduler.getInstance()
 				.setDefaultCommand(
 						s.launcherSubsystem,
-						new SetAngleCommand(s.launcherSubsystem, () -> Units.rotationsToDegrees(codriveController.getLeftY())));
+						new SetAngleCommand(
+								s.launcherSubsystem, () -> Units.rotationsToDegrees(codriveController.getLeftY())));
 		// launcherPodiumPresetButton.onTrue(
 		//		new SetAngleLaunchCommand(
 		//				s.launcherSubsystem,
