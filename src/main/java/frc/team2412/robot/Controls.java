@@ -94,9 +94,8 @@ public class Controls {
 		codriveIntakeStopButton.onTrue(new AllStopCommand(s.intakeSubsystem));
 		codriveIntakeReverseButton.onTrue(new AllReverseCommand(s.intakeSubsystem));
 
-		//feeder shoot note out 
+		// feeder shoot note out
 		launcherLaunchButton.whileTrue(new FeederInCommand(s.intakeSubsystem));
-
 	}
 
 	private void bindLauncherControls() {
@@ -116,5 +115,4 @@ public class Controls {
 		//				LauncherSubsystem.SUBWOOFER_AIM_ANGLE));
 
 	}
-
 }
