@@ -44,6 +44,8 @@ public class FullTargetCommand extends Command {
 		this.drivebaseSubsystem = drivebaseSubsystem;
 		this.launch = launch;
 		yawAlignmentCommand = drivebaseSubsystem.rotateToAngle(() -> yawTarget, false);
+
+		addRequirements(launcherSubsystem, intakeSubsystem);
 	}
 
 	@Override
