@@ -74,9 +74,11 @@ public class FullTargetCommand extends Command {
 		}
 
 		if (MathUtil.isNear(
-				yawTarget.getDegrees(),
-				drivebaseSubsystem.getPose().getRotation().getDegrees(),
-				YAW_TARGET_VIBRATION_TOLERANCE)) {
+						yawTarget.getDegrees(),
+						drivebaseSubsystem.getPose().getRotation().getDegrees(),
+						YAW_TARGET_VIBRATION_TOLERANCE)
+				&& launcherSubsystem.isAtAngle()
+				&& launcherSubsystem.isAtSpeed()) {
 			controls.vibrateDriveController(1.0);
 		} else {
 			controls.vibrateDriveController(0.0);

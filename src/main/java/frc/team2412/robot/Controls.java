@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.team2412.robot.commands.intake.AllInCommand;
 import frc.team2412.robot.commands.intake.AllReverseCommand;
 import frc.team2412.robot.commands.intake.AllStopCommand;
+import frc.team2412.robot.commands.launcher.FullTargetCommand;
 import frc.team2412.robot.commands.launcher.SetAngleLaunchCommand;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
 
@@ -67,6 +68,17 @@ public class Controls {
 		}
 		if (INTAKE_ENABLED) {
 			bindIntakeControls();
+		}
+		if (DRIVEBASE_ENABLED && LAUNCHER_ENABLED && INTAKE_ENABLED) {
+			// temporary controls, not sure what drive team wants
+			driveController
+					.leftBumper()
+					.onTrue(
+							new FullTargetCommand(
+									s.launcherSubsystem,
+									s.intakeSubsystem,
+									s.drivebaseSubsystem,
+									() -> driveController.rightBumper().getAsBoolean()));
 		}
 	}
 
