@@ -73,7 +73,7 @@ public class Controls {
 			// temporary controls, not sure what drive team wants
 			driveController
 					.leftBumper()
-					.onTrue(
+					.whileTrue(
 							new FullTargetCommand(
 									s.launcherSubsystem,
 									s.intakeSubsystem,
