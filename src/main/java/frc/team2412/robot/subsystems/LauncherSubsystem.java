@@ -8,6 +8,8 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
 import com.revrobotics.SparkPIDController;
+
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -156,7 +158,8 @@ public class LauncherSubsystem extends SubsystemBase {
 	}
 
 	public boolean isAtTargetSpeed() {
-		return (setLauncherSpeedEntry.getDouble(0) == launcherTopEncoder.getVelocity());
+		return (MathUtil.isNear(
+				setLauncherSpeedEntry.getDouble(0), launcherTopEncoder.getVelocity(), 1));
 	}
 
 	@Override
