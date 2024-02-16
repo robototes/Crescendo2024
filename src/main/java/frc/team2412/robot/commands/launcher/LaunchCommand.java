@@ -8,10 +8,10 @@ public class LaunchCommand extends Command {
 	private final LauncherSubsystem launcherSubsystem;
 	private final IntakeSubsystem intakeSubsystem;
 
-	public LaunchCommand(LauncherSubsystem launcherSubsystem, IntakeSubsystem IntakeSubsystem) {
+	public LaunchCommand(LauncherSubsystem launcherSubsystem, IntakeSubsystem intakeSubsystem) {
 		this.launcherSubsystem = launcherSubsystem;
-		this.intakeSubsystem = IntakeSubsystem;
-		addRequirements(launcherSubsystem, IntakeSubsystem);
+		this.intakeSubsystem = intakeSubsystem;
+		addRequirements(launcherSubsystem, intakeSubsystem);
 	}
 
 	@Override
