@@ -143,6 +143,7 @@ public class LauncherSubsystem extends SubsystemBase {
 	public void launch(double speed) {
 		launcherTopPIDController.setReference(speed, ControlType.kVelocity);
 		launcherBottomPIDController.setReference(speed, ControlType.kVelocity);
+		setLauncherSpeedEntry.setDouble(speed);
 	}
 	// returns the degrees of the angle of the launcher
 	public double getAngle() {
@@ -155,8 +156,7 @@ public class LauncherSubsystem extends SubsystemBase {
 	}
 
 	public boolean isAtTargetSpeed() {
-		return (setLauncherSpeedEntry.getDouble(0)
-				== launcherSpeedEntry.getDouble(SPEAKER_SHOOT_SPEED_RPM));
+		return (setLauncherSpeedEntry.getDouble(0) == launcherTopEncoder.getVelocity());
 	}
 
 	@Override
