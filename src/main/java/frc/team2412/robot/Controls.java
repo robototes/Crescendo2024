@@ -108,7 +108,6 @@ public class Controls {
 		//				s.launcherSubsystem,
 		//				LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
 		//				LauncherSubsystem.SUBWOOFER_AIM_ANGLE));
-		launcherLaunchButton.whileTrue(new LaunchCommand(s.launcherSubsystem, s.intakeSubsystem));
 	}
 
 	private void bindLaunchCommand() {
