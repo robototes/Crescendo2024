@@ -1,9 +1,9 @@
 package frc.team2412.robot.commands.launcher;
 
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
 
-public class SetAngleLaunchCommand extends ParallelCommandGroup {
+public class SetAngleLaunchCommand extends SequentialCommandGroup {
 	private double launcherSpeed;
 	private double launcherAngle;
 

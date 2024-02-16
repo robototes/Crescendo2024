@@ -11,6 +11,7 @@ public class SetLaunchSpeedCommand extends Command {
 	public SetLaunchSpeedCommand(LauncherSubsystem launcherSubsystem, double speed) {
 		launcherSpeed = speed;
 		this.launcherSubsystem = launcherSubsystem;
+		addRequirements(launcherSubsystem);
 	}
 
 	@Override
