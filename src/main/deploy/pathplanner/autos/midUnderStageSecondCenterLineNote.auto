@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.8,
-      "y": 6.55
+      "x": 1.4,
+      "y": 5.55
     },
-    "rotation": -120.0
+    "rotation": 179.3950927289807
   },
   "command": {
     "type": "sequential",
@@ -14,7 +14,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "HighSpeakerToHighNoteLaunch2"
+            "pathName": "midUnderStageCenterNoteLaunch"
           }
         },
         {
@@ -26,7 +26,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "HighNoteLaunch2ToFarHighNoteToLaunch"
+            "pathName": "launchPosSecondCenterLineNoteLaunch"
           }
         }
       ]

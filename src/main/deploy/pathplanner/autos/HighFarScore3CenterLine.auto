@@ -28,6 +28,18 @@
           "data": {
             "pathName": "HighNoteLaunch2ToFarHighNoteToLaunch"
           }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "launchSecondNoteCenterLineLaunch"
+          }
         }
       ]
     }
