@@ -4,11 +4,12 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.team2412.robot.Controls;
-import frc.team2412.robot.Robot;
 import frc.team2412.robot.subsystems.DrivebaseSubsystem;
 import frc.team2412.robot.subsystems.IntakeSubsystem;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
@@ -23,10 +24,11 @@ public class FullTargetCommand extends Command {
 			LauncherDataLoader.fromCSV(
 					FileSystems.getDefault()
 							.getPath(Filesystem.getDeployDirectory().getPath(), "launcher_data.csv"));
-	;
-	private static final float YAW_TARGET_VIBRATION_TOLERANCE = 3; // degrees
-	private final Pose2d SPEAKER_POSE = new Pose2d(0.0, 5.55, Rotation2d.fromRotations(0));
-	private final Controls controls = Robot.getInstance().controls;
+	private static final double YAW_TARGET_VIBRATION_TOLERANCE = 3; // degrees
+	private final Pose2d SPEAKER_POSE =
+			DriverStation.getAlliance().get().equals(Alliance.Blue)
+					? new Pose2d(0.0, 5.55, Rotation2d.fromRotations(0))
+					: new Pose2d(16.5, 5.55, Rotation2d.fromRotations(0));
 
 	private DrivebaseSubsystem drivebaseSubsystem;
 	private LauncherSubsystem launcherSubsystem;
@@ -34,17 +36,22 @@ public class FullTargetCommand extends Command {
 	private Command yawAlignmentCommand;
 	private Rotation2d yawTarget;
 	private BooleanSupplier launch;
+	private Controls controls;
 
 	public FullTargetCommand(
 			LauncherSubsystem launcherSubsystem,
 			IntakeSubsystem intakeSubsystem,
 			DrivebaseSubsystem drivebaseSubsystem,
+			Controls controls,
 			BooleanSupplier launch) {
 		this.launcherSubsystem = launcherSubsystem;
 		this.intakeSubsystem = intakeSubsystem;
 		this.drivebaseSubsystem = drivebaseSubsystem;
+		this.controls = controls;
 		this.launch = launch;
 		yawAlignmentCommand = drivebaseSubsystem.rotateToAngle(() -> yawTarget, false);
+
+		addRequirements(launcherSubsystem, intakeSubsystem);
 	}
 
 	@Override
@@ -73,9 +80,13 @@ public class FullTargetCommand extends Command {
 		}
 
 		if (MathUtil.isNear(
-				yawTarget.getRadians(),
-				drivebaseSubsystem.getPose().getRotation().getRadians(),
-				YAW_TARGET_VIBRATION_TOLERANCE)) {
+						yawTarget.getDegrees(),
+						drivebaseSubsystem.getPose().getRotation().getDegrees(),
+						YAW_TARGET_VIBRATION_TOLERANCE,
+						0,
+						360)
+				&& launcherSubsystem.isAtAngle()
+				&& launcherSubsystem.isAtSpeed()) {
 			controls.vibrateDriveController(1.0);
 		} else {
 			controls.vibrateDriveController(0.0);

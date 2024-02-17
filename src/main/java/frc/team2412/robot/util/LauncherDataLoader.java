@@ -3,6 +3,7 @@ package frc.team2412.robot.util;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.wpilibj.Filesystem;
+import frc.team2412.robot.Robot;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -23,7 +24,8 @@ public class LauncherDataLoader {
 						Files.newBufferedWriter(
 								FileSystems.getDefault()
 										.getPath(
-												Filesystem.getOperatingDirectory().getPath(), "logs/CSVInterpreter.log"),
+												Filesystem.getOperatingDirectory().getPath(),
+												Robot.isReal() ? "logs/CSVInterpreter.log" : "CSVInterpreter.log"),
 								StandardOpenOption.CREATE,
 								StandardOpenOption.WRITE); ) {
 

@@ -17,6 +17,7 @@ import frc.team2412.robot.commands.intake.AllInCommand;
 import frc.team2412.robot.commands.intake.AllReverseCommand;
 import frc.team2412.robot.commands.intake.AllStopCommand;
 import frc.team2412.robot.commands.intake.FeederInCommand;
+import frc.team2412.robot.commands.launcher.FullTargetCommand;
 import frc.team2412.robot.commands.launcher.SetAngleCommand;
 
 public class Controls {
@@ -69,6 +70,18 @@ public class Controls {
 		}
 		if (INTAKE_ENABLED) {
 			bindIntakeControls();
+		}
+		if (DRIVEBASE_ENABLED && LAUNCHER_ENABLED && INTAKE_ENABLED) {
+			// temporary controls, not sure what drive team wants
+			driveController
+					.leftBumper()
+					.whileTrue(
+							new FullTargetCommand(
+									s.launcherSubsystem,
+									s.intakeSubsystem,
+									s.drivebaseSubsystem,
+									this,
+									driveController.rightBumper()));
 		}
 	}
 
