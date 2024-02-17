@@ -6,8 +6,13 @@
     "angle": 20
   },
   "conversionFactor": {
+<<<<<<< Updated upstream
     "angle": 19.2,
     "drive": 0.059108484
+=======
+    "angle": 28.125,
+    "drive": 0.034621437
+>>>>>>> Stashed changes
   },
   "rampRate": {
     "drive": 0.25,
