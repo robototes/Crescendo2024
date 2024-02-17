@@ -1,8 +1,8 @@
 {
   "imu": {
-    "type": "pigeon2",
-    "id": 13,
-    "canbus": "Drivebase"
+    "type": "navx",
+    "id": 0,
+    "canbus": null
   },
   "invertedIMU": false,
   "modules": [
