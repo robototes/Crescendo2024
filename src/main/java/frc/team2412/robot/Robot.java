@@ -69,7 +69,11 @@ public class Robot extends TimedRobot {
 		subsystems = new Subsystems();
 		controls = new Controls(subsystems);
 
-		autoChooser = AutoBuilder.buildAutoChooser();
+		if (Subsystems.SubsystemConstants.DRIVEBASE_ENABLED) {
+			autoChooser = AutoBuilder.buildAutoChooser();
+		} else {
+			autoChooser = new SendableChooser<>();
+		}
 
 		Shuffleboard.startRecording();
 
