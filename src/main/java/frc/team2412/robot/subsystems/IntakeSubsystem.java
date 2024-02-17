@@ -153,4 +153,8 @@ public class IntakeSubsystem extends SubsystemBase {
 	public boolean getFeederSensor() {
 		return feederSensor.get();
 	}
+
+	public boolean getIntakeSensor() {
+		return intakeSensor.get();
+	}
 }
