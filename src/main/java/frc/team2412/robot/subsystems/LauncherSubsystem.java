@@ -64,6 +64,13 @@ public class LauncherSubsystem extends SubsystemBase {
 					.withSize(1, 1)
 					.withWidget(BuiltInWidgets.kTextView)
 					.getEntry();
+
+	private final GenericEntry launcherAngleSpeedEntry =
+			Shuffleboard.getTab("Launcher")
+					.add("Launcher angle Speed", 0)
+					.withSize(1, 1)
+					.withWidget(BuiltInWidgets.kTextView)
+					.getEntry();
 	// Constructor
 	public LauncherSubsystem() {
 
@@ -149,6 +156,10 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherBottomPIDController.setReference(speed, ControlType.kVelocity);
 		setLauncherSpeedEntry.setDouble(speed);
 	}
+
+	public double getLauncherSpeed() {
+		return launcherTopEncoder.getVelocity();
+	}
 	// returns the degrees of the angle of the launcher
 	public double getAngle() {
 		// get position returns a double in the form of rotations
@@ -159,9 +170,18 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherAnglePIDController.setReference(Units.degreesToRotations(angle), ControlType.kPosition);
 	}
 
+	public double getAngleSpeed() {
+		return launcherAngleEncoder.getVelocity();
+	}
+
+	public void setAngleSpeed(double Speed) {
+		launcherAnglePIDController.setReference(Speed, ControlType.kPosition);
+	}
+
 	@Override
 	public void periodic() {
 		launcherAngleEntry.setDouble(getAngle());
-		launcherSpeedEntry.setDouble(launcherTopEncoder.getVelocity());
+		launcherSpeedEntry.setDouble(getLauncherSpeed());
+		launcherAngleSpeedEntry.setDouble(getAngleSpeed());
 	}
 }
