@@ -8,24 +8,22 @@ import java.util.function.DoubleSupplier;
 
 public class SetAngleCommand extends Command {
 	private final LauncherSubsystem launcherSubsystem;
-	private final DoubleSupplier launcherAngle;
+	private final DoubleSupplier launcherAngleSpeed;
 
-	public SetAngleCommand(LauncherSubsystem launcherSubsystem, DoubleSupplier angle) {
+	public SetAngleCommand(LauncherSubsystem launcherSubsystem, DoubleSupplier angleSpeed) {
 		this.launcherSubsystem = launcherSubsystem;
-		this.launcherAngle = angle;
+		this.launcherAngleSpeed = angleSpeed;
 		addRequirements(launcherSubsystem);
 	}
 
 	@Override
 	public void execute() {
-		launcherSubsystem.setAngle(launcherAngle.getAsDouble());
+		
+		launcherSubsystem.setAngleSpeed(launcherAngleSpeed.getAsDouble());
 	}
 
 	@Override
 	public boolean isFinished() {
-		return (MathUtil.isNear(
-				launcherAngle.getAsDouble(),
-				launcherSubsystem.getAngle(),
-				LauncherSubsystem.ANGLE_TOLERANCE));
+		return false;
 	}
 }

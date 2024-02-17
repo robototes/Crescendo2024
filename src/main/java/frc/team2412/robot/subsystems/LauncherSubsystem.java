@@ -155,6 +155,10 @@ public class LauncherSubsystem extends SubsystemBase {
 		return Units.rotationsToDegrees(launcherAngleEncoder.getPosition());
 	}
 
+	public void setAngleSpeed(double Speed){
+		launcherAnglePIDController.setReference(Speed, ControlType.kPosition);
+	}
+
 	public void setAngle(double angle) {
 		launcherAnglePIDController.setReference(Units.degreesToRotations(angle), ControlType.kPosition);
 	}
