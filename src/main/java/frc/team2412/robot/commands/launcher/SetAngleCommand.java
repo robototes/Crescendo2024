@@ -1,6 +1,5 @@
 package frc.team2412.robot.commands.launcher;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
 import java.util.function.DoubleSupplier;
@@ -18,7 +17,7 @@ public class SetAngleCommand extends Command {
 
 	@Override
 	public void execute() {
-		
+
 		launcherSubsystem.setAngleSpeed(launcherAngleSpeed.getAsDouble());
 	}
 

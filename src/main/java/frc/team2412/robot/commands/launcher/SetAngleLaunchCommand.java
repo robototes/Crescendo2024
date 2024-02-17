@@ -2,9 +2,7 @@ package frc.team2412.robot.commands.launcher;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
-import java.util.function.DoubleSupplier;
 // this command can be used as a preset in controls, allowing the user to input a speed and angle
 // value when they keybind it multiple times.
 
@@ -13,8 +11,7 @@ public class SetAngleLaunchCommand extends Command {
 	private double launcherAngle;
 	private LauncherSubsystem launcherSubsystem;
 
-	public SetAngleLaunchCommand(
-			LauncherSubsystem launcherSubsystem, double speed, double angle) {
+	public SetAngleLaunchCommand(LauncherSubsystem launcherSubsystem, double speed, double angle) {
 		launcherSpeed = speed;
 		launcherAngle = angle;
 		this.launcherSubsystem = launcherSubsystem;
@@ -27,12 +24,9 @@ public class SetAngleLaunchCommand extends Command {
 		launcherSubsystem.launch(launcherSpeed);
 	}
 
-
 	@Override
-	public boolean isFinished(){
+	public boolean isFinished() {
 		return MathUtil.isNear(
-			launcherAngle,
-			launcherSubsystem.getAngle(),
-			LauncherSubsystem.ANGLE_TOLERANCE);
+				launcherAngle, launcherSubsystem.getAngle(), LauncherSubsystem.ANGLE_TOLERANCE);
 	}
 }

@@ -8,7 +8,6 @@ import static frc.team2412.robot.Subsystems.SubsystemConstants.LAUNCHER_ENABLED;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -105,7 +104,8 @@ public class Controls {
 				.setDefaultCommand(
 						s.launcherSubsystem,
 						new SetAngleCommand(
-								s.launcherSubsystem, () -> MathUtil.applyDeadband(codriveController.getLeftY(), 0.1) * 0.75));
+								s.launcherSubsystem,
+								() -> MathUtil.applyDeadband(codriveController.getLeftY(), 0.1) * 0.75));
 		// launcherPodiumPresetButton.onTrue(
 		//		new SetAngleLaunchCommand(
 		//				s.launcherSubsystem,
