@@ -294,4 +294,9 @@ public class DrivebaseSubsystem extends SubsystemBase {
 						.getEntry();
 		xWheelsEnabled = xWheelsEntry.getBoolean(true);
 	}
+
+	/** Get the YAGSL {@link SwerveDrive} object. */
+	public SwerveDrive getSwerveDrive() {
+		return swerveDrive;
+	}
 }

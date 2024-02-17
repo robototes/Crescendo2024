@@ -132,7 +132,7 @@ tasks.withType(JavaCompile) {
 spotless {
 	format "misc", {
 		target "*"
-		targetExclude "simgui*.json", "**/build/**", "**/build-*/**", "**/bin/**", "/.*", "WPILib-License.md", "gradlew"
+		targetExclude "simgui*.json", "**/build/**", "**/build-*/**", "**/bin/**", "/.*", "WPILib-License.md", "gradlew", "networktables.json", "networktables.json.bck"
 		toggleOffOn()
 		indentWithTabs()
 		endWithNewline()
@@ -151,3 +151,7 @@ spotless {
 tasks.named("build") { finalizedBy("spotlessApply") }
 tasks.named("deploy") { finalizedBy("spotlessApply") }
 spotlessCheck.mustRunAfter(compileJava);
+
+javadoc {
+	options.links("https://github.wpilib.org/allwpilib/docs/release/java/")
+}
