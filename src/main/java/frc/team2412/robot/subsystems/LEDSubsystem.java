@@ -5,32 +5,33 @@ import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LEDSubsystem extends SubsystemBase {
-	private static final double RED_LED_COLOR = 0.61;
-    private static final double GREEN_LED_COLOR = 0.77;
-    private static final double BLUE_LED_COLOR = 0.87;
-    private static final double YELLOW_LED_COLOR = 0.69;
+	private static final int RED_LED_COLOR = 1805;
+    private static final int GREEN_LED_COLOR = 1885;
+    private static final int BLUE_LED_COLOR = 1935;
+    private static final int YELLOW_LED_COLOR = 1845;
 
 	private final PWM blinkin;
 
+
 	public LEDSubsystem() {
 		blinkin = new PWM(BLINKIN_LED);
-		blinkin.setSpeed(RED_LED_COLOR); // sets to red
+		blinkin.setPulseTimeMicroseconds(RED_LED_COLOR); // sets to red
 	}
 
-	public void setLED(double color) {
-		blinkin.setSpeed(color);
+	private void setLED(int color) {
+		blinkin.setPulseTimeMicroseconds(color);
 	}
 
 	public void setGREEN_LED() {
-		blinkin.setSpeed(GREEN_LED_COLOR);
+		setLED(GREEN_LED_COLOR);
 	}
 	
 	public void setBLUE_LED() {
-		blinkin.setSpeed(BLUE_LED_COLOR);
+		setLED(BLUE_LED_COLOR);
 	}
 	
 	public void setYELLOW_LED() {
-		blinkin.setSpeed(YELLOW_LED_COLOR);
+		setLED(YELLOW_LED_COLOR);
 	}
 	
 
