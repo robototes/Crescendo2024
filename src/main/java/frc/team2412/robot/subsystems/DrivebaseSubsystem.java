@@ -40,9 +40,9 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
 	private static final double MAX_SPEED =
 			Robot.getInstance().getRobotType() == RobotType.BONK
-					? 2.0
+					? 2
 					: Robot.getInstance().getRobotType() == RobotType.PRACTICE
-							? 4.09
+							? 2
 							: Robot.getInstance().getRobotType() == RobotType.CRANE ? 5 : 1.0;
 
 	// distance from center of the robot to the furthest module
