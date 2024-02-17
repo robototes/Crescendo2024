@@ -15,4 +15,9 @@ public class IntakeStopCommand extends Command {
 	public void initialize() {
 		intakeSubsystem.intakeStop();
 	}
+
+	@Override
+	public boolean isFinished() {
+		return false;
+	}
 }
