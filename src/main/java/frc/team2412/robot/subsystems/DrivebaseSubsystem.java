@@ -40,7 +40,11 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
 	private static final double MAX_SPEED =
 			Robot.getInstance().getRobotType() == RobotType.BONK
+<<<<<<< Updated upstream
 					? 2
+=======
+					? 2.0
+>>>>>>> Stashed changes
 					: Robot.getInstance().getRobotType() == RobotType.PRACTICE
 							? 2
 							: Robot.getInstance().getRobotType() == RobotType.CRANE ? 5 : 1.0;
