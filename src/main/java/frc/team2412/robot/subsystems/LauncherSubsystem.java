@@ -156,7 +156,8 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherBottomPIDController.setReference(speed, ControlType.kVelocity);
 		setLauncherSpeedEntry.setDouble(speed);
 	}
-	public double getLauncherSpeed(){
+
+	public double getLauncherSpeed() {
 		return launcherTopEncoder.getVelocity();
 	}
 	// returns the degrees of the angle of the launcher
@@ -169,13 +170,13 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherAnglePIDController.setReference(Units.degreesToRotations(angle), ControlType.kPosition);
 	}
 
-	public double getAngleSpeed(){
+	public double getAngleSpeed() {
 		return launcherAngleEncoder.getVelocity();
 	}
+
 	public void setAngleSpeed(double Speed) {
 		launcherAnglePIDController.setReference(Speed, ControlType.kPosition);
 	}
-
 
 	@Override
 	public void periodic() {
