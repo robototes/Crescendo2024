@@ -301,6 +301,8 @@ public class DrivebaseSubsystem extends SubsystemBase {
 		xWheelsEnabled = xWheelsEntry.getBoolean(true);
 	}
 
-	@Override
-	public void periodic() {}
+	/** Get the YAGSL {@link SwerveDrive} object. */
+	public SwerveDrive getSwerveDrive() {
+		return swerveDrive;
+	}
 }

@@ -73,6 +73,11 @@ public class Robot extends TimedRobot {
 		autoChooser = AutoBuilder.buildAutoChooser();
 		SmartDashboard.putData("Auto Chooser", autoChooser);
 		SmartDashboard.putString("current bot", getTypeFromAddress().toString());
+		if (Subsystems.SubsystemConstants.DRIVEBASE_ENABLED) {
+			autoChooser = AutoBuilder.buildAutoChooser();
+		} else {
+			autoChooser = new SendableChooser<>();
+		}
 
 		Shuffleboard.startRecording();
 
