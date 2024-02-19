@@ -1,7 +1,6 @@
 package frc.team2412.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -142,9 +141,15 @@ public class Robot extends TimedRobot {
 	public void disabledInit() {
 		Shuffleboard.stopRecording();
 
-		Command coastCommand = new WaitCommand(5).andThen(new InstantCommand(() -> {
-			if (DriverStation.isDisabled()) subsystems.drivebaseSubsystem.setMotorBrake(false);
-		})).ignoringDisable(true);
+		Command coastCommand =
+				new WaitCommand(5)
+						.andThen(
+								new InstantCommand(
+										() -> {
+											if (DriverStation.isDisabled())
+												subsystems.drivebaseSubsystem.setMotorBrake(false);
+										}))
+						.ignoringDisable(true);
 		coastCommand.schedule();
 	}
 
