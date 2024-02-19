@@ -116,15 +116,11 @@ public class Robot extends TimedRobot {
 		DriverStation.silenceJoystickConnectionWarning(!DriverStation.isFMSAttached());
 
 		autoChooser.getSelected().schedule();
-
-		subsystems.drivebaseSubsystem.setMotorBrake(true);
 	}
 
 	@Override
 	public void teleopInit() {
 		Shuffleboard.startRecording();
-
-		subsystems.drivebaseSubsystem.setMotorBrake(true);
 	}
 
 	@Override
@@ -151,6 +147,11 @@ public class Robot extends TimedRobot {
 										}))
 						.ignoringDisable(true);
 		coastCommand.schedule();
+	}
+
+	@Override
+	public void disabledExit() {
+		subsystems.drivebaseSubsystem.setMotorBrake(true);
 	}
 
 	public RobotType getRobotType() {
