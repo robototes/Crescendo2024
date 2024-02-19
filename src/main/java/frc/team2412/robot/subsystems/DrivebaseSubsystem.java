@@ -218,6 +218,10 @@ public class DrivebaseSubsystem extends SubsystemBase {
 		return alignCommand;
 	}
 
+	public void setMotorBrake(boolean brake) {
+		swerveDrive.setMotorIdleMode(brake);
+	}
+
 	public ChassisSpeeds getRobotSpeeds() {
 		return swerveDrive.getRobotVelocity();
 	}

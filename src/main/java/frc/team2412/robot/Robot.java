@@ -1,6 +1,7 @@
 package frc.team2412.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -11,6 +12,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.team2412.robot.util.MACAddress;
 import frc.team2412.robot.util.MatchDashboard;
 
@@ -114,11 +117,15 @@ public class Robot extends TimedRobot {
 		DriverStation.silenceJoystickConnectionWarning(!DriverStation.isFMSAttached());
 
 		autoChooser.getSelected().schedule();
+
+		subsystems.drivebaseSubsystem.setMotorBrake(true);
 	}
 
 	@Override
 	public void teleopInit() {
 		Shuffleboard.startRecording();
+
+		subsystems.drivebaseSubsystem.setMotorBrake(true);
 	}
 
 	@Override
@@ -134,6 +141,11 @@ public class Robot extends TimedRobot {
 	@Override
 	public void disabledInit() {
 		Shuffleboard.stopRecording();
+
+		Command coastCommand = new WaitCommand(5).andThen(new InstantCommand(() -> {
+			if (DriverStation.isDisabled()) subsystems.drivebaseSubsystem.setMotorBrake(false);
+		})).ignoringDisable(true);
+		coastCommand.schedule();
 	}
 
 	public RobotType getRobotType() {
