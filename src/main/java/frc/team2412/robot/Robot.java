@@ -70,6 +70,7 @@ public class Robot extends TimedRobot {
 
 		subsystems = new Subsystems();
 		controls = new Controls(subsystems);
+		autoLogic = new AutoLogic();
 
 		autoChooser = AutoBuilder.buildAutoChooser();
 		SmartDashboard.putData("Auto Chooser", autoChooser);
@@ -100,7 +101,6 @@ public class Robot extends TimedRobot {
 
 		DriverStation.silenceJoystickConnectionWarning(true);
 
-		autoLogic = new AutoLogic();
 		dashboard = new MatchDashboard(subsystems);
 	}
 
@@ -148,6 +148,4 @@ public class Robot extends TimedRobot {
 	public boolean isCompetition() {
 		return getRobotType() == RobotType.COMPETITION;
 	}
-
-
 }

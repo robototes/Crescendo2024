@@ -24,6 +24,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "DummyLaunch"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "launchPosFirstNoteCenterLineLaunch"
