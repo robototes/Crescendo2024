@@ -71,7 +71,6 @@ public class Robot extends TimedRobot {
 		subsystems = new Subsystems();
 		controls = new Controls(subsystems);
 
-		System.out.println("Auto paths: " + AutoBuilder.getAllAutoNames());
 		autoChooser = AutoBuilder.buildAutoChooser();
 		SmartDashboard.putData("Auto Chooser", autoChooser);
 		SmartDashboard.putString("current bot", getTypeFromAddress().toString());
@@ -119,7 +118,6 @@ public class Robot extends TimedRobot {
 
 		// Checks if FMS is attatched and enables joystick warning if true
 		DriverStation.silenceJoystickConnectionWarning(!DriverStation.isFMSAttached());
-
 		autoChooser.getSelected().schedule();
 	}
 
