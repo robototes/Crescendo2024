@@ -274,6 +274,36 @@ public class TalonSRXSwerve extends SwerveMotor {
 	}
 
 	/**
+	 * Get the voltage output of the motor controller.
+	 *
+	 * @return Voltage output.
+	 */
+	@Override
+	public double getVoltage() {
+		return motor.getMotorOutputVoltage();
+	}
+
+	/**
+	 * Set the voltage of the motor.
+	 *
+	 * @param voltage Voltage to set.
+	 */
+	@Override
+	public void setVoltage(double voltage) {
+		motor.setVoltage(voltage);
+	}
+
+	/**
+	 * Get the applied dutycycle output.
+	 *
+	 * @return Applied dutycycle output to the motor.
+	 */
+	@Override
+	public double getAppliedOutput() {
+		return motor.getMotorOutputPercent();
+	}
+
+	/**
 	 * Get the velocity of the integrated encoder.
 	 *
 	 * @return velocity in Meters Per Second, or Degrees per Second.
