@@ -11,6 +11,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.team2412.robot.Subsystems.SubsystemConstants;
+import frc.team2412.robot.commands.diagnostic.IntakeDiagnosticCommand;
+import frc.team2412.robot.commands.diagnostic.LauncherDiagnosticCommand;
 import frc.team2412.robot.commands.diagnostic.diagnosticSequentialCommand;
 import frc.team2412.robot.util.MACAddress;
 import frc.team2412.robot.util.MatchDashboard;
@@ -101,10 +104,26 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void testInit() {
-		CommandScheduler.getInstance()
-				.schedule(
-						new diagnosticSequentialCommand(
-								subsystems.intakeSubsystem, subsystems.launcherSubsystem));
+		if(SubsystemConstants.INTAKE_ENABLED && SubsystemConstants.LAUNCHER_ENABLED){
+			CommandScheduler.getInstance()
+					.schedule(
+							new diagnosticSequentialCommand(
+									subsystems.intakeSubsystem, subsystems.launcherSubsystem));
+		}
+		else if(SubsystemConstants.INTAKE_ENABLED){
+			CommandScheduler.getInstance()
+					.schedule(
+							new IntakeDiagnosticCommand(
+									subsystems.intakeSubsystem));
+		}
+		else if(SubsystemConstants.LAUNCHER_ENABLED){
+			CommandScheduler.getInstance().schedule(new LauncherDiagnosticCommand(subsystems.launcherSubsystem));
+		}
+		else
+		{
+			System.out.println("No subsystems are enabled!");
+		}
+		
 	}
 
 	@Override
