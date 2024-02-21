@@ -20,9 +20,9 @@ public class AllInCommand extends Command {
 
 	@Override
 	public void end(boolean interrupted) {
-		// intakeSubsystem.intakeStop();
-		// intakeSubsystem.indexStop();
-		// intakeSubsystem.feederStop();
+		intakeSubsystem.intakeStop();
+		intakeSubsystem.indexStop();
+		intakeSubsystem.feederStop();
 	}
 
 	@Override
