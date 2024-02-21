@@ -150,3 +150,4 @@ public class Robot extends TimedRobot {
 		return getRobotType() == RobotType.COMPETITION;
 	}
 }
+
