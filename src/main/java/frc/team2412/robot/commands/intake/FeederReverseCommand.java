@@ -13,7 +13,7 @@ public class FeederReverseCommand extends Command {
 
 	@Override
 	public void initialize() {
-		intakeSubsystem.feederReverse();
+		// intakeSubsystem.feederReverse();
 	}
 
 	@Override

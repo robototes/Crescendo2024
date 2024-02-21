@@ -14,8 +14,8 @@ public class AllStopCommand extends Command {
 	@Override
 	public void initialize() {
 		intakeSubsystem.intakeStop();
-		intakeSubsystem.indexStop();
-		intakeSubsystem.feederStop();
+		// intakeSubsystem.indexStop();
+		// intakeSubsystem.feederStop();
 	}
 
 	@Override

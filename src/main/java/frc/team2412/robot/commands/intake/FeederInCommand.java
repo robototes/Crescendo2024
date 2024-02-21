@@ -13,12 +13,12 @@ public class FeederInCommand extends Command {
 
 	@Override
 	public void initialize() {
-		intakeSubsystem.feederIn();
+		// intakeSubsystem.feederIn();
 	}
 
 	@Override
 	public void end(boolean interrupted) {
-		intakeSubsystem.feederStop();
+		// intakeSubsystem.feederStop();
 	}
 
 	@Override

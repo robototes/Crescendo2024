@@ -13,7 +13,7 @@ public class FeederStopCommand extends Command {
 
 	@Override
 	public void initialize() {
-		intakeSubsystem.feederStop();
+		// intakeSubsystem.feederStop();
 	}
 
 	public boolean isFinished() {

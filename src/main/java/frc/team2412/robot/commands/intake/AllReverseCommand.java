@@ -14,8 +14,8 @@ public class AllReverseCommand extends Command {
 	@Override
 	public void initialize() {
 		intakeSubsystem.intakeReverse();
-		intakeSubsystem.indexReverse();
-		intakeSubsystem.feederReverse();
+		// intakeSubsystem.indexReverse();
+		// intakeSubsystem.feederReverse();
 	}
 
 	@Override

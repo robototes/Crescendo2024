@@ -13,7 +13,7 @@ public class IndexReverseCommand extends Command {
 
 	@Override
 	public void initialize() {
-		intakeSubsystem.indexReverse();
+		// intakeSubsystem.indexReverse();
 	}
 
 	public boolean isFinished() {

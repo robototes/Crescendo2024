@@ -4,7 +4,6 @@ import static frc.team2412.robot.Hardware.*;
 
 import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkBase.IdleMode;
-import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.networktables.GenericEntry;
@@ -19,11 +18,11 @@ public class IntakeSubsystem extends SubsystemBase {
 	public static final double INTAKE_IN_SPEED = 0.3;
 	public static final double INTAKE_REVERSE_SPEED = -0.7;
 
-	public static final double INDEX_IN_SPEED = 0.3;
-	public static final double INDEX_REVERSE_SPEED = -0.3;
+	// public static final double INDEX_IN_SPEED = 0.3;
+	// public static final double INDEX_REVERSE_SPEED = -0.3;
 
-	public static final double FEEDER_IN_SPEED = 0.3;
-	public static final double FEEDER_REVERSE_SPEED = -0.3;
+	// public static final double FEEDER_IN_SPEED = 0.3;
+	// public static final double FEEDER_REVERSE_SPEED = -0.3;
 
 	// Motors
 	private final CANSparkMax intakeMotorFront;
@@ -31,10 +30,10 @@ public class IntakeSubsystem extends SubsystemBase {
 	private final CANSparkMax intakeMotorLeft;
 	private final CANSparkMax intakeMotorRight;
 
-	private final CANSparkFlex indexMotorLower;
-	private final CANSparkFlex indexMotorUpper;
+	// private final CANSparkFlex indexMotorLower;
+	// private final CANSparkFlex indexMotorUpper;
 
-	private final CANSparkFlex feederMotor;
+	// private final CANSparkFlex feederMotor;
 
 	// Sensors
 	private final DigitalInput indexSensor;
@@ -48,17 +47,17 @@ public class IntakeSubsystem extends SubsystemBase {
 					.withProperties(Map.of("Min", -1, "Max", 1))
 					.getEntry();
 
-	private final GenericEntry setIndexInSpeedEntry =
-			Shuffleboard.getTab("Intake")
-					.add("Index in speed - ", INDEX_IN_SPEED)
-					.withSize(1, 1)
-					.getEntry();
+	// private final GenericEntry setIndexInSpeedEntry =
+	// 		Shuffleboard.getTab("Intake")
+	// 				.add("Index in speed - ", INDEX_IN_SPEED)
+	// 				.withSize(1, 1)
+	// 				.getEntry();
 
-	private final GenericEntry setFeederInSpeedEntry =
-			Shuffleboard.getTab("Intake")
-					.add("Feeder in speed - ", FEEDER_IN_SPEED)
-					.withSize(1, 1)
-					.getEntry();
+	// private final GenericEntry setFeederInSpeedEntry =
+	// 		Shuffleboard.getTab("Intake")
+	// 				.add("Feeder in speed - ", FEEDER_IN_SPEED)
+	// 				.withSize(1, 1)
+	// 				.getEntry();
 
 	public IntakeSubsystem() {
 		intakeMotorFront = new CANSparkMax(INTAKE_MOTOR_FRONT, MotorType.kBrushless);
@@ -66,10 +65,10 @@ public class IntakeSubsystem extends SubsystemBase {
 		intakeMotorLeft = new CANSparkMax(INTAKE_MOTOR_LEFT, MotorType.kBrushless);
 		intakeMotorRight = new CANSparkMax(INTAKE_MOTOR_RIGHT, MotorType.kBrushless);
 
-		indexMotorLower = new CANSparkFlex(INDEX_MOTOR_LOWER, MotorType.kBrushless);
-		indexMotorUpper = new CANSparkFlex(INDEX_MOTOR_UPPER, MotorType.kBrushless);
+		// indexMotorLower = new CANSparkFlex(INDEX_MOTOR_LOWER, MotorType.kBrushless);
+		// indexMotorUpper = new CANSparkFlex(INDEX_MOTOR_UPPER, MotorType.kBrushless);
 
-		feederMotor = new CANSparkFlex(FEEDER_MOTOR, MotorType.kBrushless);
+		// feederMotor = new CANSparkFlex(FEEDER_MOTOR, MotorType.kBrushless);
 
 		indexSensor = new DigitalInput(INDEX_SENSOR);
 		feederSensor = new DigitalInput(FEEDER_SENSOR);
@@ -97,11 +96,11 @@ public class IntakeSubsystem extends SubsystemBase {
 		intakeMotorLeft.follow(intakeMotorFront);
 		intakeMotorRight.follow(intakeMotorFront);
 
-		configureMotor(indexMotorLower);
-		configureMotor(indexMotorUpper);
-		indexMotorLower.follow(indexMotorUpper);
+		// configureMotor(indexMotorLower);
+		// configureMotor(indexMotorUpper);
+		// indexMotorLower.follow(indexMotorUpper);
 
-		configureMotor(feederMotor);
+		// configureMotor(feederMotor);
 	}
 
 	// intake methods
@@ -117,31 +116,31 @@ public class IntakeSubsystem extends SubsystemBase {
 		intakeMotorFront.set(0);
 	}
 
-	// index methods
-	public void indexIn() {
-		indexMotorUpper.set(setIndexInSpeedEntry.getDouble(INDEX_IN_SPEED));
-	}
+	// // index methods
+	// public void indexIn() {
+	// 	indexMotorUpper.set(setIndexInSpeedEntry.getDouble(INDEX_IN_SPEED));
+	// }
 
-	public void indexReverse() {
-		indexMotorUpper.set(INDEX_REVERSE_SPEED);
-	}
+	// public void indexReverse() {
+	// 	indexMotorUpper.set(INDEX_REVERSE_SPEED);
+	// }
 
-	public void indexStop() {
-		indexMotorUpper.set(0);
-	}
+	// public void indexStop() {
+	// 	indexMotorUpper.set(0);
+	// }
 
-	// feeder methods
-	public void feederIn() {
-		feederMotor.set(setFeederInSpeedEntry.getDouble(FEEDER_IN_SPEED));
-	}
+	// // feeder methods
+	// public void feederIn() {
+	// 	feederMotor.set(setFeederInSpeedEntry.getDouble(FEEDER_IN_SPEED));
+	// }
 
-	public void feederReverse() {
-		feederMotor.set(FEEDER_REVERSE_SPEED);
-	}
+	// public void feederReverse() {
+	// 	feederMotor.set(FEEDER_REVERSE_SPEED);
+	// }
 
-	public void feederStop() {
-		feederMotor.set(0);
-	}
+	// public void feederStop() {
+	// 	feederMotor.set(0);
+	// }
 
 	// sensor methods
 	public boolean getIndexSensor() {

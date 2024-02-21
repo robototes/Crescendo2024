@@ -14,15 +14,15 @@ public class AllInCommand extends Command {
 	@Override
 	public void initialize() {
 		intakeSubsystem.intakeIn();
-		intakeSubsystem.indexIn();
-		intakeSubsystem.feederIn();
+		// intakeSubsystem.indexIn();
+		// intakeSubsystem.feederIn();
 	}
 
 	@Override
 	public void end(boolean interrupted) {
 		intakeSubsystem.intakeStop();
-		intakeSubsystem.indexStop();
-		intakeSubsystem.feederStop();
+		// intakeSubsystem.indexStop();
+		// intakeSubsystem.feederStop();
 	}
 
 	@Override
