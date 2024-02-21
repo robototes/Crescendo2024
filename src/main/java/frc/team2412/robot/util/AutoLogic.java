@@ -13,24 +13,22 @@ import frc.team2412.robot.Subsystems;
 import frc.team2412.robot.commands.intake.*;
 
 public class AutoLogic {
-	public Robot r = Robot.getInstance();
-	private final Subsystems s;
-	private final Controls controls;
+	public static Robot r = Robot.getInstance();
+	public static final Subsystems s = r.subsystems;
+	public static final Controls controls = r.controls;
 
-	private SequentialCommandGroup vibrateControllerCommand;
+	public static SequentialCommandGroup vibrateControllerCommand =
+			new SequentialCommandGroup(
+					new InstantCommand(() -> controls.vibrateDriveController(0.5)),
+					new WaitCommand(1.5),
+					new InstantCommand(() -> controls.vibrateDriveController(0.0)));
+	;
 
-	public boolean dummyLogic() {
+	public static boolean dummyLogic() {
 		return true;
 	}
 
 	public AutoLogic() {
-		s = r.subsystems;
-		controls = r.controls;
-		vibrateControllerCommand =
-				new SequentialCommandGroup(
-						new InstantCommand(() -> controls.vibrateDriveController(0.5)),
-						new WaitCommand(1.5),
-						new InstantCommand(() -> controls.vibrateDriveController(0.0)));
 
 		registerCommands();
 	}
@@ -69,7 +67,7 @@ public class AutoLogic {
 
 	// public Command getConditionalCommand(){}
 
-	public Command getAutonomousCommand(String pathName) {
+	public static Command getAutonomousCommand(String pathName) {
 		// Load the path you want to follow using its name in the GUI
 		PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
 
