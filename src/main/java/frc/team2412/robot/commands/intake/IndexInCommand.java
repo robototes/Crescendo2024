@@ -13,16 +13,11 @@ public class IndexInCommand extends Command {
 
 	@Override
 	public void initialize() {
-		// intakeSubsystem.indexIn();
-	}
-
-	@Override
-	public void end(boolean interrupted) {
-		// intakeSubsystem.feederStop();
+		intakeSubsystem.indexIn();
 	}
 
 	@Override
 	public boolean isFinished() {
-		return intakeSubsystem.getFeederSensor();
+		return true;
 	}
 }
