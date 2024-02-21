@@ -17,6 +17,7 @@ public class FeederStopCommand extends Command {
 		// intakeSubsystem.feederStop();
 	}
 
+	@Override
 	public boolean isFinished() {
 		return true;
 	}
