@@ -8,7 +8,6 @@ import static frc.team2412.robot.Subsystems.SubsystemConstants.LAUNCHER_ENABLED;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -147,5 +146,4 @@ public class Controls {
 		driveController.b().onTrue(ChoreoHandler.getChoreoCommand("juke"));
 		// no reason to rumble in auto when no one is holding the controller
 	}
-	
 }

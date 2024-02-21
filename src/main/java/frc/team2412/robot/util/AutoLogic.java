@@ -10,13 +10,13 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.team2412.robot.Controls;
 import frc.team2412.robot.Robot;
 import frc.team2412.robot.Subsystems;
-import frc.team2412.robot.commands.intake.*;
 
 public class AutoLogic {
 	public static Robot r = Robot.getInstance();
 	public static final Subsystems s = r.subsystems;
 	public static final Controls controls = r.controls;
 
+	// in place of launching command cause launcher doesnt exist
 	public static SequentialCommandGroup vibrateControllerCommand =
 			new SequentialCommandGroup(
 					new InstantCommand(() -> controls.vibrateDriveController(0.5)),
@@ -24,6 +24,11 @@ public class AutoLogic {
 					new InstantCommand(() -> controls.vibrateDriveController(0.0)));
 	;
 
+	/**
+	 * Placeholder for vision detect note
+	 *
+	 * @return true
+	 */
 	public static boolean dummyLogic() {
 		return true;
 	}
@@ -33,6 +38,7 @@ public class AutoLogic {
 		registerCommands();
 	}
 
+	/** Registers commands in PathPlanner */
 	public void registerCommands() {
 
 		// param: String commandName, Command command
@@ -67,6 +73,12 @@ public class AutoLogic {
 
 	// public Command getConditionalCommand(){}
 
+	/**
+	 * Takes a PathPlanner path and returns it as a command.
+	 *
+	 * @param pathName
+	 * @return follow path command
+	 */
 	public static Command getAutonomousCommand(String pathName) {
 		// Load the path you want to follow using its name in the GUI
 		PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);

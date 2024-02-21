@@ -1,7 +1,6 @@
 package frc.team2412.robot.util;
 
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 public class AutoPaths {
