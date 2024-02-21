@@ -104,26 +104,20 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void testInit() {
-		if(SubsystemConstants.INTAKE_ENABLED && SubsystemConstants.LAUNCHER_ENABLED){
+		if (SubsystemConstants.INTAKE_ENABLED && SubsystemConstants.LAUNCHER_ENABLED) {
 			CommandScheduler.getInstance()
 					.schedule(
 							new diagnosticSequentialCommand(
 									subsystems.intakeSubsystem, subsystems.launcherSubsystem));
-		}
-		else if(SubsystemConstants.INTAKE_ENABLED){
+		} else if (SubsystemConstants.INTAKE_ENABLED) {
 			CommandScheduler.getInstance()
-					.schedule(
-							new IntakeDiagnosticCommand(
-									subsystems.intakeSubsystem));
-		}
-		else if(SubsystemConstants.LAUNCHER_ENABLED){
-			CommandScheduler.getInstance().schedule(new LauncherDiagnosticCommand(subsystems.launcherSubsystem));
-		}
-		else
-		{
+					.schedule(new IntakeDiagnosticCommand(subsystems.intakeSubsystem));
+		} else if (SubsystemConstants.LAUNCHER_ENABLED) {
+			CommandScheduler.getInstance()
+					.schedule(new LauncherDiagnosticCommand(subsystems.launcherSubsystem));
+		} else {
 			System.out.println("No subsystems are enabled!");
 		}
-		
 	}
 
 	@Override
