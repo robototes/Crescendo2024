@@ -9,6 +9,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
 import com.revrobotics.SparkPIDController;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -27,6 +28,7 @@ public class LauncherSubsystem extends SubsystemBase {
 	// max Free Speed: 6784 RPM
 	private static final int MAX_FREE_SPEED_RPM = 6784;
 	public static final double ANGLE_TOLERANCE = 0.5;
+	public static final double RPM_TOLERANCE = 50;
 	// RPM
 	public static final int SPEAKER_SHOOT_SPEED_RPM = 3392; // 50%
 	// 3392 RPM = 50% Speed
@@ -43,6 +45,9 @@ public class LauncherSubsystem extends SubsystemBase {
 	private final SparkPIDController launcherAnglePIDController;
 	private final SparkPIDController launcherTopPIDController;
 	private final SparkPIDController launcherBottomPIDController;
+
+	private double rpmSetpoint;
+	private double angleSetpoint;
 
 	private final GenericEntry setLauncherSpeedEntry =
 			Shuffleboard.getTab("Launcher")
@@ -144,17 +149,18 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherTopMotor.stopMotor();
 		launcherBottomMotor.stopMotor();
 	}
+
 	// uses the value from the entry
 	public void launch() {
-		double speed = setLauncherSpeedEntry.getDouble(SPEAKER_SHOOT_SPEED_RPM);
-		launcherTopPIDController.setReference(speed, ControlType.kVelocity);
-		launcherBottomPIDController.setReference(speed, ControlType.kVelocity);
+		rpmSetpoint = setLauncherSpeedEntry.getDouble(SPEAKER_SHOOT_SPEED_RPM);
+		launcherTopPIDController.setReference(rpmSetpoint, ControlType.kVelocity);
+		launcherBottomPIDController.setReference(rpmSetpoint, ControlType.kVelocity);
 	}
 	// used for presets
 	public void launch(double speed) {
-		launcherTopPIDController.setReference(speed, ControlType.kVelocity);
-		launcherBottomPIDController.setReference(speed, ControlType.kVelocity);
-		setLauncherSpeedEntry.setDouble(speed);
+		rpmSetpoint = speed;
+		launcherTopPIDController.setReference(rpmSetpoint, ControlType.kVelocity);
+		launcherBottomPIDController.setReference(rpmSetpoint, ControlType.kVelocity);
 	}
 
 	public double getLauncherSpeed() {
@@ -166,8 +172,26 @@ public class LauncherSubsystem extends SubsystemBase {
 		return Units.rotationsToDegrees(launcherAngleEncoder.getPosition());
 	}
 
-	public void setAngle(double angle) {
-		launcherAnglePIDController.setReference(Units.degreesToRotations(angle), ControlType.kPosition);
+	public void setAngle(double launcherAngle) {
+		angleSetpoint = launcherAngle;
+		launcherAnglePIDController.setReference(
+				Units.degreesToRotations(angleSetpoint), ControlType.kPosition);
+	}
+
+	public boolean isAtAngle(double tolerance) {
+		return MathUtil.isNear(angleSetpoint, launcherAngleEncoder.getPosition(), tolerance);
+	}
+
+	public boolean isAtAngle() {
+		return isAtAngle(ANGLE_TOLERANCE);
+	}
+
+	public boolean isAtSpeed(double tolerance) {
+		return MathUtil.isNear(rpmSetpoint, launcherTopEncoder.getVelocity(), tolerance);
+	}
+
+	public boolean isAtSpeed() {
+		return isAtSpeed(RPM_TOLERANCE);
 	}
 
 	public double getAngleSpeed() {
