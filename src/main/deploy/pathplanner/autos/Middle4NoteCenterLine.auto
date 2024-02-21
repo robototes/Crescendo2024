@@ -24,18 +24,6 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.0
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "NoDummyLaunch"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "CenterMiddleNoteLaunchToSecondNoteLaunch"
@@ -48,18 +36,6 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.0
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "NoDummyLaunch"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "MiddleSecondNoteLaunchToTopNoteLaunch"
@@ -69,18 +45,6 @@
           "type": "named",
           "data": {
             "name": "DummyLaunch"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.05
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "NoDummyLaunch"
           }
         }
       ]

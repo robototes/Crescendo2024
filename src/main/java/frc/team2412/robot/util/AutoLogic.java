@@ -5,6 +5,8 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.team2412.robot.Controls;
 import frc.team2412.robot.Robot;
 import frc.team2412.robot.Subsystems;
@@ -12,14 +14,24 @@ import frc.team2412.robot.commands.intake.*;
 
 public class AutoLogic {
 	public Robot r = Robot.getInstance();
-	private final Subsystems s = r.subsystems;
-	private final Controls controls = r.controls;
+	private final Subsystems s;
+	private final Controls controls;
+
+	private SequentialCommandGroup vibrateControllerCommand;
 
 	public boolean dummyLogic() {
 		return true;
 	}
 
 	public AutoLogic() {
+		s = r.subsystems;
+		controls = r.controls;
+		vibrateControllerCommand =
+				new SequentialCommandGroup(
+						new InstantCommand(() -> controls.vibrateDriveController(0.5)),
+						new WaitCommand(1.5),
+						new InstantCommand(() -> controls.vibrateDriveController(0.0)));
+
 		registerCommands();
 	}
 
@@ -52,10 +64,7 @@ public class AutoLogic {
 		// NamedCommands.registerCommand(
 		// 		"SetLaunchSpeed", new SetLaunchSpeedCommand(s.launcherSubsystem, 0.1));
 		// NamedCommands.registerCommand("StopLauncher", new StopLauncherCommand(s.launcherSubsystem));
-		NamedCommands.registerCommand(
-				"DummyLaunch", new InstantCommand(() -> controls.vibrateDriveController(0.5)));
-		NamedCommands.registerCommand(
-				"NoDummyLaunch", new InstantCommand(() -> controls.vibrateDriveController(0)));
+		NamedCommands.registerCommand("DummyLaunch", vibrateControllerCommand);
 	}
 
 	// public Command getConditionalCommand(){}
