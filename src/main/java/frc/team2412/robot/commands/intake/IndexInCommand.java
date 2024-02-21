@@ -17,12 +17,7 @@ public class IndexInCommand extends Command {
 	}
 
 	@Override
-	public void end(boolean interrupted) {
-		intakeSubsystem.feederStop();
-	}
-
-	@Override
 	public boolean isFinished() {
-		return intakeSubsystem.getFeederSensor();
+		return true;
 	}
 }

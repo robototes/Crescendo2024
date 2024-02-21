@@ -18,15 +18,21 @@
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 1.0
+            "name": "DummyLaunch"
           }
         },
         {
           "type": "path",
           "data": {
             "pathName": "launchPosFirstNoteCenterLineLaunch"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "DummyLaunch"
           }
         }
       ]

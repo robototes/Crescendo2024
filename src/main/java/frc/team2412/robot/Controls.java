@@ -121,6 +121,7 @@ public class Controls {
 		//				LauncherSubsystem.SUBWOOFER_AIM_ANGLE));
 
 	}
+
 	public void vibrateDriveController(double vibration) {
 		driveController.getHID().setRumble(GenericHID.RumbleType.kBothRumble, vibration);
 	}

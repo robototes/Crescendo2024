@@ -18,9 +18,9 @@
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 1.0
+            "name": "DummyLaunch"
           }
         },
         {
@@ -30,15 +30,21 @@
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 1.0
+            "name": "DummyLaunch"
           }
         },
         {
           "type": "path",
           "data": {
             "pathName": "SpeakerToLowNote"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "DummyLaunch"
           }
         },
         {

@@ -5,7 +5,7 @@
       "x": 0.4,
       "y": 7.0
     },
-    "rotation": 90.0
+    "rotation": 0
   },
   "command": {
     "type": "sequential",
@@ -14,7 +14,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "bonkStrafe"
+            "pathName": "DummyLaunchTest"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "DummyLaunch"
           }
         }
       ]
