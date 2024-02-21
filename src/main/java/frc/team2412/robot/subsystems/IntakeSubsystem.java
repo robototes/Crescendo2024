@@ -20,8 +20,11 @@ public class IntakeSubsystem extends SubsystemBase {
 	public static final double INTAKE_REVERSE_SPEED = -0.7;
 	public static final double INTAKE_REJECT_SPEED = -0.4;
 
-	public static final double INDEX_IN_SPEED = 0.3;
-	public static final double INDEX_REVERSE_SPEED = -0.3;
+	public static final double INDEX_UPPER_IN_SPEED = 0.3;
+	public static final double INDEX_UPPER_REVERSE_SPEED = -0.3;
+
+	public static final double INDEX_LOWER_IN_SPEED = 0.3;
+	public static final double INDEX_LOWER_REVERSE_SPEED = -0.3;
 
 	// needs to be reverted before merge
 	// public static final double FEEDER_IN_SPEED = 0.3;
@@ -53,7 +56,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
 	private final GenericEntry setIndexInSpeedEntry =
 			Shuffleboard.getTab("Intake")
-					.add("Index in speed - ", INDEX_IN_SPEED)
+					.add("Index in speed - ", INDEX_UPPER_IN_SPEED)
 					.withSize(1, 1)
 					.getEntry();
 
@@ -131,21 +134,20 @@ public class IntakeSubsystem extends SubsystemBase {
 	}
 
 	// index methods
-	public void indexSet(double speed) {
-		indexMotorUpper.set(speed);
-		indexMotorLower.set(speed);
-	}
 
 	public void indexIn() {
-		indexSet(setIndexInSpeedEntry.getDouble(INDEX_IN_SPEED));
+		indexMotorUpper.set(setIndexInSpeedEntry.getDouble(INDEX_UPPER_IN_SPEED));
+		indexMotorLower.set(INDEX_LOWER_IN_SPEED);
 	}
 
 	public void indexReverse() {
-		indexSet(INDEX_REVERSE_SPEED);
+		indexMotorUpper.set(INDEX_UPPER_REVERSE_SPEED);
+		indexMotorLower.set(INDEX_LOWER_REVERSE_SPEED);
 	}
 
 	public void indexStop() {
-		indexSet(0);
+		indexMotorUpper.set(0);
+		indexMotorLower.set(0);
 	}
 
 	// feeder methods
