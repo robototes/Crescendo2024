@@ -31,7 +31,6 @@ public class Hardware {
 	// LED strip is PWM port 8
 	public static final int BLINKIN_LED = 8;
 
-
 	// intake sensors  (Digital IO)
 	public static final int INDEX_SENSOR = 1;
 	public static final int FEEDER_SENSOR = 2;
