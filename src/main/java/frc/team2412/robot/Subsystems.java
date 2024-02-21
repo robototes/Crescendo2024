@@ -2,10 +2,12 @@ package frc.team2412.robot;
 
 import static frc.team2412.robot.Subsystems.SubsystemConstants.*;
 
+import frc.team2412.robot.sensors.AprilTagsProcessor;
 import frc.team2412.robot.subsystems.DrivebaseSubsystem;
 import frc.team2412.robot.subsystems.IntakeSubsystem;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
 import frc.team2412.robot.subsystems.LimelightSubsystem;
+import frc.team2412.robot.util.DrivebaseWrapper;
 
 public class Subsystems {
 	public static class SubsystemConstants {
@@ -20,15 +22,26 @@ public class Subsystems {
 		public static final boolean DRIVEBASE_ENABLED = true;
 	}
 
+	public final DrivebaseWrapper drivebaseWrapper;
 	public final DrivebaseSubsystem drivebaseSubsystem;
 	public final LauncherSubsystem launcherSubsystem;
 	public LimelightSubsystem limelightSubsystem;
 	public final IntakeSubsystem intakeSubsystem;
+	public final AprilTagsProcessor apriltagsProcessor;
 
 	public Subsystems() {
 		// initialize subsystems here (wow thats wild)
 		if (DRIVEBASE_ENABLED) {
 			drivebaseSubsystem = new DrivebaseSubsystem();
+			drivebaseWrapper = new DrivebaseWrapper(drivebaseSubsystem.getSwerveDrive());
+		} else {
+			drivebaseSubsystem = null;
+			drivebaseWrapper = new DrivebaseWrapper();
+		}
+		if (APRILTAGS_ENABLED) {
+			apriltagsProcessor = new AprilTagsProcessor(drivebaseWrapper);
+		} else {
+			apriltagsProcessor = null;
 		}
 		if (LAUNCHER_ENABLED) {
 			launcherSubsystem = new LauncherSubsystem();

@@ -15,4 +15,9 @@ public class IndexInCommand extends Command {
 	public void initialize() {
 		intakeSubsystem.indexIn();
 	}
+
+	@Override
+	public boolean isFinished() {
+		return true;
+	}
 }

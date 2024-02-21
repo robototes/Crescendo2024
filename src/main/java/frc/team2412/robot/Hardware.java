@@ -1,7 +1,11 @@
 package frc.team2412.robot;
 
 public class Hardware {
-	// this is where we will ID the hardware, like motors n stuff
+	// apriltags stuff
+	public static final String PHOTON_CAM = "Arducam_OV9281_USB_Camera";
+	public static final String PHOTON_IP = "10.24.12.12";
+
+	// motor IDs:
 
 	// drive devices [1 - 19]
 
@@ -20,7 +24,12 @@ public class Hardware {
 	public static final int INTAKE_MOTOR_LEFT = 42;
 	public static final int INTAKE_MOTOR_RIGHT = 43;
 
-	public static final int INDEX_MOTOR = 44;
+	public static final int INDEX_MOTOR_LOWER = 44;
+	public static final int INDEX_MOTOR_UPPER = 45;
 
-	public static final int FEEDER_MOTOR = 45;
+	public static final int FEEDER_MOTOR = 46;
+
+	// intake sensors  (Digital IO)
+	public static final int INDEX_SENSOR = 1;
+	public static final int FEEDER_SENSOR = 2;
 }

@@ -39,14 +39,18 @@ public class DrivebaseSubsystem extends SubsystemBase {
 	// SWERVE CONSTANTS (that aren't in deploy dir)
 
 	private static final double MAX_SPEED =
-			Robot.getInstance().getRobotType() == RobotType.PRACTICE
+			Robot.getInstance().getRobotType() == RobotType.BONK
 					? 2.0
-					: Robot.getInstance().getRobotType() == RobotType.CRANE ? 3.0 : 1.0;
+					: Robot.getInstance().getRobotType() == RobotType.CRANE
+							? 3.0
+							: Robot.getInstance().getRobotType() == RobotType.PRACTICE ? 4.0 : 1.0;
 	// distance from center of the robot to the furthest module
 	private static final double DRIVEBASE_RADIUS =
-			Robot.getInstance().getRobotType() == RobotType.PRACTICE
+			Robot.getInstance().getRobotType() == RobotType.BONK
 					? 0.305328701
-					: Robot.getInstance().getRobotType() == RobotType.CRANE ? 0.3937 : 0.3;
+					: Robot.getInstance().getRobotType() == RobotType.CRANE
+							? 0.3937
+							: Robot.getInstance().getRobotType() == RobotType.PRACTICE ? 0.3 : 0.3;
 	private static final double JOYSTICK_DEADBAND = 0.05;
 	private static final double HEADING_CORRECTION_DEADBAND = 0.005;
 
@@ -82,6 +86,10 @@ public class DrivebaseSubsystem extends SubsystemBase {
 			case CRANE:
 				swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "craneswerve");
 				System.out.println("Running crane swerve");
+				break;
+			case BONK:
+				swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "bonkswerve");
+				System.out.println("Running bonk swerve");
 				break;
 			case COMPETITION:
 			default:
@@ -126,7 +134,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
 		// LOW verbosity only sends field position, HIGH sends full drive data, MACHINE sends data
 		// viewable by AdvantageScope
-		SwerveDriveTelemetry.verbosity = TelemetryVerbosity.LOW;
+		SwerveDriveTelemetry.verbosity = TelemetryVerbosity.MACHINE;
 	}
 
 	/**
@@ -307,5 +315,10 @@ public class DrivebaseSubsystem extends SubsystemBase {
 						.withSize(1, 1)
 						.getEntry();
 		xWheelsEnabled = xWheelsEntry.getBoolean(true);
+	}
+
+	/** Get the YAGSL {@link SwerveDrive} object. */
+	public SwerveDrive getSwerveDrive() {
+		return swerveDrive;
 	}
 }
