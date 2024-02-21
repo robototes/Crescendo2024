@@ -3,6 +3,7 @@ package frc.team2412.robot.subsystems;
 import static frc.team2412.robot.Hardware.*;
 
 import com.revrobotics.CANSparkBase;
+import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
@@ -30,10 +31,10 @@ public class IntakeSubsystem extends SubsystemBase {
 	private final CANSparkMax intakeMotorLeft;
 	private final CANSparkMax intakeMotorRight;
 
-	// private final CANSparkFlex indexMotorLower;
-	// private final CANSparkFlex indexMotorUpper;
+	private final CANSparkFlex indexMotorLower;
+	private final CANSparkFlex indexMotorUpper;
 
-	// private final CANSparkFlex feederMotor;
+	private final CANSparkFlex feederMotor;
 
 	// Sensors
 	private final DigitalInput indexSensor;
@@ -65,10 +66,10 @@ public class IntakeSubsystem extends SubsystemBase {
 		intakeMotorLeft = new CANSparkMax(INTAKE_MOTOR_LEFT, MotorType.kBrushless);
 		intakeMotorRight = new CANSparkMax(INTAKE_MOTOR_RIGHT, MotorType.kBrushless);
 
-		// indexMotorLower = new CANSparkFlex(INDEX_MOTOR_LOWER, MotorType.kBrushless);
-		// indexMotorUpper = new CANSparkFlex(INDEX_MOTOR_UPPER, MotorType.kBrushless);
+		indexMotorLower = new CANSparkFlex(INDEX_MOTOR_LOWER, MotorType.kBrushless);
+		indexMotorUpper = new CANSparkFlex(INDEX_MOTOR_UPPER, MotorType.kBrushless);
 
-		// feederMotor = new CANSparkFlex(FEEDER_MOTOR, MotorType.kBrushless);
+		feederMotor = new CANSparkFlex(FEEDER_MOTOR, MotorType.kBrushless);
 
 		indexSensor = new DigitalInput(INDEX_SENSOR);
 		feederSensor = new DigitalInput(FEEDER_SENSOR);
@@ -76,8 +77,8 @@ public class IntakeSubsystem extends SubsystemBase {
 		resetMotors();
 
 		ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Intake");
-		// shuffleboardTab.addBoolean("Index Sensor - ", indexSensor::get).withSize(1, 1);
-		// shuffleboardTab.addBoolean("Feeder Sensor - ", feederSensor::get).withSize(1, 1);
+		shuffleboardTab.addBoolean("Index Sensor - ", indexSensor::get).withSize(1, 1);
+		shuffleboardTab.addBoolean("Feeder Sensor - ", feederSensor::get).withSize(1, 1);
 	}
 
 	private void configureMotor(CANSparkBase motor) {
@@ -93,11 +94,11 @@ public class IntakeSubsystem extends SubsystemBase {
 		configureMotor(intakeMotorLeft);
 		configureMotor(intakeMotorRight);
 
-		// configureMotor(indexMotorLower);
-		// configureMotor(indexMotorUpper);
-		// indexMotorLower.follow(indexMotorUpper);
+		configureMotor(indexMotorLower);
+		configureMotor(indexMotorUpper);
+		indexMotorLower.follow(indexMotorUpper);
 
-		// configureMotor(feederMotor);
+		configureMotor(feederMotor);
 	}
 
 	public void intakeSet(double speed) {
@@ -122,28 +123,28 @@ public class IntakeSubsystem extends SubsystemBase {
 
 	// index methods
 	public void indexIn() {
-		// indexMotorUpper.set(setIndexInSpeedEntry.getDouble(INDEX_IN_SPEED));
+		indexMotorUpper.set(setIndexInSpeedEntry.getDouble(INDEX_IN_SPEED));
 	}
 
 	public void indexReverse() {
-		// indexMotorUpper.set(INDEX_REVERSE_SPEED);
+		indexMotorUpper.set(INDEX_REVERSE_SPEED);
 	}
 
 	public void indexStop() {
-		// indexMotorUpper.set(0);
+		indexMotorUpper.set(0);
 	}
 
 	// feeder methods
 	public void feederIn() {
-		// feederMotor.set(setFeederInSpeedEntry.getDouble(FEEDER_IN_SPEED));
+		feederMotor.set(setFeederInSpeedEntry.getDouble(FEEDER_IN_SPEED));
 	}
 
 	public void feederReverse() {
-		// feederMotor.set(FEEDER_REVERSE_SPEED);
+		feederMotor.set(FEEDER_REVERSE_SPEED);
 	}
 
 	public void feederStop() {
-		// feederMotor.set(0);
+		feederMotor.set(0);
 	}
 
 	// sensor methods
