@@ -16,8 +16,8 @@ import java.util.Map;
 
 public class IntakeSubsystem extends SubsystemBase {
 	// Constants
-	public static final double INTAKE_IN_SPEED = 0.3;
-	public static final double INTAKE_REVERSE_SPEED = -0.7;
+	public static final double INTAKE_IN_SPEED = 1.0;
+	public static final double INTAKE_REVERSE_SPEED = -1.0;
 
 	public static final double INDEX_IN_SPEED = 0.3;
 	public static final double INDEX_REVERSE_SPEED = -0.3;
@@ -98,6 +98,13 @@ public class IntakeSubsystem extends SubsystemBase {
 		configureMotor(indexMotorUpper);
 
 		// configureMotor(feederMotor);
+	}
+
+	public void intakeSet(double speed) {
+		intakeMotorFront.set(speed);
+		intakeMotorLeft.set(speed);
+		intakeMotorRight.set(speed);
+		intakeMotorBack.set(speed);
 	}
 
 	public void intakeSet(double speed) {
