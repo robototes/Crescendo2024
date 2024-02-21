@@ -22,7 +22,7 @@ public class ChoreoHandler {
 	// methods
 
 	private static boolean mirrorTrajectory() {
-		return DriverStation.getAlliance().get() == Alliance.Blue;
+		return DriverStation.getAlliance().get() == Alliance.Red;
 	}
 
 	public static Command getChoreoCommand(String pathName) {
