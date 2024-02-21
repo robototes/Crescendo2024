@@ -69,7 +69,10 @@ public class AutoLogic {
         NamedCommands.registerCommand("DummyLaunch", new InstantCommand(() -> controls.vibrateDriveController(0.5)));
     }
 
-    //public Command getConditionalCommand(){}
+    //public Command getConditionalCommand(){
+    //
+    //
+    // }
 
 
 
