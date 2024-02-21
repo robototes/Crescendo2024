@@ -55,7 +55,7 @@ public class LauncherSubsystem extends SubsystemBase {
 	private final GenericEntry launcherAngleEntry =
 			Shuffleboard.getTab("Launcher")
 					.add("Launcher angle", 0)
-					.withSize(1, 1)
+					.withSize(2, 1)
 					.withWidget(BuiltInWidgets.kTextView)
 					.getEntry();
 	private final GenericEntry launcherSpeedEntry =
@@ -68,7 +68,7 @@ public class LauncherSubsystem extends SubsystemBase {
 	private final GenericEntry launcherAngleSpeedEntry =
 			Shuffleboard.getTab("Launcher")
 					.add("Launcher angle Speed", 0)
-					.withSize(1, 1)
+					.withSize(2, 1)
 					.withWidget(BuiltInWidgets.kTextView)
 					.getEntry();
 	// Constructor
