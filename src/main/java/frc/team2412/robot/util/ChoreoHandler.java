@@ -19,10 +19,6 @@ public class ChoreoHandler {
 	private static final PIDController yController = new PIDController(0.1, 0, 0);
 	private static final PIDController rotationController = new PIDController(0.5, 0, 0);
 
-	// constructor
-
-	public ChoreoHandler() {}
-
 	// methods
 
 	private static boolean mirrorTrajectory() {
