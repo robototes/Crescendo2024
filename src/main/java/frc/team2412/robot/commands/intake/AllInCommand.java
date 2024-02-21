@@ -21,14 +21,15 @@ public class AllInCommand extends Command {
 	@Override
 	public void execute() {
 		if (intakeSubsystem.getIndexSensor()) {
-			intakeSubsystem.intakeReverse();
+			intakeSubsystem.intakeReject();
 		}
 	}
 
 	@Override
 	public void end(boolean interrupted) {
-		intakeSubsystem.intakeReverse();
+		intakeSubsystem.intakeReject();
 		intakeSubsystem.indexStop();
+		// needs to be reverted before merge
 		// intakeSubsystem.feederStop();
 	}
 

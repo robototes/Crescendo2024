@@ -13,6 +13,7 @@ public class FeederReverseCommand extends Command {
 
 	@Override
 	public void initialize() {
+		// needs to be reverted before merge
 		// intakeSubsystem.feederReverse();
 	}
 
