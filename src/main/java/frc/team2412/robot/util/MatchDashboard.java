@@ -15,7 +15,7 @@ public class MatchDashboard {
 	private final Field2d field;
 
 	public MatchDashboard(Subsystems s) {
-		field = s.drivebaseSubsystem.getField();
+		field = s.drivebaseWrapper.getField();
 
 		tab.add(new FMSWidget()).withPosition(0, 0).withSize(4, 1);
 		tab.add(field).withPosition(0, 1).withSize(4, 3);

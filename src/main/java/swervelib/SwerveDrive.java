@@ -21,6 +21,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +50,8 @@ public class SwerveDrive {
 	public final SwerveDriveConfiguration swerveDriveConfiguration;
 	/** Swerve odometry. */
 	public final SwerveDrivePoseEstimator swerveDrivePoseEstimator;
+	/** Swerve odometry, without vision measurements. */
+	public final SwerveDrivePoseEstimator odometryOnlyPoseEstimator;
 	/** Swerve modules. */
 	private final SwerveModule[] swerveModules;
 	/** WPILib {@link Notifier} to keep odometry up to date. */
@@ -64,6 +67,8 @@ public class SwerveDrive {
 					AlertType.WARNING);
 	/** Field object. */
 	public Field2d field = new Field2d();
+	/** Field object for the odometry only measurements. */
+	public FieldObject2d odometryOnlyFieldObject = field.getObject("OdometryOnly");
 	/** Swerve controller for controlling heading of the robot. */
 	public SwerveController swerveController;
 	/**
@@ -130,15 +135,20 @@ public class SwerveDrive {
 		this.swerveModules = config.modules;
 
 		//    odometry = new SwerveDriveOdometry(kinematics, getYaw(), getModulePositions());
+
+		var yaw = getYaw();
+		var modulePositions = getModulePositions();
 		swerveDrivePoseEstimator =
 				new SwerveDrivePoseEstimator(
 						kinematics,
-						getYaw(),
-						getModulePositions(),
+						yaw,
+						modulePositions,
 						new Pose2d(
 								new Translation2d(0, 0),
 								Rotation2d.fromDegrees(
 										0))); // x,y,heading in radians; Vision measurement std dev, higher=less weight
+		odometryOnlyPoseEstimator =
+				new SwerveDrivePoseEstimator(kinematics, yaw, modulePositions, new Pose2d());
 
 		zeroGyro();
 		setMaximumSpeed(maxSpeedMPS);
@@ -575,7 +585,10 @@ public class SwerveDrive {
 	 */
 	public void resetOdometry(Pose2d pose) {
 		odometryLock.lock();
-		swerveDrivePoseEstimator.resetPosition(getYaw(), getModulePositions(), pose);
+		var yaw = getYaw();
+		var modulePositions = getModulePositions();
+		swerveDrivePoseEstimator.resetPosition(yaw, modulePositions, pose);
+		odometryOnlyPoseEstimator.resetPosition(yaw, modulePositions, pose);
 		odometryLock.unlock();
 		kinematics.toSwerveModuleStates(
 				ChassisSpeeds.fromFieldRelativeSpeeds(0, 0, 0, pose.getRotation()));
@@ -841,7 +854,10 @@ public class SwerveDrive {
 		odometryLock.lock();
 		try {
 			// Update odometry
-			swerveDrivePoseEstimator.update(getYaw(), getModulePositions());
+			var yaw = getYaw();
+			var modulePositions = getModulePositions();
+			swerveDrivePoseEstimator.update(yaw, modulePositions);
+			odometryOnlyPoseEstimator.update(yaw, modulePositions);
 
 			// Update angle accumulator if the robot is simulated
 			if (SwerveDriveTelemetry.verbosity.ordinal() >= TelemetryVerbosity.HIGH.ordinal()) {
@@ -861,6 +877,7 @@ public class SwerveDrive {
 
 			if (SwerveDriveTelemetry.verbosity.ordinal() >= TelemetryVerbosity.LOW.ordinal()) {
 				field.setRobotPose(swerveDrivePoseEstimator.getEstimatedPosition());
+				odometryOnlyFieldObject.setPose(odometryOnlyPoseEstimator.getEstimatedPosition());
 			}
 
 			double sumVelocity = 0;

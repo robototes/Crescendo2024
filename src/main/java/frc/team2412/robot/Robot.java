@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.team2412.robot.commands.diagnostic.diagnosticSequentialCommand;
 import frc.team2412.robot.util.MACAddress;
 import frc.team2412.robot.util.MatchDashboard;
 
@@ -20,8 +21,9 @@ public class Robot extends TimedRobot {
 
 	public enum RobotType {
 		COMPETITION,
+		PRACTICE,
 		CRANE,
-		PRACTICE;
+		BONK;
 	}
 
 	public static Robot getInstance() {
@@ -47,12 +49,14 @@ public class Robot extends TimedRobot {
 	}
 
 	public static final MACAddress COMPETITION_ADDRESS = MACAddress.of(0x00, 0x00, 0x00);
-	public static final MACAddress CRANE_ADDRESS = MACAddress.of(0x33, 0x9d, 0xd1);
-	public static final MACAddress PRACTICE_ADDRESS = MACAddress.of(0x33, 0x9D, 0xE7);
+	public static final MACAddress PRACTICE_ADDRESS = MACAddress.of(0x33, 0x9d, 0xD1);
+	public static final MACAddress BONK_ADDRESS = MACAddress.of(0x33, 0x9D, 0xE7);
+	public static final MACAddress CRANE_ADDRESS = MACAddress.of(0x22, 0xB0, 0x92);
 
 	private static RobotType getTypeFromAddress() {
 		if (PRACTICE_ADDRESS.exists()) return RobotType.PRACTICE;
 		if (CRANE_ADDRESS.exists()) return RobotType.CRANE;
+		if (BONK_ADDRESS.exists()) return RobotType.BONK;
 		if (!COMPETITION_ADDRESS.exists())
 			DriverStation.reportWarning(
 					"Code running on unknown MAC Address! Running competition code anyways", false);
@@ -66,7 +70,11 @@ public class Robot extends TimedRobot {
 		subsystems = new Subsystems();
 		controls = new Controls(subsystems);
 
-		autoChooser = AutoBuilder.buildAutoChooser();
+		if (Subsystems.SubsystemConstants.DRIVEBASE_ENABLED) {
+			autoChooser = AutoBuilder.buildAutoChooser();
+		} else {
+			autoChooser = new SendableChooser<>();
+		}
 
 		Shuffleboard.startRecording();
 
@@ -92,7 +100,12 @@ public class Robot extends TimedRobot {
 	}
 
 	@Override
-	public void testInit() {}
+	public void testInit() {
+		CommandScheduler.getInstance()
+				.schedule(
+						new diagnosticSequentialCommand(
+								subsystems.intakeSubsystem, subsystems.launcherSubsystem));
+	}
 
 	@Override
 	public void robotPeriodic() {
