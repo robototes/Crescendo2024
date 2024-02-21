@@ -8,6 +8,7 @@ import static frc.team2412.robot.Subsystems.SubsystemConstants.LAUNCHER_ENABLED;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -134,6 +135,9 @@ public class Controls {
 	}
 
 	public void vibrateDriveController(double vibration) {
-		driveController.getHID().setRumble(RumbleType.kBothRumble, vibration);
+		// no reason to rumble in auto when no one is holding the controller
+		if (!DriverStation.isAutonomous()) {
+			driveController.getHID().setRumble(RumbleType.kBothRumble, vibration);
+		}	
 	}
 }
