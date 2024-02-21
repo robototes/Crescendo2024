@@ -21,7 +21,7 @@ public class AllInCommand extends Command {
 	@Override
 	public void execute() {
 		if (intakeSubsystem.getIndexSensor()) {
-			intakeSubsystem.intakeStop();
+			intakeSubsystem.intakeReverse();
 		}
 	}
 
