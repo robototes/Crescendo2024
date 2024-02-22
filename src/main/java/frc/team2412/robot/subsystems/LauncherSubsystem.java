@@ -22,6 +22,7 @@ import java.util.Map;
 public class LauncherSubsystem extends SubsystemBase {
 	// CONSTANTS
 	// ANGLE VALUES
+	public static final int AMP_AIM_ANGLE = 90;
 	public static final int SUBWOOFER_AIM_ANGLE = 54;
 	public static final int PODIUM_AIM_ANGLE = 39;
 	// MOTOR VALUES
