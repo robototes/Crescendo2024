@@ -27,11 +27,10 @@ public class IntakeSubsystem extends SubsystemBase {
 	public static final double INDEX_LOWER_IN_SPEED = 0.3;
 	public static final double INDEX_LOWER_REVERSE_SPEED = -0.3;
 
-	public static final double FEEDER_ALIGN_BACKWARD_SPEED = -0.2;
-	public static final double FEEDER_ALIGN_FORWARD_SPEED = 0.2;
+	public static final double FEEDER_SHOOT_SPEED = 1.0;
 
 	// needs to be reverted before merge
-	// public static final double FEEDER_IN_SPEED = 0.3;
+	// public static final double FEEDER_IN_SPEED = 0.65;
 	// public static final double FEEDER_REVERSE_SPEED = -0.3;
 
 	// Motors
@@ -166,7 +165,6 @@ public class IntakeSubsystem extends SubsystemBase {
 	}
 
 	// index methods
-
 	public void indexIn() {
 		indexMotorUpper.set(setIndexInSpeedEntry.getDouble(INDEX_UPPER_IN_SPEED));
 		indexMotorLower.set(INDEX_LOWER_IN_SPEED);
@@ -196,12 +194,8 @@ public class IntakeSubsystem extends SubsystemBase {
 	// 	feederMotor.set(0);
 	// }
 
-	// public void feederAlignBackward() {
-	// 	feederMotor.set(FEEDER_ALIGN_BACKWARD_SPEED);
-	// }
-
-	// public void feederAlignForward() {
-	// 	feederMotor.set(FEEDER_ALIGN_FORWARD_SPEED);
+	// public void feederShoot() {
+	// 	feederMotor.set(FEEDER_SHOOT_SPEED);
 	// }
 
 	// sensor methods
