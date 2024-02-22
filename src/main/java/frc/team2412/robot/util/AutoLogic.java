@@ -22,7 +22,6 @@ public class AutoLogic {
 					new InstantCommand(() -> controls.vibrateDriveController(0.5)),
 					new WaitCommand(1.5),
 					new InstantCommand(() -> controls.vibrateDriveController(0.0)));
-	;
 
 	/**
 	 * Placeholder for vision detect note

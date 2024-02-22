@@ -1,10 +1,15 @@
 package frc.team2412.robot.util;
 
+import static frc.team2412.robot.util.AutoLogic.*;
+
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 public class AutoPaths {
+
+	private static Command placeHolderCommand = Commands.waitSeconds(0.5);
 	public static SequentialCommandGroup testAuto =
 			new SequentialCommandGroup(
 					AutoLogic.getAutoCommand("TestPath"),
@@ -13,7 +18,25 @@ public class AutoPaths {
 							AutoLogic.getAutoCommand("TestPathFalse"),
 							() -> false));
 
-	
+	public static Command midSpeakerCenterLineN3N2N1 =
+			Commands.sequence(
+					vibrateControllerCommand,
+					getAutoCommand("MidSpeakerQCenterLineN3"),
+					Commands.either(
+							Commands.sequence(
+									getAutoCommand("QCenterLineN3LCenterLineN3"),
+									placeHolderCommand,
+									getAutoCommand("LCenterLineN3QCenterLineN2"),
+									Commands.either(
+											Commands.sequence(
+													getAutoCommand("N3QCenterLineN2LCenterLineN2"),
+													getAutoCommand("N3LCenterLineN2LCenterLineN1")),
+											getAutoCommand("QCenterLineN2LCenterLineN1"),
+											AutoLogic::dummyLogic)),
+							Commands.sequence(
+									getAutoCommand("QCenterLineN3QCenterLineN2"),
+									getAutoCommand("QCenterLineN2LCenterLineN2")),
+							AutoLogic::dummyLogic));
 
 	// public static SequentialCommandGroup midSpeakerCenterLineN3N2N1 =
 	// 		new SequentialCommandGroup(
