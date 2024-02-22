@@ -103,14 +103,14 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void testInit() {
-		 if (SubsystemConstants.INTAKE_ENABLED) {
+		if (SubsystemConstants.INTAKE_ENABLED) {
 			CommandScheduler.getInstance()
 					.schedule(new IntakeDiagnosticCommand(subsystems.intakeSubsystem));
 		}
 		if (SubsystemConstants.LAUNCHER_ENABLED) {
 			CommandScheduler.getInstance()
 					.schedule(new LauncherDiagnosticCommand(subsystems.launcherSubsystem));
-		} 
+		}
 	}
 
 	@Override
