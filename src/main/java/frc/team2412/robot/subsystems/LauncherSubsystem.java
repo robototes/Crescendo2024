@@ -188,8 +188,8 @@ public class LauncherSubsystem extends SubsystemBase {
 	}
 	// stop launcher motors method
 	public void stopLauncher() {
-		launcherTopMotor.stopMotor();
-		launcherBottomMotor.stopMotor();
+		launcherTopMotor.disable();
+		launcherBottomMotor.disable();
 	}
 
 	// uses the value from the entry
