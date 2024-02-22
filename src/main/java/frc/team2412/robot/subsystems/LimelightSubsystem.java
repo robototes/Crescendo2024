@@ -72,7 +72,7 @@ public class LimelightSubsystem extends SubsystemBase {
 				.withPosition(4, 0)
 				.withSize(1, 1);
 		limelightTab
-				.addDouble("Limelight Based Turn Power - TEST ", this::turnPowerExp)
+				.addDouble("Limelight Based Turn Power - TEST ", this::turnPowerLin)
 				.withPosition(5, 0)
 				.withSize(1, 1);
 		limelightTab
@@ -131,21 +131,21 @@ public class LimelightSubsystem extends SubsystemBase {
 	}
 
 	public double turnPowerExp() {
-		if(getHorizontalOffset() >= 10){
-		return MathUtil.clamp(
-				(Math.signum(getHorizontalOffset())
-						* (Math.pow(Math.abs(getHorizontalOffset()), 1.8) / 0.2)),
-				-0.25,
-				0.25);
-		}else{
+		if (Math.abs(getHorizontalOffset()) >= 1.0) {
+			return MathUtil.clamp(
+					(Math.signum(getHorizontalOffset())
+							* (Math.pow(Math.abs(getHorizontalOffset()), 0.6) * 0.14)),
+					-0.25,
+					0.25);
+		} else {
 			return 0.0;
 		}
 	}
-	
+
 	public double turnPowerLin() {
-		if(getHorizontalOffset() >= 3.0){
-			return MathUtil.clamp(0.04*getHorizontalOffset(), -0.25, 0.25);
-		}else{
+		if (Math.abs(getHorizontalOffset()) >= 1.0) {
+			return MathUtil.clamp(0.04 * getHorizontalOffset(), -0.25, 0.25);
+		} else {
 			return 0.0;
 		}
 	}
@@ -189,7 +189,7 @@ public class LimelightSubsystem extends SubsystemBase {
 	}
 
 	public Command getWithinDistance(DrivebaseSubsystem drivebaseSubsystem) {
-		final DoubleSupplier returnTurn = () -> turnPowerExp();
+		final DoubleSupplier returnTurn = () -> turnPowerLin();
 		final DoubleSupplier returnZero = () -> 0.0;
 		Command moveCommand;
 		Pose2d targetPose;
@@ -197,7 +197,6 @@ public class LimelightSubsystem extends SubsystemBase {
 			System.out.println("has targets");
 			moveCommand =
 					new DriveCommand(drivebaseSubsystem, returnZero, returnZero, returnTurn, returnZero);
-
 		} else {
 			System.out.println("hasn't targets");
 			moveCommand =

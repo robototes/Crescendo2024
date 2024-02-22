@@ -3,10 +3,9 @@ package frc.team2412.robot;
 import static frc.team2412.robot.Controls.ControlConstants.CODRIVER_CONTROLLER_PORT;
 import static frc.team2412.robot.Controls.ControlConstants.CONTROLLER_PORT;
 import static frc.team2412.robot.Subsystems.SubsystemConstants.DRIVEBASE_ENABLED;
-import static frc.team2412.robot.Subsystems.SubsystemConstants.LIMELIGHT_ENABLED;
 import static frc.team2412.robot.Subsystems.SubsystemConstants.INTAKE_ENABLED;
 import static frc.team2412.robot.Subsystems.SubsystemConstants.LAUNCHER_ENABLED;
-
+import static frc.team2412.robot.Subsystems.SubsystemConstants.LIMELIGHT_ENABLED;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -80,7 +79,6 @@ public class Controls {
 		if (INTAKE_ENABLED) {
 			bindIntakeControls();
 		}
-
 	}
 
 	// drivebase
@@ -92,10 +90,8 @@ public class Controls {
 								driveController::getLeftY,
 								driveController::getLeftX,
 								() -> Rotation2d.fromRotations(driveController.getRightX())));
-		// driveController.start().onTrue(new InstantCommand(s.drivebaseSubsystem::resetGyro));
 		driveController.rightStick().onTrue(new InstantCommand(s.drivebaseSubsystem::toggleXWheels));
 	}
-
 
 	public void bindLimelightControls() {
 		getWithinDistanceTrigger.onTrue(s.limelightSubsystem.getWithinDistance(s.drivebaseSubsystem));

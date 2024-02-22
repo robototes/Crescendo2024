@@ -40,11 +40,6 @@ public class DriveCommand extends Command {
 					.addPersistent("Field Oriented 1", true)
 					.withWidget(BuiltInWidgets.kToggleSwitch)
 					.getEntry();
-	private static GenericEntry cubeSpeedEntry =
-			Shuffleboard.getTab("Drivebase")
-					.addPersistent("Cube Speed 1", true)
-					.withWidget(BuiltInWidgets.kToggleSwitch)
-					.getEntry();
 	private static GenericEntry turboRotationEntry =
 			Shuffleboard.getTab("Drivebase")
 					.addPersistent("Turbo Rotation Modifier 1", TURBO_ROTATION_DEFAULT)
@@ -87,10 +82,8 @@ public class DriveCommand extends Command {
 		double cubed_y = magnitude * Math.sin(angle);
 
 		drivebaseSubsystem.simpleDrive(
-				(cubeSpeedEntry.getBoolean(false) ? cubed_x : x)
-						* driveSpeedEntry.getDouble(1.0)
-						* 4.4196, // convert from percent to m/s
-				(cubeSpeedEntry.getBoolean(false) ? cubed_y : y) * driveSpeedEntry.getDouble(1.0) * 4.4196,
+				cubed_x * driveSpeedEntry.getDouble(1.0) * 4.4196, // convert from percent to m/s
+				cubed_y * driveSpeedEntry.getDouble(1.0) * 4.4196,
 				Rotation2d.fromRotations(
 						rot
 								* rotationSpeedModifier
