@@ -39,11 +39,14 @@ public class LauncherSubsystem extends SubsystemBase {
 	// HARDWARE
 	private final CANSparkFlex launcherTopMotor;
 	private final CANSparkFlex launcherBottomMotor;
-	private final CANSparkFlex launcherAngleMotor;
+	private final CANSparkFlex launcherAngleOneMotor;
+	private final CANSparkFlex launcherAngleTwoMotor;
 	private final RelativeEncoder launcherTopEncoder;
 	private final RelativeEncoder launcherBottomEncoder;
 	private final SparkAbsoluteEncoder launcherAngleEncoder;
-	private final SparkPIDController launcherAnglePIDController;
+	private final SparkPIDController launcherAngleOnePIDController;
+	private final SparkPIDController launcherAngleTwoPIDController;
+
 	private final SparkPIDController launcherTopPIDController;
 	private final SparkPIDController launcherBottomPIDController;
 
@@ -99,11 +102,14 @@ public class LauncherSubsystem extends SubsystemBase {
 		// motors
 		launcherTopMotor = new CANSparkFlex(Hardware.LAUNCHER_TOP_MOTOR_ID, MotorType.kBrushless);
 		launcherBottomMotor = new CANSparkFlex(Hardware.LAUNCHER_BOTTOM_MOTOR_ID, MotorType.kBrushless);
-		launcherAngleMotor = new CANSparkFlex(Hardware.LAUNCHER_ANGLE_MOTOR_ID, MotorType.kBrushless);
+		launcherAngleOneMotor =
+				new CANSparkFlex(Hardware.LAUNCHER_PIVOT_ONE_MOTOR_ID, MotorType.kBrushless);
+		launcherAngleTwoMotor =
+				new CANSparkFlex(Hardware.LAUNCHER_PIVOT_TWO_MOTOR_ID, MotorType.kBrushless);
 		// encoders
 		launcherTopEncoder = launcherTopMotor.getEncoder();
 		launcherBottomEncoder = launcherBottomMotor.getEncoder();
-		launcherAngleEncoder = launcherAngleMotor.getAbsoluteEncoder(Type.kDutyCycle);
+		launcherAngleEncoder = launcherAngleOneMotor.getAbsoluteEncoder(Type.kDutyCycle);
 
 		// PID controllers
 		// Create launcherTopPIDController and launcherTopMotor]
@@ -111,10 +117,15 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherTopPIDController.setFeedbackDevice(launcherTopEncoder);
 		launcherBottomPIDController = launcherBottomMotor.getPIDController();
 		launcherBottomPIDController.setFeedbackDevice(launcherBottomEncoder);
-		launcherAnglePIDController = launcherAngleMotor.getPIDController();
-		launcherAnglePIDController.setFeedbackDevice(launcherAngleEncoder);
+		launcherAngleOnePIDController = launcherAngleOneMotor.getPIDController();
+		launcherAngleOnePIDController.setFeedbackDevice(launcherAngleEncoder);
+		launcherAngleTwoPIDController = launcherAngleTwoMotor.getPIDController();
+		launcherAngleTwoPIDController.setFeedbackDevice(launcherAngleEncoder);
+
 		Shuffleboard.getTab("Launcher")
-				.add(new SparkPIDWidget(launcherAnglePIDController, "launcherAnglePIDController"));
+				.add(new SparkPIDWidget(launcherAngleOnePIDController, "launcherAngleOnePIDController"));
+		Shuffleboard.getTab("Launcher")
+				.add(new SparkPIDWidget(launcherAngleTwoPIDController, "launcherAngleTwoPIDController"));
 		Shuffleboard.getTab("Launcher")
 				.add(new SparkPIDWidget(launcherTopPIDController, "launcherTopPIDController"));
 		Shuffleboard.getTab("Launcher")
@@ -124,31 +135,42 @@ public class LauncherSubsystem extends SubsystemBase {
 	public void configMotors() {
 		launcherTopMotor.restoreFactoryDefaults();
 		launcherBottomMotor.restoreFactoryDefaults();
-		launcherAngleMotor.restoreFactoryDefaults();
+		launcherAngleOneMotor.restoreFactoryDefaults();
+		launcherAngleTwoMotor.restoreFactoryDefaults();
 		// idle mode (wow)
 		launcherTopMotor.setIdleMode(IdleMode.kCoast);
 		launcherBottomMotor.setIdleMode(IdleMode.kCoast);
-		launcherAngleMotor.setIdleMode(IdleMode.kBrake);
+		launcherAngleOneMotor.setIdleMode(IdleMode.kBrake);
+		launcherAngleTwoMotor.setIdleMode(IdleMode.kBrake);
 		// inveritng the bottom motor lmao
 		launcherBottomMotor.setInverted(true);
 
 		// current limit
 		launcherTopMotor.setSmartCurrentLimit(20);
 		launcherBottomMotor.setSmartCurrentLimit(20);
-		launcherAngleMotor.setSmartCurrentLimit(20);
+		launcherAngleOneMotor.setSmartCurrentLimit(20);
+		launcherAngleTwoMotor.setSmartCurrentLimit(20);
 
-		launcherAngleMotor.setSoftLimit(CANSparkBase.SoftLimitDirection.kForward, 100);
-		launcherAngleMotor.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, 2);
+		launcherAngleOneMotor.setSoftLimit(CANSparkBase.SoftLimitDirection.kForward, 100);
+		launcherAngleOneMotor.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, 2);
+		launcherAngleTwoMotor.setSoftLimit(CANSparkBase.SoftLimitDirection.kForward, 100);
+		launcherAngleTwoMotor.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, 2);
 
 		launcherTopMotor.burnFlash();
 		launcherBottomMotor.burnFlash();
-		launcherAngleMotor.burnFlash();
+		launcherAngleOneMotor.burnFlash();
+		launcherAngleTwoMotor.burnFlash();
 
 		// PID
-		launcherAnglePIDController.setP(0.1);
-		launcherAnglePIDController.setI(0);
-		launcherAnglePIDController.setD(0);
-		launcherAnglePIDController.setFF(0);
+		launcherAngleOnePIDController.setP(0.1);
+		launcherAngleOnePIDController.setI(0);
+		launcherAngleOnePIDController.setD(0);
+		launcherAngleOnePIDController.setFF(0);
+
+		launcherAngleTwoPIDController.setP(0.1);
+		launcherAngleTwoPIDController.setI(0);
+		launcherAngleTwoPIDController.setD(0);
+		launcherAngleTwoPIDController.setFF(0);
 
 		launcherTopPIDController.setP(0.1);
 		launcherTopPIDController.setI(0);
@@ -190,7 +212,9 @@ public class LauncherSubsystem extends SubsystemBase {
 
 	public void setAngle(double launcherAngle) {
 		angleSetpoint = launcherAngle;
-		launcherAnglePIDController.setReference(
+		launcherAngleOnePIDController.setReference(
+				Units.degreesToRotations(angleSetpoint), ControlType.kPosition);
+		launcherAngleTwoPIDController.setReference(
 				Units.degreesToRotations(angleSetpoint), ControlType.kPosition);
 	}
 
@@ -215,7 +239,8 @@ public class LauncherSubsystem extends SubsystemBase {
 	}
 
 	public void setAngleSpeed(double Speed) {
-		launcherAnglePIDController.setReference(Speed, ControlType.kPosition);
+		launcherAngleOnePIDController.setReference(Speed, ControlType.kVelocity);
+		launcherAngleTwoPIDController.setReference(Speed, ControlType.kVelocity);
 	}
 
 	@Override
