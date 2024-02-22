@@ -130,6 +130,8 @@ public class LauncherSubsystem extends SubsystemBase {
 				.add(new SparkPIDWidget(launcherTopPIDController, "launcherTopPIDController"));
 		Shuffleboard.getTab("Launcher")
 				.add(new SparkPIDWidget(launcherBottomPIDController, "launcherBottomPIDController"));
+
+		configMotors();
 	}
 
 	public void configMotors() {
@@ -146,8 +148,8 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherBottomMotor.setInverted(true);
 
 		// current limit
-		launcherTopMotor.setSmartCurrentLimit(20);
-		launcherBottomMotor.setSmartCurrentLimit(20);
+		launcherTopMotor.setSmartCurrentLimit(40);
+		launcherBottomMotor.setSmartCurrentLimit(40);
 		launcherAngleOneMotor.setSmartCurrentLimit(20);
 		launcherAngleTwoMotor.setSmartCurrentLimit(20);
 
