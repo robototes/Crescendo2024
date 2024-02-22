@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.team2412.robot.commands.intake.AllInCommand;
 import frc.team2412.robot.commands.intake.AllReverseCommand;
 import frc.team2412.robot.commands.intake.AllStopCommand;
-import frc.team2412.robot.commands.intake.FeederInCommand;
 import frc.team2412.robot.commands.launcher.FullTargetCommand;
 import frc.team2412.robot.commands.launcher.SetAngleCommand;
 
@@ -111,7 +110,7 @@ public class Controls {
 		codriveIntakeReverseButton.onTrue(new AllReverseCommand(s.intakeSubsystem));
 
 		// feeder shoot note out
-		launcherLaunchButton.whileTrue(new FeederInCommand(s.intakeSubsystem));
+		launcherLaunchButton.onTrue(new InstantCommand(s.launcherSubsystem::launch));
 	}
 
 	private void bindLauncherControls() {

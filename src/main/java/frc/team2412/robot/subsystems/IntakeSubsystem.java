@@ -22,7 +22,7 @@ public class IntakeSubsystem extends SubsystemBase {
 	public static final double INDEX_IN_SPEED = 0.3;
 	public static final double INDEX_REVERSE_SPEED = -0.3;
 
-	public static final double FEEDER_IN_SPEED = 0.3;
+	public static final double FEEDER_IN_SPEED = 1.0;
 	public static final double FEEDER_REVERSE_SPEED = -0.3;
 
 	// Motors
@@ -84,7 +84,7 @@ public class IntakeSubsystem extends SubsystemBase {
 	private void configureMotor(CANSparkBase motor) {
 		motor.restoreFactoryDefaults();
 		motor.setIdleMode(IdleMode.kBrake);
-		motor.setSmartCurrentLimit(20);
+		motor.setSmartCurrentLimit(40);
 		motor.burnFlash();
 	}
 
@@ -99,6 +99,7 @@ public class IntakeSubsystem extends SubsystemBase {
 		indexMotorLower.follow(indexMotorUpper);
 
 		configureMotor(feederMotor);
+		feederMotor.setInverted(true);
 	}
 
 	public void intakeSet(double speed) {
@@ -136,7 +137,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
 	// feeder methods
 	public void feederIn() {
-		feederMotor.set(setFeederInSpeedEntry.getDouble(FEEDER_IN_SPEED));
+		feederMotor.set(1.0); // setFeederInSpeedEntry.getDouble(FEEDER_IN_SPEED));
 	}
 
 	public void feederReverse() {

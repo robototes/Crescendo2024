@@ -103,6 +103,8 @@ public class LauncherSubsystem extends SubsystemBase {
 				.add(new SparkPIDWidget(launcherTopPIDController, "launcherTopPIDController"));
 		Shuffleboard.getTab("Launcher")
 				.add(new SparkPIDWidget(launcherBottomPIDController, "launcherBottomPIDController"));
+
+		configMotors();
 	}
 
 	public void configMotors() {
@@ -113,12 +115,12 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherTopMotor.setIdleMode(IdleMode.kCoast);
 		launcherBottomMotor.setIdleMode(IdleMode.kCoast);
 		launcherAngleMotor.setIdleMode(IdleMode.kBrake);
-		// inveritng the bottom motor lmao
-		launcherBottomMotor.setInverted(true);
+		// inveritng the top motor lmao
+		launcherTopMotor.setInverted(true);
 
 		// current limit
-		launcherTopMotor.setSmartCurrentLimit(20);
-		launcherBottomMotor.setSmartCurrentLimit(20);
+		launcherTopMotor.setSmartCurrentLimit(40);
+		launcherBottomMotor.setSmartCurrentLimit(40);
 		launcherAngleMotor.setSmartCurrentLimit(20);
 
 		launcherAngleMotor.setSoftLimit(CANSparkBase.SoftLimitDirection.kForward, 100);
