@@ -76,6 +76,21 @@ public class LauncherSubsystem extends SubsystemBase {
 					.withSize(2, 1)
 					.withWidget(BuiltInWidgets.kTextView)
 					.getEntry();
+
+	private final GenericEntry launcherTopFlywheelTemp =
+			Shuffleboard.getTab("Launcher")
+					.add("top Flywheel temp", 0)
+					.withSize(1, 1)
+					.withWidget(BuiltInWidgets.kTextView)
+					.getEntry();
+
+	private final GenericEntry launcherBottomFlyWheelTemp =
+			Shuffleboard.getTab("Launcher")
+					.add("bottom Flywheel temp", 0)
+					.withSize(1, 1)
+					.withWidget(BuiltInWidgets.kTextView)
+					.getEntry();
+
 	// Constructor
 	public LauncherSubsystem() {
 
@@ -207,5 +222,7 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherAngleEntry.setDouble(getAngle());
 		launcherSpeedEntry.setDouble(getLauncherSpeed());
 		launcherAngleSpeedEntry.setDouble(getAngleSpeed());
+		launcherTopFlywheelTemp.setDouble(launcherTopMotor.getMotorTemperature());
+		launcherBottomFlyWheelTemp.setDouble(launcherTopMotor.getMotorTemperature());
 	}
 }
