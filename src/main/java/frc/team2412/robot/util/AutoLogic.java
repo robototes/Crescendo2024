@@ -69,6 +69,8 @@ public class AutoLogic {
 		// 		"SetLaunchSpeed", new SetLaunchSpeedCommand(s.launcherSubsystem, 0.1));
 		// NamedCommands.registerCommand("StopLauncher", new StopLauncherCommand(s.launcherSubsystem));
 		NamedCommands.registerCommand("DummyLaunch", vibrateControllerCommand);
+
+		NamedCommands.registerCommand("AutoLogicTest", AutoPaths.testAuto);
 	}
 
 	// public Command getConditionalCommand(){}
@@ -79,7 +81,7 @@ public class AutoLogic {
 	 * @param pathName
 	 * @return follow path command
 	 */
-	public static Command getAutonomousCommand(String pathName) {
+	public static Command getAutoCommand(String pathName) {
 		// Load the path you want to follow using its name in the GUI
 		PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
 
