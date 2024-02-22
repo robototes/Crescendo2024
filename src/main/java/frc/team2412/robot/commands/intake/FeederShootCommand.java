@@ -13,8 +13,7 @@ public class FeederShootCommand extends Command {
 
 	@Override
 	public void initialize() {
-		// needs to be reverted before merge
-		// intakeSubsystem.feederShoot();
+		intakeSubsystem.feederShoot();
 	}
 
 	@Override

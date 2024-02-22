@@ -27,8 +27,7 @@ public class Hardware {
 	public static final int INDEX_MOTOR_LOWER = 44;
 	public static final int INDEX_MOTOR_UPPER = 45;
 
-	// needs to be reverted before merge
-	// public static final int FEEDER_MOTOR = 46;
+	public static final int FEEDER_MOTOR = 46;
 
 	// intake sensors  (Digital IO)
 	public static final int INDEX_SENSOR = 1;

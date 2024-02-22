@@ -29,8 +29,7 @@ public class AllInCommand extends Command {
 	public void end(boolean interrupted) {
 		intakeSubsystem.intakeReject();
 		intakeSubsystem.indexStop();
-		// needs to be reverted before merge
-		// intakeSubsystem.feederStop();
+		intakeSubsystem.feederStop();
 	}
 
 	@Override

@@ -29,9 +29,8 @@ public class IntakeSubsystem extends SubsystemBase {
 
 	public static final double FEEDER_SHOOT_SPEED = 1.0;
 
-	// needs to be reverted before merge
-	// public static final double FEEDER_IN_SPEED = 0.65;
-	// public static final double FEEDER_REVERSE_SPEED = -0.3;
+	public static final double FEEDER_IN_SPEED = 0.65;
+	public static final double FEEDER_REVERSE_SPEED = -0.3;
 
 	// Motors
 	private final CANSparkMax intakeMotorFront;
@@ -42,8 +41,7 @@ public class IntakeSubsystem extends SubsystemBase {
 	private final CANSparkFlex indexMotorLower;
 	private final CANSparkFlex indexMotorUpper;
 
-	// needs to be reverted before merge
-	// private final CANSparkFlex feederMotor;
+	private final CANSparkFlex feederMotor;
 
 	// Sensors
 	private final DigitalInput indexSensor;
@@ -63,12 +61,11 @@ public class IntakeSubsystem extends SubsystemBase {
 					.withSize(1, 1)
 					.getEntry();
 
-	// needs to be reverted before merge
-	// private final GenericEntry setFeederInSpeedEntry =
-	// 		Shuffleboard.getTab("Intake")
-	// 				.add("Feeder in speed - ", FEEDER_IN_SPEED)
-	// 				.withSize(1, 1)
-	// 				.getEntry();
+	private final GenericEntry setFeederInSpeedEntry =
+			Shuffleboard.getTab("Intake")
+					.add("Feeder in speed - ", FEEDER_IN_SPEED)
+					.withSize(1, 1)
+					.getEntry();
 
 	private final GenericEntry intakeMotorFrontTemp =
 			Shuffleboard.getTab("Intake")
@@ -107,8 +104,7 @@ public class IntakeSubsystem extends SubsystemBase {
 		indexMotorLower = new CANSparkFlex(INDEX_MOTOR_LOWER, MotorType.kBrushless);
 		indexMotorUpper = new CANSparkFlex(INDEX_MOTOR_UPPER, MotorType.kBrushless);
 
-		// needs to be reverted before merge
-		// feederMotor = new CANSparkFlex(FEEDER_MOTOR, MotorType.kBrushless);
+		feederMotor = new CANSparkFlex(FEEDER_MOTOR, MotorType.kBrushless);
 
 		indexSensor = new DigitalInput(INDEX_SENSOR);
 		feederSensor = new DigitalInput(FEEDER_SENSOR);
@@ -136,8 +132,7 @@ public class IntakeSubsystem extends SubsystemBase {
 		configureMotor(indexMotorLower);
 		configureMotor(indexMotorUpper);
 
-		// needs to be reverted before merge
-		// configureMotor(feederMotor);
+		configureMotor(feederMotor);
 	}
 
 	public void intakeSet(double speed) {
@@ -181,22 +176,21 @@ public class IntakeSubsystem extends SubsystemBase {
 	}
 
 	// feeder methods
-	// needs to be reverted before merge
-	// public void feederIn() {
-	// 	feederMotor.set(setFeederInSpeedEntry.getDouble(FEEDER_IN_SPEED));
-	// }
+	public void feederIn() {
+		feederMotor.set(setFeederInSpeedEntry.getDouble(FEEDER_IN_SPEED));
+	}
 
-	// public void feederReverse() {
-	// 	feederMotor.set(FEEDER_REVERSE_SPEED);
-	// }
+	public void feederReverse() {
+		feederMotor.set(FEEDER_REVERSE_SPEED);
+	}
 
-	// public void feederStop() {
-	// 	feederMotor.set(0);
-	// }
+	public void feederStop() {
+		feederMotor.set(0);
+	}
 
-	// public void feederShoot() {
-	// 	feederMotor.set(FEEDER_SHOOT_SPEED);
-	// }
+	public void feederShoot() {
+		feederMotor.set(FEEDER_SHOOT_SPEED);
+	}
 
 	// sensor methods
 	public boolean getIndexSensor() {

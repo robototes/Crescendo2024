@@ -57,8 +57,7 @@ public class FullTargetCommand extends Command {
 	@Override
 	public void initialize() {
 		CommandScheduler.getInstance().schedule(yawAlignmentCommand);
-		// needs to be reverted before merge
-		// intakeSubsystem.feederStop();
+		intakeSubsystem.feederStop();
 	}
 
 	@Override
@@ -75,11 +74,9 @@ public class FullTargetCommand extends Command {
 		launcherSubsystem.launch(dataPoint.rpm);
 
 		if (launch.getAsBoolean()) {
-			// needs to be reverted before merge
-			// intakeSubsystem.feederIn();
+			intakeSubsystem.feederIn();
 		} else {
-			// needs to be reverted before merge
-			// intakeSubsystem.feederStop();
+			intakeSubsystem.feederStop();
 		}
 
 		if (MathUtil.isNear(
@@ -100,8 +97,7 @@ public class FullTargetCommand extends Command {
 	public void end(boolean interrupted) {
 		yawAlignmentCommand.cancel();
 		launcherSubsystem.stopLauncher();
-		// needs to be reverted before merge
-		// intakeSubsystem.feederStop();
+		intakeSubsystem.feederStop();
 		controls.vibrateDriveController(0.0);
 	}
 }
