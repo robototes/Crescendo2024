@@ -9,6 +9,8 @@ import static frc.team2412.robot.Subsystems.SubsystemConstants.LIMELIGHT_ENABLED
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -17,6 +19,7 @@ import frc.team2412.robot.commands.intake.AllInCommand;
 import frc.team2412.robot.commands.intake.AllReverseCommand;
 import frc.team2412.robot.commands.intake.AllStopCommand;
 import frc.team2412.robot.commands.intake.FeederInCommand;
+import frc.team2412.robot.commands.launcher.FullTargetCommand;
 import frc.team2412.robot.commands.launcher.SetAngleCommand;
 
 public class Controls {
@@ -79,6 +82,18 @@ public class Controls {
 		if (INTAKE_ENABLED) {
 			bindIntakeControls();
 		}
+		if (DRIVEBASE_ENABLED && LAUNCHER_ENABLED && INTAKE_ENABLED) {
+			// temporary controls, not sure what drive team wants
+			driveController
+					.leftBumper()
+					.whileTrue(
+							new FullTargetCommand(
+									s.launcherSubsystem,
+									s.intakeSubsystem,
+									s.drivebaseSubsystem,
+									this,
+									driveController.rightBumper()));
+		}
 	}
 
 	// drivebase
@@ -128,5 +143,12 @@ public class Controls {
 		//				s.launcherSubsystem,
 		//				LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
 		//				LauncherSubsystem.SUBWOOFER_AIM_ANGLE));
+	}
+
+	public void vibrateDriveController(double vibration) {
+		// no reason to rumble in auto when no one is holding the controller
+		if (!DriverStation.isAutonomous()) {
+			driveController.getHID().setRumble(RumbleType.kBothRumble, vibration);
+		}
 	}
 }
