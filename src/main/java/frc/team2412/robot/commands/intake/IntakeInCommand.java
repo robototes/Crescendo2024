@@ -17,12 +17,7 @@ public class IntakeInCommand extends Command {
 	}
 
 	@Override
-	public void end(boolean interrupted) {
-		intakeSubsystem.intakeStop();
-	}
-
-	@Override
 	public boolean isFinished() {
-		return intakeSubsystem.getFeederSensor();
+		return true;
 	}
 }

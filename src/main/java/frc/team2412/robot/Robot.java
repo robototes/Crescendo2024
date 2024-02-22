@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.team2412.robot.commands.diagnostic.diagnosticSequentialCommand;
 import frc.team2412.robot.util.MACAddress;
 import frc.team2412.robot.util.MatchDashboard;
 
@@ -101,7 +102,12 @@ public class Robot extends TimedRobot {
 	}
 
 	@Override
-	public void testInit() {}
+	public void testInit() {
+		CommandScheduler.getInstance()
+				.schedule(
+						new diagnosticSequentialCommand(
+								subsystems.intakeSubsystem, subsystems.launcherSubsystem));
+	}
 
 	@Override
 	public void robotPeriodic() {
