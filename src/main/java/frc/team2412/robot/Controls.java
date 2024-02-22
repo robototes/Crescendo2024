@@ -84,8 +84,7 @@ public class Controls {
 									s.intakeSubsystem,
 									s.drivebaseSubsystem,
 									this,
-									driveController.rightBumper()));
-			// temporary controls, not sure what drive team wants
+									driveController.leftTrigger()));
 			codriveController
 					.leftTrigger()
 					.whileTrue(
@@ -94,7 +93,7 @@ public class Controls {
 									s.intakeSubsystem,
 									s.drivebaseSubsystem,
 									this,
-									driveController.rightBumper()));
+									codriveController.leftTrigger()));
 		}
 	}
 
