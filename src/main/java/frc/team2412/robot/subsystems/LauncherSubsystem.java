@@ -45,7 +45,7 @@ public class LauncherSubsystem extends SubsystemBase {
 	private final RelativeEncoder launcherBottomEncoder;
 	private final SparkAbsoluteEncoder launcherAngleEncoder;
 	private final SparkPIDController launcherAngleOnePIDController;
-	private final SparkPIDController launcherAngleTwoPIDController;
+	//private final SparkPIDController launcherAngleTwoPIDController;
 
 	private final SparkPIDController launcherTopPIDController;
 	private final SparkPIDController launcherBottomPIDController;
@@ -119,13 +119,13 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherBottomPIDController.setFeedbackDevice(launcherBottomEncoder);
 		launcherAngleOnePIDController = launcherAngleOneMotor.getPIDController();
 		launcherAngleOnePIDController.setFeedbackDevice(launcherAngleEncoder);
-		launcherAngleTwoPIDController = launcherAngleTwoMotor.getPIDController();
-		launcherAngleTwoPIDController.setFeedbackDevice(launcherAngleEncoder);
+		//launcherAngleTwoPIDController = launcherAngleTwoMotor.getPIDController();
+		//launcherAngleTwoPIDController.setFeedbackDevice(launcherAngleEncoder);
 
 		Shuffleboard.getTab("Launcher")
 				.add(new SparkPIDWidget(launcherAngleOnePIDController, "launcherAngleOnePIDController"));
-		Shuffleboard.getTab("Launcher")
-				.add(new SparkPIDWidget(launcherAngleTwoPIDController, "launcherAngleTwoPIDController"));
+		//Shuffleboard.getTab("Launcher")
+		//		.add(new SparkPIDWidget(launcherAngleTwoPIDController, "launcherAngleTwoPIDController"));
 		Shuffleboard.getTab("Launcher")
 				.add(new SparkPIDWidget(launcherTopPIDController, "launcherTopPIDController"));
 		Shuffleboard.getTab("Launcher")
@@ -161,16 +161,18 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherAngleOneMotor.burnFlash();
 		launcherAngleTwoMotor.burnFlash();
 
+		launcherAngleTwoMotor.follow(launcherAngleOneMotor);
+
 		// PID
 		launcherAngleOnePIDController.setP(0.1);
 		launcherAngleOnePIDController.setI(0);
 		launcherAngleOnePIDController.setD(0);
 		launcherAngleOnePIDController.setFF(0);
 
-		launcherAngleTwoPIDController.setP(0.1);
-		launcherAngleTwoPIDController.setI(0);
-		launcherAngleTwoPIDController.setD(0);
-		launcherAngleTwoPIDController.setFF(0);
+		//launcherAngleTwoPIDController.setP(0.1);
+		//launcherAngleTwoPIDController.setI(0);
+		//launcherAngleTwoPIDController.setD(0);
+		//launcherAngleTwoPIDController.setFF(0);
 
 		launcherTopPIDController.setP(0.1);
 		launcherTopPIDController.setI(0);
@@ -214,8 +216,8 @@ public class LauncherSubsystem extends SubsystemBase {
 		angleSetpoint = launcherAngle;
 		launcherAngleOnePIDController.setReference(
 				Units.degreesToRotations(angleSetpoint), ControlType.kPosition);
-		launcherAngleTwoPIDController.setReference(
-				Units.degreesToRotations(angleSetpoint), ControlType.kPosition);
+		//launcherAngleTwoPIDController.setReference(
+		//		Units.degreesToRotations(angleSetpoint), ControlType.kPosition);
 	}
 
 	public boolean isAtAngle(double tolerance) {
@@ -240,7 +242,7 @@ public class LauncherSubsystem extends SubsystemBase {
 
 	public void setAngleSpeed(double Speed) {
 		launcherAngleOnePIDController.setReference(Speed, ControlType.kVelocity);
-		launcherAngleTwoPIDController.setReference(Speed, ControlType.kVelocity);
+		//launcherAngleTwoPIDController.setReference(Speed, ControlType.kVelocity);
 	}
 
 	@Override
