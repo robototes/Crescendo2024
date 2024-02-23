@@ -155,26 +155,11 @@ public class DrivebaseSubsystem extends SubsystemBase {
 		// if we're requesting the robot to stay still, lock wheels in X formation
 		if (translation.getNorm() == 0 && rotation.getRotations() == 0 && xWheelsEnabled) {
 			swerveDrive.lockPose();
-		}
-		if (rotationSetpoint != null) {
+		} else if (rotationSetpoint != null) {
 			swerveDrive.drive(
 					translation.unaryMinus(), rotationSetpoint.getRadians(), fieldOriented, false);
 		} else {
 			swerveDrive.drive(translation.unaryMinus(), rotation.getRadians(), fieldOriented, false);
-		}
-	}
-
-	public void driveWithDoubleSupplierTurn(
-			Translation2d translation, Supplier<Double> rotation, boolean fieldOriented) {
-		// if we're requesting the robot to stay still, lock wheels in X formation
-		if (translation.getNorm() == 0 && rotation.get() == 0.0 && xWheelsEnabled) {
-			swerveDrive.lockPose();
-		}
-		else if (rotationSetpoint != null) {
-			swerveDrive.drive(
-					translation.unaryMinus(), rotationSetpoint.getRadians(), fieldOriented, false);
-		} else {
-			swerveDrive.drive(translation.unaryMinus(), rotation.get(), fieldOriented, false);
 		}
 	}
 

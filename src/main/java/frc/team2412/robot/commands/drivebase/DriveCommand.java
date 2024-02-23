@@ -17,6 +17,7 @@ public class DriveCommand extends Command {
 	private final DoubleSupplier strafe;
 	private final DoubleSupplier rotation;
 	private final DoubleSupplier turboRotation;
+
 	// temporary because code is kinda messy
 	Rotation2d MAX_ROTATIONS_PER_SEC = Rotation2d.fromRotations(0.8574);
 
