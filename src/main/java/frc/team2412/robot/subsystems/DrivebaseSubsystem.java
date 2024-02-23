@@ -170,7 +170,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 		if (translation.getNorm() == 0 && rotation.get() == 0.0 && xWheelsEnabled) {
 			swerveDrive.lockPose();
 		}
-		if (rotationSetpoint != null) {
+		else if (rotationSetpoint != null) {
 			swerveDrive.drive(
 					translation.unaryMinus(), rotationSetpoint.getRadians(), fieldOriented, false);
 		} else {
@@ -209,8 +209,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
 	public void simpleDrive(double forward, double strafe, Rotation2d rotation) {
 
-		ChassisSpeeds chassisSpeeds = new ChassisSpeeds(0, 0, 0);
-		chassisSpeeds = new ChassisSpeeds(forward, -strafe, rotation.getRadians());
+		ChassisSpeeds chassisSpeeds = new ChassisSpeeds(forward, -strafe, rotation.getRadians());
 
 		drive(chassisSpeeds);
 	}

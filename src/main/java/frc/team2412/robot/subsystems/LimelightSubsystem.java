@@ -32,7 +32,7 @@ public class LimelightSubsystem extends SubsystemBase {
 
 	// MEMBERS
 
-	NetworkTable networkTable;
+	final NetworkTable networkTable;
 
 	String currentPoseString;
 	String targetPoseString;
@@ -42,7 +42,7 @@ public class LimelightSubsystem extends SubsystemBase {
 	// CONSTRUCTOR !
 	public LimelightSubsystem() {
 
-		// broadcast 10.24.12.227
+		// camera stream 10.24.12.11
 
 		// logging
 		currentPoseString = "";
@@ -62,13 +62,8 @@ public class LimelightSubsystem extends SubsystemBase {
 				.addDouble("Vertical Offset", this::getVerticalOffset)
 				.withPosition(2, 0)
 				.withSize(1, 1);
-
 		limelightTab
-				.addDouble("Target Distance ", this::getDistanceFromTarget)
-				.withPosition(3, 0)
-				.withSize(1, 1);
-		limelightTab
-				.addDouble("Target Distance 2 - TEST ", this::getDistanceFromTargetTheSecond)
+				.addDouble("Target Distance 2 - TEST ", this::getDistanceFromTarget)
 				.withPosition(4, 0)
 				.withSize(1, 1);
 		limelightTab
@@ -86,7 +81,7 @@ public class LimelightSubsystem extends SubsystemBase {
 				.withSize(4, 1);
 	}
 
-	public void setPipeline() {
+	private void setPipeline() {
 		networkTable.getEntry("pipeline").setNumber(2);
 	}
 
@@ -107,20 +102,8 @@ public class LimelightSubsystem extends SubsystemBase {
 	public double getBoxWidth() {
 		return networkTable.getEntry("tshort").getDouble(0);
 	}
-
+	//TODO re-measure distances to make this right
 	public double getDistanceFromTarget() {
-
-		// 1.3 at 1.9
-		// 1.0 at 1.3
-
-		double angleToTarget = getVerticalOffset();
-		// return (TARGET_HEIGHT - CAMERA_MOUNT_HEIGHT) / Math.tan(CAMERA_ANGLE_OFFSET + angleToTarget);
-
-		return (TARGET_HEIGHT - CAMERA_MOUNT_HEIGHT)
-				/ (CAMERA_ANGLE_OFFSET + Math.tan(Units.degreesToRadians(getVerticalOffset())));
-	}
-
-	public double getDistanceFromTargetTheSecond() {
 
 		// focal length = (P x D) / W
 		double focal_length = 346.1818;
@@ -130,6 +113,7 @@ public class LimelightSubsystem extends SubsystemBase {
 		return (8.25 * focal_length) / getBoxWidth();
 	}
 
+	// returns turn power from exponential curve, input is from -27deg to +27deg
 	public double turnPowerExp() {
 		if (Math.abs(getHorizontalOffset()) >= 1.0) {
 			return MathUtil.clamp(
@@ -142,6 +126,7 @@ public class LimelightSubsystem extends SubsystemBase {
 		}
 	}
 
+	// returns turn power from linear curve, input is from -27deg to +27deg
 	public double turnPowerLin() {
 		if (Math.abs(getHorizontalOffset()) >= 1.0) {
 			return MathUtil.clamp(0.04 * getHorizontalOffset(), -0.25, 0.25);
@@ -154,7 +139,6 @@ public class LimelightSubsystem extends SubsystemBase {
 
 	// target height / tan(vertical angle)
 
-	// TODO fix this or something
 	public Pose2d getTargetPose(Pose2d currentPose) {
 
 		// math thing to get target pose using current pose
@@ -162,7 +146,7 @@ public class LimelightSubsystem extends SubsystemBase {
 		Rotation2d targetHeading =
 				new Rotation2d(
 						currentPose.getRotation().getRadians() + Units.degreesToRadians(getHorizontalOffset()));
-		double targetDistance = getDistanceFromTargetTheSecond() / 39.3700787;
+		double targetDistance = getDistanceFromTarget() / 39.3700787;
 
 		double targetX = Math.sin(targetHeading.getRadians()) * targetDistance;
 		double targetY = Math.cos(targetHeading.getRadians()) * targetDistance;
@@ -192,7 +176,6 @@ public class LimelightSubsystem extends SubsystemBase {
 		final DoubleSupplier returnTurn = () -> turnPowerLin();
 		final DoubleSupplier returnZero = () -> 0.0;
 		Command moveCommand;
-		Pose2d targetPose;
 		if (hasTargets()) {
 			System.out.println("has targets");
 			moveCommand =

@@ -69,10 +69,6 @@ public class Controls {
 		if (LIMELIGHT_ENABLED) {
 			bindLimelightControls();
 		}
-		// if (LAUNCHER_ENABLED) {
-		//	bindLauncherControls();
-		// }
-
 		if (LAUNCHER_ENABLED) {
 			bindLauncherControls();
 		}
