@@ -14,6 +14,9 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.team2412.robot.Subsystems.SubsystemConstants;
 import frc.team2412.robot.commands.diagnostic.IntakeDiagnosticCommand;
 import frc.team2412.robot.commands.diagnostic.LauncherDiagnosticCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+
 import frc.team2412.robot.util.MACAddress;
 import frc.team2412.robot.util.MatchDashboard;
 
@@ -146,6 +149,22 @@ public class Robot extends TimedRobot {
 	@Override
 	public void disabledInit() {
 		Shuffleboard.stopRecording();
+
+		Command coastCommand =
+				new WaitCommand(5)
+						.andThen(
+								new InstantCommand(
+										() -> {
+											if (DriverStation.isDisabled())
+												subsystems.drivebaseSubsystem.setMotorBrake(false);
+										}))
+						.ignoringDisable(true);
+		coastCommand.schedule();
+	}
+
+	@Override
+	public void disabledExit() {
+		subsystems.drivebaseSubsystem.setMotorBrake(true);
 	}
 
 	public RobotType getRobotType() {
