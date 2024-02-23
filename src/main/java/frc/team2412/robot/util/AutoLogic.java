@@ -69,7 +69,7 @@ public class AutoLogic {
 		// NamedCommands.registerCommand("StopLauncher", new StopLauncherCommand(s.launcherSubsystem));
 		NamedCommands.registerCommand("DummyLaunch", vibrateControllerCommand);
 
-		NamedCommands.registerCommand("AutoLogicTest", AutoPaths.testAuto);
+		NamedCommands.registerCommand("AutoLogicTest", AutoPaths.midSpeakerCenterLineN3N2N1);
 	}
 
 	// public Command getConditionalCommand(){}

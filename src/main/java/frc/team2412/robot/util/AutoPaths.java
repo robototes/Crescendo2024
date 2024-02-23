@@ -21,24 +21,23 @@ public class AutoPaths {
 
 	public static Command midSpeakerCenterLineN3N2N1 =
 			Commands.sequence(
-					vibrateControllerCommand,
 					getAutoCommand("MidSpeakerQCenterLineN3"),
 					Commands.either(
 							Commands.sequence(
 									getAutoCommand("QCenterLineN3LCenterLineN3"),
-									placeHolderCommand,
+									Commands.waitSeconds(0.5),
 									getAutoCommand("LCenterLineN3QCenterLineN2"),
 									Commands.either(
 											Commands.sequence(
 													getAutoCommand("N3QCenterLineN2LCenterLineN2"),
-													placeHolderCommand,
+													Commands.waitSeconds(0.5),
 													getAutoCommand("N3LCenterLineN2LCenterLineN1")),
 											getAutoCommand("QCenterLineN2LCenterLineN1"),
-											AutoLogic::dummyLogic)),
+											() -> true)),
 							Commands.sequence(
 									getAutoCommand("QCenterLineN3QCenterLineN2"),
 									getAutoCommand("QCenterLineN2LCenterLineN2")),
-							AutoLogic::dummyLogic));
+							() -> true));
 
 	public static Command lowSpeakerCenterLineN5N4N3 =
 			Commands.sequence(
@@ -58,6 +57,14 @@ public class AutoPaths {
 
 
 
+	public static Command test =
+			Commands.sequence(
+					getAutoCommand("MidSpeakerQCenterLineN3"),
+					Commands.waitSeconds(0.5),
+					Commands.either(
+							getAutoCommand("QCenterLineN3LCenterLineN3"),
+							getAutoCommand("QCenterLineN3QCenterLineN2"),
+							() -> true));
 
 	// public static Command TopSpeakerCenterLineN1N2AutoLine1 =
 	// Commands.sequence(vibrateControllerCommand)
