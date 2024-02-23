@@ -57,7 +57,7 @@ public class Controls {
 		// launcherSubwooferPresetButton = codriveController.povRight();
 		// launcherPodiumPresetButton = codriveController.povLeft();
 		// launcherTrapPresetButton = codriveController.povUp();
-		launcherLaunchButton = codriveController.a();
+		launcherLaunchButton = codriveController.leftBumper();
 		// intake controls (confirmed with driveteam)
 		driveIntakeInButton = driveController.y();
 		driveIntakeStopButton = driveController.b();
@@ -84,7 +84,7 @@ public class Controls {
 									s.intakeSubsystem,
 									s.drivebaseSubsystem,
 									this,
-									driveController.rightBumper()));
+									driveController.leftBumper()));
 			codriveController
 					.rightBumper()
 					.whileTrue(
@@ -93,7 +93,7 @@ public class Controls {
 									s.intakeSubsystem,
 									s.drivebaseSubsystem,
 									this,
-									codriveController.rightBumper()));
+									codriveController.leftBumper()));
 		}
 	}
 
