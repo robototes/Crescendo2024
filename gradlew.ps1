@@ -33,44 +33,38 @@ $APP_HOME = Split-Path $MyInvocation.MyCommand.Path
 $APP_NAME = "gradlew"
 
 # Add default JVM options here. You can also use JAVA_OPTS and GRADLE_OPTS to pass JVM options to this script.
-$DEFAULT_JVM_OPTS = "-Xms64m" + " " + "-Xmx64m"
+$DEFAULT_JVM_OPTS = "-Xms64m -Xmx64m"
 
 # Find java.exe
 if (! $env:JAVA_HOME) {
-$JAVA_EXE = "java.exe"
-$p = '$JAVA_EXE -version >NUL 2>&1'
-if($p.ExitCode) {
-	Write-Output "`n"
-	Write-Output "ERROR: JAVA_HOME is not set and no 'java' command could be found in your PATH."
-	Write-Output "`n"
-	Write-Output "Please set the JAVA_HOME variable in your environment to match the"
-	Write-Output "location of your Java installation."
-	exit 1
-}
+	$JAVA_EXE = "java.exe"
+	$p = '$JAVA_EXE -version >NUL 2>&1'
+	if ($p.ExitCode) {
+		Write-Output ""
+		Write-Output "ERROR: JAVA_HOME is not set and no 'java' command could be found in your PATH."
+		Write-Output ""
+		Write-Output "Please set the JAVA_HOME variable in your environment to match the"
+		Write-Output "location of your Java installation."
+		exit 1
+	}
 } else {
-$JAVA_EXE="$env:JAVA_HOME/bin/java.exe"
-if (-not (Test-Path -Path $JAVA_EXE -PathType Leaf)) {
-	Write-Output "`n"
-	Write-Output "ERROR: JAVA_HOME is set to an invalid directory: $env:JAVA_HOME"
-	Write-Output "`n"
-	Write-Output "Please set the JAVA_HOME variable in your environment to match the"
-	Write-Output "location of your Java installation."
-	exit 1
-}
-}
-
-# Include command line arguments
-$CMD_LINE_ARGS = ""
-foreach ($element in $args) {
-$CMD_LINE_ARGS += "$element "
+	$JAVA_EXE="$env:JAVA_HOME/bin/java.exe"
+	if (-not (Test-Path -Path $JAVA_EXE -PathType Leaf)) {
+		Write-Output ""
+		Write-Output "ERROR: JAVA_HOME is set to an invalid directory: $env:JAVA_HOME"
+		Write-Output ""
+		Write-Output "Please set the JAVA_HOME variable in your environment to match the"
+		Write-Output "location of your Java installation."
+		exit 1
+	}
 }
 
 # Setup the CLASSPATH
 $CLASSPATH = "$APP_HOME\gradle\wrapper\gradle-wrapper.jar"
 
 # Setup parameters
-$params = "$DEFAULT_JVM_OPTS"+" "+"$env:JAVA_OPTS"+" "+"$env:GRADLE_OPTS"+" "+"-Dorg.gradle.appname=$APP_NAME"+" "+"-classpath $CLASSPATH"+" "+"org.gradle.wrapper.GradleWrapperMain"+" "+"$CMD_LINE_ARGS"
-$cmd = "$JAVA_EXE"
+$params = "$DEFAULT_JVM_OPTS $env:JAVA_OPTS $env:GRADLE_OPTS -Dorg.gradle.appname=$APP_NAME -classpath $CLASSPATH org.gradle.wrapper.GradleWrapperMain $args"
 # Execute Gradle
-$g = Start-Process -Wait -PassThru -NoNewWindow -FilePath "$cmd" -ArgumentList $params
+# (Use Start-Process because using `. $JAVA_EXE $params` will pass everything as one argument, and we need to expand the different options)
+$g = Start-Process -Wait -PassThru -NoNewWindow -FilePath $JAVA_EXE -ArgumentList $params
 exit $g.ExitCode
