@@ -95,6 +95,27 @@ public class IntakeSubsystem extends SubsystemBase {
 					.withWidget(BuiltInWidgets.kTextView)
 					.getEntry();
 
+	private final GenericEntry indexMotorUpperTemp =
+			Shuffleboard.getTab("Intake")
+					.add("Upper Index temp", 0)
+					.withSize(1, 1)
+					.withWidget(BuiltInWidgets.kTextView)
+					.getEntry();
+
+	private final GenericEntry indexMotorLowerTemp =
+			Shuffleboard.getTab("Intake")
+					.add("Lower Index temp", 0)
+					.withSize(1, 1)
+					.withWidget(BuiltInWidgets.kTextView)
+					.getEntry();
+
+	private final GenericEntry feederMotorTemp =
+			Shuffleboard.getTab("Intake")
+					.add("Feeder temp", 0)
+					.withSize(1, 1)
+					.withWidget(BuiltInWidgets.kTextView)
+					.getEntry();
+
 	public IntakeSubsystem() {
 		intakeMotorFront = new CANSparkMax(INTAKE_MOTOR_FRONT, MotorType.kBrushless);
 		intakeMotorBack = new CANSparkMax(INTAKE_MOTOR_BACK, MotorType.kBrushless);
@@ -207,5 +228,10 @@ public class IntakeSubsystem extends SubsystemBase {
 		intakeMotorBackTemp.setDouble(intakeMotorBack.getMotorTemperature());
 		intakeMotorRightTemp.setDouble(intakeMotorRight.getMotorTemperature());
 		intakeMotorLeftTemp.setDouble(intakeMotorLeft.getMotorTemperature());
+
+		indexMotorUpperTemp.setDouble(indexMotorUpper.getMotorTemperature());
+		indexMotorLowerTemp.setDouble(indexMotorLower.getMotorTemperature());
+
+		feederMotorTemp.setDouble(feederMotor.getMotorTemperature());
 	}
 }
