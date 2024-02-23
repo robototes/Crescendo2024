@@ -70,6 +70,10 @@ public class AutoLogic {
 		NamedCommands.registerCommand("DummyLaunch", vibrateControllerCommand);
 
 		NamedCommands.registerCommand("AutoLogicTest", AutoPaths.midSpeakerCenterLineN3N2N1);
+		NamedCommands.registerCommand(
+				"MidSpeakerCenterLineN5N4N3", AutoPaths.midSpeakerCenterLineN3N2N1);
+		NamedCommands.registerCommand(
+				"LowSpeakerCenterLineN5N4N3", AutoPaths.lowSpeakerCenterLineN5N4N3);
 	}
 
 	// public Command getConditionalCommand(){}

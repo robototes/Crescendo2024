@@ -41,21 +41,18 @@ public class AutoPaths {
 
 	public static Command lowSpeakerCenterLineN5N4N3 =
 			Commands.sequence(
-					vibrateControllerCommand,
+					Commands.waitSeconds(0.5),
 					getAutoCommand("LowSpeakerQCenterLineN5"),
 					Commands.either(
 							Commands.sequence(
 									getAutoCommand("QCenterLineN5LCenterLineN5"),
-									placeHolderCommand,
-									getAutoCommand("LCenterLineN5LCenterLineN4")
-									),
+									Commands.waitSeconds(0.5),
+									getAutoCommand("LCenterLineN5LCenterLineN4")),
 							Commands.sequence(
 									getAutoCommand("QCenterLineN5LCenterLineN4"),
-									placeHolderCommand,
+									Commands.waitSeconds(0.5),
 									getAutoCommand("LCenterLineN4LCenterLineN3")),
-							AutoLogic::dummyLogic));
-
-
+							() -> false));
 
 	public static Command test =
 			Commands.sequence(
@@ -65,6 +62,27 @@ public class AutoPaths {
 							getAutoCommand("QCenterLineN3LCenterLineN3"),
 							getAutoCommand("QCenterLineN3QCenterLineN2"),
 							() -> true));
+
+	public static Command TopSpeakerCenterLineN1N2AutoLine1 =
+			Commands.sequence(
+					getAutoCommand("TopSpeakerQCenterLineN1"),
+					Commands.either(
+							Commands.sequence(
+									getAutoCommand("QCenterLineN1LCenterLineN1"),
+									Commands.waitSeconds(0.5),
+									getAutoCommand("LCenterLineN1QCenterLineN2")),
+							Commands.sequence(
+											getAutoCommand("QCenterLineN1QCenterLineN2"),
+											Commands.either(
+															Commands.sequence(
+																	getAutoCommand("QCenterLineN2LCenterLineN2"),
+																	getAutoCommand("LCenterLineN2LAutoLineN1")),
+													getAutoCommand("QCenterLineN2AutoLineN1"), () -> true)),
+									Commands.either(
+											getAutoCommand("QCenterLineN2LCenterLineN2"),
+											getAutoCommand("QCenterLineLAutoLineN1"),
+											() -> true)),
+							() -> true);
 
 	// public static Command TopSpeakerCenterLineN1N2AutoLine1 =
 	// Commands.sequence(vibrateControllerCommand)
