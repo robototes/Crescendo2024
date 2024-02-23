@@ -17,7 +17,7 @@ import java.util.List;
 public class TrapAlign {
 	private static final Pose2d[] BLUE_TRAP_POSES = {
 		// trap that faces amp
-		new Pose2d(new Translation2d(4.3, 5.14), Rotation2d.fromDegrees(-61)),
+		new Pose2d(new Translation2d(4.3, 5.14), Rotation2d.fromDegrees(-60)),
 		// trap that faces source
 		new Pose2d(new Translation2d(4.3, 3.09), Rotation2d.fromDegrees(-300)),
 		// trap that faces mid
@@ -26,7 +26,7 @@ public class TrapAlign {
 
 	private static final Pose2d[] RED_TRAP_POSES = {
 		// trap that faces amp
-		new Pose2d(new Translation2d(12.3, 5.14), Rotation2d.fromDegrees(-61)),
+		new Pose2d(new Translation2d(12.3, 5.14), Rotation2d.fromDegrees(-60)),
 		// trap that faces source
 		new Pose2d(new Translation2d(12.3, 3.09), Rotation2d.fromDegrees(120)),
 		// trap that faces mid
