@@ -15,18 +15,19 @@ public class AllInCommand extends Command {
 	public void initialize() {
 		intakeSubsystem.intakeIn();
 		intakeSubsystem.indexIn();
-		intakeSubsystem.feederIn();
+		// intakeSubsystem.feederIn();
 	}
 
 	@Override
 	public void execute() {
 		if (intakeSubsystem.getIndexSensor()) {
-			intakeSubsystem.intakeStop();
+			intakeSubsystem.intakeReject();
 		}
 	}
 
 	@Override
 	public void end(boolean interrupted) {
+		intakeSubsystem.intakeReject();
 		intakeSubsystem.indexStop();
 		intakeSubsystem.feederStop();
 	}
