@@ -29,6 +29,8 @@ public class Hardware {
 	public static final int INDEX_MOTOR_UPPER = 45;
 
 	public static final int FEEDER_MOTOR = 46;
+	// LED strip is PWM port 8
+	public static final int BLINKIN_LED = 8;
 
 	// intake sensors  (Digital IO)
 	public static final int INDEX_SENSOR = 1;
