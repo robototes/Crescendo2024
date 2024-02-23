@@ -148,11 +148,10 @@ public class LimelightSubsystem extends SubsystemBase {
 						currentPose.getRotation().getRadians() + Units.degreesToRadians(getHorizontalOffset()));
 		double targetDistance = getDistanceFromTarget() / 39.3700787;
 
-		double targetX = Math.sin(targetHeading.getRadians()) * targetDistance;
-		double targetY = Math.cos(targetHeading.getRadians()) * targetDistance;
+        Translation2d translationOffset = new Translation2d(targetDistance, targetHeading);
 
 		Pose2d targetPose =
-				new Pose2d(currentPose.getX() + targetY, currentPose.getY() + targetX, targetHeading);
+				new Pose2d(currentPose.getTranslation().plus(translationOffset), targetHeading);
 
 		currentPoseString = currentPose.toString();
 		targetPoseString = targetPose.toString();
