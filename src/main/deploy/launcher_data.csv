@@ -1,0 +1,8 @@
+# test comment
+
+# DISTANCE (meters), ANGLE (degrees), RPM (velocity)
+
+0, 75, 1500
+1, 30, 2000
+2, 20, 3000
+5, 10, 3500

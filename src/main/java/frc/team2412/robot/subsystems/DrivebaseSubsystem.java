@@ -43,7 +43,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 					? 2.0
 					: Robot.getInstance().getRobotType() == RobotType.CRANE
 							? 3.0
-							: Robot.getInstance().getRobotType() == RobotType.PRACTICE ? 4.0 : 1.0;
+							: Robot.getInstance().getRobotType() == RobotType.PRACTICE ? 5.0 : 1.0;
 	// distance from center of the robot to the furthest module
 	private static final double DRIVEBASE_RADIUS =
 			Robot.getInstance().getRobotType() == RobotType.BONK
