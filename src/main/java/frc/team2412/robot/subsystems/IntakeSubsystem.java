@@ -69,7 +69,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
 	private final GenericEntry intakeMotorFrontTemp =
 			Shuffleboard.getTab("Intake")
-					.add("Back Intake temp", 0)
+					.add("Front Intake temp", 0)
 					.withSize(1, 1)
 					.withWidget(BuiltInWidgets.kTextView)
 					.getEntry();
