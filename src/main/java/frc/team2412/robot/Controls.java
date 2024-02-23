@@ -77,23 +77,23 @@ public class Controls {
 		if (DRIVEBASE_ENABLED && LAUNCHER_ENABLED && INTAKE_ENABLED) {
 			// temporary controls, not sure what drive team wants
 			driveController
-					.rightTrigger()
+					.rightBumper()
 					.whileTrue(
 							new FullTargetCommand(
 									s.launcherSubsystem,
 									s.intakeSubsystem,
 									s.drivebaseSubsystem,
 									this,
-									driveController.rightTrigger()));
+									driveController.rightBumper()));
 			codriveController
-					.rightTrigger()
+					.rightBumper()
 					.whileTrue(
 							new FullTargetCommand(
 									s.launcherSubsystem,
 									s.intakeSubsystem,
 									s.drivebaseSubsystem,
 									this,
-									codriveController.rightTrigger()));
+									codriveController.rightBumper()));
 		}
 	}
 
