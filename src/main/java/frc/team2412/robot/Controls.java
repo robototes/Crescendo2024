@@ -86,14 +86,14 @@ public class Controls {
 									this,
 									driveController.leftTrigger()));
 			codriveController
-					.leftTrigger()
+					.rightTrigger()
 					.whileTrue(
 							new FullTargetCommand(
 									s.launcherSubsystem,
 									s.intakeSubsystem,
 									s.drivebaseSubsystem,
 									this,
-									codriveController.leftTrigger()));
+									codriveController.rightTrigger()));
 		}
 	}
 

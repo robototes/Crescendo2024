@@ -25,6 +25,7 @@ public class LauncherSubsystem extends SubsystemBase {
 	public static final int AMP_AIM_ANGLE = 90;
 	public static final int SUBWOOFER_AIM_ANGLE = 54;
 	public static final int PODIUM_AIM_ANGLE = 39;
+	public static final int TRAP_AIM_ANGLE = 80;
 	// MOTOR VALUES
 	// max Free Speed: 6784 RPM
 	private static final int MAX_FREE_SPEED_RPM = 6784;
@@ -32,6 +33,7 @@ public class LauncherSubsystem extends SubsystemBase {
 	public static final double RPM_TOLERANCE = 50;
 	// RPM
 	public static final int SPEAKER_SHOOT_SPEED_RPM = 3392; // 50%
+	public static final int TRAP_SHOOT_SPEED_RPM = 2000;
 	// 3392 RPM = 50% Speed
 	// 1356 RPM = 20% Speed
 	// 1017 RPM = 15% Speed
