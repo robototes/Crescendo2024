@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 public class AutoPaths {
 
 	private static Command placeHolderCommand = Commands.waitSeconds(0.5);
+
 	public static SequentialCommandGroup testAuto =
 			new SequentialCommandGroup(
 					AutoLogic.getAutoCommand("TestPath"),
@@ -30,6 +31,7 @@ public class AutoPaths {
 									Commands.either(
 											Commands.sequence(
 													getAutoCommand("N3QCenterLineN2LCenterLineN2"),
+													placeHolderCommand,
 													getAutoCommand("N3LCenterLineN2LCenterLineN1")),
 											getAutoCommand("QCenterLineN2LCenterLineN1"),
 											AutoLogic::dummyLogic)),
@@ -38,33 +40,10 @@ public class AutoPaths {
 									getAutoCommand("QCenterLineN2LCenterLineN2")),
 							AutoLogic::dummyLogic));
 
-	// public static SequentialCommandGroup midSpeakerCenterLineN3N2N1 =
-	// 		new SequentialCommandGroup(
-	// 				AutoLogic.getAutoCommand("MidSpeakerQCenterLineN3"),
-	// 				new ConditionalCommand(
-	// 						AutoLogic.getAutoCommand("QCenterLineN3LCenterLineN3")
-	// 								.andThen(
-	// 										AutoLogic.vibrateControllerCommand,
-	// 										AutoLogic.getAutoCommand("LCenterLineN1QCenterLineN2")
-	// 												.andThen(
-	// 														Commands.either(
-	// 																AutoLogic.getAutoCommand("QCenterLineN2LCenterLineN2")
-	// 																		.andThen(
-	// 																				AutoLogic.vibrateControllerCommand,
-	// 																				AutoLogic.getAutoCommand(("LCenterLineN2LCenterLineN1"))),
-	// 																AutoLogic.getAutoCommand("QCenterLineN2LCenterLineN2"),
-	// 																AutoLogic::dummyLogic))),
-	// 						AutoLogic.getAutoCommand("QCenterLineN3QCenterLineN2")
-	// 								.andThen(
-	// 										Commands.either(
-	// 												AutoLogic.getAutoCommand("N3QCenterLineN2LCenterLineN2")
-	// 														.andThen(
-	// 																AutoLogic.vibrateControllerCommand,
-	// 																AutoLogic.getAutoCommand("LCenterLineN2LCenterLineN1")),
-	// 												AutoLogic.getAutoCommand("N3QCenterLineN2LCenterLineN1"),
-	// 												AutoLogic::dummyLogic)),
-	// 						AutoLogic::dummyLogic),
-	// 				AutoLogic.vibrateControllerCommand);
+	
+
+	// public static Command TopSpeakerCenterLineN1N2AutoLine1 =
+	// Commands.sequence(vibrateControllerCommand)
 
 	// public static SequentialCommandGroup topSpeakerCenterLineN1N2AutoLine1 =
 	// 		new SequentialCommandGroup(
