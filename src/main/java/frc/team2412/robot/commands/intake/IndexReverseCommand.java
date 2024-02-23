@@ -16,6 +16,7 @@ public class IndexReverseCommand extends Command {
 		intakeSubsystem.indexReverse();
 	}
 
+	@Override
 	public boolean isFinished() {
 		return true;
 	}

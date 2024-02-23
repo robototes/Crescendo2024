@@ -59,7 +59,7 @@ public class Controls {
 		// launcherTrapPresetButton = codriveController.povUp();
 		launcherLaunchButton = codriveController.a();
 		// intake controls (confirmed with driveteam)
-		driveIntakeInButton = driveController.x();
+		driveIntakeInButton = driveController.y();
 		driveIntakeStopButton = driveController.b();
 		driveIntakeReverseButton = driveController.y();
 		codriveIntakeInButton = codriveController.x();
