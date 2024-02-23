@@ -70,7 +70,7 @@ public class TrapAlign {
 				DrivebaseSubsystem drivebaseSubsystem, LauncherSubsystem launcherSubsystem) {
 			this.drivebaseSubsystem = drivebaseSubsystem;
 			this.launcherSubsystem = launcherSubsystem;
-			addRequirements(launcherSubsystem);
+			addRequirements(launcherSubsystem, drivebaseSubsystem);
 		}
 
 		@Override
