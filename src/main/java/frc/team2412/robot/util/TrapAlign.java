@@ -97,6 +97,7 @@ public class TrapAlign {
 				trapCommand.end(true);
 			}
 			trapCommand = null;
+			launcherSubsystem.stopLauncher();
 		}
 	}
 }

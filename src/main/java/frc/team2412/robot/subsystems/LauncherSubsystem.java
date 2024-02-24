@@ -160,12 +160,12 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherAngleTwoMotor.setSoftLimit(CANSparkBase.SoftLimitDirection.kForward, 100);
 		launcherAngleTwoMotor.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, 25);
 
+		launcherAngleTwoMotor.follow(launcherAngleOneMotor);
+
 		launcherTopMotor.burnFlash();
 		launcherBottomMotor.burnFlash();
 		launcherAngleOneMotor.burnFlash();
 		launcherAngleTwoMotor.burnFlash();
-
-		launcherAngleTwoMotor.follow(launcherAngleOneMotor);
 
 		// PID
 		launcherAngleOnePIDController.setP(0.1);
