@@ -21,14 +21,18 @@ import java.util.Map;
 
 public class LauncherSubsystem extends SubsystemBase {
 	// CONSTANTS
+
+	// HARDWARE
+	private static final int PIVOT_GEARING_RATIO = 180;
 	// ANGLE VALUES
+	public static final int AMP_AIM_ANGLE = 90;
 	public static final int SUBWOOFER_AIM_ANGLE = 54;
 	public static final int PODIUM_AIM_ANGLE = 39;
+	public static final int TRAP_AIM_ANGLE = 80;
 	// MOTOR VALUES
 	// max Free Speed: 6784 RPM
 	private static final int MAX_FREE_SPEED_RPM = 6784;
 	public static final double ANGLE_TOLERANCE = 0.5;
-	public static final double FLYWHEEL_VELOCITY_TOLERANCE = 0.1;
 	public static final double RPM_TOLERANCE = 50;
 	// RPM
 	public static final int SPEAKER_SHOOT_SPEED_RPM = 3392; // 50%
@@ -41,13 +45,19 @@ public class LauncherSubsystem extends SubsystemBase {
 	// HARDWARE
 	private final CANSparkFlex launcherTopMotor;
 	private final CANSparkFlex launcherBottomMotor;
-	private final CANSparkFlex launcherAngleMotor;
+	private final CANSparkFlex launcherAngleOneMotor;
+	private final CANSparkFlex launcherAngleTwoMotor;
 	private final RelativeEncoder launcherTopEncoder;
 	private final RelativeEncoder launcherBottomEncoder;
 	private final SparkAbsoluteEncoder launcherAngleEncoder;
-	private final SparkPIDController launcherAnglePIDController;
+	private final SparkPIDController launcherAngleOnePIDController;
+	// private final SparkPIDController launcherAngleTwoPIDController;
+
 	private final SparkPIDController launcherTopPIDController;
 	private final SparkPIDController launcherBottomPIDController;
+
+	private double rpmSetpoint;
+	private double angleSetpoint;
 
 	private final GenericEntry setLauncherSpeedEntry =
 			Shuffleboard.getTab("Launcher")
@@ -76,6 +86,21 @@ public class LauncherSubsystem extends SubsystemBase {
 					.withSize(2, 1)
 					.withWidget(BuiltInWidgets.kTextView)
 					.getEntry();
+
+	private final GenericEntry launcherTopFlywheelTemp =
+			Shuffleboard.getTab("Launcher")
+					.add("top Flywheel temp", 0)
+					.withSize(1, 1)
+					.withWidget(BuiltInWidgets.kTextView)
+					.getEntry();
+
+	private final GenericEntry launcherBottomFlyWheelTemp =
+			Shuffleboard.getTab("Launcher")
+					.add("bottom Flywheel temp", 0)
+					.withSize(1, 1)
+					.withWidget(BuiltInWidgets.kTextView)
+					.getEntry();
+
 	// Constructor
 	public LauncherSubsystem() {
 
@@ -83,11 +108,14 @@ public class LauncherSubsystem extends SubsystemBase {
 		// motors
 		launcherTopMotor = new CANSparkFlex(Hardware.LAUNCHER_TOP_MOTOR_ID, MotorType.kBrushless);
 		launcherBottomMotor = new CANSparkFlex(Hardware.LAUNCHER_BOTTOM_MOTOR_ID, MotorType.kBrushless);
-		launcherAngleMotor = new CANSparkFlex(Hardware.LAUNCHER_ANGLE_MOTOR_ID, MotorType.kBrushless);
+		launcherAngleOneMotor =
+				new CANSparkFlex(Hardware.LAUNCHER_PIVOT_ONE_MOTOR_ID, MotorType.kBrushless);
+		launcherAngleTwoMotor =
+				new CANSparkFlex(Hardware.LAUNCHER_PIVOT_TWO_MOTOR_ID, MotorType.kBrushless);
 		// encoders
 		launcherTopEncoder = launcherTopMotor.getEncoder();
 		launcherBottomEncoder = launcherBottomMotor.getEncoder();
-		launcherAngleEncoder = launcherAngleMotor.getAbsoluteEncoder(Type.kDutyCycle);
+		launcherAngleEncoder = launcherAngleOneMotor.getAbsoluteEncoder(Type.kDutyCycle);
 
 		// PID controllers
 		// Create launcherTopPIDController and launcherTopMotor]
@@ -95,44 +123,66 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherTopPIDController.setFeedbackDevice(launcherTopEncoder);
 		launcherBottomPIDController = launcherBottomMotor.getPIDController();
 		launcherBottomPIDController.setFeedbackDevice(launcherBottomEncoder);
-		launcherAnglePIDController = launcherAngleMotor.getPIDController();
-		launcherAnglePIDController.setFeedbackDevice(launcherAngleEncoder);
+		launcherAngleOnePIDController = launcherAngleOneMotor.getPIDController();
+		launcherAngleOnePIDController.setFeedbackDevice(launcherAngleEncoder);
+		// launcherAngleTwoPIDController = launcherAngleTwoMotor.getPIDController();
+		// launcherAngleTwoPIDController.setFeedbackDevice(launcherAngleEncoder);
+
 		Shuffleboard.getTab("Launcher")
-				.add(new SparkPIDWidget(launcherAnglePIDController, "launcherAnglePIDController"));
+				.add(new SparkPIDWidget(launcherAngleOnePIDController, "launcherAngleOnePIDController"));
+		// Shuffleboard.getTab("Launcher")
+		//		.add(new SparkPIDWidget(launcherAngleTwoPIDController, "launcherAngleTwoPIDController"));
 		Shuffleboard.getTab("Launcher")
 				.add(new SparkPIDWidget(launcherTopPIDController, "launcherTopPIDController"));
 		Shuffleboard.getTab("Launcher")
 				.add(new SparkPIDWidget(launcherBottomPIDController, "launcherBottomPIDController"));
+
+		configMotors();
 	}
 
 	public void configMotors() {
 		launcherTopMotor.restoreFactoryDefaults();
 		launcherBottomMotor.restoreFactoryDefaults();
-		launcherAngleMotor.restoreFactoryDefaults();
+		launcherAngleOneMotor.restoreFactoryDefaults();
+		launcherAngleTwoMotor.restoreFactoryDefaults();
 		// idle mode (wow)
 		launcherTopMotor.setIdleMode(IdleMode.kCoast);
 		launcherBottomMotor.setIdleMode(IdleMode.kCoast);
-		launcherAngleMotor.setIdleMode(IdleMode.kBrake);
+		launcherAngleOneMotor.setIdleMode(IdleMode.kBrake);
+		launcherAngleTwoMotor.setIdleMode(IdleMode.kBrake);
 		// inveritng the bottom motor lmao
 		launcherBottomMotor.setInverted(true);
+		launcherAngleTwoMotor.setInverted(true);
 
 		// current limit
-		launcherTopMotor.setSmartCurrentLimit(20);
-		launcherBottomMotor.setSmartCurrentLimit(20);
-		launcherAngleMotor.setSmartCurrentLimit(20);
+		launcherTopMotor.setSmartCurrentLimit(40);
+		launcherBottomMotor.setSmartCurrentLimit(40);
+		launcherAngleOneMotor.setSmartCurrentLimit(20);
+		launcherAngleTwoMotor.setSmartCurrentLimit(20);
 
-		launcherAngleMotor.setSoftLimit(CANSparkBase.SoftLimitDirection.kForward, 100);
-		launcherAngleMotor.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, 2);
+		launcherAngleOneMotor.setSoftLimit(CANSparkBase.SoftLimitDirection.kForward, 100);
+		launcherAngleOneMotor.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, 25);
+		launcherAngleTwoMotor.setSoftLimit(CANSparkBase.SoftLimitDirection.kForward, 100);
+		launcherAngleTwoMotor.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, 25);
+
+		launcherAngleTwoMotor.follow(launcherAngleOneMotor);
 
 		launcherTopMotor.burnFlash();
 		launcherBottomMotor.burnFlash();
-		launcherAngleMotor.burnFlash();
+		launcherAngleOneMotor.burnFlash();
+		launcherAngleTwoMotor.burnFlash();
 
 		// PID
-		launcherAnglePIDController.setP(0.1);
-		launcherAnglePIDController.setI(0);
-		launcherAnglePIDController.setD(0);
-		launcherAnglePIDController.setFF(0);
+		launcherAngleOnePIDController.setP(0.1);
+		launcherAngleOnePIDController.setI(0);
+		launcherAngleOnePIDController.setD(0);
+		launcherAngleOnePIDController.setFF(0);
+		launcherAngleOnePIDController.setOutputRange(-ANGLE_MAX_SPEED, ANGLE_MAX_SPEED);
+
+		// launcherAngleTwoPIDController.setP(0.1);
+		// launcherAngleTwoPIDController.setI(0);
+		// launcherAngleTwoPIDController.setD(0);
+		// launcherAngleTwoPIDController.setFF(0);
 
 		launcherTopPIDController.setP(0.1);
 		launcherTopPIDController.setI(0);
@@ -143,23 +193,29 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherBottomPIDController.setI(0);
 		launcherBottomPIDController.setD(0);
 		launcherBottomPIDController.setFF(0);
+
+		launcherAngleOneMotor.getEncoder().setPosition(launcherAngleEncoder.getPosition());
+		launcherAngleOneMotor.getEncoder().setPositionConversionFactor(PIVOT_GEARING_RATIO);
+		launcherAngleTwoMotor.getEncoder().setPosition(launcherAngleEncoder.getPosition());
+		launcherAngleTwoMotor.getEncoder().setPositionConversionFactor(PIVOT_GEARING_RATIO);
 	}
 	// stop launcher motors method
 	public void stopLauncher() {
-		launcherTopMotor.stopMotor();
-		launcherBottomMotor.stopMotor();
+		launcherTopMotor.disable();
+		launcherBottomMotor.disable();
 	}
+
 	// uses the value from the entry
 	public void launch() {
-		double speed = setLauncherSpeedEntry.getDouble(SPEAKER_SHOOT_SPEED_RPM);
-		launcherTopPIDController.setReference(speed, ControlType.kVelocity);
-		launcherBottomPIDController.setReference(speed, ControlType.kVelocity);
+		rpmSetpoint = setLauncherSpeedEntry.getDouble(SPEAKER_SHOOT_SPEED_RPM);
+		launcherTopPIDController.setReference(rpmSetpoint, ControlType.kVelocity);
+		launcherBottomPIDController.setReference(rpmSetpoint, ControlType.kVelocity);
 	}
 	// used for presets
 	public void launch(double speed) {
-		launcherTopPIDController.setReference(speed, ControlType.kVelocity);
-		launcherBottomPIDController.setReference(speed, ControlType.kVelocity);
-		setLauncherSpeedEntry.setDouble(speed);
+		rpmSetpoint = speed;
+		launcherTopPIDController.setReference(rpmSetpoint, ControlType.kVelocity);
+		launcherBottomPIDController.setReference(rpmSetpoint, ControlType.kVelocity);
 	}
 
 	public double getLauncherSpeed() {
@@ -171,8 +227,28 @@ public class LauncherSubsystem extends SubsystemBase {
 		return Units.rotationsToDegrees(launcherAngleEncoder.getPosition());
 	}
 
-	public void setAngle(double angle) {
-		launcherAnglePIDController.setReference(Units.degreesToRotations(angle), ControlType.kPosition);
+	public void setAngle(double launcherAngle) {
+		angleSetpoint = launcherAngle;
+		launcherAngleOnePIDController.setReference(
+				Units.degreesToRotations(angleSetpoint), ControlType.kPosition);
+		// launcherAngleTwoPIDController.setReference(
+		//		Units.degreesToRotations(angleSetpoint), ControlType.kPosition);
+	}
+
+	public boolean isAtAngle(double tolerance) {
+		return MathUtil.isNear(angleSetpoint, launcherAngleEncoder.getPosition(), tolerance);
+	}
+
+	public boolean isAtAngle() {
+		return isAtAngle(ANGLE_TOLERANCE);
+	}
+
+	public boolean isAtSpeed(double tolerance) {
+		return MathUtil.isNear(rpmSetpoint, launcherTopEncoder.getVelocity(), tolerance);
+	}
+
+	public boolean isAtSpeed() {
+		return isAtSpeed(RPM_TOLERANCE);
 	}
 
 	public double getAngleSpeed() {
@@ -180,7 +256,9 @@ public class LauncherSubsystem extends SubsystemBase {
 	}
 
 	public void setAngleSpeed(double Speed) {
-		launcherAnglePIDController.setReference(Speed, ControlType.kPosition);
+		// launcherAngleOnePIDController.setReference(Speed, ControlType.kVelocity);
+		// launcherAngleTwoPIDController.setReference(Speed, ControlType.kVelocity);
+		launcherAngleOneMotor.set(Speed);
 	}
 
 	public boolean atTargetSpeed() {
@@ -196,5 +274,7 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherAngleEntry.setDouble(getAngle());
 		launcherSpeedEntry.setDouble(getLauncherSpeed());
 		launcherAngleSpeedEntry.setDouble(getAngleSpeed());
+		launcherTopFlywheelTemp.setDouble(launcherTopMotor.getMotorTemperature());
+		launcherBottomFlyWheelTemp.setDouble(launcherTopMotor.getMotorTemperature());
 	}
 }

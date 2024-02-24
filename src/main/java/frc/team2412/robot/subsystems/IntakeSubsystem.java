@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -16,13 +17,19 @@ import java.util.Map;
 
 public class IntakeSubsystem extends SubsystemBase {
 	// Constants
-	public static final double INTAKE_IN_SPEED = 1.0;
-	public static final double INTAKE_REVERSE_SPEED = -1.0;
+	public static final double INTAKE_IN_SPEED = 0.3;
+	public static final double INTAKE_REVERSE_SPEED = -0.7;
+	public static final double INTAKE_REJECT_SPEED = -0.4;
 
-	public static final double INDEX_IN_SPEED = 0.3;
-	public static final double INDEX_REVERSE_SPEED = -0.3;
+	public static final double INDEX_UPPER_IN_SPEED = 0.3;
+	public static final double INDEX_UPPER_REVERSE_SPEED = -0.3;
 
-	public static final double FEEDER_IN_SPEED = 0.3;
+	public static final double INDEX_LOWER_IN_SPEED = 0.3;
+	public static final double INDEX_LOWER_REVERSE_SPEED = -0.3;
+
+	public static final double FEEDER_SHOOT_SPEED = 1.0;
+
+	public static final double FEEDER_IN_SPEED = 0.65;
 	public static final double FEEDER_REVERSE_SPEED = -0.3;
 
 	// Motors
@@ -50,7 +57,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
 	private final GenericEntry setIndexInSpeedEntry =
 			Shuffleboard.getTab("Intake")
-					.add("Index in speed - ", INDEX_IN_SPEED)
+					.add("Index in speed - ", INDEX_UPPER_IN_SPEED)
 					.withSize(1, 1)
 					.getEntry();
 
@@ -58,6 +65,55 @@ public class IntakeSubsystem extends SubsystemBase {
 			Shuffleboard.getTab("Intake")
 					.add("Feeder in speed - ", FEEDER_IN_SPEED)
 					.withSize(1, 1)
+					.getEntry();
+
+	private final GenericEntry intakeMotorFrontTemp =
+			Shuffleboard.getTab("Intake")
+					.add("Front Intake temp", 0)
+					.withSize(1, 1)
+					.withWidget(BuiltInWidgets.kTextView)
+					.getEntry();
+
+	private final GenericEntry intakeMotorBackTemp =
+			Shuffleboard.getTab("Intake")
+					.add("Back Intake temp", 0)
+					.withSize(1, 1)
+					.withWidget(BuiltInWidgets.kTextView)
+					.getEntry();
+
+	private final GenericEntry intakeMotorLeftTemp =
+			Shuffleboard.getTab("Intake")
+					.add("Left Intake temp", 0)
+					.withSize(1, 1)
+					.withWidget(BuiltInWidgets.kTextView)
+					.getEntry();
+
+	private final GenericEntry intakeMotorRightTemp =
+			Shuffleboard.getTab("Intake")
+					.add("Right Intake temp", 0)
+					.withSize(1, 1)
+					.withWidget(BuiltInWidgets.kTextView)
+					.getEntry();
+
+	private final GenericEntry indexMotorUpperTemp =
+			Shuffleboard.getTab("Intake")
+					.add("Upper Index temp", 0)
+					.withSize(1, 1)
+					.withWidget(BuiltInWidgets.kTextView)
+					.getEntry();
+
+	private final GenericEntry indexMotorLowerTemp =
+			Shuffleboard.getTab("Intake")
+					.add("Lower Index temp", 0)
+					.withSize(1, 1)
+					.withWidget(BuiltInWidgets.kTextView)
+					.getEntry();
+
+	private final GenericEntry feederMotorTemp =
+			Shuffleboard.getTab("Intake")
+					.add("Feeder temp", 0)
+					.withSize(1, 1)
+					.withWidget(BuiltInWidgets.kTextView)
 					.getEntry();
 
 	public IntakeSubsystem() {
@@ -96,7 +152,6 @@ public class IntakeSubsystem extends SubsystemBase {
 
 		configureMotor(indexMotorLower);
 		configureMotor(indexMotorUpper);
-		indexMotorLower.follow(indexMotorUpper);
 
 		configureMotor(feederMotor);
 	}
@@ -121,17 +176,24 @@ public class IntakeSubsystem extends SubsystemBase {
 		intakeSet(0);
 	}
 
+	public void intakeReject() {
+		intakeSet(INTAKE_REJECT_SPEED);
+	}
+
 	// index methods
 	public void indexIn() {
-		indexMotorUpper.set(setIndexInSpeedEntry.getDouble(INDEX_IN_SPEED));
+		indexMotorUpper.set(setIndexInSpeedEntry.getDouble(INDEX_UPPER_IN_SPEED));
+		indexMotorLower.set(INDEX_LOWER_IN_SPEED);
 	}
 
 	public void indexReverse() {
-		indexMotorUpper.set(INDEX_REVERSE_SPEED);
+		indexMotorUpper.set(INDEX_UPPER_REVERSE_SPEED);
+		indexMotorLower.set(INDEX_LOWER_REVERSE_SPEED);
 	}
 
 	public void indexStop() {
 		indexMotorUpper.set(0);
+		indexMotorLower.set(0);
 	}
 
 	// feeder methods
@@ -147,6 +209,10 @@ public class IntakeSubsystem extends SubsystemBase {
 		feederMotor.set(0);
 	}
 
+	public void feederShoot() {
+		feederMotor.set(FEEDER_SHOOT_SPEED);
+	}
+
 	// sensor methods
 	public boolean getIndexSensor() {
 		return indexSensor.get();
@@ -154,5 +220,18 @@ public class IntakeSubsystem extends SubsystemBase {
 
 	public boolean getFeederSensor() {
 		return feederSensor.get();
+	}
+
+	@Override
+	public void periodic() {
+		intakeMotorFrontTemp.setDouble(intakeMotorFront.getMotorTemperature());
+		intakeMotorBackTemp.setDouble(intakeMotorBack.getMotorTemperature());
+		intakeMotorRightTemp.setDouble(intakeMotorRight.getMotorTemperature());
+		intakeMotorLeftTemp.setDouble(intakeMotorLeft.getMotorTemperature());
+
+		indexMotorUpperTemp.setDouble(indexMotorUpper.getMotorTemperature());
+		indexMotorLowerTemp.setDouble(indexMotorLower.getMotorTemperature());
+
+		feederMotorTemp.setDouble(feederMotor.getMotorTemperature());
 	}
 }

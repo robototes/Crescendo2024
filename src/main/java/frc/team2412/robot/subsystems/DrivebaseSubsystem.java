@@ -38,12 +38,18 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
 	// SWERVE CONSTANTS (that aren't in deploy dir)
 
-	private static final double MAX_SPEED =
+	public static final double MAX_SPEED =
 			Robot.getInstance().getRobotType() == RobotType.BONK
 					? 2.0
 					: Robot.getInstance().getRobotType() == RobotType.CRANE
 							? 3.0
 							: Robot.getInstance().getRobotType() == RobotType.PRACTICE ? 5.0 : 1.0;
+
+	// Auto align stuff, dw abt it
+	public static final double MAX_ACCELERATION = 3;
+	public static final double MAX_ANGULAR_VELOCITY = 540;
+	public static final double MAX_ANGULAR_ACCELERAITON = 720;
+
 	// distance from center of the robot to the furthest module
 	private static final double DRIVEBASE_RADIUS =
 			Robot.getInstance().getRobotType() == RobotType.BONK
@@ -104,8 +110,8 @@ public class DrivebaseSubsystem extends SubsystemBase {
 			throw new RuntimeException();
 		}
 
-		// set drive motors to brake
-		swerveDrive.setMotorIdleMode(true);
+		// set drive motors to coast intially, this will be changed to brake on enable
+		swerveDrive.setMotorIdleMode(false);
 		// swerve drive heading will slowly drift over time as you translate. this method enables an
 		// active correction using pid. disabled until testing can be done
 		// TODO: this still needs to be improved
@@ -216,6 +222,10 @@ public class DrivebaseSubsystem extends SubsystemBase {
 							Math.abs(swerveDrive.getOdometryHeading().minus(angle.get()).getRotations())
 									< HEADING_CORRECTION_DEADBAND);
 		return alignCommand;
+	}
+
+	public void setMotorBrake(boolean brake) {
+		swerveDrive.setMotorIdleMode(brake);
 	}
 
 	public ChassisSpeeds getRobotSpeeds() {
