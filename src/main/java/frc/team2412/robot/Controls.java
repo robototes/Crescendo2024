@@ -20,7 +20,6 @@ import frc.team2412.robot.commands.intake.AllStopCommand;
 import frc.team2412.robot.commands.intake.FeederInCommand;
 import frc.team2412.robot.commands.launcher.FullTargetCommand;
 import frc.team2412.robot.commands.launcher.SetAngleCommand;
-import frc.team2412.robot.util.ChoreoHandler;
 
 public class Controls {
 	public static class ControlConstants {
@@ -66,7 +65,6 @@ public class Controls {
 		codriveIntakeReverseButton = codriveController.povLeft();
 		if (DRIVEBASE_ENABLED) {
 			bindDrivebaseControls();
-			bindChoreoControls();
 		}
 		if (LAUNCHER_ENABLED) {
 			bindLauncherControls();
@@ -140,10 +138,5 @@ public class Controls {
 		if (!DriverStation.isAutonomous()) {
 			driveController.getHID().setRumble(RumbleType.kBothRumble, vibration);
 		}
-	}
-
-	private void bindChoreoControls() {
-		driveController.b().onTrue(ChoreoHandler.getChoreoCommand("juke"));
-		// no reason to rumble in auto when no one is holding the controller
 	}
 }
