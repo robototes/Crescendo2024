@@ -16,8 +16,8 @@ public class Subsystems {
 		public static final boolean APRILTAGS_ENABLED = false;
 		public static final boolean LIMELIGHT_ENABLED = false;
 		public static final boolean CLIMB_ENABLED = false;
-		public static final boolean LAUNCHER_ENABLED = false;
-		public static final boolean INTAKE_ENABLED = false;
+		public static final boolean LAUNCHER_ENABLED = true;
+		public static final boolean INTAKE_ENABLED = true;
 		public static final boolean DRIVEBASE_ENABLED = true;
 	}
 

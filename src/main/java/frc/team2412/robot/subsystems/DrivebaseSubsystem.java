@@ -38,12 +38,17 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
 	// SWERVE CONSTANTS (that aren't in deploy dir)
 
-	private static final double MAX_SPEED =
+	public static final double MAX_SPEED =
 			Robot.getInstance().getRobotType() == RobotType.BONK
 					? 3.0
 					: Robot.getInstance().getRobotType() == RobotType.PRACTICE
 							? 2.0
-							: Robot.getInstance().getRobotType() == RobotType.CRANE ? 5.0 : 1.0;
+							: Robot.getInstance().getRobotType() == RobotType.CRANE ? 3.0 : 1.0;
+  
+	// Auto align stuff, dw abt it
+	public static final double MAX_ACCELERATION = 3;
+	public static final double MAX_ANGULAR_VELOCITY = 540;
+	public static final double MAX_ANGULAR_ACCELERAITON = 720;
 
 	// distance from center of the robot to the furthest module
 	private static final double DRIVEBASE_RADIUS =
