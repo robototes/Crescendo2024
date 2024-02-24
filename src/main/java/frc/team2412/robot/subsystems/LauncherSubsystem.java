@@ -149,20 +149,20 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherAngleTwoMotor.setIdleMode(IdleMode.kBrake);
 		// inveritng the bottom motor lmao
 		launcherBottomMotor.setInverted(true);
-		launcherAngleTwoMotor.setInverted(true);
+		// launcherAngleTwoMotor.setInverted(true);
 
 		// current limit
 		launcherTopMotor.setSmartCurrentLimit(40);
 		launcherBottomMotor.setSmartCurrentLimit(40);
-		launcherAngleOneMotor.setSmartCurrentLimit(20);
-		launcherAngleTwoMotor.setSmartCurrentLimit(20);
+		launcherAngleOneMotor.setSmartCurrentLimit(40);
+		launcherAngleTwoMotor.setSmartCurrentLimit(40);
 
 		launcherAngleOneMotor.setSoftLimit(CANSparkBase.SoftLimitDirection.kForward, 100);
 		launcherAngleOneMotor.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, 25);
 		launcherAngleTwoMotor.setSoftLimit(CANSparkBase.SoftLimitDirection.kForward, 100);
 		launcherAngleTwoMotor.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, 25);
 
-		launcherAngleTwoMotor.follow(launcherAngleOneMotor);
+		launcherAngleTwoMotor.follow(launcherAngleOneMotor, true);
 
 		launcherTopMotor.burnFlash();
 		launcherBottomMotor.burnFlash();
@@ -191,10 +191,10 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherBottomPIDController.setD(0);
 		launcherBottomPIDController.setFF(0);
 
+		launcherAngleOneMotor.getEncoder().setPositionConversionFactor(80);
 		launcherAngleOneMotor.getEncoder().setPosition(launcherAngleEncoder.getPosition());
-		launcherAngleOneMotor.getEncoder().setPositionConversionFactor(180);
+		launcherAngleTwoMotor.getEncoder().setPositionConversionFactor(80);
 		launcherAngleTwoMotor.getEncoder().setPosition(launcherAngleEncoder.getPosition());
-		launcherAngleTwoMotor.getEncoder().setPositionConversionFactor(180);
 	}
 	// stop launcher motors method
 	public void stopLauncher() {
