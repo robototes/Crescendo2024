@@ -261,14 +261,6 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherAngleOneMotor.set(Speed);
 	}
 
-	public boolean atTargetSpeed() {
-
-		return MathUtil.isNear(
-				setLauncherSpeedEntry.getDouble(0),
-				launcherTopEncoder.getVelocity(),
-				FLYWHEEL_VELOCITY_TOLERANCE);
-	}
-
 	@Override
 	public void periodic() {
 		launcherAngleEntry.setDouble(getAngle());

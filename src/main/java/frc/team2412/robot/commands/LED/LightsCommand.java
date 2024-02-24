@@ -29,7 +29,7 @@ public class LightsCommand extends Command {
 	public void execute() {
 		if (intakeSubsystem.getIndexSensor()) {
 			ledSubsystem.setBLUE_LED();
-		} else if (launcherSubsystem.atTargetSpeed()) {
+		} else if (launcherSubsystem.isAtSpeed()) {
 			ledSubsystem.setGREEN_LED();
 		}
 	}
