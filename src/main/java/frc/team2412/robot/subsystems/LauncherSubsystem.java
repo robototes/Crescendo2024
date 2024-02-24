@@ -148,6 +148,7 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherAngleTwoMotor.setIdleMode(IdleMode.kBrake);
 		// inveritng the bottom motor lmao
 		launcherBottomMotor.setInverted(true);
+		launcherAngleTwoMotor.setInverted(true);
 
 		// current limit
 		launcherTopMotor.setSmartCurrentLimit(40);
