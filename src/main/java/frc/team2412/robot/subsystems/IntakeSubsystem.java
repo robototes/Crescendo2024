@@ -24,8 +24,8 @@ public class IntakeSubsystem extends SubsystemBase {
 	public static final double INDEX_UPPER_IN_SPEED = 0.8;
 	public static final double INDEX_UPPER_REVERSE_SPEED = -0.8;
 
-	public static final double INJEST_SPEED = 0.3;
-	public static final double INJEST_REVERSE_SPEED = -0.3;
+	public static final double INGEST_SPEED = 0.3;
+	public static final double INGEST_REVERSE_SPEED = -0.3;
 
 	public static final double FEEDER_SHOOT_SPEED = 1.0;
 
@@ -38,7 +38,7 @@ public class IntakeSubsystem extends SubsystemBase {
 	private final CANSparkMax intakeMotorLeft;
 	private final CANSparkMax intakeMotorRight;
 
-	private final CANSparkFlex injestMotor;
+	private final CANSparkFlex ingestMotor;
 	private final CANSparkFlex indexMotorUpper;
 
 	private final CANSparkFlex feederMotor;
@@ -104,9 +104,9 @@ public class IntakeSubsystem extends SubsystemBase {
 					.withWidget(BuiltInWidgets.kTextView)
 					.getEntry();
 
-	private final GenericEntry injestMotorTemp =
+	private final GenericEntry ingestMotorTemp =
 			Shuffleboard.getTab("Intake")
-					.add("Injest temp", 0)
+					.add("Ingest temp", 0)
 					.withSize(1, 1)
 					.withWidget(BuiltInWidgets.kTextView)
 					.getEntry();
@@ -132,7 +132,7 @@ public class IntakeSubsystem extends SubsystemBase {
 		intakeMotorLeft = new CANSparkMax(INTAKE_MOTOR_LEFT, MotorType.kBrushless);
 		intakeMotorRight = new CANSparkMax(INTAKE_MOTOR_RIGHT, MotorType.kBrushless);
 
-		injestMotor = new CANSparkFlex(INJEST_MOTOR, MotorType.kBrushless);
+		ingestMotor = new CANSparkFlex(INGEST_MOTOR, MotorType.kBrushless);
 		indexMotorUpper = new CANSparkFlex(INDEX_MOTOR_UPPER, MotorType.kBrushless);
 
 		feederMotor = new CANSparkFlex(FEEDER_MOTOR, MotorType.kBrushless);
@@ -160,7 +160,7 @@ public class IntakeSubsystem extends SubsystemBase {
 		configureMotor(intakeMotorLeft);
 		configureMotor(intakeMotorRight);
 
-		configureMotor(injestMotor);
+		configureMotor(ingestMotor);
 		configureMotor(indexMotorUpper);
 
 		configureMotor(feederMotor);
@@ -172,7 +172,7 @@ public class IntakeSubsystem extends SubsystemBase {
 		intakeMotorRight.set(speed);
 		intakeMotorBack.set(speed);
 
-		injestMotor.set(speed);
+		ingestMotor.set(speed);
 	}
 
 	// intake methods
@@ -242,7 +242,7 @@ public class IntakeSubsystem extends SubsystemBase {
 		intakeMotorRightTemp.setDouble(intakeMotorRight.getMotorTemperature());
 		intakeMotorLeftTemp.setDouble(intakeMotorLeft.getMotorTemperature());
 
-		injestMotorTemp.setDouble(injestMotor.getMotorTemperature());
+		ingestMotorTemp.setDouble(ingestMotor.getMotorTemperature());
 
 		indexMotorUpperTemp.setDouble(indexMotorUpper.getMotorTemperature());
 
