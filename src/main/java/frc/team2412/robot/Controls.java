@@ -134,7 +134,7 @@ public class Controls {
 								s.launcherSubsystem,
 								() ->
 										MathUtil.applyDeadband(codriveController.getLeftY(), 0.1)
-												* LauncherSubsystem.ANGLE_MAX_SPPEED));
+												* LauncherSubsystem.ANGLE_MAX_SPEED));
 
 		launcherSubwooferPresetButton.onTrue(
 				new SetAngleLaunchCommand(

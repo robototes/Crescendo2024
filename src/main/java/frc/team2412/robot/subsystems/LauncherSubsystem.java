@@ -34,7 +34,7 @@ public class LauncherSubsystem extends SubsystemBase {
 	// RPM
 	public static final int SPEAKER_SHOOT_SPEED_RPM = 3392; // 50%
 	public static final int TRAP_SHOOT_SPEED_RPM = 2000;
-	public static final double ANGLE_MAX_SPPEED = 0.3;
+	public static final double ANGLE_MAX_SPEED = 0.3;
 	// 3392 RPM = 50% Speed
 	// 1356 RPM = 20% Speed
 	// 1017 RPM = 15% Speed
@@ -174,7 +174,7 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherAngleOnePIDController.setI(0);
 		launcherAngleOnePIDController.setD(0);
 		launcherAngleOnePIDController.setFF(0);
-		launcherAngleOnePIDController.setOutputRange(-ANGLE_MAX_SPPEED, ANGLE_MAX_SPPEED);
+		launcherAngleOnePIDController.setOutputRange(-ANGLE_MAX_SPEED, ANGLE_MAX_SPEED);
 
 		// launcherAngleTwoPIDController.setP(0.1);
 		// launcherAngleTwoPIDController.setI(0);
