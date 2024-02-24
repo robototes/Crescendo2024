@@ -9,6 +9,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
 import com.revrobotics.SparkPIDController;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -27,6 +28,7 @@ public class LauncherSubsystem extends SubsystemBase {
 	// max Free Speed: 6784 RPM
 	private static final int MAX_FREE_SPEED_RPM = 6784;
 	public static final double ANGLE_TOLERANCE = 0.5;
+	public static final double FLYWHEEL_VELOCITY_TOLERANCE = 0.1;
 	// RPM
 	public static final int SPEAKER_SHOOT_SPEED_RPM = 3392; // 50%
 	// 3392 RPM = 50% Speed
@@ -176,6 +178,18 @@ public class LauncherSubsystem extends SubsystemBase {
 
 	public void setAngleSpeed(double Speed) {
 		launcherAnglePIDController.setReference(Speed, ControlType.kPosition);
+	}
+
+	public boolean atTargetSpeed() {
+
+		return MathUtil.isNear(
+				setLauncherSpeedEntry.getDouble(0),
+				launcherTopEncoder.getVelocity(),
+				FLYWHEEL_VELOCITY_TOLERANCE);
+		// if(MathUtil.isNear(setLauncherSpeedEntry.getDouble(0), launcherTopEncoder.getVelocity(), )){
+		// 	return true;
+		// }
+		// return false;
 	}
 
 	@Override
