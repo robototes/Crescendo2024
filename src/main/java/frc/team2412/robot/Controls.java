@@ -18,6 +18,7 @@ import frc.team2412.robot.commands.intake.AllInCommand;
 import frc.team2412.robot.commands.intake.AllReverseCommand;
 import frc.team2412.robot.commands.intake.AllStopCommand;
 import frc.team2412.robot.commands.intake.FeederInCommand;
+import frc.team2412.robot.commands.launcher.SetAngleAmpLaunchCommand;
 import frc.team2412.robot.commands.launcher.SetAngleCommand;
 import frc.team2412.robot.commands.launcher.SetAngleLaunchCommand;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
@@ -59,7 +60,7 @@ public class Controls {
 		launcherTrapPresetButton = codriveController.y();
 		launcherLaunchButton = codriveController.rightBumper();
 		// intake controls (confirmed with driveteam)
-		driveIntakeInButton = driveController.y();
+		driveIntakeInButton = driveController.a();
 		driveIntakeStopButton = driveController.b();
 		driveIntakeReverseButton = driveController.y();
 		codriveIntakeInButton = codriveController.povUp();
@@ -146,12 +147,14 @@ public class Controls {
 		//				LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
 		//				LauncherSubsystem.PODIUM_AIM_ANGLE));
 		launcherAmpPresetButton.onTrue(
-				new SetAngleLaunchCommand(
+				new SetAngleAmpLaunchCommand(
 						s.launcherSubsystem,
 						LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
 						LauncherSubsystem.AMP_AIM_ANGLE));
 		launcherTrapPresetButton.onTrue(
 				TrapAlign.trapPreset(s.drivebaseSubsystem, s.launcherSubsystem));
+
+		codriveController.b().whileTrue(s.launcherSubsystem.run(s.launcherSubsystem::stopLauncher));
 
 		codriveController
 				.leftBumper()
