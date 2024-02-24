@@ -21,8 +21,8 @@ public class IntakeSubsystem extends SubsystemBase {
 	public static final double INTAKE_REVERSE_SPEED = -0.7;
 	public static final double INTAKE_REJECT_SPEED = -0.4;
 
-	public static final double INDEX_UPPER_IN_SPEED = 0.3;
-	public static final double INDEX_UPPER_REVERSE_SPEED = -0.3;
+	public static final double INDEX_UPPER_IN_SPEED = 0.8;
+	public static final double INDEX_UPPER_REVERSE_SPEED = -0.8;
 
 	public static final double INJEST_SPEED = 0.3;
 	public static final double INJEST_REVERSE_SPEED = -0.3;
@@ -224,11 +224,11 @@ public class IntakeSubsystem extends SubsystemBase {
 
 	// sensor methods
 
-	public boolean getIndexSensor() {
+	public boolean indexSensorHasNote() {
 		return indexSensor.get() && !getSensorOverride();
 	}
 
-	public boolean getFeederSensor() {
+	public boolean feederSensorHasNote() {
 		return feederSensor.get() && !getSensorOverride();
 	}
 
