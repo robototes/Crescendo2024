@@ -38,7 +38,7 @@
         {
           "type": "named",
           "data": {
-            "name": "VisionLaunch "
+            "name": "VisionLaunch"
           }
         },
         {
@@ -50,12 +50,30 @@
         {
           "type": "named",
           "data": {
+            "name": "VisionLaunch "
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MidNoteToBottomNote"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BottomNoteLaunch"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "VisionLaunch"
           }
         }
       ]
     }
   },
-  "folder": null,
+  "folder": "Vision Autos",
   "choreoAuto": false
 }

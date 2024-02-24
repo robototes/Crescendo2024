@@ -6,7 +6,10 @@
     "Auto Logic Paths"
   ],
   "autoFolders": [
-    "Complex Autos"
+    "Complex Autos",
+    "Test",
+    "Preset Autos",
+    "Vision Autos"
   ],
   "defaultMaxVel": 3.0,
   "defaultMaxAccel": 3.0,

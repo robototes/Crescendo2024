@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.73,
-      "y": 4.48
+      "x": 1.4,
+      "y": 5.55
     },
-    "rotation": 120.0
+    "rotation": 179.3950927289807
   },
   "command": {
     "type": "sequential",
@@ -20,7 +20,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "LowSpeakerToLowNote"
+            "pathName": "midUnderStageCenterNoteLaunch"
           }
         },
         {
@@ -32,25 +32,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "LowNoteToLaunch"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "VisionLaunch"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "LowLaunchToMidNote"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "MidNoteToHighNoteLaunch"
+            "pathName": "launchPosSecondCenterLineNoteLaunch"
           }
         },
         {
@@ -62,6 +44,6 @@
       ]
     }
   },
-  "folder": null,
+  "folder": "Vision Autos",
   "choreoAuto": false
 }
