@@ -25,7 +25,8 @@ public class Hardware {
 	public static final int INTAKE_MOTOR_LEFT = 42;
 	public static final int INTAKE_MOTOR_RIGHT = 43;
 
-	public static final int INDEX_MOTOR_LOWER = 44;
+	public static final int INJEST_MOTOR = 44;
+
 	public static final int INDEX_MOTOR_UPPER = 45;
 
 	public static final int FEEDER_MOTOR = 46;
