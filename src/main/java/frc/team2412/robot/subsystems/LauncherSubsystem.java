@@ -190,9 +190,9 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherBottomPIDController.setFF(0);
 
 		launcherAngleOneMotor.getEncoder().setPosition(launcherAngleEncoder.getPosition());
-		launcherAngleOneMotor.getEncoder().setPositionConversionFactor(80);
+		launcherAngleOneMotor.getEncoder().setPositionConversionFactor(180);
 		launcherAngleTwoMotor.getEncoder().setPosition(launcherAngleEncoder.getPosition());
-		launcherAngleTwoMotor.getEncoder().setPositionConversionFactor(80);
+		launcherAngleTwoMotor.getEncoder().setPositionConversionFactor(180);
 	}
 	// stop launcher motors method
 	public void stopLauncher() {
