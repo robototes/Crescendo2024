@@ -6,37 +6,37 @@ import frc.team2412.robot.subsystems.LEDSubsystem;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
 
 public class LightsCommand extends Command {
-    private final LEDSubsystem LEDSubsystem;
-    private final IntakeSubsystem intakeSubsystem;
-    private final LauncherSubsystem launcherSubsystem;
+	private final LEDSubsystem ledSubsystem;
+	private final IntakeSubsystem intakeSubsystem;
+	private final LauncherSubsystem launcherSubsystem;
 
-    public LightsCommand(
-            LEDSubsystem LEDSubsystem, 
-            IntakeSubsystem intakeSubsystem, 
-            LauncherSubsystem launcherSubsystem) {
-		this.LEDSubsystem = LEDSubsystem;
-        this.intakeSubsystem = intakeSubsystem;
-        this.launcherSubsystem = launcherSubsystem;
-		addRequirements(LEDSubsystem);
+	public LightsCommand(
+			LEDSubsystem ledSubsystem,
+			IntakeSubsystem intakeSubsystem,
+			LauncherSubsystem launcherSubsystem) {
+		this.ledSubsystem = ledSubsystem;
+		this.intakeSubsystem = intakeSubsystem;
+		this.launcherSubsystem = launcherSubsystem;
+		addRequirements(ledSubsystem);
 	}
 
-    @Override
+	@Override
 	public void initialize() {
-		LEDSubsystem.setRED_LED();
+		ledSubsystem.setRED_LED();
 	}
 
-    @Override
-    public void execute() {
-        if (intakeSubsystem.getIndexSensor()) {
-            LEDSubsystem.setBLUE_LED();
-        } else if (launcherSubsystem.atTargetSpeed()) {
-            LEDSubsystem.setGREEN_LED();
-        }
-    }
+	@Override
+	public void execute() {
+		if (intakeSubsystem.getIndexSensor()) {
+			ledSubsystem.setBLUE_LED();
+		} else if (launcherSubsystem.atTargetSpeed()) {
+			ledSubsystem.setGREEN_LED();
+		}
+	}
 
 	@Override
 	public boolean isFinished() {
-        LEDSubsystem.setRED_LED();
+		ledSubsystem.setRED_LED();
 		return true;
 	}
 }

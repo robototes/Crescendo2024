@@ -186,10 +186,6 @@ public class LauncherSubsystem extends SubsystemBase {
 				setLauncherSpeedEntry.getDouble(0),
 				launcherTopEncoder.getVelocity(),
 				FLYWHEEL_VELOCITY_TOLERANCE);
-		// if(MathUtil.isNear(setLauncherSpeedEntry.getDouble(0), launcherTopEncoder.getVelocity(), )){
-		// 	return true;
-		// }
-		// return false;
 	}
 
 	@Override
