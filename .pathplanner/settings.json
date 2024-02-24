@@ -1,6 +1,6 @@
 {
-  "robotWidth": 0.737,
-  "robotLength": 0.737,
+  "robotWidth": 0.8128,
+  "robotLength": 0.8128,
   "holonomicMode": true,
   "pathFolders": [
     "Auto Logic Paths"
