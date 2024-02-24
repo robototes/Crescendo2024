@@ -18,7 +18,6 @@ import frc.team2412.robot.commands.intake.AllInCommand;
 import frc.team2412.robot.commands.intake.AllReverseCommand;
 import frc.team2412.robot.commands.intake.AllStopCommand;
 import frc.team2412.robot.commands.intake.FeederInCommand;
-import frc.team2412.robot.commands.launcher.FullTargetCommand;
 import frc.team2412.robot.commands.launcher.SetAngleCommand;
 import frc.team2412.robot.commands.launcher.SetAngleLaunchCommand;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
@@ -58,7 +57,7 @@ public class Controls {
 		// launcherSubwooferPresetButton = codriveController.povRight();
 		// launcherPodiumPresetButton = codriveController.povLeft();
 		launcherTrapPresetButton = codriveController.y();
-		launcherLaunchButton = codriveController.leftBumper();
+		launcherLaunchButton = codriveController.rightBumper();
 		// intake controls (confirmed with driveteam)
 		driveIntakeInButton = driveController.y();
 		driveIntakeStopButton = driveController.b();
@@ -77,24 +76,24 @@ public class Controls {
 		}
 		if (DRIVEBASE_ENABLED && LAUNCHER_ENABLED && INTAKE_ENABLED) {
 			// temporary controls, not sure what drive team wants
-			driveController
-					.rightBumper()
-					.whileTrue(
-							new FullTargetCommand(
-									s.launcherSubsystem,
-									s.intakeSubsystem,
-									s.drivebaseSubsystem,
-									this,
-									driveController.leftBumper()));
-			codriveController
-					.rightBumper()
-					.whileTrue(
-							new FullTargetCommand(
-									s.launcherSubsystem,
-									s.intakeSubsystem,
-									s.drivebaseSubsystem,
-									this,
-									codriveController.leftBumper()));
+			// driveController
+			// 		.rightBumper()
+			// 		.whileTrue(
+			// 				new FullTargetCommand(
+			// 						s.launcherSubsystem,
+			// 						s.intakeSubsystem,
+			// 						s.drivebaseSubsystem,
+			// 						this,
+			// 						driveController.leftBumper()));
+			// codriveController
+			// 		.rightBumper()
+			// 		.whileTrue(
+			// 				new FullTargetCommand(
+			// 						s.launcherSubsystem,
+			// 						s.intakeSubsystem,
+			// 						s.drivebaseSubsystem,
+			// 						this,
+			// 						codriveController.leftBumper()));
 		}
 	}
 
@@ -115,10 +114,10 @@ public class Controls {
 	private void bindIntakeControls() {
 		// CommandScheduler.getInstance()
 		// 		.setDefaultCommand(s.intakeSubsystem, new IntakeStopCommand(s.intakeSubsystem));
-		driveIntakeInButton.onTrue(new AllInCommand(s.intakeSubsystem));
+		driveIntakeInButton.whileTrue(new AllInCommand(s.intakeSubsystem));
 		driveIntakeStopButton.onTrue(new AllStopCommand(s.intakeSubsystem));
 		driveIntakeReverseButton.onTrue(new AllReverseCommand(s.intakeSubsystem));
-		codriveIntakeInButton.onTrue(new AllInCommand(s.intakeSubsystem));
+		codriveIntakeInButton.whileTrue(new AllInCommand(s.intakeSubsystem));
 		codriveIntakeStopButton.onTrue(new AllStopCommand(s.intakeSubsystem));
 		codriveIntakeReverseButton.onTrue(new AllReverseCommand(s.intakeSubsystem));
 
@@ -145,6 +144,12 @@ public class Controls {
 						LauncherSubsystem.AMP_AIM_ANGLE));
 		launcherTrapPresetButton.onTrue(
 				TrapAlign.trapPreset(s.drivebaseSubsystem, s.launcherSubsystem));
+
+		codriveController
+				.leftBumper()
+				.whileTrue(
+						s.launcherSubsystem.runEnd(
+								s.launcherSubsystem::launch, s.launcherSubsystem::stopLauncher));
 	}
 
 	public void vibrateDriveController(double vibration) {
