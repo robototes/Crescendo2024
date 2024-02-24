@@ -44,7 +44,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 					: Robot.getInstance().getRobotType() == RobotType.PRACTICE
 							? 2.0
 							: Robot.getInstance().getRobotType() == RobotType.CRANE ? 3.0 : 1.0;
-  
+
 	// Auto align stuff, dw abt it
 	public static final double MAX_ACCELERATION = 3;
 	public static final double MAX_ANGULAR_VELOCITY = 540;

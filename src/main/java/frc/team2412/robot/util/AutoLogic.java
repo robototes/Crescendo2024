@@ -41,13 +41,10 @@ public class AutoLogic {
 	public void registerCommands() {
 
 		// param: String commandName, Command command
-
 		NamedCommands.registerCommand("DummyLaunch", vibrateControllerCommand);
-
 		NamedCommands.registerCommand("AutoLogicTest", AutoPaths.midSpeakerCenterLineN3N2N1);
 
 		// Complex Autos
-
 		NamedCommands.registerCommand(
 				"MidSpeakerCenterLineN5N4N3", AutoPaths.midSpeakerCenterLineN3N2N1);
 		NamedCommands.registerCommand(
