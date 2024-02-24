@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.team2412.robot.Subsystems.SubsystemConstants;
 import frc.team2412.robot.commands.diagnostic.IntakeDiagnosticCommand;
 import frc.team2412.robot.commands.diagnostic.LauncherDiagnosticCommand;
+import frc.team2412.robot.util.AutoLogic;
 import frc.team2412.robot.util.MACAddress;
 import frc.team2412.robot.util.MatchDashboard;
 
@@ -39,6 +40,7 @@ public class Robot extends TimedRobot {
 	public Controls controls;
 	public Subsystems subsystems;
 	public MatchDashboard dashboard;
+	public AutoLogic autoLogic;
 
 	public SendableChooser<Command> autoChooser;
 
@@ -73,7 +75,11 @@ public class Robot extends TimedRobot {
 
 		subsystems = new Subsystems();
 		controls = new Controls(subsystems);
+		autoLogic = new AutoLogic();
 
+		autoChooser = AutoBuilder.buildAutoChooser();
+		SmartDashboard.putData("Auto Chooser", autoChooser);
+		SmartDashboard.putString("current bot", getTypeFromAddress().toString());
 		if (Subsystems.SubsystemConstants.DRIVEBASE_ENABLED) {
 			autoChooser = AutoBuilder.buildAutoChooser();
 		} else {
@@ -126,7 +132,6 @@ public class Robot extends TimedRobot {
 
 		// Checks if FMS is attatched and enables joystick warning if true
 		DriverStation.silenceJoystickConnectionWarning(!DriverStation.isFMSAttached());
-
 		autoChooser.getSelected().schedule();
 	}
 

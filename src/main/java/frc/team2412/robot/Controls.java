@@ -172,7 +172,6 @@ public class Controls {
 	}
 
 	public void vibrateDriveController(double vibration) {
-		// no reason to rumble in auto when no one is holding the controller
 		if (!DriverStation.isAutonomous()) {
 			driveController.getHID().setRumble(RumbleType.kBothRumble, vibration);
 		}
