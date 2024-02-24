@@ -42,6 +42,11 @@ public class TalonFXSwerve extends SwerveMotor {
 		factoryDefaults();
 		clearStickyFaults();
 
+		if (motor.getIsProLicensed().getValue()) {
+			m_angleVoltageSetter.EnableFOC = true;
+			m_velocityVoltageSetter.EnableFOC = true;
+		}
+
 		//    if (SwerveDriveTelemetry.isSimulation)
 		//    {
 		////      PhysicsSim.getInstance().addTalonFX(motor, .25, 6800);
