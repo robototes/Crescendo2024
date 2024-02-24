@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.3,
-        "y": 6.2
+        "x": 7.123913346925792,
+        "y": 6.369600486948722
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.715574350067619,
-        "y": 6.388089893296904
+        "x": 7.539487696993411,
+        "y": 6.557690380245626
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "QCenterLineN2"
     },
     {
       "anchor": {
@@ -67,7 +67,7 @@
   "reversed": false,
   "folder": "Auto Logic Paths",
   "previewStartingState": {
-    "rotation": 159.03,
+    "rotation": 145.95,
     "velocity": 0.0
   },
   "useDefaultConstraints": true

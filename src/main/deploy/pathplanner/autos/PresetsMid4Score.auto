@@ -12,6 +12,12 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "VisionLaunch"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "SpeakerToMidNoteReturn"
@@ -20,7 +26,7 @@
         {
           "type": "named",
           "data": {
-            "name": "DummyLaunch"
+            "name": "VisionLaunch"
           }
         },
         {
@@ -32,7 +38,7 @@
         {
           "type": "named",
           "data": {
-            "name": "DummyLaunch"
+            "name": "VisionLaunch"
           }
         },
         {
@@ -42,15 +48,15 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "DummyLaunch"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "LowNoteToSpeaker"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "VisionLaunch"
           }
         }
       ]

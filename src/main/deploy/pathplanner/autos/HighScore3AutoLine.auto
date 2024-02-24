@@ -12,15 +12,21 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "SubwooferLaunch"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "HighSpeakerToHighNoteLaunch2"
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 1.0
+            "name": "VisionLaunch"
           }
         },
         {
@@ -30,15 +36,21 @@
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 1.0
+            "name": "VisionLaunch "
           }
         },
         {
           "type": "path",
           "data": {
             "pathName": "launchSecondNoteLaunch"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "VisionLaunch"
           }
         }
       ]

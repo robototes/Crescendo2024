@@ -12,6 +12,12 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "SubwooferLaunch"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "MidSpeakerToCenterMiddleNode"
@@ -20,7 +26,7 @@
         {
           "type": "named",
           "data": {
-            "name": "DummyLaunch"
+            "name": "VisionLaunch"
           }
         },
         {
@@ -32,7 +38,7 @@
         {
           "type": "named",
           "data": {
-            "name": "DummyLaunch"
+            "name": "VisionLaunch"
           }
         },
         {
@@ -44,7 +50,7 @@
         {
           "type": "named",
           "data": {
-            "name": "DummyLaunch"
+            "name": "VisionLaunch"
           }
         }
       ]

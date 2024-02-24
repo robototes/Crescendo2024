@@ -10,6 +10,9 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.team2412.robot.Controls;
 import frc.team2412.robot.Robot;
 import frc.team2412.robot.Subsystems;
+import frc.team2412.robot.commands.launcher.FullTargetCommand;
+import frc.team2412.robot.commands.launcher.SetAngleLaunchCommand;
+import frc.team2412.robot.subsystems.LauncherSubsystem;
 
 public class AutoLogic {
 	public static Robot r = Robot.getInstance();
@@ -42,15 +45,31 @@ public class AutoLogic {
 
 		// param: String commandName, Command command
 		NamedCommands.registerCommand("DummyLaunch", vibrateControllerCommand);
-		NamedCommands.registerCommand("AutoLogicTest", AutoPaths.midSpeakerCenterLineN3N2N1);
+		NamedCommands.registerCommand(
+				"VisionLaunch",
+				new FullTargetCommand(
+						s.launcherSubsystem,
+						s.intakeSubsystem,
+						s.drivebaseSubsystem,
+						controls,
+						s.launcherSubsystem::isAtSpeed));
 
+		NamedCommands.registerCommand(
+				"SubwooferLaunch",
+				new SetAngleLaunchCommand(
+						s.launcherSubsystem,
+						LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
+						LauncherSubsystem.SUBWOOFER_AIM_ANGLE));
 		// Complex Autos
+		NamedCommands.registerCommand("AutoLogicTest", AutoPaths.testAuto);
 		NamedCommands.registerCommand(
 				"MidSpeakerCenterLineN5N4N3", AutoPaths.midSpeakerCenterLineN3N2N1);
 		NamedCommands.registerCommand(
 				"LowSpeakerCenterLineN5N4N3", AutoPaths.lowSpeakerCenterLineN5N4N3);
 		NamedCommands.registerCommand(
 				"TopSpeakerCenterLineN1N2AutoLine1", AutoPaths.TopSpeakerCenterLineN1N2AutoLine1);
+		NamedCommands.registerCommand(
+				"TopSpeakerCenterLineN1N2AutoLine1", AutoPaths.TopSpeakerCenterLineN1N2N3);
 	}
 
 	// public Command getConditionalCommand(){}

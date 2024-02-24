@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.3,
-        "y": 6.55
+        "x": 7.123913346925792,
+        "y": 6.369600486948722
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.502946177063525,
-        "y": 6.471292221863723
+        "x": 7.3268595239893175,
+        "y": 6.2908927088124456
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "QCenterLineN2"
     },
     {
       "anchor": {
@@ -32,28 +32,12 @@
     },
     {
       "anchor": {
-        "x": 6.319624170779873,
-        "y": 6.1292382044223555
+        "x": 5.376664447022588,
+        "y": 6.471292221863723
       },
       "prevControl": {
-        "x": 6.595190161078812,
-        "y": 5.877634474149413
-      },
-      "nextControl": {
-        "x": 6.106995997775779,
-        "y": 6.323376971078266
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 5.3,
-        "y": 6.304887564730085
-      },
-      "prevControl": {
-        "x": 5.912857231119867,
-        "y": 6.36035578377463
+        "x": 6.652433485047149,
+        "y": 6.554494550430542
       },
       "nextControl": null,
       "isLocked": false,
@@ -77,13 +61,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -171.5,
+    "rotation": -169.73243726080997,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "Auto Logic Paths",
   "previewStartingState": {
-    "rotation": 142.5,
+    "rotation": 145.95,
     "velocity": 0
   },
   "useDefaultConstraints": true

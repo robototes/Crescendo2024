@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.27,
-        "y": 5.29
+        "x": 4.35,
+        "y": 5.45
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.877450475621671,
-        "y": 6.813346239305091
+        "x": 4.9574504756216715,
+        "y": 6.973346239305092
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.28107330088534,
-        "y": 6.193951126640992
+        "x": 7.123913346925792,
+        "y": 6.369600486948722
       },
       "prevControl": {
-        "x": 6.310379467605782,
-        "y": 6.434313409167359
+        "x": 6.153219513646234,
+        "y": 6.609962769475089
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "QCenterLineN2"
     }
   ],
   "rotationTargets": [],
@@ -39,7 +39,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 159.03,
+    "rotation": 145.95,
     "rotateFast": false
   },
   "reversed": false,

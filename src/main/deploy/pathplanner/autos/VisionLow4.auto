@@ -34,6 +34,12 @@
           "data": {
             "pathName": "lowLaunchNoteFourCenterLine"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "VisionLaunch"
+          }
         }
       ]
     }

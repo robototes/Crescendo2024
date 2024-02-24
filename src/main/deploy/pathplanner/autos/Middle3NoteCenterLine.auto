@@ -12,21 +12,33 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "VisionLaunch"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "MidSpeakerToCenterMiddleNode"
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 1.0
+            "name": "VisionLaunch"
           }
         },
         {
           "type": "path",
           "data": {
             "pathName": "CenterMiddleNoteLaunchToSecondNoteLaunch"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "VisionLaunch"
           }
         }
       ]

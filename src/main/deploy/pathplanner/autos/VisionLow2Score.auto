@@ -12,6 +12,12 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "SubwooferLaunch"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "LowSpeakerToMiddleLowNote"
@@ -21,6 +27,12 @@
           "type": "path",
           "data": {
             "pathName": "MiddleLowNoteToLaunch"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "VisionLaunch"
           }
         }
       ]

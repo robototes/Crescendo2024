@@ -18,9 +18,9 @@
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 1.0
+            "name": "VisionLaunch"
           }
         },
         {
@@ -30,15 +30,21 @@
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 1.0
+            "name": "VisionLaunch"
           }
         },
         {
           "type": "path",
           "data": {
             "pathName": "MidNoteToBottomNote"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "VisionLaunch"
           }
         }
       ]
