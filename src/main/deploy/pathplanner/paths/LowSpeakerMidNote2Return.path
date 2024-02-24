@@ -3,51 +3,61 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.9099007567384503,
-        "y": 3.7441047855068685
+        "x": 0.73,
+        "y": 4.48
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.890375669039626,
-        "y": 4.71929316921697
+        "x": 1.1795692059852587,
+        "y": 3.9012647394664164
       },
       "isLocked": false,
-      "linkedName": "TopSpeaker"
+      "linkedName": "LowSpeaker"
     },
     {
       "anchor": {
-        "x": 2.8713498868439173,
-        "y": 7.617635415451011
+        "x": 2.8990839963661905,
+        "y": 5.546821904454621
       },
       "prevControl": {
-        "x": 2.1780714304759803,
-        "y": 7.6039071291863
+        "x": 2.7049452297102787,
+        "y": 5.260236106057798
       },
       "nextControl": {
-        "x": 3.805064907427112,
-        "y": 7.636124821799193
+        "x": 3.055835370728229,
+        "y": 5.7782167904176305
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.2,
-        "y": 7.497454274187828
+        "x": 1.3,
+        "y": 5.55
       },
       "prevControl": {
-        "x": 6.2,
-        "y": 7.497454274187828
+        "x": 2.131773632916635,
+        "y": 5.611534826673257
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "MidSpeaker"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.95,
-      "rotationDegrees": 180.0,
+      "waypointRelativePos": 0.7,
+      "rotationDegrees": 135.74,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 1.15,
+      "rotationDegrees": 152.92881489926606,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 0.05,
+      "rotationDegrees": 120.0,
       "rotateFast": false
     }
   ],
@@ -61,13 +71,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 178.7,
+    "rotation": 180.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Auto Logic Paths",
+  "folder": null,
   "previewStartingState": {
-    "rotation": -120.0,
+    "rotation": 120.3432488842395,
     "velocity": 0
   },
   "useDefaultConstraints": true
