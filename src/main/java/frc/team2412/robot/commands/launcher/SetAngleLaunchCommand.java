@@ -31,7 +31,7 @@ public class SetAngleLaunchCommand extends Command {
 	}
 
 	@Override
-	public void end(boolean interrupted){
+	public void end(boolean interrupted) {
 		launcherSubsystem.stopLauncher();
 	}
 }
