@@ -114,10 +114,10 @@ public class Controls {
 	private void bindIntakeControls() {
 		// CommandScheduler.getInstance()
 		// 		.setDefaultCommand(s.intakeSubsystem, new IntakeStopCommand(s.intakeSubsystem));
-		driveIntakeInButton.whileTrue(new AllInCommand(s.intakeSubsystem));
+		driveIntakeInButton.onTrue(new AllInCommand(s.intakeSubsystem));
 		driveIntakeStopButton.onTrue(new AllStopCommand(s.intakeSubsystem));
 		driveIntakeReverseButton.onTrue(new AllReverseCommand(s.intakeSubsystem));
-		codriveIntakeInButton.whileTrue(new AllInCommand(s.intakeSubsystem));
+		codriveIntakeInButton.onTrue(new AllInCommand(s.intakeSubsystem));
 		codriveIntakeStopButton.onTrue(new AllStopCommand(s.intakeSubsystem));
 		codriveIntakeReverseButton.onTrue(new AllReverseCommand(s.intakeSubsystem));
 
