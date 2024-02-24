@@ -85,8 +85,7 @@ public class Controls {
 									s.intakeSubsystem,
 									s.drivebaseSubsystem,
 									this,
-									driveController.leftBumper(),
-									false));
+									driveController.leftBumper()));
 			codriveController
 					.rightBumper()
 					.whileTrue(
@@ -95,8 +94,7 @@ public class Controls {
 									s.intakeSubsystem,
 									s.drivebaseSubsystem,
 									this,
-									codriveController.leftBumper(),
-									false));
+									codriveController.leftBumper()));
 		}
 	}
 

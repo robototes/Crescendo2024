@@ -34,21 +34,18 @@ public class FullTargetCommand extends Command {
 	private Rotation2d yawTarget;
 	private BooleanSupplier launch;
 	private Controls controls;
-	private boolean isAuto;
 
 	public FullTargetCommand(
 			LauncherSubsystem launcherSubsystem,
 			IntakeSubsystem intakeSubsystem,
 			DrivebaseSubsystem drivebaseSubsystem,
 			Controls controls,
-			BooleanSupplier launch,
-			boolean isAuto) {
+			BooleanSupplier launch) {
 		this.launcherSubsystem = launcherSubsystem;
 		this.intakeSubsystem = intakeSubsystem;
 		this.drivebaseSubsystem = drivebaseSubsystem;
 		this.controls = controls;
 		this.launch = launch;
-		this.isAuto = isAuto;
 		yawAlignmentCommand = drivebaseSubsystem.rotateToAngle(() -> yawTarget, false);
 
 		addRequirements(launcherSubsystem, intakeSubsystem);
@@ -84,9 +81,6 @@ public class FullTargetCommand extends Command {
 			intakeSubsystem.feederStop();
 		}
 
-		if (isAuto && launcherSubsystem.isAtSpeed()) {
-			intakeSubsystem.feederIn();
-		}
 
 		if (MathUtil.isNear(
 						yawTarget.getDegrees(),
