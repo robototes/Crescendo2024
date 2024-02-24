@@ -3,21 +3,14 @@
   "startingPose": {
     "position": {
       "x": 0.75,
-      "y": 4.54
+      "y": 6.56
     },
-    "rotation": 120.0
+    "rotation": -120.0
   },
   "command": {
     "type": "sequential",
     "data": {
-      "commands": [
-        {
-          "type": "named",
-          "data": {
-            "name": "LowSpeakerCenterLineN5N4N3"
-          }
-        }
-      ]
+      "commands": []
     }
   },
   "folder": "Complex Autos",

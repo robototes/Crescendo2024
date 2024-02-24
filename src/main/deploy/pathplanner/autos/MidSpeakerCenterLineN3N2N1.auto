@@ -14,12 +14,12 @@
         {
           "type": "named",
           "data": {
-            "name": "AutoLogicTest"
+            "name": "MidSpeakerCenterLineN5N4N3"
           }
         }
       ]
     }
   },
-  "folder": null,
+  "folder": "Complex Autos",
   "choreoAuto": false
 }

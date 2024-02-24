@@ -81,6 +81,25 @@ public class AutoPaths {
 											Commands.sequence(getAutoCommand("QCenterLineN2LAutoLineN1")),
 											() -> true)),
 							() -> true));
+
+	public static Command TopSpeakerCenterLineN1N2N3 =
+			Commands.sequence(
+					getAutoCommand("TopSpeakerQCenterLineN1"),
+					Commands.either(
+							Commands.sequence(
+									getAutoCommand("QCenterLineN1LCenterLineN1"),
+									Commands.waitSeconds(0.5),
+									getAutoCommand("LCenterLineN1QCenterLineN2")),
+							Commands.sequence(
+									getAutoCommand("QCenterLineN1QCenterLineN2"),
+									Commands.either(
+											Commands.sequence(
+													getAutoCommand("QCenterLineN2LCenterLineN2"),
+													Commands.waitSeconds(0.5),
+													getAutoCommand("LCenterLineN2LCenterLineN3")),
+											Commands.sequence(getAutoCommand("QCenterLineN2LCenterLineN3")),
+											() -> true)),
+							() -> true));
 	// Commands.either(
 	// 		Commands.sequence(
 	// 				getAutoCommand("QCenterLineN1LCenterLineN1"),

@@ -41,39 +41,19 @@ public class AutoLogic {
 	public void registerCommands() {
 
 		// param: String commandName, Command command
-		// NamedCommands.registerCommand();
-		// NamedCommands.registerCommand(
-		// 		"SetAngleRetract", new SetAngleCommand(s.launcherSubsystem, () -> 0));
-		// NamedCommands.registerCommand(
-		// 		"IntakeDiagnostic", new IntakeDiagnosticCommand(s.intakeSubsystem));
-		// NamedCommands.registerCommand(
-		// 		"LauncherDiagnostic", new LauncherDiagnosticCommand(s.launcherSubsystem));
-		// NamedCommands.registerCommand("AllIn", new AllInCommand(s.intakeSubsystem));
-		// NamedCommands.registerCommand("AllReverse", new AllReverseCommand(s.intakeSubsystem));
-		// NamedCommands.registerCommand("AllStop", new AllStopCommand(s.intakeSubsystem));
-		// NamedCommands.registerCommand("FeederIn", new FeederInCommand(s.intakeSubsystem));
-		// NamedCommands.registerCommand("FeederReverse", new FeederReverseCommand(s.intakeSubsystem));
-		// NamedCommands.registerCommand("FeederStop", new FeederStopCommand(s.intakeSubsystem));
-		// NamedCommands.registerCommand("IndexIn", new IndexInCommand(s.intakeSubsystem));
-		// NamedCommands.registerCommand("IndexReverse", new IndexReverseCommand(s.intakeSubsystem));
-		// NamedCommands.registerCommand("IndexStop", new IndexStopCommand(s.intakeSubsystem));
-		// NamedCommands.registerCommand("IntakeIn", new IntakeInCommand(s.intakeSubsystem));
-		// NamedCommands.registerCommand("IntakeReverse", new IntakeReverseCommand(s.intakeSubsystem));
-		// NamedCommands.registerCommand("IntakeStop", new IntakeStopCommand(s.intakeSubsystem));
-		// NamedCommands.registerCommand(
-		// 		"SetAngleLaunch", new SetAngleLaunchCommand(s.launcherSubsystem, 0.1, 0.1));
-		// NamedCommands.registerCommand("SetAngle", new SetAngleCommand(s.launcherSubsystem, () ->
-		// 0.1));
-		// NamedCommands.registerCommand(
-		// 		"SetLaunchSpeed", new SetLaunchSpeedCommand(s.launcherSubsystem, 0.1));
-		// NamedCommands.registerCommand("StopLauncher", new StopLauncherCommand(s.launcherSubsystem));
+
 		NamedCommands.registerCommand("DummyLaunch", vibrateControllerCommand);
 
 		NamedCommands.registerCommand("AutoLogicTest", AutoPaths.midSpeakerCenterLineN3N2N1);
+
+		// Complex Autos
+
 		NamedCommands.registerCommand(
 				"MidSpeakerCenterLineN5N4N3", AutoPaths.midSpeakerCenterLineN3N2N1);
 		NamedCommands.registerCommand(
 				"LowSpeakerCenterLineN5N4N3", AutoPaths.lowSpeakerCenterLineN5N4N3);
+		NamedCommands.registerCommand(
+				"TopSpeakerCenterLineN1N2AutoLine1", AutoPaths.TopSpeakerCenterLineN1N2AutoLine1);
 	}
 
 	// public Command getConditionalCommand(){}
