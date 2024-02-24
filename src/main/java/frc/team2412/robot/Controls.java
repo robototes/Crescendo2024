@@ -57,12 +57,12 @@ public class Controls {
 		// launcherTrapPresetButton = codriveController.povUp();
 		launcherLaunchButton = codriveController.a();
 		// intake controls (confirmed with driveteam)
-		driveIntakeInButton = driveController.x();
+		driveIntakeInButton = driveController.y();
 		driveIntakeStopButton = driveController.b();
-		driveIntakeReverseButton = driveController.y();
-		codriveIntakeInButton = codriveController.povLeft();
+		driveIntakeReverseButton = driveController.x();
+		codriveIntakeInButton = codriveController.povUp();
 		codriveIntakeStopButton = codriveController.povRight();
-		codriveIntakeReverseButton = codriveController.povUp();
+		codriveIntakeReverseButton = codriveController.povLeft();
 		if (DRIVEBASE_ENABLED) {
 			bindDrivebaseControls();
 		}

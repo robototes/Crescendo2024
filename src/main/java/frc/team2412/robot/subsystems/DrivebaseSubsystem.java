@@ -104,8 +104,8 @@ public class DrivebaseSubsystem extends SubsystemBase {
 			throw new RuntimeException();
 		}
 
-		// set drive motors to brake
-		swerveDrive.setMotorIdleMode(true);
+		// set drive motors to coast intially, this will be changed to brake on enable
+		swerveDrive.setMotorIdleMode(false);
 		// swerve drive heading will slowly drift over time as you translate. this method enables an
 		// active correction using pid. disabled until testing can be done
 		// TODO: this still needs to be improved
@@ -216,6 +216,10 @@ public class DrivebaseSubsystem extends SubsystemBase {
 							Math.abs(swerveDrive.getOdometryHeading().minus(angle.get()).getRotations())
 									< HEADING_CORRECTION_DEADBAND);
 		return alignCommand;
+	}
+
+	public void setMotorBrake(boolean brake) {
+		swerveDrive.setMotorIdleMode(brake);
 	}
 
 	public ChassisSpeeds getRobotSpeeds() {
