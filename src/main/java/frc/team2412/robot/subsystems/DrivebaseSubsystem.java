@@ -42,7 +42,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 			Robot.getInstance().getRobotType() == RobotType.BONK
 					? 3.0
 					: Robot.getInstance().getRobotType() == RobotType.PRACTICE
-							? 2.0
+							? 5.0
 							: Robot.getInstance().getRobotType() == RobotType.CRANE ? 3.0 : 1.0;
 
 	// Auto align stuff, dw abt it

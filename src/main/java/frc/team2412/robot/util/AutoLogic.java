@@ -10,6 +10,8 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.team2412.robot.Controls;
 import frc.team2412.robot.Robot;
 import frc.team2412.robot.Subsystems;
+import frc.team2412.robot.commands.intake.AllInCommand;
+import frc.team2412.robot.commands.intake.FeederInCommand;
 import frc.team2412.robot.commands.launcher.FullTargetCommand;
 import frc.team2412.robot.commands.launcher.SetAngleLaunchCommand;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
@@ -57,9 +59,13 @@ public class AutoLogic {
 		NamedCommands.registerCommand(
 				"SubwooferLaunch",
 				new SetAngleLaunchCommand(
-						s.launcherSubsystem,
-						LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
-						LauncherSubsystem.SUBWOOFER_AIM_ANGLE));
+								s.launcherSubsystem,
+								LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
+								LauncherSubsystem.SUBWOOFER_AIM_ANGLE)
+						.andThen(new WaitCommand(1))
+						.andThen(new FeederInCommand(s.intakeSubsystem)));
+
+		NamedCommands.registerCommand("Intake", new AllInCommand(s.intakeSubsystem));
 		// Complex Autos
 		NamedCommands.registerCommand("AutoLogicTest", AutoPaths.testAuto);
 		NamedCommands.registerCommand(
