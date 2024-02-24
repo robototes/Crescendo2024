@@ -21,5 +21,6 @@ public class MatchDashboard {
 		tab.add(field).withPosition(0, 1).withSize(4, 3);
 		Robot r = Robot.getInstance();
 		tab.add("Auto Chooser", r.autoChooser).withPosition(4, 0).withSize(2, 1);
+		AutonomousField.configureShuffleboardTab(tab, 6, 0, "Auto Chooser", r::addPeriodic);
 	}
 }
