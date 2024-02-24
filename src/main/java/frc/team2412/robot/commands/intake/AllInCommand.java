@@ -34,9 +34,6 @@ public class AllInCommand extends Command {
 
 	@Override
 	public boolean isFinished() {
-		if (!intakeSubsystem.getSensorOverride()) {
-			return intakeSubsystem.getFeederSensor();
-		}
-		return true;
+		return !intakeSubsystem.getSensorOverride() || intakeSubsystem.getFeederSensor();
 	}
 }
