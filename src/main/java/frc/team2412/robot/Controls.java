@@ -41,7 +41,7 @@ public class Controls {
 	private final Trigger codriveIntakeReverseButton;
 	// Launcher
 	private final Trigger launcherAmpPresetButton;
-	// private final Trigger launcherSubwooferPresetButton;
+	private final Trigger launcherSubwooferPresetButton;
 	// private final Trigger launcherPodiumPresetButton;
 	private final Trigger launcherTrapPresetButton;
 	private final Trigger launcherLaunchButton;
@@ -54,7 +54,7 @@ public class Controls {
 		this.s = s;
 
 		launcherAmpPresetButton = codriveController.x();
-		// launcherSubwooferPresetButton = codriveController.povRight();
+		launcherSubwooferPresetButton = codriveController.a();
 		// launcherPodiumPresetButton = codriveController.povLeft();
 		launcherTrapPresetButton = codriveController.y();
 		launcherLaunchButton = codriveController.rightBumper();
@@ -133,7 +133,13 @@ public class Controls {
 								s.launcherSubsystem,
 								() ->
 										MathUtil.applyDeadband(codriveController.getLeftY(), 0.1)
-												* LauncherSubsystem.ANGLE_MAX_SPPEED));
+												* LauncherSubsystem.ANGLE_MAX_SPEED));
+
+		launcherSubwooferPresetButton.onTrue(
+				new SetAngleLaunchCommand(
+						s.launcherSubsystem,
+						LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
+						LauncherSubsystem.SUBWOOFER_AIM_ANGLE));
 		// launcherPodiumPresetButton.onTrue(
 		//		new SetAngleLaunchCommand(
 		//				s.launcherSubsystem,
