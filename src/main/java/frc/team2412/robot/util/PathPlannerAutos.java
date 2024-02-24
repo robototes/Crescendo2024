@@ -166,12 +166,14 @@ public class PathPlannerAutos {
 	}
 
 	private static List<PathPlannerTrajectory> loadAutoTrajectories(String autoName) {
+		File autoFile =
+				new File(Filesystem.getDeployDirectory(), "pathplanner/autos/" + autoName + ".auto");
+		if (!autoFile.exists()) {
+			return List.of();
+		}
 		String text;
 		try {
-			text =
-					Files.readString(
-							new File(Filesystem.getDeployDirectory(), "pathplanner/autos/" + autoName + ".auto")
-									.toPath());
+			text = Files.readString(autoFile.toPath());
 		} catch (IOException e) {
 			e.printStackTrace();
 			return List.of();
