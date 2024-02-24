@@ -72,17 +72,32 @@ public class AutoPaths {
 									Commands.waitSeconds(0.5),
 									getAutoCommand("LCenterLineN1QCenterLineN2")),
 							Commands.sequence(
-											getAutoCommand("QCenterLineN1QCenterLineN2"),
-											Commands.either(
-															Commands.sequence(
-																	getAutoCommand("QCenterLineN2LCenterLineN2"),
-																	getAutoCommand("LCenterLineN2LAutoLineN1")),
-													getAutoCommand("QCenterLineN2AutoLineN1"), () -> true)),
+									getAutoCommand("QCenterLineN1QCenterLineN2"),
 									Commands.either(
-											getAutoCommand("QCenterLineN2LCenterLineN2"),
-											getAutoCommand("QCenterLineLAutoLineN1"),
+											Commands.sequence(
+													getAutoCommand("QCenterLineN2LCenterLineN2"),
+													Commands.waitSeconds(0.5),
+													getAutoCommand("LCenterLineN2LAutoLineN1")),
+											Commands.sequence(getAutoCommand("QCenterLineN2LAutoLineN1")),
 											() -> true)),
-							() -> true);
+							() -> true));
+	// Commands.either(
+	// 		Commands.sequence(
+	// 				getAutoCommand("QCenterLineN1LCenterLineN1"),
+	// 				Commands.waitSeconds(0.5),
+	// 				getAutoCommand("LCenterLineN1QCenterLineN2")),
+	// 		Commands.sequence(
+	// 						getAutoCommand("QCenterLineN1QCenterLineN2"),
+	// 						Commands.either(
+	// 										Commands.sequence(
+	// 												getAutoCommand("QCenterLineN2LCenterLineN2"),
+	// 												getAutoCommand("LCenterLineN2LAutoLineN1")),
+	// 								getAutoCommand("QCenterLineN2AutoLineN1"), () -> true)),
+	// 				Commands.either(
+	// 						getAutoCommand("QCenterLineN2LCenterLineN2"),
+	// 						getAutoCommand("QCenterLineLAutoLineN1"),
+	// 						() -> true)),
+	// 		() -> true);
 
 	// public static Command TopSpeakerCenterLineN1N2AutoLine1 =
 	// Commands.sequence(vibrateControllerCommand)
