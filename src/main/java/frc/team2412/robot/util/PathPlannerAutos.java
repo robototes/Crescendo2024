@@ -4,6 +4,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.PathPlannerTrajectory;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import java.io.File;
 import java.io.IOException;
@@ -169,13 +170,15 @@ public class PathPlannerAutos {
 		File autoFile =
 				new File(Filesystem.getDeployDirectory(), "pathplanner/autos/" + autoName + ".auto");
 		if (!autoFile.exists()) {
+			DriverStation.reportWarning(
+					"Attempted to load non-existent auto \"" + autoName + "\"", false);
 			return List.of();
 		}
 		String text;
 		try {
 			text = Files.readString(autoFile.toPath());
 		} catch (IOException e) {
-			e.printStackTrace();
+			DriverStation.reportWarning("Could not load auto \"" + autoName + "\"", e.getStackTrace());
 			return List.of();
 		}
 		List<PathPlannerPath> paths = getPaths(text);
