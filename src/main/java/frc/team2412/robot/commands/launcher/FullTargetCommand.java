@@ -41,7 +41,8 @@ public class FullTargetCommand extends Command {
 			IntakeSubsystem intakeSubsystem,
 			DrivebaseSubsystem drivebaseSubsystem,
 			Controls controls,
-			BooleanSupplier launch, boolean isAuto) {
+			BooleanSupplier launch,
+			boolean isAuto) {
 		this.launcherSubsystem = launcherSubsystem;
 		this.intakeSubsystem = intakeSubsystem;
 		this.drivebaseSubsystem = drivebaseSubsystem;
@@ -83,7 +84,7 @@ public class FullTargetCommand extends Command {
 			intakeSubsystem.feederStop();
 		}
 
-		if (isAuto && launcherSubsystem.isAtSpeed()){
+		if (isAuto && launcherSubsystem.isAtSpeed()) {
 			intakeSubsystem.feederIn();
 		}
 
