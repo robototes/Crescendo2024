@@ -15,7 +15,7 @@ public class AllInCommand extends Command {
 	public void initialize() {
 		intakeSubsystem.intakeIn();
 		intakeSubsystem.indexIn();
-		// intakeSubsystem.feederIn();
+		intakeSubsystem.feederIn();
 	}
 
 	@Override
