@@ -21,6 +21,9 @@ import java.util.Map;
 
 public class LauncherSubsystem extends SubsystemBase {
 	// CONSTANTS
+
+	// HARDWARE
+	private static final int PIVOT_GEARING_RATIO = 180;
 	// ANGLE VALUES
 	public static final int AMP_AIM_ANGLE = 90;
 	public static final int SUBWOOFER_AIM_ANGLE = 54;
@@ -34,6 +37,7 @@ public class LauncherSubsystem extends SubsystemBase {
 	// RPM
 	public static final int SPEAKER_SHOOT_SPEED_RPM = 3392; // 50%
 	public static final int TRAP_SHOOT_SPEED_RPM = 2000;
+	public static final double ANGLE_MAX_SPEED = 0.3;
 	// 3392 RPM = 50% Speed
 	// 1356 RPM = 20% Speed
 	// 1017 RPM = 15% Speed
@@ -173,7 +177,7 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherAngleOnePIDController.setI(0);
 		launcherAngleOnePIDController.setD(0);
 		launcherAngleOnePIDController.setFF(0);
-		launcherAngleOnePIDController.setOutputRange(-0.3, 0.3);
+		launcherAngleOnePIDController.setOutputRange(-ANGLE_MAX_SPEED, ANGLE_MAX_SPEED);
 
 		// launcherAngleTwoPIDController.setP(0.1);
 		// launcherAngleTwoPIDController.setI(0);
@@ -191,9 +195,9 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherBottomPIDController.setFF(0);
 
 		launcherAngleOneMotor.getEncoder().setPosition(launcherAngleEncoder.getPosition());
-		launcherAngleOneMotor.getEncoder().setPositionConversionFactor(180);
+		launcherAngleOneMotor.getEncoder().setPositionConversionFactor(PIVOT_GEARING_RATIO);
 		launcherAngleTwoMotor.getEncoder().setPosition(launcherAngleEncoder.getPosition());
-		launcherAngleTwoMotor.getEncoder().setPositionConversionFactor(180);
+		launcherAngleTwoMotor.getEncoder().setPositionConversionFactor(PIVOT_GEARING_RATIO);
 	}
 	// stop launcher motors method
 	public void stopLauncher() {
