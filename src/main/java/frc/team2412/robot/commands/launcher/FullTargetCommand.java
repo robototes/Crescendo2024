@@ -81,7 +81,6 @@ public class FullTargetCommand extends Command {
 			intakeSubsystem.feederStop();
 		}
 
-
 		if (MathUtil.isNear(
 						yawTarget.getDegrees(),
 						drivebaseSubsystem.getPose().getRotation().getDegrees(),
