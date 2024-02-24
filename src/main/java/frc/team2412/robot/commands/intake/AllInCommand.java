@@ -20,7 +20,7 @@ public class AllInCommand extends Command {
 
 	@Override
 	public void execute() {
-		if (intakeSubsystem.getIndexSensor() && !intakeSubsystem.getSensorOverride()) {
+		if (intakeSubsystem.getIndexSensor()) {
 			intakeSubsystem.intakeReject();
 		}
 	}
@@ -34,6 +34,6 @@ public class AllInCommand extends Command {
 
 	@Override
 	public boolean isFinished() {
-		return intakeSubsystem.getSensorOverride() || intakeSubsystem.getFeederSensor();
+		return intakeSubsystem.getFeederSensor();
 	}
 }

@@ -225,11 +225,11 @@ public class IntakeSubsystem extends SubsystemBase {
 	// sensor methods
 
 	public boolean getIndexSensor() {
-		return indexSensor.get();
+		return indexSensor.get() && !getSensorOverride();
 	}
 
 	public boolean getFeederSensor() {
-		return feederSensor.get();
+		return feederSensor.get() && !getSensorOverride();
 	}
 
 	public boolean getSensorOverride() {
