@@ -21,6 +21,9 @@ import java.util.Map;
 
 public class LauncherSubsystem extends SubsystemBase {
 	// CONSTANTS
+
+	// HARDWARE
+	private static final int PIVOT_GEARING_RATIO = 180;
 	// ANGLE VALUES
 	public static final int AMP_AIM_ANGLE = 90;
 	public static final int SUBWOOFER_AIM_ANGLE = 54;
@@ -192,9 +195,9 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherBottomPIDController.setFF(0);
 
 		launcherAngleOneMotor.getEncoder().setPosition(launcherAngleEncoder.getPosition());
-		launcherAngleOneMotor.getEncoder().setPositionConversionFactor(180);
+		launcherAngleOneMotor.getEncoder().setPositionConversionFactor(PIVOT_GEARING_RATIO);
 		launcherAngleTwoMotor.getEncoder().setPosition(launcherAngleEncoder.getPosition());
-		launcherAngleTwoMotor.getEncoder().setPositionConversionFactor(180);
+		launcherAngleTwoMotor.getEncoder().setPositionConversionFactor(PIVOT_GEARING_RATIO);
 	}
 	// stop launcher motors method
 	public void stopLauncher() {
