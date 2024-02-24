@@ -132,7 +132,7 @@ public class Controls {
 						s.launcherSubsystem,
 						new SetAngleCommand(
 								s.launcherSubsystem,
-								() -> MathUtil.applyDeadband(codriveController.getLeftY(), 0.1) * 0.1));
+								() -> MathUtil.applyDeadband(codriveController.getLeftY(), 0.1) * LauncherSubsystem.ANGLE_MAX_SPPEED));
 		// launcherPodiumPresetButton.onTrue(
 		//		new SetAngleLaunchCommand(
 		//				s.launcherSubsystem,
