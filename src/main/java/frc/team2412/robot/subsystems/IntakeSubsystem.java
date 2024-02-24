@@ -143,8 +143,8 @@ public class IntakeSubsystem extends SubsystemBase {
 		resetMotors();
 
 		ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Intake");
-		shuffleboardTab.addBoolean("Index Sensor - ", !(indexSensor::get)).withSize(1, 1);
-		shuffleboardTab.addBoolean("Feeder Sensor - ", !(feederSensor::get)).withSize(1, 1);
+		shuffleboardTab.addBoolean("Index Sensor - ", indexSensorHasNote).withSize(1, 1);
+		shuffleboardTab.addBoolean("Feeder Sensor - ", feederSensorHasNote).withSize(1, 1);
 	}
 
 	private void configureMotor(CANSparkBase motor) {
