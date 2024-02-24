@@ -172,6 +172,7 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherAngleOnePIDController.setI(0);
 		launcherAngleOnePIDController.setD(0);
 		launcherAngleOnePIDController.setFF(0);
+		launcherAngleOnePIDController.setOutputRange(-0.3, 0.3);
 
 		// launcherAngleTwoPIDController.setP(0.1);
 		// launcherAngleTwoPIDController.setI(0);
@@ -187,6 +188,11 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherBottomPIDController.setI(0);
 		launcherBottomPIDController.setD(0);
 		launcherBottomPIDController.setFF(0);
+
+		launcherAngleOneMotor.getEncoder().setPosition(launcherAngleEncoder.getPosition());
+		launcherAngleOneMotor.getEncoder().setPositionConversionFactor(80);
+		launcherAngleTwoMotor.getEncoder().setPosition(launcherAngleEncoder.getPosition());
+		launcherAngleTwoMotor.getEncoder().setPositionConversionFactor(80);
 	}
 	// stop launcher motors method
 	public void stopLauncher() {
