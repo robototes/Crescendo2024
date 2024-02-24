@@ -71,6 +71,10 @@ public class LimelightSubsystem extends SubsystemBase {
 				.withPosition(4, 0)
 				.withSize(1, 1);
 		limelightTab
+				.addDouble("Limelight Based Drive Power - TEST ", this::drivePowerLin)
+				.withPosition(5, 0)
+				.withSize(1, 1);
+		limelightTab
 				.addString("Current Pose ", this::getCurrentPoseString)
 				.withPosition(0, 1)
 				.withSize(4, 1);
@@ -99,17 +103,17 @@ public class LimelightSubsystem extends SubsystemBase {
 	}
 
 	public double getBoxWidth() {
-		return networkTable.getEntry("tshort").getDouble(0);
+		return networkTable.getEntry("tlong").getDouble(0);
 	}
 	// TODO re-measure distances to make this right
 	public double getDistanceFromTarget() {
 
 		// focal length = (P x D) / W
-		double focal_length = 346.1818;
+		double focal_length = 559.0394;
 
 		// distance = (W x F) / P
 		// returns inches for testing purposes, will divide by 39.3700787 to return meters
-		return (8.25 * focal_length) / getBoxWidth();
+		return (14 * focal_length) / getBoxWidth();
 	}
 
 	// returns turn power from exponential curve, input is from -27deg to +27deg
@@ -129,6 +133,15 @@ public class LimelightSubsystem extends SubsystemBase {
 	public double turnPowerLin() {
 		if (Math.abs(getHorizontalOffset()) >= 1.0) {
 			return MathUtil.clamp(0.01 * getHorizontalOffset(), -0.25, 0.25);
+		} else {
+			return 0.0;
+		}
+	}
+
+	// drive power returns linear
+	public double drivePowerLin() {
+		if (Math.abs(getDistanceFromTarget()) >= 20) {
+			return MathUtil.clamp(0.01 * getDistanceFromTarget() - 0.2, 0, 0.25);
 		} else {
 			return 0.0;
 		}
@@ -173,12 +186,13 @@ public class LimelightSubsystem extends SubsystemBase {
 
 	public Command getWithinDistance(DrivebaseSubsystem drivebaseSubsystem) {
 		final DoubleSupplier returnTurn = () -> turnPowerLin();
+		final DoubleSupplier returnDrive = () -> drivePowerLin();
 		final DoubleSupplier returnZero = () -> 0.0;
 		Command moveCommand;
 		if (hasTargets()) {
 			System.out.println("has targets");
 			moveCommand =
-					new DriveCommand(drivebaseSubsystem, returnZero, returnZero, returnTurn, returnZero);
+					new DriveCommand(drivebaseSubsystem, returnDrive, returnZero, returnTurn, returnZero);
 
 		} else {
 			System.out.println("hasn't targets");
