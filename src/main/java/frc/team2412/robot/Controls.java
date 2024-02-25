@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.team2412.robot.commands.drivebase.DriveToNoteCommand;
 import frc.team2412.robot.commands.intake.AllInCommand;
 import frc.team2412.robot.commands.intake.AllReverseCommand;
 import frc.team2412.robot.commands.intake.AllStopCommand;
@@ -105,7 +106,8 @@ public class Controls {
 	}
 
 	public void bindLimelightControls() {
-		getWithinDistanceTrigger.onTrue(s.limelightSubsystem.getWithinDistance(s.drivebaseSubsystem));
+		getWithinDistanceTrigger.onTrue(
+				new DriveToNoteCommand(s.drivebaseSubsystem, s.limelightSubsystem));
 	}
 	// intake controls
 	private void bindIntakeControls() {

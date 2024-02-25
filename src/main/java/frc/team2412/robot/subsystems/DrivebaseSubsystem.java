@@ -192,13 +192,6 @@ public class DrivebaseSubsystem extends SubsystemBase {
 				});
 	}
 
-	public void simpleDrive(double forward, double strafe, Rotation2d rotation) {
-
-		ChassisSpeeds chassisSpeeds = new ChassisSpeeds(forward, -strafe, rotation.getRadians());
-
-		drive(chassisSpeeds);
-	}
-
 	// this might need to be put in its own file due to complexity
 	public Command rotateToAngle(Supplier<Rotation2d> angle, boolean endWhenAligned) {
 		Command alignCommand =

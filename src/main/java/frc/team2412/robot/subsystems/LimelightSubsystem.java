@@ -9,17 +9,9 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.team2412.robot.commands.drivebase.DriveCommand;
-import java.util.function.DoubleSupplier;
 
 public class LimelightSubsystem extends SubsystemBase {
-
-	// CONSTANTS
-
-	private static final PIDController TRANSLATION_PID = new PIDController(10.0, 0, 0);
-	private static final PIDController ROTATION_PID = new PIDController(8.0, 0, 0);
 
 	// meters?
 	public static final double CAMERA_MOUNT_HEIGHT = 0.1143;
@@ -182,27 +174,6 @@ public class LimelightSubsystem extends SubsystemBase {
 
 	public boolean isWithinDistance() {
 		return (getDistanceFromTarget() <= GOAL_DISTANCE_FROM_TARGET);
-	}
-
-	public Command getWithinDistance(DrivebaseSubsystem drivebaseSubsystem) {
-		final DoubleSupplier returnTurn = () -> turnPowerLin();
-		final DoubleSupplier returnDrive = () -> drivePowerLin();
-		final DoubleSupplier returnZero = () -> 0.0;
-		Command moveCommand;
-		if (hasTargets()) {
-			System.out.println("has targets");
-			moveCommand =
-					new DriveCommand(drivebaseSubsystem, returnDrive, returnZero, returnTurn, returnZero);
-
-		} else {
-			System.out.println("hasn't targets");
-			moveCommand =
-					new DriveCommand(drivebaseSubsystem, returnZero, returnZero, returnZero, returnTurn);
-		}
-
-		// create path
-		System.out.println("return movecommand");
-		return moveCommand;
 	}
 
 	@Override
