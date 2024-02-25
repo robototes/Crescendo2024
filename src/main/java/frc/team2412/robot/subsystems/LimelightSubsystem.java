@@ -1,9 +1,8 @@
 package frc.team2412.robot.subsystems;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -49,16 +48,8 @@ public class LimelightSubsystem extends SubsystemBase {
 				.withPosition(2, 0)
 				.withSize(1, 1);
 		limelightTab
-				.addDouble("Target Distance 2 - TEST ", this::getDistanceFromTarget)
+				.addDouble("Distance From Note", this::getDistanceFromTarget)
 				.withPosition(3, 0)
-				.withSize(1, 1);
-		limelightTab
-				.addDouble("Limelight Based Turn Power - TEST ", this::turnPowerLin)
-				.withPosition(4, 0)
-				.withSize(1, 1);
-		limelightTab
-				.addDouble("Limelight Based Drive Power - TEST ", this::drivePowerLin)
-				.withPosition(5, 0)
 				.withSize(1, 1);
 		limelightTab
 				.addString("Current Pose ", this::getCurrentPoseString)
@@ -102,37 +93,6 @@ public class LimelightSubsystem extends SubsystemBase {
 		return (14 * focal_length) / getBoxWidth();
 	}
 
-	// returns turn power from exponential curve, input is from -27deg to +27deg
-	public double turnPowerExp() {
-		if (Math.abs(getHorizontalOffset()) >= 1.0) {
-			return MathUtil.clamp(
-					(Math.signum(getHorizontalOffset())
-							* (Math.pow(Math.abs(getHorizontalOffset()), 0.6) * 0.14)),
-					-0.25,
-					0.25);
-		} else {
-			return 0.0;
-		}
-	}
-
-	// returns turn power from linear curve, input is from -27deg to +27deg
-	public double turnPowerLin() {
-		if (Math.abs(getHorizontalOffset()) >= 1.0) {
-			return MathUtil.clamp(0.01 * getHorizontalOffset(), -0.25, 0.25);
-		} else {
-			return 0.0;
-		}
-	}
-
-	// drive power returns linear
-	public double drivePowerLin() {
-		if (Math.abs(getDistanceFromTarget()) >= 20) {
-			return MathUtil.clamp(0.01 * getDistanceFromTarget() - 0.2, 0, 0.25);
-		} else {
-			return 0.0;
-		}
-	}
-
 	// tan(degree) * distance = sideways distance
 
 	// target height / tan(vertical angle)
@@ -146,11 +106,9 @@ public class LimelightSubsystem extends SubsystemBase {
 						currentPose.getRotation().getRadians() + Units.degreesToRadians(getHorizontalOffset()));
 		double targetDistance = getDistanceFromTarget() / 39.3700787;
 
-		double targetX = Math.sin(targetHeading.getRadians()) * targetDistance;
-		double targetY = Math.cos(targetHeading.getRadians()) * targetDistance;
-
+		Translation2d translationOffset = new Translation2d(targetDistance, targetHeading);
 		Pose2d targetPose =
-				new Pose2d(currentPose.getX() + targetY, currentPose.getY() + targetX, targetHeading);
+				new Pose2d(currentPose.getTranslation().plus(translationOffset), targetHeading);
 
 		currentPoseString = currentPose.toString();
 		targetPoseString = targetPose.toString();
