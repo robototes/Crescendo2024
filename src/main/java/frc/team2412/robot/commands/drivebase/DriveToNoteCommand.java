@@ -12,6 +12,8 @@ public class DriveToNoteCommand extends Command {
 	private final LimelightSubsystem limelightSubsystem;
 
 	private final double INCHES_TO_METERS = 39.3700787;
+	// limelight placement might be different so this multiplier is convenient
+	private final double INVERT_DRIVE_DIRECTION = -1.0;
 
 	public DriveToNoteCommand(
 		DrivebaseSubsystem drivebaseSubsystem, LimelightSubsystem limelightSubsystem) {
@@ -23,8 +25,8 @@ public class DriveToNoteCommand extends Command {
 	@Override
 	public void execute() {
 		Translation2d move =
-				new Translation2d(-limelightSubsystem.getDistanceFromTarget() / INCHES_TO_METERS, 0.0);
-		Rotation2d turn = new Rotation2d().fromDegrees(-2 * limelightSubsystem.getHorizontalOffset());
+				new Translation2d(INVERT_DRIVE_DIRECTION * limelightSubsystem.getDistanceFromTarget() / INCHES_TO_METERS, 0.0);
+		Rotation2d turn = new Rotation2d().fromDegrees(2 * INVERT_DRIVE_DIRECTION * limelightSubsystem.getHorizontalOffset());
 		drivebaseSubsystem.drive(move, turn, false);
 	}
 

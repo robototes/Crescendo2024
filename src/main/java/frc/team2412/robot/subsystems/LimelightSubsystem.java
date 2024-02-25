@@ -13,14 +13,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LimelightSubsystem extends SubsystemBase {
 
-	// meters?
-	public static final double CAMERA_MOUNT_HEIGHT = 0.1143;
-	public static final double CAMERA_ANGLE_OFFSET = 0;
-	public static final double TARGET_HEIGHT = 0.33;
-
-	public static final double GOAL_DISTANCE_FROM_TARGET = 0.7;
-	public static final double GOAL_DISTANCE_FROM_CONE = 0.3;
-	public static final double GOAL_DISTANCE_FROM_CUBE = 0.3;
+	// POTENTIAL CONSTANTS
+	public static final double GOAL_DISTANCE_FROM_NOTE = 20.0;
 
 	// MEMBERS
 
@@ -173,7 +167,7 @@ public class LimelightSubsystem extends SubsystemBase {
 	}
 
 	public boolean isWithinDistance() {
-		return (getDistanceFromTarget() <= GOAL_DISTANCE_FROM_TARGET);
+		return (getDistanceFromTarget() <= GOAL_DISTANCE_FROM_NOTE);
 	}
 
 	@Override
