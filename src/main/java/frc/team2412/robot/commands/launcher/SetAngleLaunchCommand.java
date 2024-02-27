@@ -29,9 +29,4 @@ public class SetAngleLaunchCommand extends Command {
 		return MathUtil.isNear(
 				launcherAngle, launcherSubsystem.getAngle(), LauncherSubsystem.ANGLE_TOLERANCE);
 	}
-
-	@Override
-	public void end(boolean interrupted) {
-		launcherSubsystem.stopLauncher();
-	}
 }

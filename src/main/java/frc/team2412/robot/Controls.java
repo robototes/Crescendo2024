@@ -22,7 +22,7 @@ import frc.team2412.robot.commands.intake.AllStopCommand;
 import frc.team2412.robot.commands.intake.FeederInCommand;
 import frc.team2412.robot.commands.intake.IntakeRejectCommand;
 import frc.team2412.robot.commands.intake.StopRumbleCommand;
-import frc.team2412.robot.commands.launcher.FullTargetCommand;
+import frc.team2412.robot.commands.launcher.SetAngleAmpLaunchCommand;
 import frc.team2412.robot.commands.launcher.SetAngleCommand;
 import frc.team2412.robot.commands.launcher.SetAngleLaunchCommand;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
@@ -48,7 +48,7 @@ public class Controls {
 	private final Trigger codriveIntakeRejectButton;
 	// Launcher
 	private final Trigger launcherAmpPresetButton;
-	// private final Trigger launcherSubwooferPresetButton;
+	private final Trigger launcherSubwooferPresetButton;
 	// private final Trigger launcherPodiumPresetButton;
 	private final Trigger launcherTrapPresetButton;
 	private final Trigger launcherLaunchButton;
@@ -61,13 +61,12 @@ public class Controls {
 		this.s = s;
 
 		launcherAmpPresetButton = codriveController.x();
-		// launcherSubwooferPresetButton = codriveController.povRight();
+		launcherSubwooferPresetButton = codriveController.a();
 		// launcherPodiumPresetButton = codriveController.povLeft();
 		launcherTrapPresetButton = codriveController.y();
-		launcherLaunchButton = codriveController.leftBumper();
-
+		launcherLaunchButton = codriveController.rightBumper();
 		// intake controls (confirmed with driveteam)
-		driveIntakeInButton = driveController.y();
+		driveIntakeInButton = driveController.a();
 		driveIntakeStopButton = driveController.b();
 		driveIntakeReverseButton = driveController.x();
 		driveIntakeRejectButton = driveController.povDown();
@@ -87,24 +86,24 @@ public class Controls {
 		}
 		if (DRIVEBASE_ENABLED && LAUNCHER_ENABLED && INTAKE_ENABLED) {
 			// temporary controls, not sure what drive team wants
-			driveController
-					.rightBumper()
-					.whileTrue(
-							new FullTargetCommand(
-									s.launcherSubsystem,
-									s.intakeSubsystem,
-									s.drivebaseSubsystem,
-									this,
-									driveController.leftBumper()));
-			codriveController
-					.rightBumper()
-					.whileTrue(
-							new FullTargetCommand(
-									s.launcherSubsystem,
-									s.intakeSubsystem,
-									s.drivebaseSubsystem,
-									this,
-									codriveController.leftBumper()));
+			// driveController
+			// 		.rightBumper()
+			// 		.whileTrue(
+			// 				new FullTargetCommand(
+			// 						s.launcherSubsystem,
+			// 						s.intakeSubsystem,
+			// 						s.drivebaseSubsystem,
+			// 						this,
+			// 						driveController.leftBumper()));
+			// codriveController
+			// 		.rightBumper()
+			// 		.whileTrue(
+			// 				new FullTargetCommand(
+			// 						s.launcherSubsystem,
+			// 						s.intakeSubsystem,
+			// 						s.drivebaseSubsystem,
+			// 						this,
+			// 						codriveController.leftBumper()));
 		}
 	}
 
@@ -148,23 +147,38 @@ public class Controls {
 						s.launcherSubsystem,
 						new SetAngleCommand(
 								s.launcherSubsystem,
-								() -> MathUtil.applyDeadband(codriveController.getLeftY(), 0.1) * 0.1));
+								() ->
+										MathUtil.applyDeadband(codriveController.getLeftY(), 0.1)
+												* LauncherSubsystem.ANGLE_MAX_SPEED));
+
+		launcherSubwooferPresetButton.onTrue(
+				new SetAngleLaunchCommand(
+						s.launcherSubsystem,
+						LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
+						LauncherSubsystem.SUBWOOFER_AIM_ANGLE));
 		// launcherPodiumPresetButton.onTrue(
 		//		new SetAngleLaunchCommand(
 		//				s.launcherSubsystem,
 		//				LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
 		//				LauncherSubsystem.PODIUM_AIM_ANGLE));
 		launcherAmpPresetButton.onTrue(
-				new SetAngleLaunchCommand(
+				new SetAngleAmpLaunchCommand(
 						s.launcherSubsystem,
 						LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
 						LauncherSubsystem.AMP_AIM_ANGLE));
 		launcherTrapPresetButton.onTrue(
 				TrapAlign.trapPreset(s.drivebaseSubsystem, s.launcherSubsystem));
+
+		codriveController.b().whileTrue(s.launcherSubsystem.run(s.launcherSubsystem::stopLauncher));
+
+		codriveController
+				.leftBumper()
+				.whileTrue(
+						s.launcherSubsystem.runEnd(
+								s.launcherSubsystem::launch, s.launcherSubsystem::stopLauncher));
 	}
 
 	public void vibrateDriveController(double vibration) {
-		// no reason to rumble in auto when no one is holding the controller
 		if (!DriverStation.isAutonomous()) {
 			driveController.getHID().setRumble(RumbleType.kBothRumble, vibration);
 		}
