@@ -11,7 +11,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.team2412.robot.commands.intake.AllInCommand;
@@ -19,6 +21,7 @@ import frc.team2412.robot.commands.intake.AllReverseCommand;
 import frc.team2412.robot.commands.intake.AllStopCommand;
 import frc.team2412.robot.commands.intake.FeederInCommand;
 import frc.team2412.robot.commands.intake.IntakeRejectCommand;
+import frc.team2412.robot.commands.intake.StopRumbleCommand;
 import frc.team2412.robot.commands.launcher.FullTargetCommand;
 import frc.team2412.robot.commands.launcher.SetAngleCommand;
 import frc.team2412.robot.commands.launcher.SetAngleLaunchCommand;
@@ -122,11 +125,15 @@ public class Controls {
 	private void bindIntakeControls() {
 		// CommandScheduler.getInstance()
 		// 		.setDefaultCommand(s.intakeSubsystem, new IntakeStopCommand(s.intakeSubsystem));
-		driveIntakeInButton.onTrue(new AllInCommand(s.intakeSubsystem));
+		driveIntakeInButton.onTrue(
+				Commands.sequence(
+						new AllInCommand(s.intakeSubsystem, this),
+						new WaitCommand(0.5),
+						new StopRumbleCommand(this)));
 		driveIntakeStopButton.onTrue(new AllStopCommand(s.intakeSubsystem));
 		driveIntakeReverseButton.onTrue(new AllReverseCommand(s.intakeSubsystem));
 		driveIntakeRejectButton.onTrue(new IntakeRejectCommand(s.intakeSubsystem));
-		codriveIntakeInButton.onTrue(new AllInCommand(s.intakeSubsystem));
+		codriveIntakeInButton.onTrue(new AllInCommand(s.intakeSubsystem, this));
 		codriveIntakeStopButton.onTrue(new AllStopCommand(s.intakeSubsystem));
 		codriveIntakeReverseButton.onTrue(new AllReverseCommand(s.intakeSubsystem));
 		codriveIntakeRejectButton.onTrue(new IntakeRejectCommand(s.intakeSubsystem));

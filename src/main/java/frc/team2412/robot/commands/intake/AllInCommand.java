@@ -1,13 +1,16 @@
 package frc.team2412.robot.commands.intake;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.team2412.robot.Controls;
 import frc.team2412.robot.subsystems.IntakeSubsystem;
 
 public class AllInCommand extends Command {
 	private final IntakeSubsystem intakeSubsystem;
+	private final Controls controls;
 
-	public AllInCommand(IntakeSubsystem intakeSubsystem) {
+	public AllInCommand(IntakeSubsystem intakeSubsystem, Controls controls) {
 		this.intakeSubsystem = intakeSubsystem;
+		this.controls = controls;
 		addRequirements(intakeSubsystem);
 	}
 
@@ -30,6 +33,7 @@ public class AllInCommand extends Command {
 		intakeSubsystem.intakeReject();
 		intakeSubsystem.indexStop();
 		intakeSubsystem.feederStop();
+		controls.vibrateDriveController(1.0);
 	}
 
 	@Override
