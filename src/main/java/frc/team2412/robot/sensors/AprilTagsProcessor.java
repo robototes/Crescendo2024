@@ -52,6 +52,22 @@ public class AprilTagsProcessor {
 	private static final Vector<N3> STANDARD_DEVS =
 			VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(5));
 
+	private static final double MAX_POSE_AMBIGUITY = 0.1;
+
+	private static PhotonPipelineResult filteredPipelineResult(PhotonPipelineResult result) {
+		var copy =
+				new PhotonPipelineResult(
+						result.getLatencyMillis(), result.targets, result.getMultiTagResult());
+		copy.setTimestampSeconds(result.getTimestampSeconds());
+		for (int i = copy.targets.size() - 1; i >= 0; --i) {
+			var target = copy.targets.get(i);
+			if (target.getPoseAmbiguity() > MAX_POSE_AMBIGUITY) {
+				copy.targets.remove(i);
+			}
+		}
+		return copy;
+	}
+
 	private final PhotonCamera photonCamera;
 	private final PhotonPoseEstimator photonPoseEstimator;
 	private final DrivebaseWrapper aprilTagsHelper;
@@ -59,6 +75,7 @@ public class AprilTagsProcessor {
 
 	// These are always set with every pipeline result
 	private PhotonPipelineResult latestResult = null;
+	private PhotonPipelineResult latestFilteredResult = null;
 	private Optional<EstimatedRobotPose> latestPose = Optional.empty();
 
 	// These are only set when there's a valid pose
@@ -109,7 +126,8 @@ public class AprilTagsProcessor {
 
 	public void update() {
 		latestResult = photonCamera.getLatestResult();
-		latestPose = photonPoseEstimator.update(latestResult);
+		latestFilteredResult = filteredPipelineResult(latestResult);
+		latestPose = photonPoseEstimator.update(latestFilteredResult);
 		if (latestPose.isPresent()) {
 			lastTimestampSeconds = latestPose.get().timestampSeconds;
 			lastFieldPose = latestPose.get().estimatedPose.toPose2d();
