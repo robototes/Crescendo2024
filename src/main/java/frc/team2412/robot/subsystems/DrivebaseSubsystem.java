@@ -147,7 +147,8 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
 		// LOW verbosity only sends field position, HIGH sends full drive data, MACHINE sends data
 		// viewable by AdvantageScope
-		SwerveDriveTelemetry.verbosity = TelemetryVerbosity.MACHINE;
+		SwerveDriveTelemetry.verbosity =
+				(Robot.isDebugMode ? TelemetryVerbosity.LOW : TelemetryVerbosity.MACHINE);
 	}
 
 	/**
