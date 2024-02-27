@@ -23,10 +23,10 @@ public class LauncherSubsystem extends SubsystemBase {
 	// CONSTANTS
 
 	// HARDWARE
-	private static final int PIVOT_GEARING_RATIO = 180;
+	private static final double PIVOT_GEARING_RATIO = 1.0 / 180.0;
 	// ANGLE VALUES
-	public static final int AMP_AIM_ANGLE = 90;
-	public static final int SUBWOOFER_AIM_ANGLE = 54;
+	public static final int AMP_AIM_ANGLE = 335;
+	public static final int SUBWOOFER_AIM_ANGLE = 298;
 	public static final int PODIUM_AIM_ANGLE = 39;
 	public static final int TRAP_AIM_ANGLE = 80;
 	// MOTOR VALUES
@@ -37,7 +37,7 @@ public class LauncherSubsystem extends SubsystemBase {
 	// RPM
 	public static final int SPEAKER_SHOOT_SPEED_RPM = 3392; // 50%
 	public static final int TRAP_SHOOT_SPEED_RPM = 2000;
-	public static final double ANGLE_MAX_SPEED = 0.3;
+	public static final double ANGLE_MAX_SPEED = 1.0;
 	// 3392 RPM = 50% Speed
 	// 1356 RPM = 20% Speed
 	// 1017 RPM = 15% Speed
@@ -101,7 +101,14 @@ public class LauncherSubsystem extends SubsystemBase {
 					.withWidget(BuiltInWidgets.kTextView)
 					.getEntry();
 
-	// Constructor
+	private final GenericEntry launcherIsAtSpeed =
+			Shuffleboard.getTab("Launcher")
+					.add("flywheels at target speed", false)
+					.withSize(1, 1)
+					.withWidget(BuiltInWidgets.kBooleanBox)
+					.getEntry();
+
+	// Constructors
 	public LauncherSubsystem() {
 
 		// MOTOR INSTANCE VARIBLES
@@ -151,29 +158,24 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherAngleOneMotor.setIdleMode(IdleMode.kBrake);
 		launcherAngleTwoMotor.setIdleMode(IdleMode.kBrake);
 		// inveritng the bottom motor lmao
-		launcherBottomMotor.setInverted(true);
-		launcherAngleTwoMotor.setInverted(true);
+		launcherTopMotor.setInverted(true);
+		// launcherAngleTwoMotor.setInverted(true);
 
 		// current limit
 		launcherTopMotor.setSmartCurrentLimit(40);
 		launcherBottomMotor.setSmartCurrentLimit(40);
-		launcherAngleOneMotor.setSmartCurrentLimit(20);
-		launcherAngleTwoMotor.setSmartCurrentLimit(20);
+		launcherAngleOneMotor.setSmartCurrentLimit(80);
+		launcherAngleTwoMotor.setSmartCurrentLimit(80);
 
-		launcherAngleOneMotor.setSoftLimit(CANSparkBase.SoftLimitDirection.kForward, 100);
-		launcherAngleOneMotor.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, 25);
-		launcherAngleTwoMotor.setSoftLimit(CANSparkBase.SoftLimitDirection.kForward, 100);
-		launcherAngleTwoMotor.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, 25);
+		launcherAngleOneMotor.setSoftLimit(CANSparkBase.SoftLimitDirection.kForward, 0.95f);
+		launcherAngleOneMotor.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, 0.705f);
+		launcherAngleOneMotor.enableSoftLimit(CANSparkBase.SoftLimitDirection.kForward, true);
+		launcherAngleOneMotor.enableSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, true);
 
-		launcherAngleTwoMotor.follow(launcherAngleOneMotor);
-
-		launcherTopMotor.burnFlash();
-		launcherBottomMotor.burnFlash();
-		launcherAngleOneMotor.burnFlash();
-		launcherAngleTwoMotor.burnFlash();
+		launcherAngleTwoMotor.follow(launcherAngleOneMotor, true);
 
 		// PID
-		launcherAngleOnePIDController.setP(0.1);
+		launcherAngleOnePIDController.setP(5.0);
 		launcherAngleOnePIDController.setI(0);
 		launcherAngleOnePIDController.setD(0);
 		launcherAngleOnePIDController.setFF(0);
@@ -184,20 +186,25 @@ public class LauncherSubsystem extends SubsystemBase {
 		// launcherAngleTwoPIDController.setD(0);
 		// launcherAngleTwoPIDController.setFF(0);
 
-		launcherTopPIDController.setP(0.1);
+		launcherTopPIDController.setP(0.002);
 		launcherTopPIDController.setI(0);
-		launcherTopPIDController.setD(0);
+		launcherTopPIDController.setD(0.001);
 		launcherTopPIDController.setFF(0);
 
-		launcherBottomPIDController.setP(0.1);
+		launcherBottomPIDController.setP(0.002);
 		launcherBottomPIDController.setI(0);
-		launcherBottomPIDController.setD(0);
+		launcherBottomPIDController.setD(0.001);
 		launcherBottomPIDController.setFF(0);
 
 		launcherAngleOneMotor.getEncoder().setPosition(launcherAngleEncoder.getPosition());
 		launcherAngleOneMotor.getEncoder().setPositionConversionFactor(PIVOT_GEARING_RATIO);
 		launcherAngleTwoMotor.getEncoder().setPosition(launcherAngleEncoder.getPosition());
 		launcherAngleTwoMotor.getEncoder().setPositionConversionFactor(PIVOT_GEARING_RATIO);
+
+		launcherTopMotor.burnFlash();
+		launcherBottomMotor.burnFlash();
+		launcherAngleOneMotor.burnFlash();
+		launcherAngleTwoMotor.burnFlash();
 	}
 	// stop launcher motors method
 	public void stopLauncher() {
@@ -216,6 +223,11 @@ public class LauncherSubsystem extends SubsystemBase {
 		rpmSetpoint = speed;
 		launcherTopPIDController.setReference(rpmSetpoint, ControlType.kVelocity);
 		launcherBottomPIDController.setReference(rpmSetpoint, ControlType.kVelocity);
+	}
+
+	public void ampLaunch(double speed) {
+		launcherTopPIDController.setReference(-speed, ControlType.kVelocity);
+		launcherBottomMotor.disable();
 	}
 
 	public double getLauncherSpeed() {
@@ -268,5 +280,6 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherAngleSpeedEntry.setDouble(getAngleSpeed());
 		launcherTopFlywheelTemp.setDouble(launcherTopMotor.getMotorTemperature());
 		launcherBottomFlyWheelTemp.setDouble(launcherTopMotor.getMotorTemperature());
+		launcherIsAtSpeed.setBoolean(isAtSpeed());
 	}
 }

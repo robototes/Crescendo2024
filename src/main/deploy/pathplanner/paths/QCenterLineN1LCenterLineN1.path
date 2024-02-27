@@ -1,0 +1,68 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 7.2,
+        "y": 7.5
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 7.881979007201258,
+        "y": 7.506698977361919
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.307235353209444,
+        "y": 7.349539023402371
+      },
+      "prevControl": {
+        "x": 8.593576958560673,
+        "y": 7.439029162774712
+      },
+      "nextControl": {
+        "x": 8.020893747858215,
+        "y": 7.260048884030031
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 4.3,
+        "y": 5.95
+      },
+      "prevControl": {
+        "x": 5.196736207886831,
+        "y": 6.319788126963641
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -174.34,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Auto Logic Paths",
+  "previewStartingState": {
+    "rotation": 178.7,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

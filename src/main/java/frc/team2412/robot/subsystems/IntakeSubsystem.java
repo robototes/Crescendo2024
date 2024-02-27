@@ -21,11 +21,11 @@ public class IntakeSubsystem extends SubsystemBase {
 	public static final double INTAKE_REVERSE_SPEED = -0.7;
 	public static final double INTAKE_REJECT_SPEED = -0.4;
 
-	public static final double INDEX_UPPER_IN_SPEED = 0.8;
-	public static final double INDEX_UPPER_REVERSE_SPEED = -0.8;
+	public static final double INDEX_UPPER_IN_SPEED = 1.0;
+	public static final double INDEX_UPPER_REVERSE_SPEED = -0.3;
 
-	public static final double INGEST_SPEED = 0.3;
-	public static final double INGEST_REVERSE_SPEED = -0.3;
+	public static final double INGEST_LOWER_IN_SPEED = 0.8;
+	public static final double INGEST_LOWER_REVERSE_SPEED = -0.3;
 
 	public static final double FEEDER_SHOOT_SPEED = 1.0;
 
@@ -147,23 +147,28 @@ public class IntakeSubsystem extends SubsystemBase {
 		shuffleboardTab.addBoolean("Feeder Sensor - ", this::feederSensorHasNote).withSize(1, 1);
 	}
 
-	private void configureMotor(CANSparkBase motor) {
+	private void configureMotor(CANSparkBase motor, int currentLimit, boolean invert) {
 		motor.restoreFactoryDefaults();
 		motor.setIdleMode(IdleMode.kBrake);
-		motor.setSmartCurrentLimit(20);
+		motor.setSmartCurrentLimit(currentLimit);
+		motor.setInverted(invert);
 		motor.burnFlash();
 	}
 
+	private void configureMotor(CANSparkBase motor, boolean invert) {
+		configureMotor(motor, 20, invert);
+	}
+
 	private void resetMotors() {
-		configureMotor(intakeMotorFront);
-		configureMotor(intakeMotorBack);
-		configureMotor(intakeMotorLeft);
-		configureMotor(intakeMotorRight);
+		configureMotor(intakeMotorFront, true);
+		configureMotor(intakeMotorBack, true);
+		configureMotor(intakeMotorLeft, true);
+		configureMotor(intakeMotorRight, true);
 
-		configureMotor(ingestMotor);
-		configureMotor(indexMotorUpper);
+		configureMotor(ingestMotor, false);
+		configureMotor(indexMotorUpper, 40, true);
 
-		configureMotor(feederMotor);
+		configureMotor(feederMotor, 40, true);
 	}
 
 	public void intakeSet(double speed) {
@@ -195,6 +200,7 @@ public class IntakeSubsystem extends SubsystemBase {
 	// index methods
 	public void indexIn() {
 		indexMotorUpper.set(setIndexInSpeedEntry.getDouble(INDEX_UPPER_IN_SPEED));
+		ingestMotor.set(INGEST_LOWER_IN_SPEED);
 	}
 
 	public void indexReverse() {

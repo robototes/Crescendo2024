@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 4.528127118932301,
-      "y": 4.081259900411539
+      "x": 1.3,
+      "y": 5.55
     },
     "rotation": 180.0
   },
@@ -12,14 +12,14 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "RotationOdoCheckPath"
+            "name": "MidSpeakerCenterLineN5N4N3"
           }
         }
       ]
     }
   },
-  "folder": null,
+  "folder": "Complex Autos",
   "choreoAuto": false
 }
