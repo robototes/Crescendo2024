@@ -100,6 +100,9 @@ public class AprilTagsProcessor {
 				new PhotonPoseEstimator(
 						fieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, photonCamera, ROBOT_TO_CAM);
 
+		photonPoseEstimator.setLastPose(aprilTagsHelper.getEstimatedPosition());
+		photonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.CLOSEST_TO_LAST_POSE);
+
 		networkTables.addListener(
 				networkTables
 						.getTable("photonvision")
@@ -133,7 +136,9 @@ public class AprilTagsProcessor {
 			lastFieldPose = latestPose.get().estimatedPose.toPose2d();
 			rawVisionFieldObject.setPose(lastFieldPose);
 			aprilTagsHelper.addVisionMeasurement(lastFieldPose, lastTimestampSeconds, STANDARD_DEVS);
-			aprilTagsHelper.getField().setRobotPose(aprilTagsHelper.getEstimatedPosition());
+			var estimatedPose = aprilTagsHelper.getEstimatedPosition();
+			aprilTagsHelper.getField().setRobotPose(estimatedPose);
+			photonPoseEstimator.setLastPose(estimatedPose);
 		}
 	}
 
