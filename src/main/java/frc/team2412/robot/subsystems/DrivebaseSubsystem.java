@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2412.robot.Robot;
 import frc.team2412.robot.Robot.RobotType;
+import frc.team2412.robot.Subsystems.SubsystemConstants;
 import java.io.File;
 import java.util.EnumSet;
 import java.util.Map;
@@ -246,7 +247,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
 	/** Get the robot's pose */
 	public Pose2d getPose() {
-		return Subsystems.USE_APRILTAGS_CORRECTION ? swerveDrive.getPose() : swerveDrive.getOdometryOnlyPose();
+		return SubsystemConstants.USE_APRILTAGS_CORRECTION ? swerveDrive.getPose() : swerveDrive.getOdometryOnlyPose();
 	}
 
 	/**
