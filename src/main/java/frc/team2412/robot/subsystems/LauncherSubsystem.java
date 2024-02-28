@@ -61,11 +61,11 @@ public class LauncherSubsystem extends SubsystemBase {
 
 	private final GenericEntry setLauncherSpeedEntry =
 			Shuffleboard.getTab("Launcher")
-					.addPersistent("Launcher Speed setpoint", SPEAKER_SHOOT_SPEED_RPM)
+					.add("Launcher Speed Setpoint", 0)
 					.withSize(3, 1)
 					.withWidget(BuiltInWidgets.kNumberSlider)
 					.withProperties(Map.of("Min", -MAX_FREE_SPEED_RPM, "Max", MAX_FREE_SPEED_RPM))
-					.withPosition(5, -1)
+					.withPosition(5, 0)
 					.getEntry();
 
 	private final GenericEntry launcherAngleEntry =
@@ -75,6 +75,7 @@ public class LauncherSubsystem extends SubsystemBase {
 					.withWidget(BuiltInWidgets.kTextView)
 					.withPosition(5, 3)
 					.getEntry();
+
 	private final GenericEntry launcherSpeedEntry =
 			Shuffleboard.getTab("Launcher")
 					.add("Launcher Speed", 0)
@@ -112,6 +113,7 @@ public class LauncherSubsystem extends SubsystemBase {
 					.add("flywheels at target speed", false)
 					.withSize(1, 1)
 					.withWidget(BuiltInWidgets.kBooleanBox)
+					.withPosition(2, 0)
 					.getEntry();
 
 	// Constructors
