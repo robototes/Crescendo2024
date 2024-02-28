@@ -113,7 +113,7 @@ public class LauncherSubsystem extends SubsystemBase {
 					.add("flywheels at target speed", false)
 					.withSize(1, 1)
 					.withWidget(BuiltInWidgets.kBooleanBox)
-					.withPosition(2, 0)
+					.withPosition(0, 2)
 					.getEntry();
 
 	// Constructors
