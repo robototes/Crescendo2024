@@ -230,57 +230,58 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherAngleOneMotor.set(Speed);
 	}
 
-	private void initShuffleboard(){
-		launcherBottomFlyWheelTemp = Shuffleboard.getTab("Launcher")
-		.add("bottom Flywheel temp", 0)
-		.withSize(2, 1)
-		.withWidget(BuiltInWidgets.kTextView)
-		.withPosition(0, 3)
-		.getEntry();
+	private void initShuffleboard() {
+		launcherBottomFlyWheelTemp =
+				Shuffleboard.getTab("Launcher")
+						.add("bottom Flywheel temp", 0)
+						.withSize(2, 1)
+						.withWidget(BuiltInWidgets.kTextView)
+						.withPosition(0, 3)
+						.getEntry();
 
 		launcherIsAtSpeed =
-			Shuffleboard.getTab("Launcher")
-					.add("flywheels at target speed", false)
-					.withSize(1, 1)
-					.withWidget(BuiltInWidgets.kBooleanBox)
-					.withPosition(0, 2)
-					.getEntry();
+				Shuffleboard.getTab("Launcher")
+						.add("flywheels at target speed", false)
+						.withSize(1, 1)
+						.withWidget(BuiltInWidgets.kBooleanBox)
+						.withPosition(0, 2)
+						.getEntry();
 		launcherTopFlywheelTemp =
-			Shuffleboard.getTab("Launcher")
-					.add("top Flywheel temp", 0)
-					.withSize(2, 1)
-					.withWidget(BuiltInWidgets.kTextView)
-					.withPosition(2, 3)
-					.getEntry();
+				Shuffleboard.getTab("Launcher")
+						.add("top Flywheel temp", 0)
+						.withSize(2, 1)
+						.withWidget(BuiltInWidgets.kTextView)
+						.withPosition(2, 3)
+						.getEntry();
 		launcherAngleSpeedEntry =
-			Shuffleboard.getTab("Launcher")
-					.add("Launcher angle Speed", 0)
-					.withSize(3, 1)
-					.withWidget(BuiltInWidgets.kTextView)
-					.withPosition(5, 2)
-					.getEntry();
+				Shuffleboard.getTab("Launcher")
+						.add("Launcher angle Speed", 0)
+						.withSize(3, 1)
+						.withWidget(BuiltInWidgets.kTextView)
+						.withPosition(5, 2)
+						.getEntry();
 		launcherSpeedEntry =
-			Shuffleboard.getTab("Launcher")
-					.add("Launcher Speed", 0)
-					.withSize(3, 1)
-					.withWidget(BuiltInWidgets.kTextView)
-					.withPosition(5, 1)
-					.getEntry();
+				Shuffleboard.getTab("Launcher")
+						.add("Launcher Speed", 0)
+						.withSize(3, 1)
+						.withWidget(BuiltInWidgets.kTextView)
+						.withPosition(5, 1)
+						.getEntry();
 		launcherAngleEntry =
-					Shuffleboard.getTab("Launcher")
-							.add("Launcher angle", 0)
-							.withSize(3, 1)
-							.withWidget(BuiltInWidgets.kTextView)
-							.withPosition(5, 3)
-							.getEntry();
+				Shuffleboard.getTab("Launcher")
+						.add("Launcher angle", 0)
+						.withSize(3, 1)
+						.withWidget(BuiltInWidgets.kTextView)
+						.withPosition(5, 3)
+						.getEntry();
 		setLauncherSpeedEntry =
-			Shuffleboard.getTab("Launcher")
-					.add("Launcher Speed Setpoint", 0)
-					.withSize(3, 1)
-					.withWidget(BuiltInWidgets.kNumberSlider)
-					.withProperties(Map.of("Min", -MAX_FREE_SPEED_RPM, "Max", MAX_FREE_SPEED_RPM))
-					.withPosition(5, 0)
-					.getEntry();
+				Shuffleboard.getTab("Launcher")
+						.add("Launcher Speed Setpoint", 0)
+						.withSize(3, 1)
+						.withWidget(BuiltInWidgets.kNumberSlider)
+						.withProperties(Map.of("Min", -MAX_FREE_SPEED_RPM, "Max", MAX_FREE_SPEED_RPM))
+						.withPosition(5, 0)
+						.getEntry();
 		Shuffleboard.getTab("Launcher")
 				.add(new SparkPIDWidget(launcherAngleOnePIDController, "launcherAnglePID"))
 				.withPosition(2, 0);
@@ -292,7 +293,6 @@ public class LauncherSubsystem extends SubsystemBase {
 		Shuffleboard.getTab("Launcher")
 				.add(new SparkPIDWidget(launcherBottomPIDController, "launcherBottomPID"))
 				.withPosition(1, 0);
-
 	}
 
 	@Override
