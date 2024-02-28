@@ -6,12 +6,12 @@ import frc.team2412.robot.subsystems.LauncherSubsystem;
 // this command can be used as a preset in controls, allowing the user to input a speed and angle
 // value when they keybind it multiple times.
 
-public class SetAngleLaunchCommand extends Command {
+public class SetAngleAmpLaunchCommand extends Command {
 	private double launcherSpeed;
 	private double launcherAngle;
 	private LauncherSubsystem launcherSubsystem;
 
-	public SetAngleLaunchCommand(LauncherSubsystem launcherSubsystem, double speed, double angle) {
+	public SetAngleAmpLaunchCommand(LauncherSubsystem launcherSubsystem, double speed, double angle) {
 		launcherSpeed = speed;
 		launcherAngle = angle;
 		this.launcherSubsystem = launcherSubsystem;
@@ -21,7 +21,7 @@ public class SetAngleLaunchCommand extends Command {
 	@Override
 	public void initialize() {
 		launcherSubsystem.setAngle(launcherAngle);
-		launcherSubsystem.launch(launcherSpeed);
+		launcherSubsystem.ampLaunch(launcherSpeed);
 	}
 
 	@Override

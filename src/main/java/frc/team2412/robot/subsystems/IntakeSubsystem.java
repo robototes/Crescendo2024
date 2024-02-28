@@ -21,11 +21,11 @@ public class IntakeSubsystem extends SubsystemBase {
 	public static final double INTAKE_REVERSE_SPEED = -0.7;
 	public static final double INTAKE_REJECT_SPEED = -0.4;
 
-	public static final double INDEX_UPPER_IN_SPEED = 0.3;
+	public static final double INDEX_UPPER_IN_SPEED = 1.0;
 	public static final double INDEX_UPPER_REVERSE_SPEED = -0.3;
 
-	public static final double INDEX_LOWER_IN_SPEED = 0.3;
-	public static final double INDEX_LOWER_REVERSE_SPEED = -0.3;
+	public static final double INGEST_LOWER_IN_SPEED = 0.8;
+	public static final double INGEST_LOWER_REVERSE_SPEED = -0.3;
 
 	public static final double FEEDER_SHOOT_SPEED = 1.0;
 
@@ -38,7 +38,7 @@ public class IntakeSubsystem extends SubsystemBase {
 	private final CANSparkMax intakeMotorLeft;
 	private final CANSparkMax intakeMotorRight;
 
-	private final CANSparkFlex indexMotorLower;
+	private final CANSparkFlex ingestMotor;
 	private final CANSparkFlex indexMotorUpper;
 
 	private final CANSparkFlex feederMotor;
@@ -48,6 +48,7 @@ public class IntakeSubsystem extends SubsystemBase {
 	private final DigitalInput feederSensor;
 
 	// Shuffleboard
+	// speed
 	private final GenericEntry setIntakeInSpeedEntry =
 			Shuffleboard.getTab("Intake")
 					.addPersistent("Intake in speed - ", INTAKE_IN_SPEED)
@@ -67,6 +68,7 @@ public class IntakeSubsystem extends SubsystemBase {
 					.withSize(1, 1)
 					.getEntry();
 
+	// temperature
 	private final GenericEntry intakeMotorFrontTemp =
 			Shuffleboard.getTab("Intake")
 					.add("Front Intake temp", 0)
@@ -102,9 +104,9 @@ public class IntakeSubsystem extends SubsystemBase {
 					.withWidget(BuiltInWidgets.kTextView)
 					.getEntry();
 
-	private final GenericEntry indexMotorLowerTemp =
+	private final GenericEntry ingestMotorTemp =
 			Shuffleboard.getTab("Intake")
-					.add("Lower Index temp", 0)
+					.add("Ingest temp", 0)
 					.withSize(1, 1)
 					.withWidget(BuiltInWidgets.kTextView)
 					.getEntry();
@@ -116,13 +118,21 @@ public class IntakeSubsystem extends SubsystemBase {
 					.withWidget(BuiltInWidgets.kTextView)
 					.getEntry();
 
+	// sensor override
+	private final GenericEntry sensorOverride =
+			Shuffleboard.getTab("Intake")
+					.add("Override Sensors", false)
+					.withSize(1, 1)
+					.withWidget(BuiltInWidgets.kTextView)
+					.getEntry();
+
 	public IntakeSubsystem() {
 		intakeMotorFront = new CANSparkMax(INTAKE_MOTOR_FRONT, MotorType.kBrushless);
 		intakeMotorBack = new CANSparkMax(INTAKE_MOTOR_BACK, MotorType.kBrushless);
 		intakeMotorLeft = new CANSparkMax(INTAKE_MOTOR_LEFT, MotorType.kBrushless);
 		intakeMotorRight = new CANSparkMax(INTAKE_MOTOR_RIGHT, MotorType.kBrushless);
 
-		indexMotorLower = new CANSparkFlex(INDEX_MOTOR_LOWER, MotorType.kBrushless);
+		ingestMotor = new CANSparkFlex(INGEST_MOTOR, MotorType.kBrushless);
 		indexMotorUpper = new CANSparkFlex(INDEX_MOTOR_UPPER, MotorType.kBrushless);
 
 		feederMotor = new CANSparkFlex(FEEDER_MOTOR, MotorType.kBrushless);
@@ -133,27 +143,32 @@ public class IntakeSubsystem extends SubsystemBase {
 		resetMotors();
 
 		ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Intake");
-		shuffleboardTab.addBoolean("Index Sensor - ", indexSensor::get).withSize(1, 1);
-		shuffleboardTab.addBoolean("Feeder Sensor - ", feederSensor::get).withSize(1, 1);
+		shuffleboardTab.addBoolean("Index Sensor - ", this::indexSensorHasNote).withSize(1, 1);
+		shuffleboardTab.addBoolean("Feeder Sensor - ", this::feederSensorHasNote).withSize(1, 1);
 	}
 
-	private void configureMotor(CANSparkBase motor) {
+	private void configureMotor(CANSparkBase motor, int currentLimit, boolean invert) {
 		motor.restoreFactoryDefaults();
 		motor.setIdleMode(IdleMode.kBrake);
-		motor.setSmartCurrentLimit(20);
+		motor.setSmartCurrentLimit(currentLimit);
+		motor.setInverted(invert);
 		motor.burnFlash();
 	}
 
+	private void configureMotor(CANSparkBase motor, boolean invert) {
+		configureMotor(motor, 20, invert);
+	}
+
 	private void resetMotors() {
-		configureMotor(intakeMotorFront);
-		configureMotor(intakeMotorBack);
-		configureMotor(intakeMotorLeft);
-		configureMotor(intakeMotorRight);
+		configureMotor(intakeMotorFront, true);
+		configureMotor(intakeMotorBack, true);
+		configureMotor(intakeMotorLeft, true);
+		configureMotor(intakeMotorRight, true);
 
-		configureMotor(indexMotorLower);
-		configureMotor(indexMotorUpper);
+		configureMotor(ingestMotor, false);
+		configureMotor(indexMotorUpper, 40, true);
 
-		configureMotor(feederMotor);
+		configureMotor(feederMotor, 40, true);
 	}
 
 	public void intakeSet(double speed) {
@@ -161,6 +176,8 @@ public class IntakeSubsystem extends SubsystemBase {
 		intakeMotorLeft.set(speed);
 		intakeMotorRight.set(speed);
 		intakeMotorBack.set(speed);
+
+		ingestMotor.set(speed);
 	}
 
 	// intake methods
@@ -183,17 +200,15 @@ public class IntakeSubsystem extends SubsystemBase {
 	// index methods
 	public void indexIn() {
 		indexMotorUpper.set(setIndexInSpeedEntry.getDouble(INDEX_UPPER_IN_SPEED));
-		indexMotorLower.set(INDEX_LOWER_IN_SPEED);
+		ingestMotor.set(INGEST_LOWER_IN_SPEED);
 	}
 
 	public void indexReverse() {
 		indexMotorUpper.set(INDEX_UPPER_REVERSE_SPEED);
-		indexMotorLower.set(INDEX_LOWER_REVERSE_SPEED);
 	}
 
 	public void indexStop() {
 		indexMotorUpper.set(0);
-		indexMotorLower.set(0);
 	}
 
 	// feeder methods
@@ -214,12 +229,16 @@ public class IntakeSubsystem extends SubsystemBase {
 	}
 
 	// sensor methods
-	public boolean getIndexSensor() {
-		return indexSensor.get();
+	public boolean indexSensorHasNote() {
+		return !indexSensor.get() && !getSensorOverride();
 	}
 
-	public boolean getFeederSensor() {
-		return feederSensor.get();
+	public boolean feederSensorHasNote() {
+		return !feederSensor.get() && !getSensorOverride();
+	}
+
+	public boolean getSensorOverride() {
+		return sensorOverride.getBoolean(false);
 	}
 
 	@Override
@@ -229,8 +248,9 @@ public class IntakeSubsystem extends SubsystemBase {
 		intakeMotorRightTemp.setDouble(intakeMotorRight.getMotorTemperature());
 		intakeMotorLeftTemp.setDouble(intakeMotorLeft.getMotorTemperature());
 
+		ingestMotorTemp.setDouble(ingestMotor.getMotorTemperature());
+
 		indexMotorUpperTemp.setDouble(indexMotorUpper.getMotorTemperature());
-		indexMotorLowerTemp.setDouble(indexMotorLower.getMotorTemperature());
 
 		feederMotorTemp.setDouble(feederMotor.getMotorTemperature());
 	}

@@ -18,9 +18,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "SpeakerToMidNoteReturn"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SpeakerToMidNoteReturn"
+                }
+              }
+            ]
           }
         },
         {
@@ -32,6 +45,6 @@
       ]
     }
   },
-  "folder": "Preset Autos",
+  "folder": null,
   "choreoAuto": false
 }
