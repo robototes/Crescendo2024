@@ -27,6 +27,7 @@ import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 /**
  * All 3D poses and transforms use the NWU (North-West-Up) coordinate system, where +X is
@@ -51,17 +52,55 @@ public class AprilTagsProcessor {
 	// TODO Measure these
 	private static final Vector<N3> STANDARD_DEVS = VecBuilder.fill(1, 1, Units.degreesToRadians(30));
 
-	private static final double MAX_POSE_AMBIGUITY = 0.1;
-
-	private static PhotonPipelineResult filteredPipelineResult(PhotonPipelineResult result) {
+	private static PhotonPipelineResult copy(PhotonPipelineResult result) {
 		var copy =
 				new PhotonPipelineResult(
 						result.getLatencyMillis(), result.targets, result.getMultiTagResult());
 		copy.setTimestampSeconds(result.getTimestampSeconds());
+		return copy;
+	}
+
+	private static final double MAX_POSE_AMBIGUITY = 0.1;
+
+	// Both of these are in radians
+	// Negate pitch to go from robot/target to cam pitch to cam to robot/target pitch
+	private static final double EXPECTED_CAM_TO_TARGET_PITCH = -ROBOT_TO_CAM.getRotation().getY();
+	private static final double CAM_TO_TARGET_PITCH_TOLERANCE = 0.1;
+
+	private static boolean hasCorrectPitch(Transform3d camToTarget) {
+		return Math.abs(camToTarget.getRotation().getY() - EXPECTED_CAM_TO_TARGET_PITCH) < CAM_TO_TARGET_PITCH_TOLERANCE;
+	}
+
+	private static PhotonTrackedTarget swapBestAndAltTransforms(PhotonTrackedTarget target) {
+		return new PhotonTrackedTarget(
+				target.getYaw(),
+				target.getPitch(),
+				target.getArea(),
+				target.getSkew(),
+				target.getFiducialId(),
+				target.getAlternateCameraToTarget(), // Swap
+				target.getBestCameraToTarget(),
+				target.getPoseAmbiguity(),
+				target.getMinAreaRectCorners(),
+				target.getDetectedCorners());
+	}
+
+	private static PhotonPipelineResult filteredPipelineResult(PhotonPipelineResult result) {
+		var copy = copy(result);
 		for (int i = copy.targets.size() - 1; i >= 0; --i) {
 			var target = copy.targets.get(i);
 			if (target.getPoseAmbiguity() > MAX_POSE_AMBIGUITY) {
 				copy.targets.remove(i);
+				continue;
+			}
+			if (!hasCorrectPitch(target.getBestCameraToTarget())) {
+				if (hasCorrectPitch(target.getAlternateCameraToTarget())) {
+					target = swapBestAndAltTransforms(target);
+					copy.targets.set(i, target);
+				} else {
+					copy.targets.remove(i);
+					continue;
+				}
 			}
 		}
 		return copy;
