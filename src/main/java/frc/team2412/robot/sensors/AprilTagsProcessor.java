@@ -68,7 +68,8 @@ public class AprilTagsProcessor {
 	private static final double CAM_TO_TARGET_PITCH_TOLERANCE = 0.1;
 
 	private static boolean hasCorrectPitch(Transform3d camToTarget) {
-		return Math.abs(camToTarget.getRotation().getY() - EXPECTED_CAM_TO_TARGET_PITCH) < CAM_TO_TARGET_PITCH_TOLERANCE;
+		return Math.abs(camToTarget.getRotation().getY() - EXPECTED_CAM_TO_TARGET_PITCH)
+				< CAM_TO_TARGET_PITCH_TOLERANCE;
 	}
 
 	private static PhotonTrackedTarget swapBestAndAltTransforms(PhotonTrackedTarget target) {

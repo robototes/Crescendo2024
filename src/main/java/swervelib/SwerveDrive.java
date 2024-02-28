@@ -540,7 +540,6 @@ public class SwerveDrive {
 		setRawModuleStates(kinematics.toSwerveModuleStates(chassisSpeeds), false);
 	}
 
-
 	/**
 	 * Gets the current pose (position and rotation) of the robot, as reported by odometry (and not
 	 * vision measurements).
