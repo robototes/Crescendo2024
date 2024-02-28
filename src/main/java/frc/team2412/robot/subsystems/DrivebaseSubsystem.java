@@ -246,7 +246,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
 	/** Get the robot's pose */
 	public Pose2d getPose() {
-		return swerveDrive.getPose();
+		return Subsystems.USE_APRILTAGS_CORRECTION ? swerveDrive.getPose() : swerveDrive.getOdometryOnlyPose();
 	}
 
 	/**

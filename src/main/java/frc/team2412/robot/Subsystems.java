@@ -19,6 +19,8 @@ public class Subsystems {
 		public static final boolean LAUNCHER_ENABLED = true;
 		public static final boolean INTAKE_ENABLED = true;
 		public static final boolean DRIVEBASE_ENABLED = true;
+
+		public static final boolean USE_APRILTAGS_CORRECTION = false;
 	}
 
 	public final DrivebaseWrapper drivebaseWrapper;
