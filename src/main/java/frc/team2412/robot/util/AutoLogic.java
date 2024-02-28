@@ -65,7 +65,7 @@ public class AutoLogic {
 						.andThen(new WaitCommand(1))
 						.andThen(new FeederInCommand(s.intakeSubsystem)));
 
-		NamedCommands.registerCommand("Intake", new AllInCommand(s.intakeSubsystem, controls));
+		NamedCommands.registerCommand("Intake", new AllInCommand(s.intakeSubsystem, null));
 		// Complex Autos
 		NamedCommands.registerCommand("AutoLogicTest", AutoPaths.testAuto);
 		NamedCommands.registerCommand(

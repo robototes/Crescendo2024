@@ -33,7 +33,10 @@ public class AllInCommand extends Command {
 		intakeSubsystem.intakeReject();
 		intakeSubsystem.indexStop();
 		intakeSubsystem.feederStop();
-		controls.vibrateDriveController(1.0);
+
+		if (controls != null && interrupted == false) {
+			controls.vibrateDriveController(1.0);
+		}
 	}
 
 	@Override
