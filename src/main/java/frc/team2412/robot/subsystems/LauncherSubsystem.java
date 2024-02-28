@@ -65,40 +65,46 @@ public class LauncherSubsystem extends SubsystemBase {
 					.withSize(3, 1)
 					.withWidget(BuiltInWidgets.kNumberSlider)
 					.withProperties(Map.of("Min", -MAX_FREE_SPEED_RPM, "Max", MAX_FREE_SPEED_RPM))
+					.withPosition(5, -1)
 					.getEntry();
 
 	private final GenericEntry launcherAngleEntry =
 			Shuffleboard.getTab("Launcher")
 					.add("Launcher angle", 0)
-					.withSize(2, 1)
+					.withSize(3, 1)
 					.withWidget(BuiltInWidgets.kTextView)
+					.withPosition(5, 3)
 					.getEntry();
 	private final GenericEntry launcherSpeedEntry =
 			Shuffleboard.getTab("Launcher")
 					.add("Launcher Speed", 0)
-					.withSize(1, 1)
+					.withSize(3, 1)
 					.withWidget(BuiltInWidgets.kTextView)
+					.withPosition(5, 1)
 					.getEntry();
 
 	private final GenericEntry launcherAngleSpeedEntry =
 			Shuffleboard.getTab("Launcher")
 					.add("Launcher angle Speed", 0)
-					.withSize(2, 1)
+					.withSize(3, 1)
 					.withWidget(BuiltInWidgets.kTextView)
+					.withPosition(5, 2)
 					.getEntry();
 
 	private final GenericEntry launcherTopFlywheelTemp =
 			Shuffleboard.getTab("Launcher")
 					.add("top Flywheel temp", 0)
-					.withSize(1, 1)
+					.withSize(2, 1)
 					.withWidget(BuiltInWidgets.kTextView)
+					.withPosition(2, 3)
 					.getEntry();
 
 	private final GenericEntry launcherBottomFlyWheelTemp =
 			Shuffleboard.getTab("Launcher")
 					.add("bottom Flywheel temp", 0)
-					.withSize(1, 1)
+					.withSize(2, 1)
 					.withWidget(BuiltInWidgets.kTextView)
+					.withPosition(0, 3)
 					.getEntry();
 
 	// Constructor
@@ -129,13 +135,13 @@ public class LauncherSubsystem extends SubsystemBase {
 		// launcherAngleTwoPIDController.setFeedbackDevice(launcherAngleEncoder);
 
 		Shuffleboard.getTab("Launcher")
-				.add(new SparkPIDWidget(launcherAngleOnePIDController, "launcherAngleOnePIDController"));
+				.add(new SparkPIDWidget(launcherAngleOnePIDController, "launcherAnglePID")).withPosition(2, 0);
 		// Shuffleboard.getTab("Launcher")
 		//		.add(new SparkPIDWidget(launcherAngleTwoPIDController, "launcherAngleTwoPIDController"));
 		Shuffleboard.getTab("Launcher")
-				.add(new SparkPIDWidget(launcherTopPIDController, "launcherTopPIDController"));
+				.add(new SparkPIDWidget(launcherTopPIDController, "launcherTopPID")).withPosition(0, 0);
 		Shuffleboard.getTab("Launcher")
-				.add(new SparkPIDWidget(launcherBottomPIDController, "launcherBottomPIDController"));
+				.add(new SparkPIDWidget(launcherBottomPIDController, "launcherBottomPID")).withPosition(1, 0);
 
 		configMotors();
 	}
@@ -157,8 +163,8 @@ public class LauncherSubsystem extends SubsystemBase {
 		// current limit
 		launcherTopMotor.setSmartCurrentLimit(40);
 		launcherBottomMotor.setSmartCurrentLimit(40);
-		launcherAngleOneMotor.setSmartCurrentLimit(20);
-		launcherAngleTwoMotor.setSmartCurrentLimit(20);
+		launcherAngleOneMotor.setSmartCurrentLimit(40);
+		launcherAngleTwoMotor.setSmartCurrentLimit(40);
 
 		launcherAngleOneMotor.setSoftLimit(CANSparkBase.SoftLimitDirection.kForward, 100);
 		launcherAngleOneMotor.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, 25);
