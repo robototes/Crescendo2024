@@ -16,8 +16,8 @@ public class Hardware {
 	// launcher [30 - 39]
 	public static final int LAUNCHER_TOP_MOTOR_ID = 30;
 	public static final int LAUNCHER_BOTTOM_MOTOR_ID = 31;
-	public static final int LAUNCHER_PIVOT_ONE_MOTOR_ID = 32;
-	public static final int LAUNCHER_PIVOT_TWO_MOTOR_ID = 33;
+	public static final int LAUNCHER_PIVOT_ONE_MOTOR_ID = 33;
+	public static final int LAUNCHER_PIVOT_TWO_MOTOR_ID = 32;
 
 	// intake [40 - 49]
 	public static final int INTAKE_MOTOR_FRONT = 40;
@@ -25,7 +25,8 @@ public class Hardware {
 	public static final int INTAKE_MOTOR_LEFT = 42;
 	public static final int INTAKE_MOTOR_RIGHT = 43;
 
-	public static final int INDEX_MOTOR_LOWER = 44;
+	public static final int INGEST_MOTOR = 44;
+
 	public static final int INDEX_MOTOR_UPPER = 45;
 
 	public static final int FEEDER_MOTOR = 46;

@@ -40,10 +40,10 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
 	public static final double MAX_SPEED =
 			Robot.getInstance().getRobotType() == RobotType.BONK
-					? 2.0
-					: Robot.getInstance().getRobotType() == RobotType.CRANE
-							? 3.0
-							: Robot.getInstance().getRobotType() == RobotType.PRACTICE ? 5.0 : 1.0;
+					? 3.0
+					: Robot.getInstance().getRobotType() == RobotType.PRACTICE
+							? 5.0
+							: Robot.getInstance().getRobotType() == RobotType.CRANE ? 3.0 : 1.0;
 
 	// Auto align stuff, dw abt it
 	public static final double MAX_ACCELERATION = 3;
@@ -62,8 +62,15 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
 	// AUTO CONSTANTS
 
-	private static final PIDConstants AUTO_TRANSLATION_PID = new PIDConstants(0.1, 0, 0);
-	private static final PIDConstants AUTO_ROTATION_PID = new PIDConstants(5.0, 0, 0);
+	private static final PIDConstants AUTO_TRANSLATION_PID =
+			Robot.getInstance().getRobotType() == RobotType.PRACTICE
+					? new PIDConstants(5, 0, 0.4) // practice
+					: Robot.getInstance().getRobotType() == RobotType.BONK
+							? new PIDConstants(5, 0, 0.1) // bonk
+							: Robot.getInstance().getRobotType() == RobotType.CRANE
+									? new PIDConstants(3.9, 0, 0.2) // crane
+									: new PIDConstants(0.1, 0, 0.1); // bobot TODO: tune
+	private static final PIDConstants AUTO_ROTATION_PID = new PIDConstants(5.0, 0, 0.2);
 	private static final double MAX_AUTO_SPEED =
 			500.0; // this seems to only affect rotation for some reason
 
@@ -140,7 +147,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
 		// LOW verbosity only sends field position, HIGH sends full drive data, MACHINE sends data
 		// viewable by AdvantageScope
-		SwerveDriveTelemetry.verbosity = TelemetryVerbosity.MACHINE;
+		SwerveDriveTelemetry.verbosity = TelemetryVerbosity.LOW;
 	}
 
 	/**

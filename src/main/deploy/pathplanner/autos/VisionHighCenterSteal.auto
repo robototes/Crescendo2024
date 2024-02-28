@@ -2,36 +2,36 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 8.188397459416,
-      "y": 4.057871591526659
+      "x": 0.73,
+      "y": 6.62
     },
-    "rotation": 180.0
+    "rotation": -120.0
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "SuperDuperFunPath"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 3.0
+            "name": "SubwooferLaunch"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "ReturnToSquare"
+            "pathName": "HighCenterSteal"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "VisionLaunch"
           }
         }
       ]
     }
   },
-  "folder": null,
+  "folder": "Vision Autos",
   "choreoAuto": false
 }

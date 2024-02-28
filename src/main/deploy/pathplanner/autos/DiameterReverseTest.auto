@@ -1,12 +1,6 @@
 {
   "version": 1.0,
-  "startingPose": {
-    "position": {
-      "x": 8.15,
-      "y": 4.057871591526659
-    },
-    "rotation": 180.0
-  },
+  "startingPose": null,
   "command": {
     "type": "sequential",
     "data": {
@@ -14,12 +8,12 @@
         {
           "type": "path",
           "data": {
-            "pathName": "SpinnyTurnyPath"
+            "pathName": "BonkWheelDiameterReverseTest"
           }
         }
       ]
     }
   },
-  "folder": null,
+  "folder": "Test",
   "choreoAuto": false
 }
