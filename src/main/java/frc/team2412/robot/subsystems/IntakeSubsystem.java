@@ -127,6 +127,7 @@ public class IntakeSubsystem extends SubsystemBase {
 					.getEntry();
 
 	public IntakeSubsystem() {
+
 		intakeMotorFront = new CANSparkMax(INTAKE_MOTOR_FRONT, MotorType.kBrushless);
 		intakeMotorBack = new CANSparkMax(INTAKE_MOTOR_BACK, MotorType.kBrushless);
 		intakeMotorLeft = new CANSparkMax(INTAKE_MOTOR_LEFT, MotorType.kBrushless);
