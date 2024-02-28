@@ -12,7 +12,6 @@ public class AllInRumbleCommand extends SequentialCommandGroup {
 	public AllInRumbleCommand(IntakeSubsystem intakeSubsystem, Controls controls) {
 		this.intakeSubsystem = intakeSubsystem;
 		this.controls = controls;
-		addRequirements(intakeSubsystem);
 
 		addCommands(new AllInCommand(intakeSubsystem, controls), new WaitCommand(0.5));
 	}
