@@ -34,7 +34,7 @@ public class AllInCommand extends Command {
 		intakeSubsystem.indexStop();
 		intakeSubsystem.feederStop();
 
-		if (controls != null && interrupted == false) {
+		if (controls != null && !interrupted) {
 			controls.vibrateDriveController(1.0);
 		}
 	}
