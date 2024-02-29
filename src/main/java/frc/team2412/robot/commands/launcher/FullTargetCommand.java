@@ -24,7 +24,7 @@ public class FullTargetCommand extends Command {
 			LauncherDataLoader.fromCSV(
 					FileSystems.getDefault()
 							.getPath(Filesystem.getDeployDirectory().getPath(), "launcher_data.csv"));
-	private static final double YAW_TARGET_VIBRATION_TOLERANCE = 3; // degrees
+	private static final double YAW_TARGET_VIBRATION_TOLERANCE = 10; // degrees
 	private Pose2d SPEAKER_POSE;
 
 	private DrivebaseSubsystem drivebaseSubsystem;
