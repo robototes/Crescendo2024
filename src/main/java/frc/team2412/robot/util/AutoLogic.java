@@ -48,13 +48,7 @@ public class AutoLogic {
 		// param: String commandName, Command command
 		NamedCommands.registerCommand("DummyLaunch", vibrateControllerCommand);
 		NamedCommands.registerCommand(
-				"VisionLaunch",
-				new FullTargetCommand(
-						s.launcherSubsystem,
-						s.intakeSubsystem,
-						s.drivebaseSubsystem,
-						controls,
-						s.launcherSubsystem::isAtSpeed));
+				"VisionLaunch", new FullTargetCommand(s.launcherSubsystem, s.drivebaseSubsystem, controls));
 
 		NamedCommands.registerCommand(
 				"SubwooferLaunch",

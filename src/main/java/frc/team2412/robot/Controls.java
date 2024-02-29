@@ -62,7 +62,7 @@ public class Controls {
 		launcherSubwooferPresetButton = codriveController.a();
 		// launcherPodiumPresetButton = codriveController.povLeft();
 		launcherTrapPresetButton = codriveController.y();
-		launcherLaunchButton = codriveController.rightBumper();
+		launcherLaunchButton = codriveController.leftBumper();
 		// intake controls (confirmed with driveteam)
 		driveIntakeInButton = driveController.a();
 		driveIntakeStopButton = driveController.b();
@@ -85,14 +85,8 @@ public class Controls {
 		if (DRIVEBASE_ENABLED && LAUNCHER_ENABLED && INTAKE_ENABLED) {
 			// temporary controls, not sure what drive team wants
 			driveController
-					.rightBumper()
-					.whileTrue(
-							new FullTargetCommand(
-									s.launcherSubsystem,
-									s.intakeSubsystem,
-									s.drivebaseSubsystem,
-									this,
-									driveController.leftBumper()));
+					.leftBumper()
+					.whileTrue(new FullTargetCommand(s.launcherSubsystem, s.drivebaseSubsystem, this));
 			// codriveController
 			// 		.rightBumper()
 			// 		.whileTrue(
@@ -123,7 +117,7 @@ public class Controls {
 		// CommandScheduler.getInstance()
 		// 		.setDefaultCommand(s.intakeSubsystem, new IntakeStopCommand(s.intakeSubsystem));
 		driveIntakeInButton.onTrue(new AllInCommand(s.intakeSubsystem));
-		driveIntakeStopButton.onTrue(new AllStopCommand(s.intakeSubsystem));
+		// driveIntakeStopButton.onTrue(new AllStopCommand(s.intakeSubsystem));
 		driveIntakeReverseButton.onTrue(new AllReverseCommand(s.intakeSubsystem));
 		driveIntakeRejectButton.onTrue(new IntakeRejectCommand(s.intakeSubsystem));
 		codriveIntakeInButton.onTrue(new AllInCommand(s.intakeSubsystem));
@@ -133,6 +127,7 @@ public class Controls {
 
 		// feeder shoot note out
 		launcherLaunchButton.whileTrue(new FeederInCommand(s.intakeSubsystem));
+		driveController.rightBumper().whileTrue(new FeederInCommand(s.intakeSubsystem));
 	}
 
 	private void bindLauncherControls() {
@@ -165,11 +160,13 @@ public class Controls {
 
 		codriveController.b().whileTrue(s.launcherSubsystem.run(s.launcherSubsystem::stopLauncher));
 
-		codriveController
-				.leftBumper()
-				.whileTrue(
-						s.launcherSubsystem.runEnd(
-								s.launcherSubsystem::launch, s.launcherSubsystem::stopLauncher));
+		// codriveController
+		// 		.leftBumper()
+		// 		.whileTrue(
+		// 				s.launcherSubsystem.runEnd(
+		// 						s.launcherSubsystem::launch, s.launcherSubsystem::stopLauncher));
+
+		driveController.b().onTrue(new InstantCommand(() -> s.launcherSubsystem.launch(4000)));
 	}
 
 	public void vibrateDriveController(double vibration) {

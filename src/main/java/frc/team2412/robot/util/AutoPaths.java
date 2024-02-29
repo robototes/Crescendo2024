@@ -122,12 +122,7 @@ public class AutoPaths {
 					VisionLaunchCommand());
 
 	public static Command VisionLaunchCommand() {
-		return new FullTargetCommand(
-				s.launcherSubsystem,
-				s.intakeSubsystem,
-				s.drivebaseSubsystem,
-				controls,
-				s.launcherSubsystem::isAtSpeed);
+		return new FullTargetCommand(s.launcherSubsystem, s.drivebaseSubsystem, controls);
 	}
 
 	public static Command SubwooferLaunchCommand() {
