@@ -108,8 +108,25 @@
   ],
   "eventMarkers": [
     {
-      "name": "New Event Marker",
+      "name": "IntakeSensorOverride",
       "waypointRelativePos": 0.7,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "IntakeSensorOverride"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Intake",
+      "waypointRelativePos": 1.85,
       "command": {
         "type": "parallel",
         "data": {

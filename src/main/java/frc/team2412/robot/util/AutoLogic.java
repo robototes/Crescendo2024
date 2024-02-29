@@ -11,9 +11,12 @@ import frc.team2412.robot.Controls;
 import frc.team2412.robot.Robot;
 import frc.team2412.robot.Subsystems;
 import frc.team2412.robot.commands.intake.AllInCommand;
+import frc.team2412.robot.commands.intake.AllInSensorOverrideCommand;
 import frc.team2412.robot.commands.intake.FeederInCommand;
+import frc.team2412.robot.commands.intake.IntakeStopCommand;
 import frc.team2412.robot.commands.launcher.FullTargetCommand;
 import frc.team2412.robot.commands.launcher.SetAngleLaunchCommand;
+import frc.team2412.robot.commands.launcher.StopLauncherCommand;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
 
 public class AutoLogic {
@@ -44,9 +47,14 @@ public class AutoLogic {
 
 	/** Registers commands in PathPlanner */
 	public void registerCommands() {
-
 		// param: String commandName, Command command
-		NamedCommands.registerCommand("DummyLaunch", vibrateControllerCommand);
+
+		// Intake
+		NamedCommands.registerCommand("StopIntake", new IntakeStopCommand(s.intakeSubsystem));
+		NamedCommands.registerCommand("Intake", new AllInCommand(s.intakeSubsystem));
+		NamedCommands.registerCommand(
+				"IntakeSensorOverride", new AllInSensorOverrideCommand(s.intakeSubsystem));
+		// Launcher
 		NamedCommands.registerCommand(
 				"VisionLaunch",
 				new FullTargetCommand(
@@ -64,8 +72,11 @@ public class AutoLogic {
 								LauncherSubsystem.SUBWOOFER_AIM_ANGLE)
 						.andThen(new WaitCommand(1))
 						.andThen(new FeederInCommand(s.intakeSubsystem)));
+		NamedCommands.registerCommand("StopLaunch", new StopLauncherCommand(s.launcherSubsystem));
+		NamedCommands.registerCommand(
+				"RetractPivot",
+				new SetAngleLaunchCommand(s.launcherSubsystem, 0, 0)); // TODO: add retract angle
 
-		NamedCommands.registerCommand("Intake", new AllInCommand(s.intakeSubsystem));
 		// Complex Autos
 		NamedCommands.registerCommand("AutoLogicTest", AutoPaths.testAuto);
 		NamedCommands.registerCommand(
@@ -75,7 +86,7 @@ public class AutoLogic {
 		NamedCommands.registerCommand(
 				"TopSpeakerCenterLineN1N2AutoLine1", AutoPaths.TopSpeakerCenterLineN1N2AutoLine1);
 		NamedCommands.registerCommand(
-				"TopSpeakerCenterLineN1N2AutoLine1", AutoPaths.TopSpeakerCenterLineN1N2N3);
+				"TopSpeakerCenterLineN1N2N3", AutoPaths.TopSpeakerCenterLineN1N2N3);
 	}
 
 	// public Command getConditionalCommand(){}

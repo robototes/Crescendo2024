@@ -24,6 +24,49 @@ public class AutoPaths {
 
 	// Complex Autos
 
+
+	public static Command TopSpeakerCenterLineN1N2AutoLine1 =
+			Commands.sequence(
+					SubwooferLaunchCommand(),
+					getAutoCommand("TopSpeakerQCenterLineN1"),
+					Commands.either(
+							Commands.sequence(
+									getAutoCommand("QCenterLineN1LCenterLineN1"),
+									VisionLaunchCommand(),
+									getAutoCommand("LCenterLineN1QCenterLineN2")),
+							Commands.sequence(
+									getAutoCommand("QCenterLineN1QCenterLineN2"),
+									Commands.either(
+											Commands.sequence(
+													getAutoCommand("QCenterLineN2LCenterLineN2"),
+													VisionLaunchCommand(),
+													getAutoCommand("LCenterLineN2LAutoLineN1")),
+											Commands.sequence(getAutoCommand("QCenterLineN2LAutoLineN1")),
+											() -> true)),
+							() -> true),
+					VisionLaunchCommand());
+
+	public static Command TopSpeakerCenterLineN1N2N3 =
+			Commands.sequence(
+					SubwooferLaunchCommand(),
+					getAutoCommand("TopSpeakerQCenterLineN1"),
+					Commands.either(
+							Commands.sequence(
+									getAutoCommand("QCenterLineN1LCenterLineN1"),
+									VisionLaunchCommand(),
+									getAutoCommand("LCenterLineN1QCenterLineN2")),
+							Commands.sequence(
+									getAutoCommand("QCenterLineN1QCenterLineN2"),
+									Commands.either(
+											Commands.sequence(
+													getAutoCommand("QCenterLineN2LCenterLineN2"),
+													VisionLaunchCommand(),
+													getAutoCommand("LCenterLineN2LCenterLineN3")),
+											Commands.sequence(getAutoCommand("QCenterLineN2LCenterLineN3")),
+											() -> true)),
+							() -> true),
+					VisionLaunchCommand());
+
 	public static Command midSpeakerCenterLineN3N2N1 =
 			Commands.sequence(
 					SubwooferLaunchCommand(),
@@ -79,47 +122,7 @@ public class AutoPaths {
 							() -> false),
 					VisionLaunchCommand());
 
-	public static Command TopSpeakerCenterLineN1N2AutoLine1 =
-			Commands.sequence(
-					SubwooferLaunchCommand(),
-					getAutoCommand("TopSpeakerQCenterLineN1"),
-					Commands.either(
-							Commands.sequence(
-									getAutoCommand("QCenterLineN1LCenterLineN1"),
-									VisionLaunchCommand(),
-									getAutoCommand("LCenterLineN1QCenterLineN2")),
-							Commands.sequence(
-									getAutoCommand("QCenterLineN1QCenterLineN2"),
-									Commands.either(
-											Commands.sequence(
-													getAutoCommand("QCenterLineN2LCenterLineN2"),
-													VisionLaunchCommand(),
-													getAutoCommand("LCenterLineN2LAutoLineN1")),
-											Commands.sequence(getAutoCommand("QCenterLineN2LAutoLineN1")),
-											() -> true)),
-							() -> true),
-					VisionLaunchCommand());
-
-	public static Command TopSpeakerCenterLineN1N2N3 =
-			Commands.sequence(
-					SubwooferLaunchCommand(),
-					getAutoCommand("TopSpeakerQCenterLineN1"),
-					Commands.either(
-							Commands.sequence(
-									getAutoCommand("QCenterLineN1LCenterLineN1"),
-									VisionLaunchCommand(),
-									getAutoCommand("LCenterLineN1QCenterLineN2")),
-							Commands.sequence(
-									getAutoCommand("QCenterLineN1QCenterLineN2"),
-									Commands.either(
-											Commands.sequence(
-													getAutoCommand("QCenterLineN2LCenterLineN2"),
-													VisionLaunchCommand(),
-													getAutoCommand("LCenterLineN2LCenterLineN3")),
-											Commands.sequence(getAutoCommand("QCenterLineN2LCenterLineN3")),
-											() -> true)),
-							() -> true),
-					VisionLaunchCommand());
+	// new command getters
 
 	public static Command VisionLaunchCommand() {
 		return new FullTargetCommand(

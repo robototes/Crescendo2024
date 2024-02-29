@@ -149,7 +149,6 @@ public class DrivebaseSubsystem extends SubsystemBase {
 		// viewable by AdvantageScope
 		SwerveDriveTelemetry.verbosity =
 				(Robot.isDebugMode() ? TelemetryVerbosity.LOW : TelemetryVerbosity.MACHINE);
-
 	}
 
 	/**
