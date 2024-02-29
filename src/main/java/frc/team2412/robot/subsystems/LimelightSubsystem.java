@@ -1,19 +1,24 @@
 package frc.team2412.robot.subsystems;
 
+import java.util.Map;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.units.Unit;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.networktables.GenericEntry;
 
 public class LimelightSubsystem extends SubsystemBase {
 
 	// POTENTIAL CONSTANTS
-	public static final double GOAL_DISTANCE_FROM_NOTE = 20.0;
+	private GenericEntry GOAL_DISTANCE_FROM_NOTE;
 
 	// MEMBERS
 
@@ -36,6 +41,7 @@ public class LimelightSubsystem extends SubsystemBase {
 		networkTable = NetworkTableInstance.getDefault().getTable("limelight");
 		ShuffleboardTab limelightTab = Shuffleboard.getTab("Limelight");
 
+		// helpers
 		setPipeline();
 
 		limelightTab.addBoolean("hasTarget", this::hasTargets).withPosition(0, 0).withSize(1, 1);
@@ -48,7 +54,7 @@ public class LimelightSubsystem extends SubsystemBase {
 				.withPosition(2, 0)
 				.withSize(1, 1);
 		limelightTab
-				.addDouble("Distance From Note", this::getDistanceFromTarget)
+				.addDouble("Distance From Note", this::getDistanceFromTargetInches)
 				.withPosition(3, 0)
 				.withSize(1, 1);
 		limelightTab
@@ -59,6 +65,13 @@ public class LimelightSubsystem extends SubsystemBase {
 				.addString("Target Pose ", this::getTargetPoseString)
 				.withPosition(0, 2)
 				.withSize(4, 1);
+		GOAL_DISTANCE_FROM_NOTE =
+				limelightTab.addPersistent("Goal distance", 20.0)
+						.withWidget(BuiltInWidgets.kNumberSlider)
+						.withPosition(4, 0)
+						.withSize(2, 1)
+						.withProperties(Map.of("Min", 0.0, "Max", 30.0))
+						.getEntry();
 	}
 
 	private void setPipeline() {
@@ -83,7 +96,7 @@ public class LimelightSubsystem extends SubsystemBase {
 		return networkTable.getEntry("tlong").getDouble(0);
 	}
 	// TODO re-measure distances to make this right
-	public double getDistanceFromTarget() {
+	public double getDistanceFromTargetInches() {
 
 		// focal length = (P x D) / W
 		double focal_length = 559.0394;
@@ -104,7 +117,8 @@ public class LimelightSubsystem extends SubsystemBase {
 		Rotation2d targetHeading =
 				new Rotation2d(
 						currentPose.getRotation().getRadians() + Units.degreesToRadians(getHorizontalOffset()));
-		double targetDistance = getDistanceFromTarget() / 39.3700787;
+						
+		double targetDistance = Units.inchesToMeters(getDistanceFromTargetInches());
 
 		Translation2d translationOffset = new Translation2d(targetDistance, targetHeading);
 		Pose2d targetPose =
@@ -125,7 +139,7 @@ public class LimelightSubsystem extends SubsystemBase {
 	}
 
 	public boolean isWithinDistance() {
-		return (getDistanceFromTarget() <= GOAL_DISTANCE_FROM_NOTE);
+		return (getDistanceFromTargetInches() <= GOAL_DISTANCE_FROM_NOTE.getDouble(20.0));
 	}
 
 	@Override

@@ -31,7 +31,8 @@ public class Controls {
 
 	private final CommandXboxController driveController;
 	private final CommandXboxController codriveController;
-	private final Trigger getWithinDistanceTrigger;
+	// leaving this code in in case we need to test outside of auto
+	//private final Trigger getWithinDistanceTrigger;
 
 	// Intake
 	private final Trigger driveIntakeInButton;
@@ -52,7 +53,8 @@ public class Controls {
 	public Controls(Subsystems s) {
 		driveController = new CommandXboxController(CONTROLLER_PORT);
 		codriveController = new CommandXboxController(CODRIVER_CONTROLLER_PORT);
-		getWithinDistanceTrigger = driveController.start();
+		// not sure what drive team wants (or if the trigger is even needed since we are only using the command in auto)
+		//getWithinDistanceTrigger = driveController.start();
 		this.s = s;
 
 		// launcherAmpPresetButton = codriveController.povDown();
@@ -70,9 +72,12 @@ public class Controls {
 		if (DRIVEBASE_ENABLED) {
 			bindDrivebaseControls();
 		}
+		// leaving this code in in case we need to test outside of auto
+		/*
 		if (LIMELIGHT_ENABLED) {
 			bindLimelightControls();
 		}
+		*/
 		if (LAUNCHER_ENABLED) {
 			bindLauncherControls();
 		}
@@ -103,12 +108,17 @@ public class Controls {
 								driveController::getLeftX,
 								() -> Rotation2d.fromRotations(driveController.getRightX())));
 		driveController.rightStick().onTrue(new InstantCommand(s.drivebaseSubsystem::toggleXWheels));
+		driveController.start().onTrue(new InstantCommand(s.drivebaseSubsystem::resetGyro));
 	}
 
+	// leaving this code in in case we need to test outside of auto
+	/*
 	public void bindLimelightControls() {
 		getWithinDistanceTrigger.onTrue(
 				new DriveToNoteCommand(s.drivebaseSubsystem, s.limelightSubsystem));
 	}
+	*/
+
 	// intake controls
 	private void bindIntakeControls() {
 		// CommandScheduler.getInstance()
