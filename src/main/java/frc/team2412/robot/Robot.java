@@ -36,6 +36,7 @@ public class Robot extends TimedRobot {
 		return instance;
 	}
 
+	private static final boolean debugMode = true;
 	private final RobotType robotType;
 	public Controls controls;
 	public Subsystems subsystems;
@@ -177,5 +178,9 @@ public class Robot extends TimedRobot {
 
 	public boolean isCompetition() {
 		return getRobotType() == RobotType.COMPETITION;
+	}
+
+	public static boolean isDebugMode() {
+		return debugMode;
 	}
 }
