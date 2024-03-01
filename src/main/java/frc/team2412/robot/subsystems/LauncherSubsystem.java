@@ -244,7 +244,7 @@ public class LauncherSubsystem extends SubsystemBase {
 			Shuffleboard.getTab("Launcher")
 					.addDouble("Bottom FlyWheel Temp", () -> launcherBottomMotor.getMotorTemperature());
 			Shuffleboard.getTab("Launcher")
-					.addDouble("Top FlyWheel Temp", () -> launcherBottomMotor.getMotorTemperature());
+					.addDouble("Top FlyWheel Temp", () -> launcherTopMotor.getMotorTemperature());
 		}
 
 		launcherIsAtSpeed =

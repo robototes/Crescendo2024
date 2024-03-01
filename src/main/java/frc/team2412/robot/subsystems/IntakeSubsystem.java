@@ -199,7 +199,11 @@ public class IntakeSubsystem extends SubsystemBase {
 					.withSize(1, 1)
 					.withWidget(BuiltInWidgets.kTextView);
 			shuffleboardTab
-					.addDouble("Index Motor Temp", () -> feederMotor.getMotorTemperature())
+					.addDouble("Index Motor Temp", () -> indexMotorUpper.getMotorTemperature())
+					.withSize(1, 1)
+					.withWidget(BuiltInWidgets.kTextView);
+			shuffleboardTab
+					.addDouble("Feeder Motor Temp", () -> feederMotor.getMotorTemperature())
 					.withSize(1, 1)
 					.withWidget(BuiltInWidgets.kTextView);
 		}
