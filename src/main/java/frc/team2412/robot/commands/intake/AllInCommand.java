@@ -27,7 +27,7 @@ public class AllInCommand extends Command {
 
 	@Override
 	public void end(boolean interrupted) {
-		intakeSubsystem.intakeReject();
+		// intakeSubsystem.intakeReject();
 		intakeSubsystem.indexStop();
 		intakeSubsystem.feederStop();
 	}

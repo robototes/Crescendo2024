@@ -125,7 +125,7 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherAngleTwoMotor.setSmartCurrentLimit(60);
 
 		launcherAngleOneMotor.setSoftLimit(CANSparkBase.SoftLimitDirection.kForward, 0.95f);
-		launcherAngleOneMotor.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, 0.705f);
+		launcherAngleOneMotor.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, 0.71f);
 		launcherAngleOneMotor.enableSoftLimit(CANSparkBase.SoftLimitDirection.kForward, true);
 		launcherAngleOneMotor.enableSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, true);
 

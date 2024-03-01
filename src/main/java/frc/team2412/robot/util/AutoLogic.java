@@ -57,7 +57,7 @@ public class AutoLogic {
 								LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
 								LauncherSubsystem.SUBWOOFER_AIM_ANGLE)
 						.andThen(new WaitCommand(1))
-						.andThen(new FeederInCommand(s.intakeSubsystem)));
+						.andThen(new FeederInCommand(s.intakeSubsystem).andThen(new WaitCommand(1))));
 
 		NamedCommands.registerCommand("Intake", new AllInCommand(s.intakeSubsystem));
 		// Complex Autos
