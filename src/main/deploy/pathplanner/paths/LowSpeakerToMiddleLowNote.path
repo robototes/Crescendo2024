@@ -4,15 +4,15 @@
     {
       "anchor": {
         "x": 0.73,
-        "y": 4.48
+        "y": 4.47
       },
       "prevControl": null,
       "nextControl": {
         "x": 1.031653955199802,
-        "y": 3.688636566462322
+        "y": 3.6786365664623215
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "LowSpeaker"
     },
     {
       "anchor": {
@@ -93,7 +93,7 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 4.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0

@@ -12,7 +12,7 @@
         "y": 4.862713869571883
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "MidSpeaker"
     },
     {
       "anchor": {
@@ -32,16 +32,16 @@
     },
     {
       "anchor": {
-        "x": 2.7,
+        "x": 2.64,
         "y": 4.1
       },
       "prevControl": {
-        "x": 2.3813806186170927,
+        "x": 2.3213806186170927,
         "y": 4.095403506122328
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Podium"
     }
   ],
   "rotationTargets": [],
@@ -78,7 +78,7 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 4.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0

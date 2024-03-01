@@ -12,7 +12,7 @@
         "y": 4.881599477484669
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "MidSpeaker"
     },
     {
       "anchor": {
@@ -127,7 +127,7 @@
   "reversed": false,
   "folder": null,
   "previewStartingState": {
-    "rotation": -178.3186363947627,
+    "rotation": 180.0,
     "velocity": 0
   },
   "useDefaultConstraints": false
