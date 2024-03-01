@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.9099007567384503,
-        "y": 3.7441047855068685
+        "x": 0.73,
+        "y": 6.62
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.900676909719328,
-        "y": 3.9814337887363047
+        "x": 1.7207761529808778,
+        "y": 6.857329003229436
       },
       "isLocked": false,
       "linkedName": "TopSpeaker"
     },
     {
       "anchor": {
-        "x": 8.122341289728013,
-        "y": 7.44198605514762
+        "x": 8.196298915120353,
+        "y": 7.451230758317373
       },
       "prevControl": {
-        "x": 7.532805796947992,
-        "y": 7.881457967947272
+        "x": 7.4919951992360705,
+        "y": 7.662521873082659
       },
       "nextControl": {
-        "x": 8.63079996430302,
-        "y": 7.062953225009887
+        "x": 8.566087042083993,
+        "y": 7.34029432022828
       },
       "isLocked": false,
       "linkedName": null
@@ -84,7 +84,7 @@
     },
     {
       "waypointRelativePos": 0.25,
-      "rotationDegrees": -160.94570240626456,
+      "rotationDegrees": 14.22369918817612,
       "rotateFast": false
     },
     {
@@ -106,9 +106,44 @@
       }
     }
   ],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "IntakeSensorOverride",
+      "waypointRelativePos": 0.7,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "IntakeSensorOverride"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Intake",
+      "waypointRelativePos": 1.85,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Intake"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 4.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0

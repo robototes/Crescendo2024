@@ -38,6 +38,8 @@ public class Robot extends TimedRobot {
 		return instance;
 	}
 
+	private static final boolean debugMode = true;
+
 	private final RobotType robotType;
 	private final PowerDistribution PDP;
 	public Controls controls;
@@ -182,5 +184,9 @@ public class Robot extends TimedRobot {
 
 	public boolean isCompetition() {
 		return getRobotType() == RobotType.COMPETITION;
+	}
+
+	public static boolean isDebugMode() {
+		return debugMode;
 	}
 }
