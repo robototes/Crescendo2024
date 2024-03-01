@@ -36,7 +36,7 @@ public class Robot extends TimedRobot {
 		return instance;
 	}
 
-	private static final boolean debugMode = true;
+	private static final boolean debugMode = false;
 	private final RobotType robotType;
 	public Controls controls;
 	public Subsystems subsystems;
