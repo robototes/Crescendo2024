@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.9099007567384503,
-        "y": 3.7441047855068685
+        "x": 0.73,
+        "y": 6.62
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.890375669039626,
-        "y": 4.71929316921697
+        "x": 1.7104749123011758,
+        "y": 7.595188383710101
       },
       "isLocked": false,
       "linkedName": "TopSpeaker"
@@ -54,7 +54,7 @@
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 4.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0

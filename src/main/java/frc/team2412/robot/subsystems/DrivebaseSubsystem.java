@@ -65,7 +65,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
 	private static final PIDConstants AUTO_TRANSLATION_PID =
 			Robot.getInstance().getRobotType() == RobotType.PRACTICE
-					? new PIDConstants(5, 0, 0.4) // practice
+					? new PIDConstants(5, 0, 0.5) // practice
 					: Robot.getInstance().getRobotType() == RobotType.BONK
 							? new PIDConstants(5, 0, 0.1) // bonk
 							: Robot.getInstance().getRobotType() == RobotType.CRANE
