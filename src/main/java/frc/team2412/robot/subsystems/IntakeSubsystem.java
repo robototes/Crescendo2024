@@ -52,26 +52,14 @@ public class IntakeSubsystem extends SubsystemBase {
 
 	private final ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Intake");
 	// speed
-	private final GenericEntry setIntakeInSpeedEntry =
-			shuffleboardTab
-					.addPersistent("Intake in speed - ", INTAKE_IN_SPEED)
-					.withSize(2, 1)
-					.withProperties(Map.of("Min", -1, "Max", 1))
-					.getEntry();
+	private GenericEntry setIntakeInSpeedEntry;
 
-	private final GenericEntry setIndexInSpeedEntry =
-			shuffleboardTab.add("Index in speed - ", INDEX_UPPER_IN_SPEED).withSize(1, 1).getEntry();
+	private GenericEntry setIndexInSpeedEntry;
 
-	private final GenericEntry setFeederInSpeedEntry =
-			shuffleboardTab.add("Feeder in speed - ", FEEDER_IN_SPEED).withSize(1, 1).getEntry();
+	private GenericEntry setFeederInSpeedEntry;
 
 	// sensor override
-	private final GenericEntry sensorOverride =
-			shuffleboardTab
-					.add("Override Sensors", false)
-					.withSize(1, 1)
-					.withWidget(BuiltInWidgets.kTextView)
-					.getEntry();
+	private GenericEntry sensorOverride;
 
 	public IntakeSubsystem() {
 		intakeMotorFront = new CANSparkMax(INTAKE_MOTOR_FRONT, MotorType.kBrushless);
@@ -214,9 +202,29 @@ public class IntakeSubsystem extends SubsystemBase {
 					.addDouble("Index Motor Temp", () -> feederMotor.getMotorTemperature())
 					.withSize(1, 1)
 					.withWidget(BuiltInWidgets.kTextView);
-
-			shuffleboardTab.addBoolean("Index Sensor - ", this::indexSensorHasNote).withSize(1, 1);
-			shuffleboardTab.addBoolean("Feeder Sensor - ", this::feederSensorHasNote).withSize(1, 1);
 		}
+
+		shuffleboardTab.addBoolean("Index Sensor - ", this::indexSensorHasNote).withSize(1, 1);
+		shuffleboardTab.addBoolean("Feeder Sensor - ", this::feederSensorHasNote).withSize(1, 1);
+
+		setIntakeInSpeedEntry =
+				shuffleboardTab
+						.addPersistent("Intake in speed - ", INTAKE_IN_SPEED)
+						.withSize(2, 1)
+						.withProperties(Map.of("Min", -1, "Max", 1))
+						.getEntry();
+
+		setIndexInSpeedEntry =
+				shuffleboardTab.add("Index in speed - ", INDEX_UPPER_IN_SPEED).withSize(1, 1).getEntry();
+
+		setFeederInSpeedEntry =
+				shuffleboardTab.add("Feeder in speed - ", FEEDER_IN_SPEED).withSize(1, 1).getEntry();
+
+		sensorOverride =
+				shuffleboardTab
+						.add("Override Sensors", false)
+						.withSize(1, 1)
+						.withWidget(BuiltInWidgets.kTextView)
+						.getEntry();
 	}
 }
