@@ -24,7 +24,6 @@ public class AutoPaths {
 
 	// Complex Autos
 
-
 	public static Command TopSpeakerCenterLineN1N2AutoLine1 =
 			Commands.sequence(
 					SubwooferLaunchCommand(),

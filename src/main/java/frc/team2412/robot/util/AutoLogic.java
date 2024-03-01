@@ -4,6 +4,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -56,7 +57,10 @@ public class AutoLogic {
 				"IntakeSensorOverride", new AllInSensorOverrideCommand(s.intakeSubsystem));
 		// Launcher
 		NamedCommands.registerCommand(
-				"VisionLaunch", new FullTargetCommand(s.launcherSubsystem, s.drivebaseSubsystem, controls));
+				"VisionLaunch",
+				Commands.sequence(
+						new FullTargetCommand(s.launcherSubsystem, s.drivebaseSubsystem, controls),
+						new FeederInCommand(s.intakeSubsystem)));
 
 		NamedCommands.registerCommand(
 				"SubwooferLaunch",
