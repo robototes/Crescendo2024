@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.67,
+        "x": 2.64,
         "y": 4.1
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.5547461171929986,
+        "x": 2.524746117192999,
         "y": 4.003997174531632
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Podium"
     },
     {
       "anchor": {
-        "x": 2.450451758046374,
-        "y": 4.1
+        "x": 2.6,
+        "y": 4.79
       },
       "prevControl": {
-        "x": 2.3504517580463737,
-        "y": 4.1
+        "x": 2.5,
+        "y": 4.79
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "PodiumLaunch"
     }
   ],
   "rotationTargets": [
@@ -56,7 +56,7 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 4.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0

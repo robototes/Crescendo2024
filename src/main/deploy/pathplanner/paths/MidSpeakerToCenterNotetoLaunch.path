@@ -8,68 +8,68 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.497586995173991,
-        "y": 4.837621103813636
+        "x": 1.845187834519813,
+        "y": 4.992139714009158
       },
       "isLocked": false,
       "linkedName": "MidSpeaker"
     },
     {
       "anchor": {
-        "x": 2.6850030842918833,
-        "y": 3.0784861569723145
+        "x": 2.8990839963661905,
+        "y": 4.92
       },
       "prevControl": {
-        "x": 1.9746066453862476,
-        "y": 3.4401425258697294
+        "x": 2.1396103900385564,
+        "y": 4.92
       },
       "nextControl": {
-        "x": 3.4912732682608225,
-        "y": 2.6680213360426723
+        "x": 3.1790839963661908,
+        "y": 4.92
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.18,
-        "y": 3.899415798831598
+        "x": 4.400159657462172,
+        "y": 4.8
       },
       "prevControl": {
-        "x": 4.500235334840064,
-        "y": 3.5595334662516294
+        "x": 3.9457164628614976,
+        "y": 4.910918393265359
       },
       "nextControl": {
-        "x": 5.649102652491019,
-        "y": 4.133967125077108
+        "x": 4.876891015948452,
+        "y": 4.6836416147699715
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.3,
-        "y": 4.1
+        "x": 8.29957545629377,
+        "y": 4.089988751406074
       },
       "prevControl": {
-        "x": 7.928016256032513,
-        "y": 4.119240538481077
+        "x": 6.862948583040024,
+        "y": 3.2543996516564464
       },
       "nextControl": {
-        "x": 8.671983743967488,
-        "y": 4.080759461518922
+        "x": 8.94894077946899,
+        "y": 4.467680827130437
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 4.2,
-        "y": 5.1
+        "x": 4.400159657462172,
+        "y": 6.479480387532203
       },
       "prevControl": {
-        "x": 4.329425844437274,
-        "y": 4.221753198461352
+        "x": 5.7928081570448855,
+        "y": 7.021880329474945
       },
       "nextControl": null,
       "isLocked": false,
@@ -78,31 +78,13 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 2.75,
+      "waypointRelativePos": 1.8,
       "rotationDegrees": 180.0,
       "rotateFast": false
     }
   ],
   "constraintZones": [],
-  "eventMarkers": [
-    {
-      "name": "New Event Marker",
-      "waypointRelativePos": 2.15,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "Intake"
-              }
-            }
-          ]
-        }
-      }
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.0,
     "maxAcceleration": 3.0,
@@ -111,14 +93,14 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 173.0,
+    "rotation": -165.72241095228685,
     "rotateFast": false
   },
   "reversed": false,
   "folder": null,
   "previewStartingState": {
     "rotation": 180.0,
-    "velocity": 0.0
+    "velocity": 0
   },
   "useDefaultConstraints": true
 }

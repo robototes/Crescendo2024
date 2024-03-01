@@ -8,11 +8,11 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.2516735004898587,
-        "y": 6.725393882216337
+        "x": 1.4829275372836466,
+        "y": 7.256431655720455
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "TopSpeaker"
     },
     {
       "anchor": {
@@ -32,12 +32,12 @@
     },
     {
       "anchor": {
-        "x": 0.8,
-        "y": 6.54
+        "x": 0.73,
+        "y": 6.62
       },
       "prevControl": {
-        "x": 1.2757927218565008,
-        "y": 7.251049617052808
+        "x": 1.2057927218565008,
+        "y": 7.331049617052808
       },
       "nextControl": null,
       "isLocked": false,
@@ -77,7 +77,7 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 4.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
