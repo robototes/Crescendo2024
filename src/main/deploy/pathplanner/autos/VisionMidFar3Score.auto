@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.4,
+      "x": 1.33,
       "y": 5.55
     },
-    "rotation": 179.3950927289807
+    "rotation": 180.0
   },
   "command": {
     "type": "sequential",
@@ -14,13 +14,13 @@
         {
           "type": "named",
           "data": {
-            "name": "SubwooferLaunch"
+            "name": "VisionLaunch"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "midUnderStageCenterNoteLaunch"
+            "pathName": "MidSpeakerToCenterMiddleNode"
           }
         },
         {
@@ -32,7 +32,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "launchPosSecondCenterLineNoteLaunch"
+            "pathName": "CenterMiddleNoteLaunchToSecondNoteLaunch"
           }
         },
         {

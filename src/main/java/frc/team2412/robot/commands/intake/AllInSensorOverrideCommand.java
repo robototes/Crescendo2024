@@ -3,10 +3,10 @@ package frc.team2412.robot.commands.intake;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.team2412.robot.subsystems.IntakeSubsystem;
 
-public class AllInCommand extends Command {
+public class AllInSensorOverrideCommand extends Command {
 	private final IntakeSubsystem intakeSubsystem;
 
-	public AllInCommand(IntakeSubsystem intakeSubsystem) {
+	public AllInSensorOverrideCommand(IntakeSubsystem intakeSubsystem) {
 		this.intakeSubsystem = intakeSubsystem;
 		addRequirements(intakeSubsystem);
 	}
@@ -19,21 +19,7 @@ public class AllInCommand extends Command {
 	}
 
 	@Override
-	public void execute() {
-		if (intakeSubsystem.indexSensorHasNote()) {
-			intakeSubsystem.intakeReject();
-		}
-	}
-
-	@Override
-	public void end(boolean interrupted) {
-		// intakeSubsystem.intakeReject();
-		intakeSubsystem.indexStop();
-		intakeSubsystem.feederStop();
-	}
-
-	@Override
 	public boolean isFinished() {
-		return intakeSubsystem.feederSensorHasNote();
+		return true;
 	}
 }

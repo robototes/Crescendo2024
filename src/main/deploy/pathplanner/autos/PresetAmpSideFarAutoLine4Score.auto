@@ -3,9 +3,9 @@
   "startingPose": {
     "position": {
       "x": 0.73,
-      "y": 4.48
+      "y": 6.62
     },
-    "rotation": 120.0
+    "rotation": -120.0
   },
   "command": {
     "type": "sequential",
@@ -20,13 +20,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "LowSpeakerToLowNote"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "LowNoteToLowSpeaker"
+            "pathName": "HighSpeakerToHighNoteLaunch2"
           }
         },
         {
@@ -38,19 +32,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "LowSpeakerMidNote2Return"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "VisionLaunch"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "SpeakerToHighNoteReturn"
+            "pathName": "HighNoteLaunch2ToFarHighNoteToLaunch"
           }
         },
         {
@@ -62,6 +44,6 @@
       ]
     }
   },
-  "folder": "Preset Autos",
+  "folder": "Vision Autos",
   "choreoAuto": false
 }

@@ -3,9 +3,9 @@
   "startingPose": {
     "position": {
       "x": 0.73,
-      "y": 6.62
+      "y": 4.48
     },
-    "rotation": -120.0
+    "rotation": 120.0
   },
   "command": {
     "type": "sequential",
@@ -14,7 +14,7 @@
         {
           "type": "named",
           "data": {
-            "name": "TopSpeakerCenterLineN1N2AutoLine1"
+            "name": "LowSpeakerCenterLineN5N4"
           }
         }
       ]
