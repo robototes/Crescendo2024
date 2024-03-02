@@ -20,10 +20,6 @@ public class SetAngleCommand extends Command {
 		if (launcherAngleSpeed.getAsDouble() != 0.0) {
 			launcherSubsystem.setAngleSpeed(launcherAngleSpeed.getAsDouble());
 		}
-		else {
-			launcherSubsystem.setAngle(launcherSubsystem.getAngle());
-		}
-		
 	}
 
 	@Override
