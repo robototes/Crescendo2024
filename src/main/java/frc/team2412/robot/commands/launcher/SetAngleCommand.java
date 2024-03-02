@@ -17,8 +17,13 @@ public class SetAngleCommand extends Command {
 
 	@Override
 	public void execute() {
-
-		launcherSubsystem.setAngleSpeed(launcherAngleSpeed.getAsDouble());
+		if (launcherAngleSpeed.getAsDouble() != 0.0) {
+			launcherSubsystem.setAngleSpeed(launcherAngleSpeed.getAsDouble());
+		}
+		else {
+			launcherSubsystem.setAngle(launcherSubsystem.getAngle());
+		}
+		
 	}
 
 	@Override

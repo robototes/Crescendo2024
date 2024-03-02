@@ -28,6 +28,18 @@
           "data": {
             "name": "SubwooferLaunch"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SpeakerToHighNoteReturn"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "SubwooferLaunch"
+          }
         }
       ]
     }
