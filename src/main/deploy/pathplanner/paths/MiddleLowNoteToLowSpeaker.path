@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.3,
-        "y": 0.8
+        "x": 9.09898598894585,
+        "y": 0.8080477216589235
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.9,
-        "y": 0.8000000000000005
+        "x": 5.69898598894585,
+        "y": 0.8080477216589248
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "CenterLineN5"
     },
     {
       "anchor": {
@@ -60,7 +60,7 @@
   "eventMarkers": [
     {
       "name": "New Event Marker",
-      "waypointRelativePos": 0,
+      "waypointRelativePos": 0.25,
       "command": {
         "type": "parallel",
         "data": {

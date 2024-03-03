@@ -48,16 +48,16 @@
     },
     {
       "anchor": {
-        "x": 8.3,
-        "y": 0.8
+        "x": 9.09898598894585,
+        "y": 0.8080477216589235
       },
       "prevControl": {
-        "x": 7.737879845802489,
-        "y": 0.8
+        "x": 8.536865834748339,
+        "y": 0.8080477216589235
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "CenterLineN5"
     }
   ],
   "rotationTargets": [
@@ -73,25 +73,7 @@
     }
   ],
   "constraintZones": [],
-  "eventMarkers": [
-    {
-      "name": "New Event Marker",
-      "waypointRelativePos": 1.5,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "Intake"
-              }
-            }
-          ]
-        }
-      }
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.0,
     "maxAcceleration": 3.0,
