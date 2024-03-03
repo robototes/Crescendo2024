@@ -40,6 +40,12 @@
           "data": {
             "name": "SubwooferLaunch"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "HighSpeakerCenterLine"
+          }
         }
       ]
     }

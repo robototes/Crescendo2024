@@ -32,7 +32,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "SpeakerToHighNoteReturn"
+            "pathName": "SpeakerToLowNote"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LowNoteToSpeaker"
           }
         },
         {
@@ -44,13 +50,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "SpeakerToLowNote"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "LowNoteToSpeaker"
+            "pathName": "SpeakerToHighNoteReturn"
           }
         },
         {
