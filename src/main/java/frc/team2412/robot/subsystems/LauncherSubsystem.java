@@ -28,15 +28,15 @@ public class LauncherSubsystem extends SubsystemBase {
 	public static final int AMP_AIM_ANGLE = 335;
 	public static final int SUBWOOFER_AIM_ANGLE = 298;
 	public static final int PODIUM_AIM_ANGLE = 39;
-	public static final int TRAP_AIM_ANGLE = 80;
+	public static final int TRAP_AIM_ANGLE = 290;
 	// MOTOR VALUES
 	// max Free Speed: 6784 RPM
 	private static final int MAX_FREE_SPEED_RPM = 6784;
-	public static final double ANGLE_TOLERANCE = 0.5;
-	public static final double RPM_TOLERANCE = 50;
+	public static final double ANGLE_TOLERANCE = 5;
+	public static final double RPM_TOLERANCE = 200;
 	// RPM
-	public static final int SPEAKER_SHOOT_SPEED_RPM = 3392; // 50%
-	public static final int TRAP_SHOOT_SPEED_RPM = 2000;
+	public static final int SPEAKER_SHOOT_SPEED_RPM = 3850;
+	public static final int TRAP_SHOOT_SPEED_RPM = 4000;
 	public static final double ANGLE_MAX_SPEED = 1.0;
 	// 3392 RPM = 50% Speed
 	// 1356 RPM = 20% Speed
@@ -59,54 +59,19 @@ public class LauncherSubsystem extends SubsystemBase {
 	private double rpmSetpoint;
 	private double angleSetpoint;
 
-	private final GenericEntry setLauncherSpeedEntry =
-			Shuffleboard.getTab("Launcher")
-					.addPersistent("Launcher Speed setpoint", SPEAKER_SHOOT_SPEED_RPM)
-					.withSize(3, 1)
-					.withWidget(BuiltInWidgets.kNumberSlider)
-					.withProperties(Map.of("Min", -MAX_FREE_SPEED_RPM, "Max", MAX_FREE_SPEED_RPM))
-					.getEntry();
+	private GenericEntry setLauncherSpeedEntry;
 
-	private final GenericEntry launcherAngleEntry =
-			Shuffleboard.getTab("Launcher")
-					.add("Launcher angle", 0)
-					.withSize(2, 1)
-					.withWidget(BuiltInWidgets.kTextView)
-					.getEntry();
-	private final GenericEntry launcherSpeedEntry =
-			Shuffleboard.getTab("Launcher")
-					.add("Launcher Speed", 0)
-					.withSize(1, 1)
-					.withWidget(BuiltInWidgets.kTextView)
-					.getEntry();
+	private GenericEntry launcherAngleEntry;
 
-	private final GenericEntry launcherAngleSpeedEntry =
-			Shuffleboard.getTab("Launcher")
-					.add("Launcher angle Speed", 0)
-					.withSize(2, 1)
-					.withWidget(BuiltInWidgets.kTextView)
-					.getEntry();
+	private GenericEntry launcherSpeedEntry;
 
-	private final GenericEntry launcherTopFlywheelTemp =
-			Shuffleboard.getTab("Launcher")
-					.add("top Flywheel temp", 0)
-					.withSize(1, 1)
-					.withWidget(BuiltInWidgets.kTextView)
-					.getEntry();
+	private GenericEntry launcherAngleSpeedEntry;
 
-	private final GenericEntry launcherBottomFlyWheelTemp =
-			Shuffleboard.getTab("Launcher")
-					.add("bottom Flywheel temp", 0)
-					.withSize(1, 1)
-					.withWidget(BuiltInWidgets.kTextView)
-					.getEntry();
+	private GenericEntry launcherTopFlywheelTemp;
 
-	private final GenericEntry launcherIsAtSpeed =
-			Shuffleboard.getTab("Launcher")
-					.add("flywheels at target speed", false)
-					.withSize(1, 1)
-					.withWidget(BuiltInWidgets.kBooleanBox)
-					.getEntry();
+	private GenericEntry launcherBottomFlyWheelTemp;
+
+	private GenericEntry launcherIsAtSpeed;
 
 	// Constructors
 	public LauncherSubsystem() {
@@ -135,16 +100,8 @@ public class LauncherSubsystem extends SubsystemBase {
 		// launcherAngleTwoPIDController = launcherAngleTwoMotor.getPIDController();
 		// launcherAngleTwoPIDController.setFeedbackDevice(launcherAngleEncoder);
 
-		Shuffleboard.getTab("Launcher")
-				.add(new SparkPIDWidget(launcherAngleOnePIDController, "launcherAngleOnePIDController"));
-		// Shuffleboard.getTab("Launcher")
-		//		.add(new SparkPIDWidget(launcherAngleTwoPIDController, "launcherAngleTwoPIDController"));
-		Shuffleboard.getTab("Launcher")
-				.add(new SparkPIDWidget(launcherTopPIDController, "launcherTopPIDController"));
-		Shuffleboard.getTab("Launcher")
-				.add(new SparkPIDWidget(launcherBottomPIDController, "launcherBottomPIDController"));
-
 		configMotors();
+		initShuffleboard();
 	}
 
 	public void configMotors() {
@@ -164,11 +121,11 @@ public class LauncherSubsystem extends SubsystemBase {
 		// current limit
 		launcherTopMotor.setSmartCurrentLimit(40);
 		launcherBottomMotor.setSmartCurrentLimit(40);
-		launcherAngleOneMotor.setSmartCurrentLimit(80);
-		launcherAngleTwoMotor.setSmartCurrentLimit(80);
+		launcherAngleOneMotor.setSmartCurrentLimit(60);
+		launcherAngleTwoMotor.setSmartCurrentLimit(60);
 
 		launcherAngleOneMotor.setSoftLimit(CANSparkBase.SoftLimitDirection.kForward, 0.95f);
-		launcherAngleOneMotor.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, 0.705f);
+		launcherAngleOneMotor.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, 0.71f);
 		launcherAngleOneMotor.enableSoftLimit(CANSparkBase.SoftLimitDirection.kForward, true);
 		launcherAngleOneMotor.enableSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, true);
 
@@ -271,6 +228,71 @@ public class LauncherSubsystem extends SubsystemBase {
 		// launcherAngleOnePIDController.setReference(Speed, ControlType.kVelocity);
 		// launcherAngleTwoPIDController.setReference(Speed, ControlType.kVelocity);
 		launcherAngleOneMotor.set(Speed);
+	}
+
+	private void initShuffleboard() {
+		launcherBottomFlyWheelTemp =
+				Shuffleboard.getTab("Launcher")
+						.add("bottom Flywheel temp", 0)
+						.withSize(2, 1)
+						.withWidget(BuiltInWidgets.kTextView)
+						.withPosition(0, 3)
+						.getEntry();
+
+		launcherIsAtSpeed =
+				Shuffleboard.getTab("Launcher")
+						.add("flywheels at target speed", false)
+						.withSize(1, 1)
+						.withWidget(BuiltInWidgets.kBooleanBox)
+						.withPosition(0, 2)
+						.getEntry();
+		launcherTopFlywheelTemp =
+				Shuffleboard.getTab("Launcher")
+						.add("top Flywheel temp", 0)
+						.withSize(2, 1)
+						.withWidget(BuiltInWidgets.kTextView)
+						.withPosition(2, 3)
+						.getEntry();
+		launcherAngleSpeedEntry =
+				Shuffleboard.getTab("Launcher")
+						.add("Launcher angle Speed", 0)
+						.withSize(3, 1)
+						.withWidget(BuiltInWidgets.kTextView)
+						.withPosition(5, 2)
+						.getEntry();
+		launcherSpeedEntry =
+				Shuffleboard.getTab("Launcher")
+						.add("Launcher Speed", 0)
+						.withSize(3, 1)
+						.withWidget(BuiltInWidgets.kTextView)
+						.withPosition(5, 1)
+						.getEntry();
+		launcherAngleEntry =
+				Shuffleboard.getTab("Launcher")
+						.add("Launcher angle", 0)
+						.withSize(3, 1)
+						.withWidget(BuiltInWidgets.kTextView)
+						.withPosition(5, 3)
+						.getEntry();
+		setLauncherSpeedEntry =
+				Shuffleboard.getTab("Launcher")
+						.add("Launcher Speed Setpoint", 0)
+						.withSize(3, 1)
+						.withWidget(BuiltInWidgets.kNumberSlider)
+						.withProperties(Map.of("Min", -MAX_FREE_SPEED_RPM, "Max", MAX_FREE_SPEED_RPM))
+						.withPosition(5, 0)
+						.getEntry();
+		Shuffleboard.getTab("Launcher")
+				.add(new SparkPIDWidget(launcherAngleOnePIDController, "launcherAnglePID"))
+				.withPosition(2, 0);
+		// Shuffleboard.getTab("Launcher")
+		//		.add(new SparkPIDWidget(launcherAngleTwoPIDController, "launcherAngleTwoPIDController"));
+		Shuffleboard.getTab("Launcher")
+				.add(new SparkPIDWidget(launcherTopPIDController, "launcherTopPID"))
+				.withPosition(0, 0);
+		Shuffleboard.getTab("Launcher")
+				.add(new SparkPIDWidget(launcherBottomPIDController, "launcherBottomPID"))
+				.withPosition(1, 0);
 	}
 
 	@Override

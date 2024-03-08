@@ -11,12 +11,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.team2412.robot.Controls;
 import frc.team2412.robot.subsystems.DrivebaseSubsystem;
-import frc.team2412.robot.subsystems.IntakeSubsystem;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
 import frc.team2412.robot.util.LauncherDataLoader;
 import frc.team2412.robot.util.LauncherDataPoint;
 import java.nio.file.FileSystems;
-import java.util.function.BooleanSupplier;
 
 public class FullTargetCommand extends Command {
 
@@ -24,37 +22,30 @@ public class FullTargetCommand extends Command {
 			LauncherDataLoader.fromCSV(
 					FileSystems.getDefault()
 							.getPath(Filesystem.getDeployDirectory().getPath(), "launcher_data.csv"));
-	private static final double YAW_TARGET_VIBRATION_TOLERANCE = 3; // degrees
+	private static final double YAW_TARGET_VIBRATION_TOLERANCE = 10; // degrees
 	private Pose2d SPEAKER_POSE;
 
 	private DrivebaseSubsystem drivebaseSubsystem;
 	private LauncherSubsystem launcherSubsystem;
-	private IntakeSubsystem intakeSubsystem;
 	private Command yawAlignmentCommand;
 	private Rotation2d yawTarget;
-	private BooleanSupplier launch;
 	private Controls controls;
 
 	public FullTargetCommand(
 			LauncherSubsystem launcherSubsystem,
-			IntakeSubsystem intakeSubsystem,
 			DrivebaseSubsystem drivebaseSubsystem,
-			Controls controls,
-			BooleanSupplier launch) {
+			Controls controls) {
 		this.launcherSubsystem = launcherSubsystem;
-		this.intakeSubsystem = intakeSubsystem;
 		this.drivebaseSubsystem = drivebaseSubsystem;
 		this.controls = controls;
-		this.launch = launch;
 		yawAlignmentCommand = drivebaseSubsystem.rotateToAngle(() -> yawTarget, false);
 
-		addRequirements(launcherSubsystem, intakeSubsystem);
+		addRequirements(launcherSubsystem);
 	}
 
 	@Override
 	public void initialize() {
 		CommandScheduler.getInstance().schedule(yawAlignmentCommand);
-		intakeSubsystem.feederStop();
 
 		SPEAKER_POSE =
 				DriverStation.getAlliance().get().equals(Alliance.Blue)
@@ -75,12 +66,6 @@ public class FullTargetCommand extends Command {
 		launcherSubsystem.setAngle(dataPoint.angle);
 		launcherSubsystem.launch(dataPoint.rpm);
 
-		if (launch.getAsBoolean()) {
-			intakeSubsystem.feederIn();
-		} else {
-			intakeSubsystem.feederStop();
-		}
-
 		if (MathUtil.isNear(
 						yawTarget.getDegrees(),
 						drivebaseSubsystem.getPose().getRotation().getDegrees(),
@@ -99,7 +84,6 @@ public class FullTargetCommand extends Command {
 	public void end(boolean interrupted) {
 		yawAlignmentCommand.cancel();
 		launcherSubsystem.stopLauncher();
-		intakeSubsystem.feederStop();
 		controls.vibrateDriveController(0.0);
 	}
 }

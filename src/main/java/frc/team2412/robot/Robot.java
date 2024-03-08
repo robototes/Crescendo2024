@@ -3,7 +3,10 @@ package frc.team2412.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -36,7 +39,10 @@ public class Robot extends TimedRobot {
 		return instance;
 	}
 
+	private static final boolean debugMode = true;
+
 	private final RobotType robotType;
+	private final PowerDistribution PDP;
 	public Controls controls;
 	public Subsystems subsystems;
 	public MatchDashboard dashboard;
@@ -47,6 +53,7 @@ public class Robot extends TimedRobot {
 	protected Robot(RobotType type) {
 		// non public for singleton. Protected so test class can subclass
 		instance = this;
+		PDP = new PowerDistribution(Hardware.PDP_ID, ModuleType.kRev);
 		robotType = type;
 	}
 
@@ -72,6 +79,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void robotInit() {
 		LiveWindow.disableAllTelemetry();
+		LiveWindow.enableTelemetry(PDP);
 
 		subsystems = new Subsystems();
 		controls = new Controls(subsystems);
@@ -107,6 +115,8 @@ public class Robot extends TimedRobot {
 		DriverStation.silenceJoystickConnectionWarning(true);
 
 		dashboard = new MatchDashboard(subsystems);
+
+		RobotController.setBrownoutVoltage(5.75);
 	}
 
 	@Override
@@ -177,5 +187,9 @@ public class Robot extends TimedRobot {
 
 	public boolean isCompetition() {
 		return getRobotType() == RobotType.COMPETITION;
+	}
+
+	public static boolean isDebugMode() {
+		return debugMode;
 	}
 }

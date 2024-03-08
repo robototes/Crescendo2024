@@ -17,7 +17,7 @@ import java.util.Map;
 
 public class IntakeSubsystem extends SubsystemBase {
 	// Constants
-	public static final double INTAKE_IN_SPEED = 0.3;
+	public static final double INTAKE_IN_SPEED = 0.6;
 	public static final double INTAKE_REVERSE_SPEED = -0.7;
 	public static final double INTAKE_REJECT_SPEED = -0.4;
 
@@ -123,7 +123,7 @@ public class IntakeSubsystem extends SubsystemBase {
 			Shuffleboard.getTab("Intake")
 					.add("Override Sensors", false)
 					.withSize(1, 1)
-					.withWidget(BuiltInWidgets.kTextView)
+					.withWidget(BuiltInWidgets.kToggleSwitch)
 					.getEntry();
 
 	public IntakeSubsystem() {

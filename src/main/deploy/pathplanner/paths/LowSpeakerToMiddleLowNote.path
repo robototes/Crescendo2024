@@ -4,28 +4,28 @@
     {
       "anchor": {
         "x": 0.73,
-        "y": 4.48
+        "y": 4.47
       },
       "prevControl": null,
       "nextControl": {
         "x": 1.031653955199802,
-        "y": 3.688636566462322
+        "y": 3.6786365664623215
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "LowSpeaker"
     },
     {
       "anchor": {
-        "x": 2.7778742005415524,
-        "y": 1.2881920200359664
+        "x": 3.034636378061356,
+        "y": 1.5112125236126965
       },
       "prevControl": {
-        "x": 1.1900561100054632,
-        "y": 1.5888973576834935
+        "x": 1.7459946013496772,
+        "y": 2.4864008951782903
       },
       "nextControl": {
-        "x": 5.2842174152816765,
-        "y": 0.8135338793200119
+        "x": 4.116859540132383,
+        "y": 0.6922328333967845
       },
       "isLocked": false,
       "linkedName": null
@@ -48,16 +48,16 @@
     },
     {
       "anchor": {
-        "x": 8.3,
-        "y": 0.8
+        "x": 9.011238164994147,
+        "y": 0.81
       },
       "prevControl": {
-        "x": 7.737879845802489,
-        "y": 0.8
+        "x": 8.449118010796635,
+        "y": 0.81
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "CenterLineN5"
     }
   ],
   "rotationTargets": [
@@ -75,7 +75,7 @@
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 4.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0

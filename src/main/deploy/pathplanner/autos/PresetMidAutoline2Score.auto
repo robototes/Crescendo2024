@@ -2,7 +2,7 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3,
+      "x": 1.33,
       "y": 5.55
     },
     "rotation": 180.0
@@ -18,22 +18,9 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Intake"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "SpeakerToMidNoteReturn"
-                }
-              }
-            ]
+            "pathName": "SpeakerToMidNoteReturn"
           }
         },
         {
@@ -41,10 +28,16 @@
           "data": {
             "name": "SubwooferLaunch"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MidSpeakerPassAutoLine"
+          }
         }
       ]
     }
   },
-  "folder": null,
+  "folder": "Preset Autos",
   "choreoAuto": false
 }
