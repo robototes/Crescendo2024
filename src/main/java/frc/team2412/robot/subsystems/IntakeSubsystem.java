@@ -222,6 +222,10 @@ public class IntakeSubsystem extends SubsystemBase {
 		return feederSensor.get();
 	}
 
+	public boolean isIntakeOn() {
+		return (intakeMotorFront.get() != 0 || indexMotorUpper.get() != 0 || indexMotorLower.get() != 0 || feederMotor.get() != 0);
+	}
+
 	@Override
 	public void periodic() {
 		intakeMotorFrontTemp.setDouble(intakeMotorFront.getMotorTemperature());

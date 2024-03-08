@@ -27,16 +27,25 @@ public class LightsCommand extends Command {
 
 	@Override
 	public void execute() {
-		if (intakeSubsystem.getIndexSensor()) {
-			ledSubsystem.setBLUE_LED();
-		} else if (launcherSubsystem.isAtSpeed()) {
+		if (launcherSubsystem.isAtSpeed()) { //Checks if launcher is ready
 			ledSubsystem.setGREEN_LED();
+		} else if (intakeSubsystem.getIndexSensor()) { //Checks if note is in feeder
+			ledSubsystem.setBLUE_LED();
+		} else if (intakeSubsystem.isIntakeOn()) { //Checks if intake is on
+			ledSubsystem.setYELLOW_LED();
+		} else { //Everything else including intake off
+			ledSubsystem.setRED_LED();
 		}
 	}
 
 	@Override
+	public void end(boolean interrupted) {
+		ledSubsystem.disableLED();
+	}
+
+
+	@Override
 	public boolean isFinished() {
-		ledSubsystem.setRED_LED();
 		return true;
 	}
 }
