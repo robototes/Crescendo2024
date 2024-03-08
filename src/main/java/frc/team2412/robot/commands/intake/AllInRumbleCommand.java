@@ -16,7 +16,10 @@ public class AllInRumbleCommand extends SequentialCommandGroup {
 		addCommands(new AllInCommand(intakeSubsystem, controls), new WaitCommand(0.5));
 	}
 
-	public void end() {
-		controls.vibrateDriveController(0.0);
-	}
+    @Override
+    public final void end (boolean interrupted) {
+        if (interrupted){
+            controls.vibrateDriveController(0.0); 
+        }
+    }
 }
