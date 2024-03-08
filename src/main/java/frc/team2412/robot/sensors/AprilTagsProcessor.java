@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import frc.team2412.robot.Hardware;
-import frc.team2412.robot.Robot;
 import frc.team2412.robot.util.DrivebaseWrapper;
 import frc.team2412.robot.util.SendablePose3d;
 import java.util.EnumSet;
@@ -128,11 +127,11 @@ public class AprilTagsProcessor {
 		this.aprilTagsHelper = aprilTagsHelper;
 		rawVisionFieldObject = aprilTagsHelper.getField().getObject("RawVision");
 		var networkTables = NetworkTableInstance.getDefault();
-		if (Robot.isSimulation()) {
-			networkTables.stopServer();
-			networkTables.setServer(Hardware.PHOTON_IP);
-			networkTables.startClient4("Photonvision");
-		}
+		// if (Robot.isSimulation()) {
+		// 	networkTables.stopServer();
+		// 	networkTables.setServer(Hardware.PHOTON_IP);
+		// 	networkTables.startClient4("Photonvision");
+		// }
 
 		photonCamera = new PhotonCamera(Hardware.PHOTON_CAM);
 		photonPoseEstimator =
