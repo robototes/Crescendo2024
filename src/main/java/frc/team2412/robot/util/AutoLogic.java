@@ -52,7 +52,7 @@ public class AutoLogic {
 
 		// Intake
 		NamedCommands.registerCommand("StopIntake", new IntakeStopCommand(s.intakeSubsystem));
-		NamedCommands.registerCommand("Intake", new AllInCommand(s.intakeSubsystem));
+		NamedCommands.registerCommand("Intake", new AllInCommand(s.intakeSubsystem, controls));
 		NamedCommands.registerCommand(
 				"IntakeSensorOverride", new AllInSensorOverrideCommand(s.intakeSubsystem));
 		// Launcher

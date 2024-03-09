@@ -7,6 +7,7 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.SparkLimitSwitch;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -46,6 +47,11 @@ public class IntakeSubsystem extends SubsystemBase {
 	// Sensors
 	private final DigitalInput indexSensor;
 	private final DigitalInput feederSensor;
+
+	private final SparkLimitSwitch intakeFrontSensor;
+	private final SparkLimitSwitch intakeBackSensor;
+	private final SparkLimitSwitch intakeLeftSensor;
+	private final SparkLimitSwitch intakeRightSensor;
 
 	// Shuffleboard
 	// speed
@@ -141,6 +147,11 @@ public class IntakeSubsystem extends SubsystemBase {
 		indexSensor = new DigitalInput(INDEX_SENSOR);
 		feederSensor = new DigitalInput(FEEDER_SENSOR);
 
+		intakeFrontSensor = intakeMotorFront.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
+		intakeBackSensor = intakeMotorBack.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
+		intakeLeftSensor = intakeMotorLeft.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
+		intakeRightSensor = intakeMotorRight.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
+
 		resetMotors();
 
 		ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Intake");
@@ -198,6 +209,22 @@ public class IntakeSubsystem extends SubsystemBase {
 		intakeSet(INTAKE_REJECT_SPEED);
 	}
 
+	public void intakeFrontReject() {
+		intakeMotorFront.set(INTAKE_REJECT_SPEED);
+	}
+
+	public void intakeBackReject() {
+		intakeMotorBack.set(INTAKE_REJECT_SPEED);
+	}
+
+	public void intakeLeftReject() {
+		intakeMotorLeft.set(INTAKE_REJECT_SPEED);
+	}
+
+	public void intakeRightReject() {
+		intakeMotorRight.set(INTAKE_REJECT_SPEED);
+	}
+
 	// index methods
 	public void indexIn() {
 		indexMotorUpper.set(setIndexInSpeedEntry.getDouble(INDEX_UPPER_IN_SPEED));
@@ -236,6 +263,22 @@ public class IntakeSubsystem extends SubsystemBase {
 
 	public boolean feederSensorHasNote() {
 		return !feederSensor.get() && !getSensorOverride();
+	}
+
+	public boolean intakeFrontSeesNote() {
+		return intakeFrontSensor.isPressed();
+	}
+
+	public boolean intakeBackSeesNote() {
+		return intakeBackSensor.isPressed();
+	}
+
+	public boolean intakeLeftSeesNote() {
+		return intakeLeftSensor.isPressed();
+	}
+
+	public boolean intakeRightSeesNote() {
+		return intakeRightSensor.isPressed();
 	}
 
 	public boolean getSensorOverride() {
