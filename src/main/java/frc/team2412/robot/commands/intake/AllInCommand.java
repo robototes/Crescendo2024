@@ -31,7 +31,9 @@ public class AllInCommand extends Command {
 			intakeSubsystem.intakeLeftReject();
 			intakeSubsystem.intakeRightReject();
 
-			Commands.race(new RumbleCommand(controls), new WaitCommand(0.5)).schedule();
+			if (controls != null) {
+				Commands.race(new RumbleCommand(controls), new WaitCommand(0.5)).schedule();
+			}
 		}
 
 		if (intakeSubsystem.intakeBackSeesNote()) {
@@ -39,7 +41,9 @@ public class AllInCommand extends Command {
 			intakeSubsystem.intakeLeftReject();
 			intakeSubsystem.intakeRightReject();
 
-			Commands.race(new RumbleCommand(controls), new WaitCommand(0.5)).schedule();
+			if (controls != null) {
+				Commands.race(new RumbleCommand(controls), new WaitCommand(0.5)).schedule();
+			}
 		}
 
 		if (intakeSubsystem.intakeLeftSeesNote()) {
@@ -47,7 +51,9 @@ public class AllInCommand extends Command {
 			intakeSubsystem.intakeBackReject();
 			intakeSubsystem.intakeRightReject();
 
-			Commands.race(new RumbleCommand(controls), new WaitCommand(0.5)).schedule();
+			if (controls != null) {
+				Commands.race(new RumbleCommand(controls), new WaitCommand(0.5)).schedule();
+			}
 		}
 
 		if (intakeSubsystem.intakeRightSeesNote()) {
@@ -55,14 +61,18 @@ public class AllInCommand extends Command {
 			intakeSubsystem.intakeBackReject();
 			intakeSubsystem.intakeLeftReject();
 
-			Commands.race(new RumbleCommand(controls), new WaitCommand(0.5)).schedule();
+			if (controls != null) {
+				Commands.race(new RumbleCommand(controls), new WaitCommand(0.5)).schedule();
+			}
 		}
 
 		// all intake motors rejecting after index
 		if (intakeSubsystem.indexSensorHasNote()) {
 			intakeSubsystem.intakeReject();
 
-			Commands.race(new RumbleCommand(controls), new WaitCommand(0.5)).schedule();
+			if (controls != null) {
+				Commands.race(new RumbleCommand(controls), new WaitCommand(1)).schedule();
+			}
 		}
 	}
 
@@ -72,7 +82,9 @@ public class AllInCommand extends Command {
 		intakeSubsystem.indexStop();
 		intakeSubsystem.feederStop();
 
-		Commands.race(new RumbleCommand(controls), new WaitCommand(1)).schedule();
+		if (controls != null) {
+			Commands.race(new RumbleCommand(controls), new WaitCommand(1)).schedule();
+		}
 	}
 
 	@Override
