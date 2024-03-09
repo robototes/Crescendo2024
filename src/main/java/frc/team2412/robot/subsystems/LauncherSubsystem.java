@@ -28,15 +28,15 @@ public class LauncherSubsystem extends SubsystemBase {
 	public static final int AMP_AIM_ANGLE = 335;
 	public static final int SUBWOOFER_AIM_ANGLE = 298;
 	public static final int PODIUM_AIM_ANGLE = 39;
-	public static final int TRAP_AIM_ANGLE = 80;
+	public static final int TRAP_AIM_ANGLE = 290;
 	// MOTOR VALUES
 	// max Free Speed: 6784 RPM
 	private static final int MAX_FREE_SPEED_RPM = 6784;
-	public static final double ANGLE_TOLERANCE = 0.5;
-	public static final double RPM_TOLERANCE = 50;
+	public static final double ANGLE_TOLERANCE = 5;
+	public static final double RPM_TOLERANCE = 200;
 	// RPM
-	public static final int SPEAKER_SHOOT_SPEED_RPM = 3392; // 50%
-	public static final int TRAP_SHOOT_SPEED_RPM = 2000;
+	public static final int SPEAKER_SHOOT_SPEED_RPM = 3850;
+	public static final int TRAP_SHOOT_SPEED_RPM = 4000;
 	public static final double ANGLE_MAX_SPEED = 1.0;
 	// 3392 RPM = 50% Speed
 	// 1356 RPM = 20% Speed
@@ -125,7 +125,7 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherAngleTwoMotor.setSmartCurrentLimit(60);
 
 		launcherAngleOneMotor.setSoftLimit(CANSparkBase.SoftLimitDirection.kForward, 0.95f);
-		launcherAngleOneMotor.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, 0.705f);
+		launcherAngleOneMotor.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, 0.71f);
 		launcherAngleOneMotor.enableSoftLimit(CANSparkBase.SoftLimitDirection.kForward, true);
 		launcherAngleOneMotor.enableSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, true);
 

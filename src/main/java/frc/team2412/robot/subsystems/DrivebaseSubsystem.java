@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2412.robot.Robot;
 import frc.team2412.robot.Robot.RobotType;
+import frc.team2412.robot.Subsystems.SubsystemConstants;
 import java.io.File;
 import java.util.EnumSet;
 import java.util.Map;
@@ -42,7 +43,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 			Robot.getInstance().getRobotType() == RobotType.BONK
 					? 3.0
 					: Robot.getInstance().getRobotType() == RobotType.PRACTICE
-							? 5.0
+							? 6.0
 							: Robot.getInstance().getRobotType() == RobotType.CRANE ? 3.0 : 1.0;
 
 	// Auto align stuff, dw abt it
@@ -64,7 +65,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
 	private static final PIDConstants AUTO_TRANSLATION_PID =
 			Robot.getInstance().getRobotType() == RobotType.PRACTICE
-					? new PIDConstants(5, 0, 0.4) // practice
+					? new PIDConstants(5, 0, 0.5) // practice
 					: Robot.getInstance().getRobotType() == RobotType.BONK
 							? new PIDConstants(5, 0, 0.1) // bonk
 							: Robot.getInstance().getRobotType() == RobotType.CRANE
@@ -147,8 +148,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
 		// LOW verbosity only sends field position, HIGH sends full drive data, MACHINE sends data
 		// viewable by AdvantageScope
-		SwerveDriveTelemetry.verbosity =
-				(Robot.isDebugMode() ? TelemetryVerbosity.LOW : TelemetryVerbosity.MACHINE);
+		SwerveDriveTelemetry.verbosity = TelemetryVerbosity.MACHINE;
 	}
 
 	/**
@@ -247,7 +247,9 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
 	/** Get the robot's pose */
 	public Pose2d getPose() {
-		return swerveDrive.getPose();
+		return SubsystemConstants.USE_APRILTAGS_CORRECTION
+				? swerveDrive.getPose()
+				: swerveDrive.getOdometryOnlyPose();
 	}
 
 	/**

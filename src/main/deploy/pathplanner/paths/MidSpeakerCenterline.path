@@ -3,40 +3,51 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.77,
-        "y": 4.08
+        "x": 1.33,
+        "y": 5.55
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.3966676963984557,
-        "y": 4.103137615644601
+        "x": 2.4106518521825655,
+        "y": 5.645110007559683
+      },
+      "isLocked": false,
+      "linkedName": "MidSpeaker"
+    },
+    {
+      "anchor": {
+        "x": 4.828591889962878,
+        "y": 4.3678916811515345
+      },
+      "prevControl": {
+        "x": 3.8008686983169317,
+        "y": 5.605830980179606
+      },
+      "nextControl": {
+        "x": 5.257581251504547,
+        "y": 3.8511544956581605
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 0.73,
-        "y": 4.46
+        "x": 7.539024674248874,
+        "y": 4.143647242163843
       },
       "prevControl": {
-        "x": 1.1980586123334407,
-        "y": 3.964467068033235
+        "x": 6.105810216371028,
+        "y": 3.8609042538750162
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "LowSpeaker"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.9,
-      "rotationDegrees": 120.0,
-      "rotateFast": false
-    },
-    {
-      "waypointRelativePos": 0.05,
-      "rotationDegrees": 180.0,
+      "waypointRelativePos": 0.95,
+      "rotationDegrees": 152.14947029794482,
       "rotateFast": false
     }
   ],
@@ -50,7 +61,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 120.0,
+    "rotation": 180.0,
     "rotateFast": false
   },
   "reversed": false,
@@ -59,5 +70,5 @@
     "rotation": 180.0,
     "velocity": 0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

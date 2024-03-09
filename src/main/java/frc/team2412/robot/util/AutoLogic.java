@@ -4,6 +4,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -57,12 +58,9 @@ public class AutoLogic {
 		// Launcher
 		NamedCommands.registerCommand(
 				"VisionLaunch",
-				new FullTargetCommand(
-						s.launcherSubsystem,
-						s.intakeSubsystem,
-						s.drivebaseSubsystem,
-						controls,
-						s.launcherSubsystem::isAtSpeed));
+				Commands.sequence(
+						new FullTargetCommand(s.launcherSubsystem, s.drivebaseSubsystem, controls),
+						new FeederInCommand(s.intakeSubsystem)));
 
 		NamedCommands.registerCommand(
 				"SubwooferLaunch",
@@ -71,7 +69,7 @@ public class AutoLogic {
 								LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
 								LauncherSubsystem.SUBWOOFER_AIM_ANGLE)
 						.andThen(new WaitCommand(1))
-						.andThen(new FeederInCommand(s.intakeSubsystem)));
+						.andThen(new FeederInCommand(s.intakeSubsystem).andThen(new WaitCommand(0.5))));
 		NamedCommands.registerCommand("StopLaunch", new StopLauncherCommand(s.launcherSubsystem));
 		NamedCommands.registerCommand(
 				"RetractPivot",
@@ -83,6 +81,7 @@ public class AutoLogic {
 				"MidSpeakerCenterLineN5N4N3", AutoPaths.midSpeakerCenterLineN3N2N1);
 		NamedCommands.registerCommand(
 				"LowSpeakerCenterLineN5N4N3", AutoPaths.lowSpeakerCenterLineN5N4N3);
+		NamedCommands.registerCommand("LowSpeakerCenterLineN5N4N3", AutoPaths.lowSpeakerCenterLineN5N4);
 		NamedCommands.registerCommand(
 				"TopSpeakerCenterLineN1N2AutoLine1", AutoPaths.TopSpeakerCenterLineN1N2AutoLine1);
 		NamedCommands.registerCommand(

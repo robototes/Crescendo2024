@@ -24,7 +24,6 @@ public class AutoPaths {
 
 	// Complex Autos
 
-
 	public static Command TopSpeakerCenterLineN1N2AutoLine1 =
 			Commands.sequence(
 					SubwooferLaunchCommand(),
@@ -125,12 +124,7 @@ public class AutoPaths {
 	// new command getters
 
 	public static Command VisionLaunchCommand() {
-		return new FullTargetCommand(
-				s.launcherSubsystem,
-				s.intakeSubsystem,
-				s.drivebaseSubsystem,
-				controls,
-				s.launcherSubsystem::isAtSpeed);
+		return new FullTargetCommand(s.launcherSubsystem, s.drivebaseSubsystem, controls);
 	}
 
 	public static Command SubwooferLaunchCommand() {
