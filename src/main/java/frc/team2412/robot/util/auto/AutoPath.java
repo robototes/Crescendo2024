@@ -18,7 +18,7 @@ public class AutoPath {
 		autoCommand = AutoBuilder.buildAuto(pathPlannerAutoName);
 		this.vision = vision;
 	}
-	
+
 	public AutoPath(String displayName, String pathPlannerAutoName) {
 		this(displayName, pathPlannerAutoName, false);
 	}
@@ -30,7 +30,7 @@ public class AutoPath {
 	public String getDisplayName() {
 		return displayName;
 	}
-	
+
 	public Command getAutoCommand() {
 		return autoCommand;
 	}

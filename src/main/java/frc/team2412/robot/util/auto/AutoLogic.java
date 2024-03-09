@@ -3,11 +3,11 @@ package frc.team2412.robot.util.auto;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathPlannerPath;
-import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -27,7 +27,6 @@ import frc.team2412.robot.commands.launcher.FullTargetCommand;
 import frc.team2412.robot.commands.launcher.SetAngleLaunchCommand;
 import frc.team2412.robot.commands.launcher.StopLauncherCommand;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
-import edu.wpi.first.math.util.Units;
 import java.util.List;
 import java.util.Map;
 
@@ -37,21 +36,30 @@ public class AutoLogic {
 	public static final Controls controls = r.controls;
 
 	public static enum StartPosition {
-		AMP_SIDE_SUBWOOFER(new Pose2d(0.73, 6.62, new Rotation2d(Units.degreesToRadians(-120)))),
-		MID_SIDE_SUBWOOFER(new Pose2d(1.33, 5.55, new Rotation2d(Units.degreesToRadians(180)))),
-		SOURCE_SIDE_SUBWOOFER(new Pose2d(0.73, 4.46, new Rotation2d(Units.degreesToRadians(120))))
-		MISC(null);
+		AMP_SIDE_SUBWOOFER(
+				" Amp Side Subwoofer",
+				new Pose2d(0.73, 6.62, new Rotation2d(Units.degreesToRadians(-120)))),
+		MID_SIDE_SUBWOOFER(
+				"Mid Side Subwoofer", new Pose2d(1.33, 5.55, new Rotation2d(Units.degreesToRadians(180)))),
+		SOURCE_SIDE_SUBWOOFER(
+				"Source Side Subwoofer",
+				new Pose2d(0.73, 4.46, new Rotation2d(Units.degreesToRadians(120)))),
+		MISC("Misc", null);
 
+		String title;
 		Pose2d startPose;
-		StartPosition(Pose2d startPose) {
+
+		StartPosition(String title, Pose2d startPose) {
+			this.title = title;
 			this.startPose = startPose;
 		}
 	};
 
 	// paths lists
 
-	List<AutoPath> noPiecePaths =
+	private static List<AutoPath> noPiecePaths =
 			List.of(
+					// presets
 					new AutoPath("Test Path", "testPath"),
 					new AutoPath("Stand Still", "PresetSourceSide1Score"),
 					new AutoPath("Stand Still", "PresetMid1Score"),
@@ -59,15 +67,39 @@ public class AutoLogic {
 					new AutoPath("Pass Auto Line", "PresetSourceSide1ScorePassAutoLine"),
 					new AutoPath("Pass Auto Line", "PresetAmpSide1ScorePassAutoLine"));
 
-	List<AutoPath> onePiecePaths =
+	private static List<AutoPath> onePiecePaths =
 			List.of(
-					new AutoPath("AutolineN1", "PresetAmpSide2Score")),
+					// presets
+					new AutoPath("Autoline N1", "PresetAmpSide2Score"),
 					new AutoPath("Autoline N2", "PresetMidAutoline2Score"),
-					new AutoPath("Autoline N3", "PresetSourceSideAutoline2Score"));
+					new AutoPath("Autoline N3", "PresetSourceSideAutoline2Score"),
+					new AutoPath("CenterLine N5", "PresetSourceSideFar2Score"),
+					// vision
+					new AutoPath("CenterLine N3 N1", "VisionMidFar2Score", true));
+
+	private static List<AutoPath> twoPiecePaths =
+			List.of(
+					// presets
+					new AutoPath("Autoline N1", "PresetAmpSideAutoline3Score"),
+					new AutoPath("Autoline N2", "PresetMidAutoline3Score"),
+					// vision
+					new AutoPath("Centerline N5 N4", "VisionSourceSide3Score", true),
+					new AutoPath(
+							"Autoline N1 Centerline STEAL(N1 N2 N3 N4) N5", "VisionAmpSideFarSteal", true));
+
+	private static List<AutoPath> threePiecePaths =
+			List.of(
+					// presets
+					new AutoPath("Autoline N2 N3 N1", "PresetMidAutoline4Score"),
+					// vision
+					new AutoPath("Autoline N1 CenterLine N1 N2", "VisionAmpSide4Score", true),
+					new AutoPath("Autoline N1 N2 N3", "VisionAmpSideAutoLine4Score", true),
+					new AutoPath("Autoline N3 N2 N1", "VisionMid4Score", true));
 
 	// gulp map
 
-	Map<Integer, List<AutoPath>> commandsMap = Map.of(0, onePiecePaths);
+	private static Map<Integer, List<AutoPath>> commandsMap =
+			Map.of(0, noPiecePaths, 1, onePiecePaths, 2, twoPiecePaths, 3, threePiecePaths);
 
 	// vars
 
@@ -80,13 +112,13 @@ public class AutoLogic {
 
 	private static ShuffleboardTab tab = Shuffleboard.getTab("Match");
 
-	private static SendableChooser<StartPosition> startPosition;
-	private static SendableChooser<String> availableAutos;
+	private static SendableChooser<StartPosition> startPositionChooser =
+			new SendableChooser<StartPosition>();
+	private static SendableChooser<AutoPath> availableAutos = new SendableChooser<AutoPath>();
 	private static GenericEntry amountGamePiecesEntry;
-	private static GenericEntry autoRoutinesEntry;
+	private static GenericEntry isVisionEntry;
 
 	public AutoLogic() {
-
 		registerCommands();
 	}
 
@@ -126,7 +158,7 @@ public class AutoLogic {
 		NamedCommands.registerCommand(
 				"LowSpeakerCenterLineN5N4N3", ComplexAutoPaths.lowSpeakerCenterLineN5N4N3);
 		NamedCommands.registerCommand(
-				"TopSpeakerCe,nterLineN1N2AutoLine1", ComplexAutoPaths.TopSpeakerCenterLineN1N2AutoLine1);
+				"TopSpeakerCenterLineN1N2AutoLine1", ComplexAutoPaths.TopSpeakerCenterLineN1N2AutoLine1);
 		NamedCommands.registerCommand(
 				"TopSpeakerCenterLineN1N2AutoLine1", ComplexAutoPaths.TopSpeakerCenterLineN1N2N3);
 	}
@@ -149,14 +181,37 @@ public class AutoLogic {
 
 	public static void initShuffleBoard() {
 
-		tab.add("Starting Position", startPosition).withPosition(5, 1).withSize(2, 1);
-		amountGamePiecesEntry = tab.add("Game Pieces", 0).withPosition(5, 2).withSize(2, 1).getEntry();
+		startPositionChooser.setDefaultOption(StartPosition.MISC.title, StartPosition.MISC);
+		for (StartPosition startPosition : StartPosition.values()) {
+			startPositionChooser.addOption(startPosition.title, startPosition);
+		}
+
+		tab.add("Starting Position", startPositionChooser).withPosition(5, 1).withSize(2, 1);
+
+		isVisionEntry =
+				tab.add("Use Vision Launch", false)
+						.withWidget(BuiltInWidgets.kToggleSwitch)
+						.withPosition(5, 2)
+						.withSize(1, 1)
+						.getEntry();
+		amountGamePiecesEntry = tab.add("Game Pieces", 0).withPosition(5, 2).withSize(1, 1).getEntry();
 		tab.add("Available Auto Variants", availableAutos).withPosition(5, 3).withSize(2, 1);
 	}
 
-	// public static void updateAvailableAutos() {
+	/** Takes the auto filtering entries in shuffleboard to provide a list of suitable autos */
+	public static void filterAutos() {
+		availableAutos.close();
 
-	// 	for ()
+		List<AutoPath> autoCommandsList = commandsMap.get((int) amountGamePiecesEntry.getInteger(0));
 
-	// }
+		// List<AutoPath> filteredList = new ArrayList<AutoPath>();
+
+		for (AutoPath auto : autoCommandsList) {
+			if (auto.getStartPose().equals(startPositionChooser.getSelected().startPose)
+					&& auto.isVision() == isVisionEntry.getBoolean(false)) {
+				// filteredList.add(auto);
+				availableAutos.addOption(auto.getDisplayName(), auto);
+			}
+		}
+	}
 }
