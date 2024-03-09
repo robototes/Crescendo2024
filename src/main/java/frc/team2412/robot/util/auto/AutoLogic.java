@@ -3,6 +3,10 @@ package frc.team2412.robot.util.auto;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathPlannerPath;
+import edu.wpi.first.math.Pair;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -23,7 +27,7 @@ import frc.team2412.robot.commands.launcher.FullTargetCommand;
 import frc.team2412.robot.commands.launcher.SetAngleLaunchCommand;
 import frc.team2412.robot.commands.launcher.StopLauncherCommand;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
-import java.util.HashMap;
+import edu.wpi.first.math.util.Units;
 import java.util.List;
 import java.util.Map;
 
@@ -32,10 +36,40 @@ public class AutoLogic {
 	public static final Subsystems s = r.subsystems;
 	public static final Controls controls = r.controls;
 
-	List<AutoPath> onePiecePaths = List.of(new AutoPath("Test Path", "testPath"));
+	public static enum StartPosition {
+		AMP_SIDE_SUBWOOFER(new Pose2d(0.73, 6.62, new Rotation2d(Units.degreesToRadians(-120)))),
+		MID_SIDE_SUBWOOFER(new Pose2d(1.33, 5.55, new Rotation2d(Units.degreesToRadians(180)))),
+		SOURCE_SIDE_SUBWOOFER(new Pose2d(0.73, 4.46, new Rotation2d(Units.degreesToRadians(120))))
+		MISC(null);
 
-	Map<Integer, List<AutoPath>> commandsMap = Map.of(0, List.of(new AutoPath("Test Path", "testPath")));
+		Pose2d startPose;
+		StartPosition(Pose2d startPose) {
+			this.startPose = startPose;
+		}
+	};
 
+	// paths lists
+
+	List<AutoPath> noPiecePaths =
+			List.of(
+					new AutoPath("Test Path", "testPath"),
+					new AutoPath("Stand Still", "PresetSourceSide1Score"),
+					new AutoPath("Stand Still", "PresetMid1Score"),
+					new AutoPath("Stand Still", "PresetAmpSide1Score"),
+					new AutoPath("Pass Auto Line", "PresetSourceSide1ScorePassAutoLine"),
+					new AutoPath("Pass Auto Line", "PresetAmpSide1ScorePassAutoLine"));
+
+	List<AutoPath> onePiecePaths =
+			List.of(
+					new AutoPath("AutolineN1", "PresetAmpSide2Score")),
+					new AutoPath("Autoline N2", "PresetMidAutoline2Score"),
+					new AutoPath("Autoline N3", "PresetSourceSideAutoline2Score"));
+
+	// gulp map
+
+	Map<Integer, List<AutoPath>> commandsMap = Map.of(0, onePiecePaths);
+
+	// vars
 
 	// in place of launching command cause launcher doesnt exist
 	public static SequentialCommandGroup vibrateControllerCommand =
@@ -45,12 +79,6 @@ public class AutoLogic {
 					new InstantCommand(() -> controls.vibrateDriveController(0.0)));
 
 	private static ShuffleboardTab tab = Shuffleboard.getTab("Match");
-
-	public static enum StartPosition {
-		AMP_SIDE_SUBWOOFER(),
-		MID_SIDE_SUBWOOFER(),
-		SOURCE_SIDE_SUBWOOFER();
-	};
 
 	private static SendableChooser<StartPosition> startPosition;
 	private static SendableChooser<String> availableAutos;

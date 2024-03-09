@@ -19,9 +19,9 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.team2412.robot.Subsystems.SubsystemConstants;
 import frc.team2412.robot.commands.diagnostic.IntakeDiagnosticCommand;
 import frc.team2412.robot.commands.diagnostic.LauncherDiagnosticCommand;
-import frc.team2412.robot.util.AutoLogic;
 import frc.team2412.robot.util.MACAddress;
 import frc.team2412.robot.util.MatchDashboard;
+import frc.team2412.robot.util.auto.AutoLogic;
 
 public class Robot extends TimedRobot {
 	/** Singleton Stuff */
