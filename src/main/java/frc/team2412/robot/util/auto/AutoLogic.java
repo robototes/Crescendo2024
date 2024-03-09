@@ -60,7 +60,7 @@ public class AutoLogic {
 	private static List<AutoPath> noPiecePaths =
 			List.of(
 					// presets
-					new AutoPath("Test Path", "testPath"),
+					new AutoPath("Test Path", "DiameterTest"),
 					new AutoPath("Stand Still", "PresetSourceSide1Score"),
 					new AutoPath("Stand Still", "PresetMid1Score"),
 					new AutoPath("Stand Still", "PresetAmpSide1Score"),
