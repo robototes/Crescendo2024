@@ -26,7 +26,7 @@
         {
           "type": "named",
           "data": {
-            "name": "VisionLaunch"
+            "name": "SubwooferLaunch"
           }
         },
         {
@@ -38,7 +38,7 @@
         {
           "type": "named",
           "data": {
-            "name": "VisionLaunch"
+            "name": "SubwooferLaunch"
           }
         },
         {
@@ -50,7 +50,7 @@
         {
           "type": "named",
           "data": {
-            "name": "VisionLaunch"
+            "name": "SubwooferLaunch"
           }
         }
       ]

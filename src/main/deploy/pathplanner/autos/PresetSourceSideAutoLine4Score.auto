@@ -32,7 +32,7 @@
         {
           "type": "named",
           "data": {
-            "name": "VisionLaunch"
+            "name": "SubwooferLaunch"
           }
         },
         {
@@ -44,19 +44,19 @@
         {
           "type": "named",
           "data": {
-            "name": "VisionLaunch"
+            "name": "SubwooferLaunch"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "SpeakerToHighNoteReturn"
+            "pathName": "LowSpeakerToHighNoteReturn"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "VisionLaunch"
+            "name": "SubwooferLaunch"
           }
         }
       ]
