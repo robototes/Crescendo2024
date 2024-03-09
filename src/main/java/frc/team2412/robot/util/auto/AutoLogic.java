@@ -1,8 +1,12 @@
-package frc.team2412.robot.util;
+package frc.team2412.robot.util.auto;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathPlannerPath;
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -19,11 +23,19 @@ import frc.team2412.robot.commands.launcher.FullTargetCommand;
 import frc.team2412.robot.commands.launcher.SetAngleLaunchCommand;
 import frc.team2412.robot.commands.launcher.StopLauncherCommand;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class AutoLogic {
 	public static Robot r = Robot.getInstance();
 	public static final Subsystems s = r.subsystems;
 	public static final Controls controls = r.controls;
+
+	List<AutoPath> onePiecePaths = List.of(new AutoPath("Test Path", "testPath"));
+
+	Map<Integer, List<AutoPath>> commandsMap = Map.of(0, List.of(new AutoPath("Test Path", "testPath")));
+
 
 	// in place of launching command cause launcher doesnt exist
 	public static SequentialCommandGroup vibrateControllerCommand =
@@ -32,14 +44,18 @@ public class AutoLogic {
 					new WaitCommand(1.5),
 					new InstantCommand(() -> controls.vibrateDriveController(0.0)));
 
-	/**
-	 * Placeholder for vision detect note
-	 *
-	 * @return true
-	 */
-	public static boolean dummyLogic() {
-		return true;
-	}
+	private static ShuffleboardTab tab = Shuffleboard.getTab("Match");
+
+	public static enum StartPosition {
+		AMP_SIDE_SUBWOOFER(),
+		MID_SIDE_SUBWOOFER(),
+		SOURCE_SIDE_SUBWOOFER();
+	};
+
+	private static SendableChooser<StartPosition> startPosition;
+	private static SendableChooser<String> availableAutos;
+	private static GenericEntry amountGamePiecesEntry;
+	private static GenericEntry autoRoutinesEntry;
 
 	public AutoLogic() {
 
@@ -76,16 +92,15 @@ public class AutoLogic {
 				new SetAngleLaunchCommand(s.launcherSubsystem, 0, 0)); // TODO: add retract angle
 
 		// Complex Autos
-		NamedCommands.registerCommand("AutoLogicTest", AutoPaths.testAuto);
+		NamedCommands.registerCommand("AutoLogicTest", ComplexAutoPaths.testAuto);
 		NamedCommands.registerCommand(
-				"MidSpeakerCenterLineN5N4N3", AutoPaths.midSpeakerCenterLineN3N2N1);
+				"MidSpeakerCenterLineN5N4N3", ComplexAutoPaths.midSpeakerCenterLineN3N2N1);
 		NamedCommands.registerCommand(
-				"LowSpeakerCenterLineN5N4N3", AutoPaths.lowSpeakerCenterLineN5N4N3);
-		NamedCommands.registerCommand("LowSpeakerCenterLineN5N4N3", AutoPaths.lowSpeakerCenterLineN5N4);
+				"LowSpeakerCenterLineN5N4N3", ComplexAutoPaths.lowSpeakerCenterLineN5N4N3);
 		NamedCommands.registerCommand(
-				"TopSpeakerCenterLineN1N2AutoLine1", AutoPaths.TopSpeakerCenterLineN1N2AutoLine1);
+				"TopSpeakerCe,nterLineN1N2AutoLine1", ComplexAutoPaths.TopSpeakerCenterLineN1N2AutoLine1);
 		NamedCommands.registerCommand(
-				"TopSpeakerCenterLineN1N2N3", AutoPaths.TopSpeakerCenterLineN1N2N3);
+				"TopSpeakerCenterLineN1N2AutoLine1", ComplexAutoPaths.TopSpeakerCenterLineN1N2N3);
 	}
 
 	// public Command getConditionalCommand(){}
@@ -103,4 +118,17 @@ public class AutoLogic {
 		// Create a path following command using AutoBuilder. This will also trigger event markers.
 		return AutoBuilder.followPath(path);
 	}
+
+	public static void initShuffleBoard() {
+
+		tab.add("Starting Position", startPosition).withPosition(5, 1).withSize(2, 1);
+		amountGamePiecesEntry = tab.add("Game Pieces", 0).withPosition(5, 2).withSize(2, 1).getEntry();
+		tab.add("Available Auto Variants", availableAutos).withPosition(5, 3).withSize(2, 1);
+	}
+
+	// public static void updateAvailableAutos() {
+
+	// 	for ()
+
+	// }
 }
