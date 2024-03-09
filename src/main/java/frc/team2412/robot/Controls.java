@@ -20,8 +20,8 @@ import frc.team2412.robot.commands.intake.AllStopCommand;
 import frc.team2412.robot.commands.intake.FeederInCommand;
 import frc.team2412.robot.commands.intake.IntakeRejectCommand;
 import frc.team2412.robot.commands.launcher.FullTargetCommand;
+import frc.team2412.robot.commands.launcher.ManualAngleCommand;
 import frc.team2412.robot.commands.launcher.SetAngleAmpLaunchCommand;
-import frc.team2412.robot.commands.launcher.SetAngleCommand;
 import frc.team2412.robot.commands.launcher.SetAngleLaunchCommand;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
 
@@ -109,7 +109,7 @@ public class Controls {
 								() -> Rotation2d.fromRotations(driveController.getRightX())));
 		driveController.start().onTrue(new InstantCommand(s.drivebaseSubsystem::resetGyro));
 		driveController.rightStick().onTrue(new InstantCommand(s.drivebaseSubsystem::toggleXWheels));
-		// driveController
+		// driveController		x
 		// 		.back()
 		// 		.onTrue(
 		// 				new InstantCommand(
@@ -140,7 +140,7 @@ public class Controls {
 		CommandScheduler.getInstance()
 				.setDefaultCommand(
 						s.launcherSubsystem,
-						new SetAngleCommand(
+						new ManualAngleCommand(
 								s.launcherSubsystem,
 								() ->
 										MathUtil.applyDeadband(codriveController.getLeftY(), 0.1)

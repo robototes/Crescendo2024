@@ -22,6 +22,7 @@ public class SetAngleLaunchCommand extends Command {
 	public void initialize() {
 		launcherSubsystem.setAngle(launcherAngle);
 		launcherSubsystem.launch(launcherSpeed);
+		launcherSubsystem.manualSetpoint(launcherAngle);
 	}
 
 	@Override

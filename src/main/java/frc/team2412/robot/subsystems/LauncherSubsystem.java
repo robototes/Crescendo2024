@@ -10,6 +10,7 @@ import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
 import com.revrobotics.SparkPIDController;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -29,6 +30,11 @@ public class LauncherSubsystem extends SubsystemBase {
 	public static final int SUBWOOFER_AIM_ANGLE = 298;
 	public static final int PODIUM_AIM_ANGLE = 39;
 	public static final int TRAP_AIM_ANGLE = 290;
+	public static final double MANUAL_MODIFIER = 0.02;
+	public static final double RETRACTED_ANGLE = 255;
+	// offset for FF so parallel to floor is 0
+	public static final double FF_PIVOT_OFFSET = 250;
+
 	// MOTOR VALUES
 	// max Free Speed: 6784 RPM
 	private static final int MAX_FREE_SPEED_RPM = 6784;
@@ -52,12 +58,13 @@ public class LauncherSubsystem extends SubsystemBase {
 	private final SparkAbsoluteEncoder launcherAngleEncoder;
 	private final SparkPIDController launcherAngleOnePIDController;
 	// private final SparkPIDController launcherAngleTwoPIDController;
-
+	private final ArmFeedforward launcherAngleFF = new ArmFeedforward(0.1, 0.1, 0);
 	private final SparkPIDController launcherTopPIDController;
 	private final SparkPIDController launcherBottomPIDController;
 
 	private double rpmSetpoint;
 	private double angleSetpoint;
+	private double manualAngleSetpoint;
 
 	private GenericEntry setLauncherSpeedEntry;
 
@@ -72,6 +79,8 @@ public class LauncherSubsystem extends SubsystemBase {
 	private GenericEntry launcherBottomFlyWheelTemp;
 
 	private GenericEntry launcherIsAtSpeed;
+
+	private GenericEntry launcherAngleManual;
 
 	// Constructors
 	public LauncherSubsystem() {
@@ -88,6 +97,7 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherTopEncoder = launcherTopMotor.getEncoder();
 		launcherBottomEncoder = launcherBottomMotor.getEncoder();
 		launcherAngleEncoder = launcherAngleOneMotor.getAbsoluteEncoder(Type.kDutyCycle);
+		manualAngleSetpoint = launcherAngleEncoder.getPosition();
 
 		// PID controllers
 		// Create launcherTopPIDController and launcherTopMotor]
@@ -134,8 +144,11 @@ public class LauncherSubsystem extends SubsystemBase {
 		// PID
 		launcherAngleOnePIDController.setP(5.0);
 		launcherAngleOnePIDController.setI(0);
-		launcherAngleOnePIDController.setD(0);
-		launcherAngleOnePIDController.setFF(0);
+		launcherAngleOnePIDController.setD(3);
+		launcherAngleOnePIDController.setFF(
+				launcherAngleFF.calculate(
+						Units.rotationsToRadians(launcherAngleEncoder.getPosition() - FF_PIVOT_OFFSET),
+						launcherAngleEncoder.getVelocity()));
 		launcherAngleOnePIDController.setOutputRange(-ANGLE_MAX_SPEED, ANGLE_MAX_SPEED);
 
 		// launcherAngleTwoPIDController.setP(0.1);
@@ -183,7 +196,7 @@ public class LauncherSubsystem extends SubsystemBase {
 	}
 
 	public void ampLaunch(double speed) {
-		launcherTopPIDController.setReference(-speed, ControlType.kVelocity);
+		launcherTopPIDController.setReference(-speed, ControlType.kVelocity);	
 		launcherBottomMotor.disable();
 	}
 
@@ -224,10 +237,18 @@ public class LauncherSubsystem extends SubsystemBase {
 		return launcherAngleEncoder.getVelocity();
 	}
 
-	public void setAngleSpeed(double Speed) {
-		// launcherAngleOnePIDController.setReference(Speed, ControlType.kVelocity);
-		// launcherAngleTwoPIDController.setReference(Speed, ControlType.kVelocity);
-		launcherAngleOneMotor.set(Speed);
+	public void setAngleManual(double joystickInput) {
+		manualAngleSetpoint =
+				MathUtil.clamp(manualAngleSetpoint + joystickInput * MANUAL_MODIFIER, 0.71f, 0.95f);
+
+		if (Units.degreesToRotations(getAngle()) > 0.71
+				&& Units.degreesToRotations(getAngle()) < 0.95) {
+			launcherAngleOnePIDController.setReference(manualAngleSetpoint, ControlType.kPosition);
+		}
+	}
+
+	public void manualSetpoint(double setpoint) {
+		manualAngleSetpoint = setpoint;
 	}
 
 	private void initShuffleboard() {
@@ -282,6 +303,12 @@ public class LauncherSubsystem extends SubsystemBase {
 						.withProperties(Map.of("Min", -MAX_FREE_SPEED_RPM, "Max", MAX_FREE_SPEED_RPM))
 						.withPosition(5, 0)
 						.getEntry();
+		launcherAngleManual =
+				Shuffleboard.getTab("Launcher")
+						.add("Launcher manual increase", 0)
+						.withSize(1, 1)
+						.withWidget(BuiltInWidgets.kTextView)
+						.getEntry();
 		Shuffleboard.getTab("Launcher")
 				.add(new SparkPIDWidget(launcherAngleOnePIDController, "launcherAnglePID"))
 				.withPosition(2, 0);
@@ -303,5 +330,6 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherTopFlywheelTemp.setDouble(launcherTopMotor.getMotorTemperature());
 		launcherBottomFlyWheelTemp.setDouble(launcherTopMotor.getMotorTemperature());
 		launcherIsAtSpeed.setBoolean(isAtSpeed());
+		launcherAngleManual.setDouble(manualAngleSetpoint);
 	}
 }
