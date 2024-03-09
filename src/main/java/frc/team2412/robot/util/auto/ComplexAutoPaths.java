@@ -1,6 +1,6 @@
-package frc.team2412.robot.util;
+package frc.team2412.robot.util.auto;
 
-import static frc.team2412.robot.util.AutoLogic.*;
+import static frc.team2412.robot.util.auto.AutoLogic.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -10,7 +10,21 @@ import frc.team2412.robot.commands.launcher.FullTargetCommand;
 import frc.team2412.robot.commands.launcher.SetAngleLaunchCommand;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
 
-public class AutoPaths {
+public class ComplexAutoPaths {
+
+	// Paths Hashmap
+
+	// public static enum AutoRegistry {
+	// 	TEST("test auto", 0, testAuto);
+	// 	public final String autoName;
+	// 	public final int gamePieces;
+	// 	public final Command autoCommand;
+	// 	AutoRegistry(String autoName, int gamePieces, Command autoCommand) {
+	// 		this.autoName = autoName;
+	// 		this.gamePieces = gamePieces;
+	// 		this.autoCommand = autoCommand;
+	// 	}
+	// }
 
 	// Test Auto
 
