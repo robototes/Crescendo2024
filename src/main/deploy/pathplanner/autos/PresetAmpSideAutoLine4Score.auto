@@ -3,9 +3,9 @@
   "startingPose": {
     "position": {
       "x": 0.73,
-      "y": 4.48
+      "y": 6.62
     },
-    "rotation": 120.0
+    "rotation": -120.0
   },
   "command": {
     "type": "sequential",
@@ -20,43 +20,37 @@
         {
           "type": "path",
           "data": {
-            "pathName": "LowSpeakerToLowNote"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "LowNoteToLowSpeaker"
+            "pathName": "HighSpeakerHighNoteReturn"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "VisionLaunch"
+            "name": "SubwooferLaunch"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "LowSpeakerMidNote2Return"
+            "pathName": "HighSpeakerCenterLineNoteReturn"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "VisionLaunch"
+            "name": "SubwooferLaunch"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "SpeakerToHighNoteReturn"
+            "pathName": "HighSpeakerHighNote2Return"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "VisionLaunch"
+            "name": "SubwooferLaunch"
           }
         }
       ]

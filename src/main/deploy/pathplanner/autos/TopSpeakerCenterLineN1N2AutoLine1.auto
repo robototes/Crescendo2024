@@ -10,7 +10,14 @@
   "command": {
     "type": "sequential",
     "data": {
-      "commands": []
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "TopSpeakerCenterLineN1N2AutoLine1"
+          }
+        }
+      ]
     }
   },
   "folder": "Complex Autos",

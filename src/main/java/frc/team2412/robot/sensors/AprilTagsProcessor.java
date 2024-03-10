@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import frc.team2412.robot.Hardware;
-import frc.team2412.robot.Robot;
 import frc.team2412.robot.util.DrivebaseWrapper;
 import frc.team2412.robot.util.SendablePose3d;
 import java.util.EnumSet;
@@ -27,6 +26,7 @@ import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 /**
  * All 3D poses and transforms use the NWU (North-West-Up) coordinate system, where +X is
@@ -49,8 +49,62 @@ public class AprilTagsProcessor {
 					new Rotation3d(0, Units.degreesToRadians(-30), 0));
 
 	// TODO Measure these
-	private static final Vector<N3> STANDARD_DEVS =
-			VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(5));
+	private static final Vector<N3> STANDARD_DEVS = VecBuilder.fill(1, 1, Units.degreesToRadians(30));
+
+	private static PhotonPipelineResult copy(PhotonPipelineResult result) {
+		var copy =
+				new PhotonPipelineResult(
+						result.getLatencyMillis(), result.targets, result.getMultiTagResult());
+		copy.setTimestampSeconds(result.getTimestampSeconds());
+		return copy;
+	}
+
+	private static final double MAX_POSE_AMBIGUITY = 0.1;
+
+	// Both of these are in radians
+	// Negate pitch to go from robot/target to cam pitch to cam to robot/target pitch
+	private static final double EXPECTED_CAM_TO_TARGET_PITCH = -ROBOT_TO_CAM.getRotation().getY();
+	private static final double CAM_TO_TARGET_PITCH_TOLERANCE = 0.1;
+
+	private static boolean hasCorrectPitch(Transform3d camToTarget) {
+		return Math.abs(camToTarget.getRotation().getY() - EXPECTED_CAM_TO_TARGET_PITCH)
+				< CAM_TO_TARGET_PITCH_TOLERANCE;
+	}
+
+	private static PhotonTrackedTarget swapBestAndAltTransforms(PhotonTrackedTarget target) {
+		return new PhotonTrackedTarget(
+				target.getYaw(),
+				target.getPitch(),
+				target.getArea(),
+				target.getSkew(),
+				target.getFiducialId(),
+				target.getAlternateCameraToTarget(), // Swap
+				target.getBestCameraToTarget(),
+				target.getPoseAmbiguity(),
+				target.getMinAreaRectCorners(),
+				target.getDetectedCorners());
+	}
+
+	private static PhotonPipelineResult filteredPipelineResult(PhotonPipelineResult result) {
+		var copy = copy(result);
+		for (int i = copy.targets.size() - 1; i >= 0; --i) {
+			var target = copy.targets.get(i);
+			if (target.getPoseAmbiguity() > MAX_POSE_AMBIGUITY) {
+				copy.targets.remove(i);
+				continue;
+			}
+			if (!hasCorrectPitch(target.getBestCameraToTarget())) {
+				if (hasCorrectPitch(target.getAlternateCameraToTarget())) {
+					target = swapBestAndAltTransforms(target);
+					copy.targets.set(i, target);
+				} else {
+					copy.targets.remove(i);
+					continue;
+				}
+			}
+		}
+		return copy;
+	}
 
 	private final PhotonCamera photonCamera;
 	private final PhotonPoseEstimator photonPoseEstimator;
@@ -59,6 +113,7 @@ public class AprilTagsProcessor {
 
 	// These are always set with every pipeline result
 	private PhotonPipelineResult latestResult = null;
+	private PhotonPipelineResult latestFilteredResult = null;
 	private Optional<EstimatedRobotPose> latestPose = Optional.empty();
 
 	// These are only set when there's a valid pose
@@ -72,16 +127,19 @@ public class AprilTagsProcessor {
 		this.aprilTagsHelper = aprilTagsHelper;
 		rawVisionFieldObject = aprilTagsHelper.getField().getObject("RawVision");
 		var networkTables = NetworkTableInstance.getDefault();
-		if (Robot.isSimulation()) {
-			networkTables.stopServer();
-			networkTables.setServer(Hardware.PHOTON_IP);
-			networkTables.startClient4("Photonvision");
-		}
+		// if (Robot.isSimulation()) {
+		// 	networkTables.stopServer();
+		// 	networkTables.setServer(Hardware.PHOTON_IP);
+		// 	networkTables.startClient4("Photonvision");
+		// }
 
 		photonCamera = new PhotonCamera(Hardware.PHOTON_CAM);
 		photonPoseEstimator =
 				new PhotonPoseEstimator(
-						fieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, photonCamera, ROBOT_TO_CAM);
+						fieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_RIO, photonCamera, ROBOT_TO_CAM);
+
+		photonPoseEstimator.setLastPose(aprilTagsHelper.getEstimatedPosition());
+		photonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.CLOSEST_TO_LAST_POSE);
 
 		networkTables.addListener(
 				networkTables
@@ -109,13 +167,16 @@ public class AprilTagsProcessor {
 
 	public void update() {
 		latestResult = photonCamera.getLatestResult();
-		latestPose = photonPoseEstimator.update(latestResult);
+		latestFilteredResult = filteredPipelineResult(latestResult);
+		latestPose = photonPoseEstimator.update(latestFilteredResult);
 		if (latestPose.isPresent()) {
 			lastTimestampSeconds = latestPose.get().timestampSeconds;
 			lastFieldPose = latestPose.get().estimatedPose.toPose2d();
 			rawVisionFieldObject.setPose(lastFieldPose);
 			aprilTagsHelper.addVisionMeasurement(lastFieldPose, lastTimestampSeconds, STANDARD_DEVS);
-			aprilTagsHelper.getField().setRobotPose(aprilTagsHelper.getEstimatedPosition());
+			var estimatedPose = aprilTagsHelper.getEstimatedPosition();
+			aprilTagsHelper.getField().setRobotPose(estimatedPose);
+			photonPoseEstimator.setLastPose(estimatedPose);
 		}
 	}
 
