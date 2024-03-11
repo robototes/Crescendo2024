@@ -129,11 +129,16 @@ public class AutonomousField {
 	}
 
 	/**
-	 * Updates the {@link Field2d} robot pose.
+	 * Updates the {@link Field2d} robot pose. If the robot is enabled, does nothing and the
+	 * trajectory will restart when the robot is disabled.
 	 *
 	 * @param autoName The name of the selected PathPlanner autonomous routine.
 	 */
 	public void update(String autoName) {
+		if (DriverStation.isEnabled()) {
+			lastName = Optional.empty();
+			return;
+		}
 		field.setRobotPose(getUpdatedPose(autoName));
 	}
 }
