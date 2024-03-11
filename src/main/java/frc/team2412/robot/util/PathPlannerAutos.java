@@ -69,10 +69,6 @@ public class PathPlannerAutos {
 		return paths;
 	}
 
-	private static Rotation2d getStartingRotation(JsonNode autoJson) {
-		return Rotation2d.fromDegrees(autoJson.get("startingPose").get("rotation").asDouble());
-	}
-
 	private static ChassisSpeeds speedsFromState(PathPlannerTrajectory.State state) {
 		return new ChassisSpeeds(
 				state.heading.getCos() * state.velocityMps,
@@ -96,7 +92,7 @@ public class PathPlannerAutos {
 			return List.of();
 		}
 		List<PathPlannerPath> paths = getPaths(autoJson);
-		Rotation2d startingRotation = getStartingRotation(autoJson);
+		Rotation2d startingRotation = paths.get(0).getPreviewStartingHolonomicPose().getRotation();
 		ChassisSpeeds startingSpeeds = new ChassisSpeeds();
 		List<PathPlannerTrajectory> trajectories = new ArrayList<>(paths.size());
 		for (var path : paths) {
