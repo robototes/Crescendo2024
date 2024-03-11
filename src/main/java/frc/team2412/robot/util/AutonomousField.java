@@ -5,7 +5,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StringSubscriber;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.Watchdog;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -39,7 +41,19 @@ public class AutonomousField {
 						.subscribe("");
 		var autonomousField =
 				new AutonomousField(() -> speedMultiplier.getDouble(DEFAULT_PLAYBACK_SPEED));
-		addPeriodic.accept(() -> autonomousField.update(activeAutoSub.get()), UPDATE_RATE);
+		var watchdog =
+				new Watchdog(0.001, () -> DriverStation.reportWarning("auto field loop overrun", false));
+		addPeriodic.accept(
+				() -> {
+					watchdog.reset();
+					autonomousField.update(activeAutoSub.get());
+					watchdog.addEpoch("AutonomousField.update()");
+					watchdog.disable();
+					if (watchdog.isExpired()) {
+						watchdog.printEpochs();
+					}
+				},
+				UPDATE_RATE);
 		tab.add("Selected auto", autonomousField.getField())
 				.withPosition(columnIndex, rowIndex)
 				.withSize(2, 2);
