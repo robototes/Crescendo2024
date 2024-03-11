@@ -92,6 +92,9 @@ public class PathPlannerAutos {
 			return List.of();
 		}
 		List<PathPlannerPath> paths = getPaths(autoJson);
+		if (paths.isEmpty()) {
+			return List.of();
+		}
 		Rotation2d startingRotation = paths.get(0).getPreviewStartingHolonomicPose().getRotation();
 		ChassisSpeeds startingSpeeds = new ChassisSpeeds();
 		List<PathPlannerTrajectory> trajectories = new ArrayList<>(paths.size());
