@@ -132,7 +132,7 @@ tasks.withType(JavaCompile) {
 spotless {
 	format "misc", {
 		target "*"
-		targetExclude "simgui*.json", "**/build/**", "**/build-*/**", "**/bin/**", "/.*", "WPILib-License.md", "gradlew", "networktables.json", "networktables.json.bck"
+		targetExclude "simgui*.json", "**/build/**", "**/build-*/**", "**/bin/**", "/.*", "WPILib-License.md", "gradlew", "networktables.json", "networktables.json.bck", "*.log"
 		toggleOffOn()
 		indentWithTabs()
 		endWithNewline()
