@@ -1,9 +1,16 @@
 package frc.team2412.robot.subsystems;
 
+import java.io.File;
+import java.util.EnumSet;
+import java.util.Map;
+import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -11,6 +18,8 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTableEvent;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Filesystem;
@@ -21,15 +30,12 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.team2412.robot.Robot;
 import frc.team2412.robot.Robot.RobotType;
 import frc.team2412.robot.Subsystems.SubsystemConstants;
-import java.io.File;
-import java.util.EnumSet;
-import java.util.Map;
-import java.util.function.DoubleSupplier;
-import java.util.function.Supplier;
 import swervelib.SwerveDrive;
+import swervelib.SwerveModule;
 import swervelib.math.SwerveMath;
 import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
@@ -319,4 +325,44 @@ public class DrivebaseSubsystem extends SubsystemBase {
 	public SwerveDrive getSwerveDrive() {
 		return swerveDrive;
 	}
+
+	private SysIdRoutine getDriveSysIdRoutine() {
+		return new SysIdRoutine(new SysIdRoutine.Config(), 
+			new SysIdRoutine.Mechanism(
+				(Measure<Voltage> volts) -> {
+					for (SwerveModule module : swerveDrive.getModules()) {
+						module.getDriveMotor().setVoltage(volts.magnitude());
+						module.setAngle(0);
+					}
+				}, 
+				null, this));
+	}
+
+	private SysIdRoutine getAngleSysIdRoutine() {
+		return new SysIdRoutine(new SysIdRoutine.Config(), 
+			new SysIdRoutine.Mechanism(
+				(Measure<Voltage> volts) -> {
+					for (SwerveModule module : swerveDrive.getModules()) {
+						module.getAngleMotor().setVoltage(volts.magnitude());
+					}
+				}, 
+				null, this));
+	}
+
+	public Command driveSysIdQuasistatic(SysIdRoutine.Direction direction) {
+		return getDriveSysIdRoutine().quasistatic(direction);
+	}
+
+	public Command driveSysIdDynamic(SysIdRoutine.Direction direction) {
+		return getDriveSysIdRoutine().dynamic(direction);
+	}
+
+	public Command angleSysIdQuasistatic(SysIdRoutine.Direction direction) {
+		return getAngleSysIdRoutine().quasistatic(direction);
+	}
+
+	public Command angleSysIdDynamic(SysIdRoutine.Direction direction) {
+		return getAngleSysIdRoutine().dynamic(direction);
+	}
+
 }

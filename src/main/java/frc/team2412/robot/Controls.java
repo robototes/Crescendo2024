@@ -185,6 +185,10 @@ public class Controls {
 		driveController.rightBumper().whileTrue(s.launcherSubsystem.armSysIdQuasistatic(Direction.kReverse));
 		driveController.leftTrigger().whileTrue(s.launcherSubsystem.flywheelSysIdQuasistatic(Direction.kForward));
 		driveController.rightTrigger().whileTrue(s.launcherSubsystem.flywheelSysIdQuasistatic(Direction.kReverse));
+		driveController.x().whileTrue(s.drivebaseSubsystem.driveSysIdQuasistatic(Direction.kForward));
+		driveController.y().whileTrue(s.drivebaseSubsystem.driveSysIdQuasistatic(Direction.kReverse));
+		driveController.a().whileTrue(s.drivebaseSubsystem.angleSysIdQuasistatic(Direction.kForward));
+		driveController.b().whileTrue(s.drivebaseSubsystem.angleSysIdQuasistatic(Direction.kReverse));
 	}
 
 	public void vibrateDriveController(double vibration) {
