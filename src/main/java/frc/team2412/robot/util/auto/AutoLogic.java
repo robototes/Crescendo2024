@@ -1,7 +1,5 @@
 package frc.team2412.robot.util.auto;
 
-import com.ctre.phoenix6.controls.StaticBrake;
-import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Dynamic;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathPlannerPath;
@@ -9,7 +7,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -30,7 +27,6 @@ import frc.team2412.robot.commands.launcher.SetAngleLaunchCommand;
 import frc.team2412.robot.commands.launcher.StopLauncherCommand;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
 import frc.team2412.robot.util.DynamicSendableChooser;
-
 import java.util.List;
 import java.util.Map;
 
@@ -94,14 +90,23 @@ public class AutoLogic {
 	private static List<AutoPath> threePiecePaths =
 			List.of(
 					// presets
+					new AutoPath("Autoline N1 N2 N3", "PresetAmpSideAutoline4Score"),
 					new AutoPath("Autoline N2 N3 N1", "PresetMidAutoline4Score"),
+					new AutoPath("Autoline N3 N2 N1", "PresetSourceSideAutoline4Score"),
+					new AutoPath("Centerline N1 Autoline Autoline N1 N2", "PresetAmpSideAutolineFar4Score"),	
 					// vision
-					new AutoPath("Autoline N1 CenterLine N1 N2", "VisionAmpSide4Score", true),
+					new AutoPath("Autoline N1 Centerline N1 N2", "VisionAmpSide4Score", true),
 					new AutoPath("Autoline N1 N2 N3", "VisionAmpSideAutoLine4Score", true),
-					new AutoPath("Autoline N3 N2 N1", "VisionMid4Score", true));
+					new AutoPath("Autoline N3 N2 N1", "VisionMid4Score", true),
+					new AutoPath("Autoline N3 N2 N1", "VisionSourceSideAutoLine4Score", true),
+					new AutoPath("Autoline N1 Centerline N1 N2", "VisionAmpSide4Score"));
 
-	private static List<AutoPath> fourPiecePaths;
-	
+	private static List<AutoPath> fourPiecePaths =
+			List.of(
+					// vision
+					new AutoPath("Centerline N1 AutoLine N1 N2 N3", "VisionAmpSideAutoLine5Score"),
+					new AutoPath("Autoline N1 Centerline N1 N2 Autoline N2", "VisionAmpSide5Score"));
+
 	private static List<AutoPath> fivePiecePaths;
 	// map (gulp)
 
@@ -121,19 +126,17 @@ public class AutoLogic {
 
 	private static SendableChooser<StartPosition> startPositionChooser =
 			new SendableChooser<StartPosition>();
-	private static DynamicSendableChooser<AutoPath> availableAutos = new DynamicSendableChooser<AutoPath>();
+	private static DynamicSendableChooser<AutoPath> availableAutos =
+			new DynamicSendableChooser<AutoPath>();
 	private static SendableChooser<Integer> gameObjects = new SendableChooser<Integer>();
 	private static SendableChooser<Boolean> isVision = new SendableChooser<Boolean>();
 	private static GenericEntry isVisionEntry;
 
-	public AutoLogic() {
-		registerCommands();
-	}
-
 	/** Registers commands in PathPlanner */
-	public void registerCommands() {
+	public static void registerCommands() {
 		// param: String commandName, Command command
 
+		System.out.println("register ");
 		// Intake
 		NamedCommands.registerCommand("StopIntake", new IntakeStopCommand(s.intakeSubsystem));
 		NamedCommands.registerCommand("Intake", new AllInCommand(s.intakeSubsystem));
@@ -195,14 +198,14 @@ public class AutoLogic {
 		}
 		isVision.setDefaultOption("Presets", false);
 		isVision.addOption("Vision", true);
-				gameObjects.setDefaultOption("0", 0);
-		for (int i = 1; i <= 5; i++) {
+		gameObjects.setDefaultOption("0", 0);
+		for (int i = 1; i <= 3; i++) {
 			gameObjects.addOption(String.valueOf(i), i);
 		}
 
 		tab.add("Starting Position", startPositionChooser).withPosition(8, 0).withSize(2, 1);
 		tab.add("Launch Type", isVision).withPosition(8, 2);
-		tab.add("Game Objects", gameObjects).withPosition(8, 2);		
+		tab.add("Game Objects", gameObjects).withPosition(8, 2);
 		tab.add("Available Auto Variants", availableAutos).withPosition(9, 3).withSize(2, 1);
 
 		isVision.onChange(AutoLogic::filterAutos);
@@ -231,6 +234,7 @@ public class AutoLogic {
 			}
 		}
 	}
+
 	public static void filterAutos(StartPosition startPosition) {
 		filterAutos(gameObjects.getSelected());
 	}
@@ -239,4 +243,7 @@ public class AutoLogic {
 		filterAutos(gameObjects.getSelected());
 	}
 
+	public static Command getSelected() {
+		return availableAutos.getSelected().getAutoCommand();
+	}
 }

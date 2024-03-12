@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import frc.team2412.robot.Robot;
 import frc.team2412.robot.Subsystems;
+import frc.team2412.robot.util.auto.AutoLogic;
 
 /*
  * Initializes and updates shuffleboard match dashboard entries
@@ -20,7 +21,6 @@ public class MatchDashboard {
 		tab.add(new FMSWidget()).withPosition(0, 0).withSize(4, 1);
 		tab.add(field).withPosition(0, 1).withSize(4, 3);
 		Robot r = Robot.getInstance();
-		tab.add("Auto Chooser", r.autoChooser).withPosition(4, 0).withSize(2, 1);
 		AutonomousField.configureShuffleboardTab(tab, 6, 0, "Auto Chooser", r::addPeriodic);
 	}
 }

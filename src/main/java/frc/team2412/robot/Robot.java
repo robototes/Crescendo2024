@@ -48,7 +48,7 @@ public class Robot extends TimedRobot {
 	public MatchDashboard dashboard;
 	public AutoLogic autoLogic;
 
-	public SendableChooser<Command> autoChooser;
+	// public SendableChooser<Command> autoChooser;
 
 	protected Robot(RobotType type) {
 		// non public for singleton. Protected so test class can subclass
@@ -83,17 +83,19 @@ public class Robot extends TimedRobot {
 
 		subsystems = new Subsystems();
 		controls = new Controls(subsystems);
-		autoLogic = new AutoLogic();
-
-		autoChooser = AutoBuilder.buildAutoChooser();
-		SmartDashboard.putData("Auto Chooser", autoChooser);
-		SmartDashboard.putString("current bot", getTypeFromAddress().toString());
-		AutoLogic.initShuffleBoard();
+		
+		// autoChooser = AutoBuilder.buildAutoChooser();
 		if (Subsystems.SubsystemConstants.DRIVEBASE_ENABLED) {
-			autoChooser = AutoBuilder.buildAutoChooser();
-		} else {
-			autoChooser = new SendableChooser<>();
+		AutoLogic.initShuffleBoard();
 		}
+		AutoLogic.registerCommands();
+		// SmartDashboard.putData("Auto Chooser", autoChooser);
+		SmartDashboard.putString("current bot", getTypeFromAddress().toString());
+		// if (Subsystems.SubsystemConstants.DRIVEBASE_ENABLED) {
+		// 	autoChooser = AutoBuilder.buildAutoChooser();
+		// } else {
+		// 	autoChooser = new SendableChooser<>();
+		// }
 
 		Shuffleboard.startRecording();
 
@@ -143,7 +145,8 @@ public class Robot extends TimedRobot {
 
 		// Checks if FMS is attatched and enables joystick warning if true
 		DriverStation.silenceJoystickConnectionWarning(!DriverStation.isFMSAttached());
-		autoChooser.getSelected().schedule();
+		// autoChooser.getSelected().schedule();
+		AutoLogic.getSelected().schedule();
 	}
 
 	@Override
