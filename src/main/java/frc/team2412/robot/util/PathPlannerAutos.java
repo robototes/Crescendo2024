@@ -17,6 +17,22 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class PathPlannerAutos {
+	// Registering named commands
+
+	private static final Map<String, List<PathPlannerPath>> namedCommandPathsCache = new HashMap<>();
+
+	public static void registerAuto(String autoName, List<PathPlannerPath> paths) {
+		namedCommandPathsCache.put(autoName, paths);
+	}
+
+	public static void registerAuto(String autoName, String... pathNames) {
+		List<PathPlannerPath> paths = new ArrayList<>(pathNames.length);
+		for (String pathName : pathNames) {
+			paths.add(getPathPlannerPath(pathName));
+		}
+		registerAuto(autoName, paths);
+	}
+
 	// Individual paths
 
 	private static PathPlannerPath loadPathPlannerPath(String name) {
@@ -47,7 +63,8 @@ public class PathPlannerAutos {
 			case "wait":
 				break;
 			case "named":
-				// TODO Handle conditional paths (after those are added)
+				String commandName = commandJson.get("data").get("name").asText();
+				paths.addAll(namedCommandPathsCache.getOrDefault(commandName, List.of()));
 				break;
 			case "path":
 				String pathName = commandJson.get("data").get("pathName").asText();
@@ -76,6 +93,22 @@ public class PathPlannerAutos {
 				state.headingAngularVelocityRps);
 	}
 
+	private static List<PathPlannerTrajectory> trajectoriesFromPaths(List<PathPlannerPath> paths) {
+		if (paths.isEmpty()) {
+			return List.of();
+		}
+		Rotation2d startingRotation = paths.get(0).getPreviewStartingHolonomicPose().getRotation();
+		ChassisSpeeds startingSpeeds = new ChassisSpeeds();
+		List<PathPlannerTrajectory> trajectories = new ArrayList<>(paths.size());
+		for (var path : paths) {
+			PathPlannerTrajectory trajectory = path.getTrajectory(startingSpeeds, startingRotation);
+			trajectories.add(trajectory);
+			startingRotation = trajectory.getEndState().targetHolonomicRotation;
+			startingSpeeds = speedsFromState(trajectory.getEndState());
+		}
+		return List.copyOf(trajectories);
+	}
+
 	private static List<PathPlannerTrajectory> loadAutoTrajectories(String autoName) {
 		File autoFile =
 				new File(Filesystem.getDeployDirectory(), "pathplanner/autos/" + autoName + ".auto");
@@ -91,20 +124,7 @@ public class PathPlannerAutos {
 			DriverStation.reportWarning("Could not load auto \"" + autoName + "\"", e.getStackTrace());
 			return List.of();
 		}
-		List<PathPlannerPath> paths = getPaths(autoJson);
-		if (paths.isEmpty()) {
-			return List.of();
-		}
-		Rotation2d startingRotation = paths.get(0).getPreviewStartingHolonomicPose().getRotation();
-		ChassisSpeeds startingSpeeds = new ChassisSpeeds();
-		List<PathPlannerTrajectory> trajectories = new ArrayList<>(paths.size());
-		for (var path : paths) {
-			PathPlannerTrajectory trajectory = path.getTrajectory(startingSpeeds, startingRotation);
-			trajectories.add(trajectory);
-			startingRotation = trajectory.getEndState().targetHolonomicRotation;
-			startingSpeeds = speedsFromState(trajectory.getEndState());
-		}
-		return List.copyOf(trajectories);
+		return trajectoriesFromPaths(getPaths(autoJson));
 	}
 
 	private static final Map<String, List<PathPlannerTrajectory>> autoTrajectoriesCache =
