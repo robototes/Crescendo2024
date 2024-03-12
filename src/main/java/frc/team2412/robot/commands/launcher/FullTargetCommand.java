@@ -1,5 +1,7 @@
 package frc.team2412.robot.commands.launcher;
 
+import static frc.team2412.robot.Subsystems.SubsystemConstants.*;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -38,7 +40,9 @@ public class FullTargetCommand extends Command {
 		this.launcherSubsystem = launcherSubsystem;
 		this.drivebaseSubsystem = drivebaseSubsystem;
 		this.controls = controls;
-		yawAlignmentCommand = drivebaseSubsystem.rotateToAngle(() -> yawTarget, false);
+		if (DRIVEBASE_ENABLED) {
+			yawAlignmentCommand = drivebaseSubsystem.rotateToAngle(() -> yawTarget, false);
+		}
 
 		addRequirements(launcherSubsystem);
 	}

@@ -8,7 +8,6 @@ import static frc.team2412.robot.Subsystems.SubsystemConstants.LAUNCHER_ENABLED;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -19,6 +18,7 @@ import frc.team2412.robot.commands.intake.AllReverseCommand;
 import frc.team2412.robot.commands.intake.AllStopCommand;
 import frc.team2412.robot.commands.intake.FeederInCommand;
 import frc.team2412.robot.commands.intake.IntakeRejectCommand;
+import frc.team2412.robot.commands.intake.RumbleCommand;
 import frc.team2412.robot.commands.launcher.FullTargetCommand;
 import frc.team2412.robot.commands.launcher.SetAngleAmpLaunchCommand;
 import frc.team2412.robot.commands.launcher.SetAngleCommand;
@@ -122,7 +122,7 @@ public class Controls {
 	private void bindIntakeControls() {
 		// CommandScheduler.getInstance()
 		// 		.setDefaultCommand(s.intakeSubsystem, new IntakeStopCommand(s.intakeSubsystem));
-		driveIntakeInButton.onTrue(new AllInCommand(s.intakeSubsystem, this));
+		driveIntakeInButton.onTrue(new RumbleCommand(this));
 		driveIntakeStopButton.onTrue(new AllStopCommand(s.intakeSubsystem));
 
 		driveIntakeReverseButton.onTrue(new AllReverseCommand(s.intakeSubsystem));
@@ -177,8 +177,10 @@ public class Controls {
 	}
 
 	public void vibrateDriveController(double vibration) {
-		if (!DriverStation.isAutonomous()) {
-			driveController.getHID().setRumble(RumbleType.kBothRumble, vibration);
-		}
+		// if (!DriverStation.isAutonomous()) {
+
+		// }
+		driveController.getHID().setRumble(RumbleType.kBothRumble, vibration);
+		codriveController.getHID().setRumble(RumbleType.kBothRumble, vibration);
 	}
 }

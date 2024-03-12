@@ -54,7 +54,7 @@ public class IntakeSubsystem extends SubsystemBase {
 	private final SparkLimitSwitch intakeRightSensor;
 
 	// Shuffleboard
-	// speed
+	// control intake speed
 	private final GenericEntry setIntakeInSpeedEntry =
 			Shuffleboard.getTab("Intake")
 					.addPersistent("Intake in speed - ", INTAKE_IN_SPEED)
@@ -74,7 +74,7 @@ public class IntakeSubsystem extends SubsystemBase {
 					.withSize(1, 1)
 					.getEntry();
 
-	// temperature
+	// motor temperature
 	private final GenericEntry intakeMotorFrontTemp =
 			Shuffleboard.getTab("Intake")
 					.add("Front Intake temp", 0)
@@ -132,6 +132,14 @@ public class IntakeSubsystem extends SubsystemBase {
 					.withWidget(BuiltInWidgets.kToggleSwitch)
 					.getEntry();
 
+	// reject override
+	private final GenericEntry rejectOverride =
+			Shuffleboard.getTab("Intake")
+					.add("Override Intake Reject", false)
+					.withSize(1, 1)
+					.withWidget(BuiltInWidgets.kToggleSwitch)
+					.getEntry();
+
 	public IntakeSubsystem() {
 
 		intakeMotorFront = new CANSparkMax(INTAKE_MOTOR_FRONT, MotorType.kBrushless);
@@ -157,6 +165,7 @@ public class IntakeSubsystem extends SubsystemBase {
 		ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Intake");
 		shuffleboardTab.addBoolean("Index Sensor - ", this::indexSensorHasNote).withSize(1, 1);
 		shuffleboardTab.addBoolean("Feeder Sensor - ", this::feederSensorHasNote).withSize(1, 1);
+		shuffleboardTab.addBoolean("Intake Sensor - ", this::intakeBackSeesNote).withSize(1, 1);
 	}
 
 	private void configureMotor(CANSparkBase motor, int currentLimit, boolean invert) {
@@ -201,10 +210,28 @@ public class IntakeSubsystem extends SubsystemBase {
 		intakeSet(INTAKE_REVERSE_SPEED);
 	}
 
+	// intake stop methods
 	public void intakeStop() {
 		intakeSet(0);
 	}
 
+	public void intakeFrontStop() {
+		intakeMotorFront.set(0);
+	}
+
+	public void intakeBackStop() {
+		intakeMotorBack.set(0);
+	}
+
+	public void intakeLeftStop() {
+		intakeMotorLeft.set(0);
+	}
+
+	public void intakeRightStop() {
+		intakeMotorRight.set(0);
+	}
+
+	// intake reject methods
 	public void intakeReject() {
 		intakeSet(INTAKE_REJECT_SPEED);
 	}
@@ -281,8 +308,13 @@ public class IntakeSubsystem extends SubsystemBase {
 		return intakeRightSensor.isPressed();
 	}
 
+	// override methods on shuffleboard
 	public boolean getSensorOverride() {
 		return sensorOverride.getBoolean(false);
+	}
+
+	public boolean getRejectOverride() {
+		return rejectOverride.getBoolean(false);
 	}
 
 	@Override

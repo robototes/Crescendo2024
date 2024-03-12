@@ -27,63 +27,95 @@ public class AllInCommand extends Command {
 	public void execute() {
 		// intake rejecting
 		if (intakeSubsystem.intakeFrontSeesNote()) {
-			intakeSubsystem.intakeBackReject();
-			intakeSubsystem.intakeLeftReject();
-			intakeSubsystem.intakeRightReject();
+			if (!intakeSubsystem.getRejectOverride()) {
+				intakeSubsystem.intakeBackReject();
+				intakeSubsystem.intakeLeftReject();
+				intakeSubsystem.intakeRightReject();
+			} else {
+				intakeSubsystem.intakeBackStop();
+				intakeSubsystem.intakeLeftStop();
+				intakeSubsystem.intakeRightStop();
+			}
 
 			if (controls != null) {
-				Commands.race(new RumbleCommand(controls), new WaitCommand(0.5)).schedule();
+				Commands.race(new RumbleCommand(controls), new WaitCommand(1)).schedule();
 			}
 		}
 
 		if (intakeSubsystem.intakeBackSeesNote()) {
-			intakeSubsystem.intakeFrontReject();
-			intakeSubsystem.intakeLeftReject();
-			intakeSubsystem.intakeRightReject();
+			if (!intakeSubsystem.getRejectOverride()) {
+				intakeSubsystem.intakeFrontReject();
+				intakeSubsystem.intakeLeftReject();
+				intakeSubsystem.intakeRightReject();
+			} else {
+				intakeSubsystem.intakeFrontStop();
+				intakeSubsystem.intakeLeftStop();
+				intakeSubsystem.intakeRightStop();
+			}
 
 			if (controls != null) {
-				Commands.race(new RumbleCommand(controls), new WaitCommand(0.5)).schedule();
+				Commands.race(new RumbleCommand(controls), new WaitCommand(2)).schedule();
 			}
 		}
 
 		if (intakeSubsystem.intakeLeftSeesNote()) {
-			intakeSubsystem.intakeFrontReject();
-			intakeSubsystem.intakeBackReject();
-			intakeSubsystem.intakeRightReject();
+			if (!intakeSubsystem.getRejectOverride()) {
+				intakeSubsystem.intakeFrontReject();
+				intakeSubsystem.intakeBackReject();
+				intakeSubsystem.intakeRightReject();
+			} else {
+				intakeSubsystem.intakeFrontStop();
+				intakeSubsystem.intakeBackStop();
+				intakeSubsystem.intakeRightStop();
+			}
 
 			if (controls != null) {
-				Commands.race(new RumbleCommand(controls), new WaitCommand(0.5)).schedule();
+				Commands.race(new RumbleCommand(controls), new WaitCommand(2)).schedule();
 			}
 		}
 
 		if (intakeSubsystem.intakeRightSeesNote()) {
-			intakeSubsystem.intakeFrontReject();
-			intakeSubsystem.intakeBackReject();
-			intakeSubsystem.intakeLeftReject();
+			if (!intakeSubsystem.getRejectOverride()) {
+				intakeSubsystem.intakeFrontReject();
+				intakeSubsystem.intakeBackReject();
+				intakeSubsystem.intakeLeftReject();
+			} else {
+				intakeSubsystem.intakeFrontStop();
+				intakeSubsystem.intakeBackStop();
+				intakeSubsystem.intakeLeftStop();
+			}
 
 			if (controls != null) {
-				Commands.race(new RumbleCommand(controls), new WaitCommand(0.5)).schedule();
+				Commands.race(new RumbleCommand(controls), new WaitCommand(2)).schedule();
 			}
 		}
 
 		// all intake motors rejecting after index
 		if (intakeSubsystem.indexSensorHasNote()) {
-			intakeSubsystem.intakeReject();
+			if (!intakeSubsystem.getRejectOverride()) {
+				intakeSubsystem.intakeReject();
+			} else {
+				intakeSubsystem.intakeStop();
+			}
 
 			if (controls != null) {
-				Commands.race(new RumbleCommand(controls), new WaitCommand(1)).schedule();
+				Commands.race(new RumbleCommand(controls), new WaitCommand(3)).schedule();
 			}
 		}
 	}
 
 	@Override
 	public void end(boolean interrupted) {
-		intakeSubsystem.intakeReject();
+		if (!intakeSubsystem.getRejectOverride()) {
+			intakeSubsystem.intakeReject();
+		} else {
+			intakeSubsystem.intakeStop();
+		}
 		intakeSubsystem.indexStop();
 		intakeSubsystem.feederStop();
 
 		if (controls != null) {
-			Commands.race(new RumbleCommand(controls), new WaitCommand(1)).schedule();
+			Commands.race(new RumbleCommand(controls), new WaitCommand(3)).schedule();
 		}
 	}
 
