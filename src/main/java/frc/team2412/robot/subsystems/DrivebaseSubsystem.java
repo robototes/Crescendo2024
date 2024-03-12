@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2412.robot.Robot;
 import frc.team2412.robot.Robot.RobotType;
+import frc.team2412.robot.Subsystems.SubsystemConstants;
 import java.io.File;
 import java.util.EnumSet;
 import java.util.Map;
@@ -38,12 +39,18 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
 	// SWERVE CONSTANTS (that aren't in deploy dir)
 
-	private static final double MAX_SPEED =
+	public static final double MAX_SPEED =
 			Robot.getInstance().getRobotType() == RobotType.BONK
-					? 2.0
-					: Robot.getInstance().getRobotType() == RobotType.CRANE
-							? 3.0
-							: Robot.getInstance().getRobotType() == RobotType.PRACTICE ? 5.0 : 1.0;
+					? 3.0
+					: Robot.getInstance().getRobotType() == RobotType.PRACTICE
+							? 6.0
+							: Robot.getInstance().getRobotType() == RobotType.CRANE ? 3.0 : 1.0;
+
+	// Auto align stuff, dw abt it
+	public static final double MAX_ACCELERATION = 3;
+	public static final double MAX_ANGULAR_VELOCITY = 540;
+	public static final double MAX_ANGULAR_ACCELERAITON = 720;
+
 	// distance from center of the robot to the furthest module
 	private static final double DRIVEBASE_RADIUS =
 			Robot.getInstance().getRobotType() == RobotType.BONK
@@ -56,8 +63,15 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
 	// AUTO CONSTANTS
 
-	private static final PIDConstants AUTO_TRANSLATION_PID = new PIDConstants(0.1, 0, 0);
-	private static final PIDConstants AUTO_ROTATION_PID = new PIDConstants(5.0, 0, 0);
+	private static final PIDConstants AUTO_TRANSLATION_PID =
+			Robot.getInstance().getRobotType() == RobotType.PRACTICE
+					? new PIDConstants(5, 0, 0.5) // practice
+					: Robot.getInstance().getRobotType() == RobotType.BONK
+							? new PIDConstants(5, 0, 0.1) // bonk
+							: Robot.getInstance().getRobotType() == RobotType.CRANE
+									? new PIDConstants(3.9, 0, 0.2) // crane
+									: new PIDConstants(0.1, 0, 0.1); // bobot TODO: tune
+	private static final PIDConstants AUTO_ROTATION_PID = new PIDConstants(5.0, 0, 0.2);
 	private static final double MAX_AUTO_SPEED =
 			500.0; // this seems to only affect rotation for some reason
 
@@ -104,8 +118,8 @@ public class DrivebaseSubsystem extends SubsystemBase {
 			throw new RuntimeException();
 		}
 
-		// set drive motors to brake
-		swerveDrive.setMotorIdleMode(true);
+		// set drive motors to coast intially, this will be changed to brake on enable
+		swerveDrive.setMotorIdleMode(false);
 		// swerve drive heading will slowly drift over time as you translate. this method enables an
 		// active correction using pid. disabled until testing can be done
 		// TODO: this still needs to be improved
@@ -217,6 +231,10 @@ public class DrivebaseSubsystem extends SubsystemBase {
 		return alignCommand;
 	}
 
+	public void setMotorBrake(boolean brake) {
+		swerveDrive.setMotorIdleMode(brake);
+	}
+
 	public ChassisSpeeds getRobotSpeeds() {
 		return swerveDrive.getRobotVelocity();
 	}
@@ -228,7 +246,9 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
 	/** Get the robot's pose */
 	public Pose2d getPose() {
-		return swerveDrive.getPose();
+		return SubsystemConstants.USE_APRILTAGS_CORRECTION
+				? swerveDrive.getPose()
+				: swerveDrive.getOdometryOnlyPose();
 	}
 
 	/**

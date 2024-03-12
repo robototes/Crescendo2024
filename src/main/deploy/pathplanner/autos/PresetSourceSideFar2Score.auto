@@ -1,0 +1,49 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.73,
+      "y": 4.47
+    },
+    "rotation": 120.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "SubwooferLaunch"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LowSpeakerToMiddleLowNote"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MiddleLowNoteToLowSpeaker"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "SubwooferLaunch"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LowSpeakerCenterLine"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Preset Autos",
+  "choreoAuto": false
+}

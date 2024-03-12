@@ -16,6 +16,7 @@ public class IndexStopCommand extends Command {
 		intakeSubsystem.indexStop();
 	}
 
+	@Override
 	public boolean isFinished() {
 		return true;
 	}

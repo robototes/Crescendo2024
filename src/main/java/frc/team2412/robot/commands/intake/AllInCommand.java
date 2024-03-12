@@ -20,19 +20,20 @@ public class AllInCommand extends Command {
 
 	@Override
 	public void execute() {
-		if (intakeSubsystem.getIndexSensor()) {
-			intakeSubsystem.intakeStop();
+		if (intakeSubsystem.indexSensorHasNote()) {
+			intakeSubsystem.intakeReject();
 		}
 	}
 
 	@Override
 	public void end(boolean interrupted) {
+		// intakeSubsystem.intakeReject();
 		intakeSubsystem.indexStop();
 		intakeSubsystem.feederStop();
 	}
 
 	@Override
 	public boolean isFinished() {
-		return intakeSubsystem.getFeederSensor();
+		return intakeSubsystem.feederSensorHasNote();
 	}
 }

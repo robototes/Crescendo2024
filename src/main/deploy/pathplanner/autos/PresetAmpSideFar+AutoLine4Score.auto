@@ -1,0 +1,25 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.73,
+      "y": 4.48
+    },
+    "rotation": 120.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "LowSpeakerCenterLineN5N4"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Complex Autos",
+  "choreoAuto": false
+}

@@ -13,14 +13,14 @@ public class Subsystems {
 	public static class SubsystemConstants {
 
 		private static final boolean IS_COMP = Robot.getInstance().isCompetition();
-
-		public static final boolean APRILTAGS_ENABLED = false;
-		// should be true when testing limelight lol
+		public static final boolean APRILTAGS_ENABLED = true;
 		public static final boolean LIMELIGHT_ENABLED = false;
 		public static final boolean CLIMB_ENABLED = false;
-		public static final boolean LAUNCHER_ENABLED = false;
-		public static final boolean INTAKE_ENABLED = false;
+		public static final boolean LAUNCHER_ENABLED = true;
+		public static final boolean INTAKE_ENABLED = true;
 		public static final boolean DRIVEBASE_ENABLED = true;
+
+		public static final boolean USE_APRILTAGS_CORRECTION = true;
 	}
 
 	public final DrivebaseWrapper drivebaseWrapper;

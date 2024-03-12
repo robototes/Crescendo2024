@@ -1,0 +1,61 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.73,
+      "y": 6.62
+    },
+    "rotation": -120.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "SubwooferLaunch"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "HighSpeakerToHighNoteLaunch2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "VisionLaunch"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "HighNoteLaunch2ToFarHighNoteToLaunch"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "VisionLaunch"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "launchSecondNoteCenterLineLaunch"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "VisionLaunch"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Vision Autos",
+  "choreoAuto": false
+}
