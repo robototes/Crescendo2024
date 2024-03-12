@@ -541,6 +541,20 @@ public class SwerveDrive {
 	}
 
 	/**
+	 * Gets the current pose (position and rotation) of the robot, as reported by odometry (and not
+	 * vision measurements).
+	 *
+	 * @return The robot's pose
+	 */
+	public Pose2d getOdometryOnlyPose() {
+
+		odometryLock.lock();
+		Pose2d poseEstimation = odometryOnlyPoseEstimator.getEstimatedPosition();
+		odometryLock.unlock();
+		return poseEstimation;
+	}
+
+	/**
 	 * Gets the current pose (position and rotation) of the robot, as reported by odometry.
 	 *
 	 * @return The robot's pose
