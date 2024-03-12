@@ -1,5 +1,7 @@
 package frc.team2412.robot.util.auto;
 
+import com.ctre.phoenix6.controls.StaticBrake;
+import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Dynamic;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathPlannerPath;
@@ -27,6 +29,8 @@ import frc.team2412.robot.commands.launcher.FullTargetCommand;
 import frc.team2412.robot.commands.launcher.SetAngleLaunchCommand;
 import frc.team2412.robot.commands.launcher.StopLauncherCommand;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
+import frc.team2412.robot.util.DynamicSendableChooser;
+
 import java.util.List;
 import java.util.Map;
 
@@ -96,7 +100,10 @@ public class AutoLogic {
 					new AutoPath("Autoline N1 N2 N3", "VisionAmpSideAutoLine4Score", true),
 					new AutoPath("Autoline N3 N2 N1", "VisionMid4Score", true));
 
-	// gulp map
+	private static List<AutoPath> fourPiecePaths;
+	
+	private static List<AutoPath> fivePiecePaths;
+	// map (gulp)
 
 	private static Map<Integer, List<AutoPath>> commandsMap =
 			Map.of(0, noPiecePaths, 1, onePiecePaths, 2, twoPiecePaths, 3, threePiecePaths);
@@ -114,8 +121,9 @@ public class AutoLogic {
 
 	private static SendableChooser<StartPosition> startPositionChooser =
 			new SendableChooser<StartPosition>();
-	private static SendableChooser<AutoPath> availableAutos = new SendableChooser<AutoPath>();
-	private static GenericEntry amountGamePiecesEntry;
+	private static DynamicSendableChooser<AutoPath> availableAutos = new DynamicSendableChooser<AutoPath>();
+	private static SendableChooser<Integer> gameObjects = new SendableChooser<Integer>();
+	private static SendableChooser<Boolean> isVision = new SendableChooser<Boolean>();
 	private static GenericEntry isVisionEntry;
 
 	public AutoLogic() {
@@ -185,33 +193,50 @@ public class AutoLogic {
 		for (StartPosition startPosition : StartPosition.values()) {
 			startPositionChooser.addOption(startPosition.title, startPosition);
 		}
+		isVision.setDefaultOption("Presets", false);
+		isVision.addOption("Vision", true);
+				gameObjects.setDefaultOption("0", 0);
+		for (int i = 1; i <= 5; i++) {
+			gameObjects.addOption(String.valueOf(i), i);
+		}
 
-		tab.add("Starting Position", startPositionChooser).withPosition(5, 1).withSize(2, 1);
+		tab.add("Starting Position", startPositionChooser).withPosition(8, 0).withSize(2, 1);
+		tab.add("Launch Type", isVision).withPosition(8, 2);
+		tab.add("Game Objects", gameObjects).withPosition(8, 2);		
+		tab.add("Available Auto Variants", availableAutos).withPosition(9, 3).withSize(2, 1);
 
-		isVisionEntry =
-				tab.add("Use Vision Launch", false)
-						.withWidget(BuiltInWidgets.kToggleSwitch)
-						.withPosition(5, 2)
-						.withSize(1, 1)
-						.getEntry();
-		amountGamePiecesEntry = tab.add("Game Pieces", 0).withPosition(5, 2).withSize(1, 1).getEntry();
-		tab.add("Available Auto Variants", availableAutos).withPosition(5, 3).withSize(2, 1);
+		isVision.onChange(AutoLogic::filterAutos);
+		startPositionChooser.onChange(AutoLogic::filterAutos);
+		gameObjects.onChange(AutoLogic::filterAutos);
+
+		filterAutos(startPositionChooser.getSelected());
 	}
 
 	/** Takes the auto filtering entries in shuffleboard to provide a list of suitable autos */
-	public static void filterAutos() {
-		availableAutos.close();
+	public static void filterAutos(int numGameObjects) {
 
-		List<AutoPath> autoCommandsList = commandsMap.get((int) amountGamePiecesEntry.getInteger(0));
+		for (AutoPath auto : availableAutos.m_map.values()) {
+			availableAutos.removeOption(auto);
+		}
+
+		List<AutoPath> autoCommandsList = commandsMap.get(numGameObjects);
 
 		// List<AutoPath> filteredList = new ArrayList<AutoPath>();
 
 		for (AutoPath auto : autoCommandsList) {
 			if (auto.getStartPose().equals(startPositionChooser.getSelected().startPose)
-					&& auto.isVision() == isVisionEntry.getBoolean(false)) {
+					&& auto.isVision() == isVision.getSelected()) {
 				// filteredList.add(auto);
 				availableAutos.addOption(auto.getDisplayName(), auto);
 			}
 		}
 	}
+	public static void filterAutos(StartPosition startPosition) {
+		filterAutos(gameObjects.getSelected());
+	}
+
+	public static void filterAutos(Boolean isVision) {
+		filterAutos(gameObjects.getSelected());
+	}
+
 }
