@@ -5,7 +5,6 @@ import static frc.team2412.robot.Controls.ControlConstants.CONTROLLER_PORT;
 import static frc.team2412.robot.Subsystems.SubsystemConstants.DRIVEBASE_ENABLED;
 import static frc.team2412.robot.Subsystems.SubsystemConstants.INTAKE_ENABLED;
 import static frc.team2412.robot.Subsystems.SubsystemConstants.LAUNCHER_ENABLED;
-import static frc.team2412.robot.Subsystems.SubsystemConstants.LIMELIGHT_ENABLED;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -15,7 +14,6 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.team2412.robot.commands.drivebase.DriveToNoteCommand;
 import frc.team2412.robot.commands.intake.AllInCommand;
 import frc.team2412.robot.commands.intake.AllReverseCommand;
 import frc.team2412.robot.commands.intake.AllStopCommand;
@@ -32,7 +30,7 @@ public class Controls {
 	private final CommandXboxController driveController;
 	private final CommandXboxController codriveController;
 	// leaving this code in in case we need to test outside of auto
-	//private final Trigger getWithinDistanceTrigger;
+	// private final Trigger getWithinDistanceTrigger;
 
 	// Intake
 	private final Trigger driveIntakeInButton;
@@ -53,8 +51,9 @@ public class Controls {
 	public Controls(Subsystems s) {
 		driveController = new CommandXboxController(CONTROLLER_PORT);
 		codriveController = new CommandXboxController(CODRIVER_CONTROLLER_PORT);
-		// not sure what drive team wants (or if the trigger is even needed since we are only using the command in auto)
-		//getWithinDistanceTrigger = driveController.start();
+		// not sure what drive team wants (or if the trigger is even needed since we are only using the
+		// command in auto)
+		// getWithinDistanceTrigger = driveController.start();
 		this.s = s;
 
 		// launcherAmpPresetButton = codriveController.povDown();

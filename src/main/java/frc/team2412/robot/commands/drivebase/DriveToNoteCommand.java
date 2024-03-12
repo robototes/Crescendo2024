@@ -3,7 +3,6 @@ package frc.team2412.robot.commands.drivebase;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.units.Unit;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.team2412.robot.subsystems.DrivebaseSubsystem;
 import frc.team2412.robot.subsystems.LimelightSubsystem;
@@ -17,7 +16,7 @@ public class DriveToNoteCommand extends Command {
 	private final double INVERT_DRIVE_DIRECTION = -1.0;
 
 	public DriveToNoteCommand(
-		DrivebaseSubsystem drivebaseSubsystem, LimelightSubsystem limelightSubsystem) {
+			DrivebaseSubsystem drivebaseSubsystem, LimelightSubsystem limelightSubsystem) {
 		this.drivebaseSubsystem = drivebaseSubsystem;
 		this.limelightSubsystem = limelightSubsystem;
 		addRequirements(drivebaseSubsystem);
@@ -26,8 +25,13 @@ public class DriveToNoteCommand extends Command {
 	@Override
 	public void execute() {
 		Translation2d move =
-				new Translation2d(INVERT_DRIVE_DIRECTION * Units.inchesToMeters(limelightSubsystem.getDistanceFromTargetInches()), 0.0);
-		Rotation2d turn = new Rotation2d().fromDegrees(2 * INVERT_DRIVE_DIRECTION * limelightSubsystem.getHorizontalOffset());
+				new Translation2d(
+						INVERT_DRIVE_DIRECTION
+								* Units.inchesToMeters(limelightSubsystem.getDistanceFromTargetInches()),
+						0.0);
+		Rotation2d turn =
+				new Rotation2d()
+						.fromDegrees(2 * INVERT_DRIVE_DIRECTION * limelightSubsystem.getHorizontalOffset());
 		drivebaseSubsystem.drive(move, turn, false);
 	}
 
