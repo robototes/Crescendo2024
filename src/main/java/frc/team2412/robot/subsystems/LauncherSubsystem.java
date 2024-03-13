@@ -29,7 +29,7 @@ public class LauncherSubsystem extends SubsystemBase {
 	public static final int AMP_AIM_ANGLE = 335;
 	public static final int SUBWOOFER_AIM_ANGLE = 298;
 	public static final int PODIUM_AIM_ANGLE = 39;
-	public static final int TRAP_AIM_ANGLE = 290;
+	public static final int TRAP_AIM_ANGLE = 317;
 	public static final double MANUAL_MODIFIER = 0.02;
 	public static final double RETRACTED_ANGLE = 255;
 	// offset for FF so parallel to floor is 0
