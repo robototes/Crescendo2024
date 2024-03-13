@@ -181,14 +181,25 @@ public class Controls {
 	}
 
 	private void bindSysIdControls() {
-		driveController.leftBumper().whileTrue(s.launcherSubsystem.armSysIdQuasistatic(Direction.kForward));
-		driveController.rightBumper().whileTrue(s.launcherSubsystem.armSysIdQuasistatic(Direction.kReverse));
-		driveController.leftTrigger().whileTrue(s.launcherSubsystem.flywheelSysIdQuasistatic(Direction.kForward));
-		driveController.rightTrigger().whileTrue(s.launcherSubsystem.flywheelSysIdQuasistatic(Direction.kReverse));
+		// only one routine can be run in one robot log
+		// switch these between arm and flywheel in code when tuning
+		driveController
+				.leftBumper()
+				.whileTrue(s.launcherSubsystem.armSysIdQuasistatic(Direction.kForward));
+		driveController
+				.rightBumper()
+				.whileTrue(s.launcherSubsystem.armSysIdQuasistatic(Direction.kReverse));
+		driveController
+				.leftTrigger()
+				.whileTrue(s.launcherSubsystem.armSysIdDynamic(Direction.kForward));
+		driveController
+				.rightTrigger()
+				.whileTrue(s.launcherSubsystem.armSysIdDynamic(Direction.kReverse));
+		// switch these between angle and drive tests in code when tuning
 		driveController.x().whileTrue(s.drivebaseSubsystem.driveSysIdQuasistatic(Direction.kForward));
 		driveController.y().whileTrue(s.drivebaseSubsystem.driveSysIdQuasistatic(Direction.kReverse));
-		driveController.a().whileTrue(s.drivebaseSubsystem.angleSysIdQuasistatic(Direction.kForward));
-		driveController.b().whileTrue(s.drivebaseSubsystem.angleSysIdQuasistatic(Direction.kReverse));
+		driveController.a().whileTrue(s.drivebaseSubsystem.driveSysIdDynamic(Direction.kForward));
+		driveController.b().whileTrue(s.drivebaseSubsystem.driveSysIdDynamic(Direction.kReverse));
 	}
 
 	public void vibrateDriveController(double vibration) {

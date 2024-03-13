@@ -59,7 +59,7 @@ public class LauncherSubsystem extends SubsystemBase {
 	private final RelativeEncoder launcherBottomEncoder;
 	private final SparkAbsoluteEncoder launcherAngleEncoder;
 	private final SparkPIDController launcherAngleOnePIDController;
-	
+
 	// arm FF values:
 	// Ks: 0.40434
 	// Kv: 0.096771
@@ -67,8 +67,10 @@ public class LauncherSubsystem extends SubsystemBase {
 
 	private final SparkPIDController launcherTopPIDController;
 	private final SparkPIDController launcherBottomPIDController;
-	private final SimpleMotorFeedforward launcherTopFeedforward = new SimpleMotorFeedforward(0, 0.11335, 0.048325);
-	private final SimpleMotorFeedforward launcherBottomFeedforward = new SimpleMotorFeedforward(0, 0.11238, 0.048209);
+	private final SimpleMotorFeedforward launcherTopFeedforward =
+			new SimpleMotorFeedforward(0, 0.11335, 0.048325);
+	private final SimpleMotorFeedforward launcherBottomFeedforward =
+			new SimpleMotorFeedforward(0, 0.11238, 0.048209);
 
 	private double rpmSetpoint;
 	private double angleSetpoint;
@@ -184,8 +186,10 @@ public class LauncherSubsystem extends SubsystemBase {
 	// used for presets
 	public void launch(double speed) {
 		rpmSetpoint = speed;
-		launcherTopPIDController.setReference(rpmSetpoint, ControlType.kVelocity, 0, launcherTopFeedforward.calculate(speed));
-		launcherBottomPIDController.setReference(rpmSetpoint, ControlType.kVelocity, 0, launcherBottomFeedforward.calculate(speed));
+		launcherTopPIDController.setReference(
+				rpmSetpoint, ControlType.kVelocity, 0, launcherTopFeedforward.calculate(speed));
+		launcherBottomPIDController.setReference(
+				rpmSetpoint, ControlType.kVelocity, 0, launcherBottomFeedforward.calculate(speed));
 	}
 
 	public void ampLaunch(double speed) {
@@ -323,18 +327,22 @@ public class LauncherSubsystem extends SubsystemBase {
 							log.motor("angle-one")
 									.voltage(
 											BaseUnits.Voltage.of(
-													launcherAngleOneMotor.getAppliedOutput() * RobotController.getBatteryVoltage()))
+													launcherAngleOneMotor.getAppliedOutput()
+															* RobotController.getBatteryVoltage()))
 									.angularPosition(
-											edu.wpi.first.units.Units.Rotations.of(launcherAngleOneMotor.getEncoder().getPosition()))
+											edu.wpi.first.units.Units.Rotations.of(
+													launcherAngleOneMotor.getEncoder().getPosition()))
 									.angularVelocity(
 											edu.wpi.first.units.Units.Rotations.per(edu.wpi.first.units.Units.Minute)
 													.of(launcherAngleOneMotor.getEncoder().getVelocity()));
 							log.motor("angle-two")
 									.voltage(
 											BaseUnits.Voltage.of(
-													launcherAngleTwoMotor.getAppliedOutput() * RobotController.getBatteryVoltage()))
+													launcherAngleTwoMotor.getAppliedOutput()
+															* RobotController.getBatteryVoltage()))
 									.angularPosition(
-											edu.wpi.first.units.Units.Rotations.of(launcherAngleTwoMotor.getEncoder().getPosition()))
+											edu.wpi.first.units.Units.Rotations.of(
+													launcherAngleTwoMotor.getEncoder().getPosition()))
 									.angularVelocity(
 											edu.wpi.first.units.Units.Rotations.per(edu.wpi.first.units.Units.Minute)
 													.of(launcherAngleTwoMotor.getEncoder().getVelocity()));
@@ -354,16 +362,20 @@ public class LauncherSubsystem extends SubsystemBase {
 							log.motor("top-flywheel")
 									.voltage(
 											BaseUnits.Voltage.of(
-													launcherTopMotor.getAppliedOutput() * RobotController.getBatteryVoltage()))
-									.angularPosition(edu.wpi.first.units.Units.Rotations.of(launcherTopEncoder.getPosition()))
+													launcherTopMotor.getAppliedOutput()
+															* RobotController.getBatteryVoltage()))
+									.angularPosition(
+											edu.wpi.first.units.Units.Rotations.of(launcherTopEncoder.getPosition()))
 									.angularVelocity(
 											edu.wpi.first.units.Units.Rotations.per(edu.wpi.first.units.Units.Minute)
 													.of(launcherTopEncoder.getVelocity()));
 							log.motor("bottom-flywheel")
 									.voltage(
 											BaseUnits.Voltage.of(
-													launcherBottomMotor.getAppliedOutput() * RobotController.getBatteryVoltage()))
-									.angularPosition(edu.wpi.first.units.Units.Rotations.of(launcherBottomEncoder.getPosition()))
+													launcherBottomMotor.getAppliedOutput()
+															* RobotController.getBatteryVoltage()))
+									.angularPosition(
+											edu.wpi.first.units.Units.Rotations.of(launcherBottomEncoder.getPosition()))
 									.angularVelocity(
 											edu.wpi.first.units.Units.Rotations.per(edu.wpi.first.units.Units.Minute)
 													.of(launcherBottomEncoder.getVelocity()));

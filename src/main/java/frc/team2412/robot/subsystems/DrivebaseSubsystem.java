@@ -1,16 +1,9 @@
 package frc.team2412.robot.subsystems;
 
-import java.io.File;
-import java.util.EnumSet;
-import java.util.Map;
-import java.util.function.DoubleSupplier;
-import java.util.function.Supplier;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -34,6 +27,11 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.team2412.robot.Robot;
 import frc.team2412.robot.Robot.RobotType;
 import frc.team2412.robot.Subsystems.SubsystemConstants;
+import java.io.File;
+import java.util.EnumSet;
+import java.util.Map;
+import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 import swervelib.SwerveDrive;
 import swervelib.SwerveModule;
 import swervelib.math.SwerveMath;
@@ -327,26 +325,30 @@ public class DrivebaseSubsystem extends SubsystemBase {
 	}
 
 	private SysIdRoutine getDriveSysIdRoutine() {
-		return new SysIdRoutine(new SysIdRoutine.Config(), 
-			new SysIdRoutine.Mechanism(
-				(Measure<Voltage> volts) -> {
-					for (SwerveModule module : swerveDrive.getModules()) {
-						module.getDriveMotor().setVoltage(volts.magnitude());
-						module.setAngle(0);
-					}
-				}, 
-				null, this));
+		return new SysIdRoutine(
+				new SysIdRoutine.Config(),
+				new SysIdRoutine.Mechanism(
+						(Measure<Voltage> volts) -> {
+							for (SwerveModule module : swerveDrive.getModules()) {
+								module.getDriveMotor().setVoltage(volts.magnitude());
+								module.setAngle(0);
+							}
+						},
+						null,
+						this));
 	}
 
 	private SysIdRoutine getAngleSysIdRoutine() {
-		return new SysIdRoutine(new SysIdRoutine.Config(), 
-			new SysIdRoutine.Mechanism(
-				(Measure<Voltage> volts) -> {
-					for (SwerveModule module : swerveDrive.getModules()) {
-						module.getAngleMotor().setVoltage(volts.magnitude());
-					}
-				}, 
-				null, this));
+		return new SysIdRoutine(
+				new SysIdRoutine.Config(),
+				new SysIdRoutine.Mechanism(
+						(Measure<Voltage> volts) -> {
+							for (SwerveModule module : swerveDrive.getModules()) {
+								module.getAngleMotor().setVoltage(volts.magnitude());
+							}
+						},
+						null,
+						this));
 	}
 
 	public Command driveSysIdQuasistatic(SysIdRoutine.Direction direction) {
@@ -364,5 +366,4 @@ public class DrivebaseSubsystem extends SubsystemBase {
 	public Command angleSysIdDynamic(SysIdRoutine.Direction direction) {
 		return getAngleSysIdRoutine().dynamic(direction);
 	}
-
 }
