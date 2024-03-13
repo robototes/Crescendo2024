@@ -63,7 +63,7 @@ public class AutoLogic {
 					new AutoPath("Stand Still", "PresetMid1Score"),
 					new AutoPath("Stand Still", "PresetAmpSide1Score"),
 					// new AutoPath("Pass Auto Line", "PresetSourceSide1ScorePassAutoLine"),
-					new AutoPath("Pass Auto Line", "PresetAmpSide1ScorePassAutoLine"),
+					new AutoPath("Pass Auto Line", "PresetAmpSide1ScorePassAutoline"),
 					new AutoPath("Pass Auto Line", "PresetSourceSide1ScorePassAutoline"));
 
 	private static List<AutoPath> onePiecePaths =
