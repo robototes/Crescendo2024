@@ -180,8 +180,7 @@ public class LauncherSubsystem extends SubsystemBase {
 	// uses the value from the entry
 	public void launch() {
 		rpmSetpoint = setLauncherSpeedEntry.getDouble(SPEAKER_SHOOT_SPEED_RPM);
-		launcherTopPIDController.setReference(rpmSetpoint, ControlType.kVelocity);
-		launcherBottomPIDController.setReference(rpmSetpoint, ControlType.kVelocity);
+		launch(rpmSetpoint);
 	}
 	// used for presets
 	public void launch(double speed) {
@@ -193,7 +192,8 @@ public class LauncherSubsystem extends SubsystemBase {
 	}
 
 	public void ampLaunch(double speed) {
-		launcherTopPIDController.setReference(-speed, ControlType.kVelocity);
+		launcherTopPIDController.setReference(
+				-speed, ControlType.kVelocity, 0, launcherTopFeedforward.calculate(-speed));
 		launcherBottomMotor.disable();
 	}
 
