@@ -6,7 +6,6 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -37,8 +36,7 @@ public class AutoLogic {
 
 	public static enum StartPosition {
 		AMP_SIDE_SUBWOOFER(
-				"Amp Side Subwoofer",
-				new Pose2d(0.73, 6.62, new Rotation2d(Units.degreesToRadians(-120)))),
+				"Amp Side Subwoofer", new Pose2d(0.73, 6.62, new Rotation2d(Units.degreesToRadians(-120)))),
 		MID_SIDE_SUBWOOFER(
 				"Mid Side Subwoofer", new Pose2d(1.33, 5.55, new Rotation2d(Units.degreesToRadians(180)))),
 		SOURCE_SIDE_SUBWOOFER(
@@ -94,7 +92,7 @@ public class AutoLogic {
 					new AutoPath("Autoline N1 N2 N3", "PresetAmpSideAutoline4Score"),
 					new AutoPath("Autoline N2 N3 N1", "PresetMidAutoline4Score"),
 					new AutoPath("Autoline N3 N2 N1", "PresetSourceSideAutoline4Score"),
-					new AutoPath("Centerline N1 Autoline Autoline N1 N2", "PresetAmpSideAutolineFar4Score"),	
+					new AutoPath("Centerline N1 Autoline Autoline N1 N2", "PresetAmpSideAutolineFar4Score"),
 					// vision
 					new AutoPath("Autoline N1 Centerline N1 N2", "VisionAmpSide4Score", true),
 					new AutoPath("Autoline N1 N2 N3", "VisionAmpSideAutoLine4Score", true),
@@ -109,10 +107,20 @@ public class AutoLogic {
 					new AutoPath("Autoline N1 Centerline N1 N2 Autoline N2", "VisionAmpSide5Score"));
 
 	private static List<AutoPath> fivePiecePaths;
-	// map (gulp)
 
+	// map (gulp)
 	private static Map<Integer, List<AutoPath>> commandsMap =
-			Map.of(0, noPiecePaths, 1, onePiecePaths, 2, twoPiecePaths, 3, threePiecePaths, 4, fourPiecePaths);
+			Map.of(
+					0,
+					noPiecePaths,
+					1,
+					onePiecePaths,
+					2,
+					twoPiecePaths,
+					3,
+					threePiecePaths,
+					4,
+					fourPiecePaths);
 
 	// vars
 
@@ -198,7 +206,7 @@ public class AutoLogic {
 		isVision.setDefaultOption("Presets", false);
 		isVision.addOption("Vision", true);
 		gameObjects.setDefaultOption("0", 0);
-		for (int i = 1; i < commandsMap.size(); i++) { 
+		for (int i = 1; i < commandsMap.size(); i++) {
 			gameObjects.addOption(String.valueOf(i), i);
 		}
 
@@ -217,10 +225,9 @@ public class AutoLogic {
 	/** Takes the auto filtering entries in shuffleboard to provide a list of suitable autos */
 	public static void filterAutos(int numGameObjects) {
 
-
 		// resets/clears all options
 		availableAutos.clearOptions();
-		
+
 		// filter based off gameobejct count
 		List<AutoPath> autoCommandsList = commandsMap.get(numGameObjects);
 
@@ -233,6 +240,7 @@ public class AutoLogic {
 		}
 	}
 
+	// auto filtering stuff
 	public static void filterAutos(StartPosition startPosition) {
 		filterAutos(gameObjects.getSelected());
 	}

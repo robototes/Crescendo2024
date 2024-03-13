@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import frc.team2412.robot.Robot;
 import frc.team2412.robot.Subsystems;
-import frc.team2412.robot.util.auto.AutoLogic;
 
 /*
  * Initializes and updates shuffleboard match dashboard entries

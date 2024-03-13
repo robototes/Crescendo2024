@@ -1,6 +1,5 @@
 package frc.team2412.robot;
 
-import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -10,7 +9,6 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -83,13 +81,13 @@ public class Robot extends TimedRobot {
 
 		subsystems = new Subsystems();
 		controls = new Controls(subsystems);
-		
+
 		AutoLogic.registerCommands();
 		// autoChooser = AutoBuilder.buildAutoChooser();
 		if (Subsystems.SubsystemConstants.DRIVEBASE_ENABLED) {
-		AutoLogic.initShuffleBoard();
+			AutoLogic.initShuffleBoard();
 		}
-	
+
 		// SmartDashboard.putData("Auto Chooser", autoChooser);
 		SmartDashboard.putString("current bot", getTypeFromAddress().toString());
 		// if (Subsystems.SubsystemConstants.DRIVEBASE_ENABLED) {

@@ -70,9 +70,7 @@ public class DynamicSendableChooser<T> implements Sendable, AutoCloseable {
 		m_map.remove(name);
 	}
 
-	/**
-	 * Removes all objects from the list of options
-	 */
+	/** Removes all objects from the list of options */
 	public void clearOptions() {
 		m_map.clear();
 	}

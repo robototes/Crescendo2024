@@ -1,7 +1,5 @@
 package frc.team2412.robot.util.auto;
 
-import static frc.team2412.robot.util.auto.AutoLogic.s;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -29,7 +27,6 @@ public class AutoPath {
 			}
 		}
 		startPosition = StartPosition.MISC;
-
 	}
 
 	public AutoPath(String displayName, String pathPlannerAutoName) {
