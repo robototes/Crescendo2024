@@ -38,7 +38,7 @@ public class ComplexAutoPaths {
 
 	// Complex Autos
 
-	public static Command TopSpeakerCenterLineN1N2AutoLine1 =
+	public static final Command TopSpeakerCenterLineN1N2AutoLine1 =
 			Commands.sequence(
 					SubwooferLaunchCommand(),
 					getAutoCommand("TopSpeakerQCenterLineN1"),
@@ -59,7 +59,7 @@ public class ComplexAutoPaths {
 							() -> true),
 					VisionLaunchCommand());
 
-	public static Command TopSpeakerCenterLineN1N2N3 =
+	public static final Command TopSpeakerCenterLineN1N2N3 =
 			Commands.sequence(
 					SubwooferLaunchCommand(),
 					getAutoCommand("TopSpeakerQCenterLineN1"),
@@ -80,7 +80,7 @@ public class ComplexAutoPaths {
 							() -> true),
 					VisionLaunchCommand());
 
-	public static Command midSpeakerCenterLineN3N2N1 =
+	public static final Command midSpeakerCenterLineN3N2N1 =
 			Commands.sequence(
 					SubwooferLaunchCommand(),
 					getAutoCommand("MidSpeakerQCenterLineN3"),
@@ -102,7 +102,7 @@ public class ComplexAutoPaths {
 							() -> true),
 					VisionLaunchCommand());
 
-	public static Command lowSpeakerCenterLineN5N4 =
+	public static final Command lowSpeakerCenterLineN5N4 =
 			Commands.sequence(
 					SubwooferLaunchCommand(),
 					getAutoCommand("LowSpeakerQCenterLineN5"),
@@ -114,7 +114,7 @@ public class ComplexAutoPaths {
 							Commands.sequence(getAutoCommand("QCenterLineN5LCenterLineN4")),
 							() -> false));
 
-	public static Command lowSpeakerCenterLineN5N4N3 =
+	public static final Command lowSpeakerCenterLineN5N4N3 =
 			Commands.sequence(
 					SubwooferLaunchCommand(),
 					getAutoCommand("LowSpeakerQCenterLineN5"),
@@ -137,11 +137,11 @@ public class ComplexAutoPaths {
 
 	// new command getters
 
-	public static Command VisionLaunchCommand() {
+	public static final Command VisionLaunchCommand() {
 		return new FullTargetCommand(s.launcherSubsystem, s.drivebaseSubsystem, controls);
 	}
 
-	public static Command SubwooferLaunchCommand() {
+	public static final Command SubwooferLaunchCommand() {
 		return new SetAngleLaunchCommand(
 				s.launcherSubsystem,
 				LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,

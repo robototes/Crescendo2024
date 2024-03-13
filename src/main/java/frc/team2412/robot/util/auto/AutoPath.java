@@ -8,11 +8,11 @@ import frc.team2412.robot.util.auto.AutoLogic.StartPosition;
 
 public class AutoPath {
 
-	private Pose2d startPose2d;
-	private StartPosition startPosition;
-	private String displayName;
-	private Command autoCommand;
-	private boolean vision;
+	private final Pose2d startPose2d;
+	private final StartPosition startPosition;
+	private final String displayName;
+	private final Command autoCommand;
+	private final boolean vision;
 
 	public AutoPath(String displayName, String pathPlannerAutoName, boolean vision) {
 		this.displayName = displayName;
