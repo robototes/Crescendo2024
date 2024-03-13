@@ -196,7 +196,7 @@ public class LauncherSubsystem extends SubsystemBase {
 	}
 
 	public void ampLaunch(double speed) {
-		launcherTopPIDController.setReference(-speed, ControlType.kVelocity);	
+		launcherTopPIDController.setReference(-speed, ControlType.kVelocity);
 		launcherBottomMotor.disable();
 	}
 

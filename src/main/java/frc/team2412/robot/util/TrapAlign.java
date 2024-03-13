@@ -18,11 +18,11 @@ public class TrapAlign {
 	private static final Pose2d[] BLUE_TRAP_POSES = {
 		// trap that faces amp
 		new Pose2d(new Translation2d(4.3, 5.14), Rotation2d.fromDegrees(-60)),
-		// trap that faces source 		
+		// trap that faces source
 		new Pose2d(new Translation2d(4.3, 3.09), Rotation2d.fromDegrees(-300)),
 		// trap that faces mid
-		//DO THIS ONE FIRST
-		//brute force the X lol
+		// DO THIS ONE FIRST
+		// brute force the X lol
 		new Pose2d(new Translation2d(6, 4.10), Rotation2d.fromDegrees(180))
 	};
 
@@ -32,8 +32,8 @@ public class TrapAlign {
 		// trap that faces source
 		new Pose2d(new Translation2d(12.3, 3.09), Rotation2d.fromDegrees(120)),
 		// trap that faces mid
-		//DO THIS ONE FIRST
-		//brute force the X lol
+		// DO THIS ONE FIRST
+		// brute force the X lol
 		new Pose2d(new Translation2d(10, 4.10), Rotation2d.fromDegrees(0))
 	};
 
