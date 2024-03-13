@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.PathPlannerTrajectory;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -17,6 +18,21 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class PathPlannerAutos {
+	public static final class Auto {
+		public final Pose2d startingPose;
+		public final List<PathPlannerTrajectory> trajectories;
+
+		public Auto() {
+			this.startingPose = null;
+			this.trajectories = List.of();
+		}
+
+		public Auto(Pose2d startingPose, List<PathPlannerTrajectory> trajectories) {
+			this.startingPose = startingPose;
+			this.trajectories = trajectories;
+		}
+	}
+
 	// Registering named commands
 
 	private static final Map<String, List<PathPlannerPath>> namedCommandPathsCache = new HashMap<>();
@@ -93,11 +109,14 @@ public class PathPlannerAutos {
 				state.headingAngularVelocityRps);
 	}
 
-	private static List<PathPlannerTrajectory> trajectoriesFromPaths(List<PathPlannerPath> paths) {
+	private static List<PathPlannerTrajectory> trajectoriesFromPaths(
+			List<PathPlannerPath> paths, Rotation2d startingRotation) {
 		if (paths.isEmpty()) {
 			return List.of();
 		}
-		Rotation2d startingRotation = paths.get(0).getPreviewStartingHolonomicPose().getRotation();
+		if (startingRotation == null) {
+			startingRotation = paths.get(0).getPreviewStartingHolonomicPose().getRotation();
+		}
 		ChassisSpeeds startingSpeeds = new ChassisSpeeds();
 		List<PathPlannerTrajectory> trajectories = new ArrayList<>(paths.size());
 		for (var path : paths) {
@@ -109,29 +128,44 @@ public class PathPlannerAutos {
 		return List.copyOf(trajectories);
 	}
 
-	private static List<PathPlannerTrajectory> loadAutoTrajectories(String autoName) {
+	private static Pose2d getStartingPose(JsonNode autoJson) {
+		JsonNode startingPose = autoJson.get("startingPose");
+		if (startingPose.isNull()) {
+			return null;
+		}
+		JsonNode translation = startingPose.get("position");
+		return new Pose2d(
+				translation.get("x").asDouble(),
+				translation.get("y").asDouble(),
+				Rotation2d.fromDegrees(startingPose.get("rotation").asDouble()));
+	}
+
+	private static Auto loadAuto(String autoName) {
 		File autoFile =
 				new File(Filesystem.getDeployDirectory(), "pathplanner/autos/" + autoName + ".auto");
 		if (!autoFile.exists()) {
 			DriverStation.reportWarning(
 					"Attempted to load non-existent auto \"" + autoName + "\"", false);
-			return List.of();
+			return new Auto();
 		}
 		JsonNode autoJson;
 		try {
 			autoJson = new ObjectMapper().readTree(autoFile);
 		} catch (IOException e) {
 			DriverStation.reportWarning("Could not load auto \"" + autoName + "\"", e.getStackTrace());
-			return List.of();
+			return new Auto();
 		}
-		return trajectoriesFromPaths(getPaths(autoJson));
+		Pose2d startingPose = getStartingPose(autoJson);
+		Rotation2d startingRotation = startingPose == null ? null : startingPose.getRotation();
+		List<PathPlannerTrajectory> trajectories =
+				trajectoriesFromPaths(getPaths(autoJson), startingRotation);
+		return new Auto(startingPose, trajectories);
 	}
 
-	private static final Map<String, List<PathPlannerTrajectory>> autoTrajectoriesCache =
-			new HashMap<>();
+	private static final Map<String, Auto> autosCache = new HashMap<>();
 
-	public static List<PathPlannerTrajectory> getAutoTrajectories(String autoName) {
-		return autoTrajectoriesCache.computeIfAbsent(autoName, PathPlannerAutos::loadAutoTrajectories);
+	public static Auto getAuto(String autoName) {
+		return autosCache.computeIfAbsent(autoName, PathPlannerAutos::loadAuto);
 	}
 
 	// Pre-loading everything
@@ -176,10 +210,6 @@ public class PathPlannerAutos {
 	}
 
 	public static void loadAllAutoTrajectories() {
-		loadAll(
-				"pathplanner/autos",
-				".auto",
-				autoTrajectoriesCache,
-				PathPlannerAutos::loadAutoTrajectories);
+		loadAll("pathplanner/autos", ".auto", autosCache, PathPlannerAutos::loadAuto);
 	}
 }

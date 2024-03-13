@@ -63,6 +63,7 @@ public class AutonomousField {
 	private final Field2d field = new Field2d();
 
 	// Keeping track of the current trajectory
+	private PathPlannerAutos.Auto auto;
 	private List<PathPlannerTrajectory> trajectories;
 	private int trajectoryIndex = 0;
 
@@ -106,12 +107,16 @@ public class AutonomousField {
 		double fpgaTime = Timer.getFPGATimestamp();
 		if (lastName.isEmpty() || !lastName.get().equals(autoName)) {
 			lastName = Optional.of(autoName);
-			trajectories = PathPlannerAutos.getAutoTrajectories(autoName);
+			auto = PathPlannerAutos.getAuto(autoName);
+			trajectories = auto.trajectories;
 			trajectoryIndex = 0;
 			lastFPGATime = fpgaTime;
 			lastTrajectoryTimeOffset = 0;
 		}
 		if (trajectories.isEmpty()) {
+			if (auto.startingPose != null) {
+				return auto.startingPose;
+			}
 			return new Pose2d();
 		}
 		lastTrajectoryTimeOffset += (fpgaTime - lastFPGATime) * speed;
