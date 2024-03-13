@@ -81,7 +81,7 @@ public class Controls {
 		if (INTAKE_ENABLED) {
 			bindIntakeControls();
 		}
-		if (DRIVEBASE_ENABLED && LAUNCHER_ENABLED && INTAKE_ENABLED) {
+		if (DRIVEBASE_ENABLED) {
 			// temporary controls, not sure what drive team wants
 			driveController
 					.leftBumper()

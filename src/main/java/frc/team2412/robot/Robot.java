@@ -1,5 +1,6 @@
 package frc.team2412.robot;
 
+import com.ctre.phoenix6.SignalLogger;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -83,9 +84,10 @@ public class Robot extends TimedRobot {
 
 		subsystems = new Subsystems();
 		controls = new Controls(subsystems);
-		autoLogic = new AutoLogic();
-
+		if (Subsystems.SubsystemConstants.LAUNCHER_ENABLED
+				&& Subsystems.SubsystemConstants.INTAKE_ENABLED) autoLogic = new AutoLogic();
 		autoChooser = AutoBuilder.buildAutoChooser();
+
 		SmartDashboard.putData("Auto Chooser", autoChooser);
 		SmartDashboard.putString("current bot", getTypeFromAddress().toString());
 		if (Subsystems.SubsystemConstants.DRIVEBASE_ENABLED) {
@@ -148,6 +150,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopInit() {
 		Shuffleboard.startRecording();
+		SignalLogger.start();
 	}
 
 	@Override
@@ -158,6 +161,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopExit() {
 		CommandScheduler.getInstance().cancelAll();
+		SignalLogger.stop();
 	}
 
 	@Override

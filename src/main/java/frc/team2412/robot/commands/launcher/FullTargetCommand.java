@@ -3,7 +3,9 @@ package frc.team2412.robot.commands.launcher;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Filesystem;
@@ -40,7 +42,9 @@ public class FullTargetCommand extends Command {
 		this.controls = controls;
 		yawAlignmentCommand = drivebaseSubsystem.rotateToAngle(() -> yawTarget, false);
 
-		addRequirements(launcherSubsystem);
+		if (launcherSubsystem != null) {
+			addRequirements(launcherSubsystem);
+		}
 	}
 
 	@Override
@@ -56,6 +60,12 @@ public class FullTargetCommand extends Command {
 	@Override
 	public void execute() {
 		Pose2d robotPose = drivebaseSubsystem.getPose();
+		ChassisSpeeds robotVelocity = drivebaseSubsystem.getSwerveDrive().getFieldVelocity();
+		robotPose.plus(
+				new Transform2d(
+						robotVelocity.vxMetersPerSecond,
+						robotVelocity.vyMetersPerSecond,
+						Rotation2d.fromRotations(0)));
 		Pose2d relativeSpeaker = robotPose.relativeTo(SPEAKER_POSE);
 		yawTarget =
 				Rotation2d.fromRadians(
@@ -63,27 +73,31 @@ public class FullTargetCommand extends Command {
 		double distance = relativeSpeaker.getTranslation().getNorm();
 		LauncherDataPoint dataPoint = LAUNCHER_DATA.get(distance);
 
-		launcherSubsystem.setAngle(dataPoint.angle);
-		launcherSubsystem.launch(dataPoint.rpm);
+		if (launcherSubsystem != null) {
+			launcherSubsystem.setAngle(dataPoint.angle);
+			launcherSubsystem.launch(dataPoint.rpm);
 
-		if (MathUtil.isNear(
-						yawTarget.getDegrees(),
-						drivebaseSubsystem.getPose().getRotation().getDegrees(),
-						YAW_TARGET_VIBRATION_TOLERANCE,
-						0,
-						360)
-				&& launcherSubsystem.isAtAngle()
-				&& launcherSubsystem.isAtSpeed()) {
-			controls.vibrateDriveController(1.0);
-		} else {
-			controls.vibrateDriveController(0.0);
+			if (MathUtil.isNear(
+							yawTarget.getDegrees(),
+							drivebaseSubsystem.getPose().getRotation().getDegrees(),
+							YAW_TARGET_VIBRATION_TOLERANCE,
+							0,
+							360)
+					&& launcherSubsystem.isAtAngle()
+					&& launcherSubsystem.isAtSpeed()) {
+				controls.vibrateDriveController(1.0);
+			} else {
+				controls.vibrateDriveController(0.0);
+			}
 		}
 	}
 
 	@Override
 	public void end(boolean interrupted) {
 		yawAlignmentCommand.cancel();
-		launcherSubsystem.stopLauncher();
-		controls.vibrateDriveController(0.0);
+		if (launcherSubsystem != null) {
+			launcherSubsystem.stopLauncher();
+			controls.vibrateDriveController(0.0);
+		}
 	}
 }
