@@ -10,6 +10,7 @@ import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
 import com.revrobotics.SparkPIDController;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.units.BaseUnits;
@@ -62,6 +63,8 @@ public class LauncherSubsystem extends SubsystemBase {
 
 	private final SparkPIDController launcherTopPIDController;
 	private final SparkPIDController launcherBottomPIDController;
+	private final SimpleMotorFeedforward launcherTopFeedforward = new SimpleMotorFeedforward(0, 0, 0);
+	private final SimpleMotorFeedforward launcherBottomFeedforward = new SimpleMotorFeedforward(0, 0, 0);
 
 	private double rpmSetpoint;
 	private double angleSetpoint;
@@ -185,8 +188,8 @@ public class LauncherSubsystem extends SubsystemBase {
 	// used for presets
 	public void launch(double speed) {
 		rpmSetpoint = speed;
-		launcherTopPIDController.setReference(rpmSetpoint, ControlType.kVelocity);
-		launcherBottomPIDController.setReference(rpmSetpoint, ControlType.kVelocity);
+		launcherTopPIDController.setReference(rpmSetpoint, ControlType.kVelocity, 0, launcherTopFeedforward.calculate(speed));
+		launcherBottomPIDController.setReference(rpmSetpoint, ControlType.kVelocity, 0, launcherBottomFeedforward.calculate(speed));
 	}
 
 	public void ampLaunch(double speed) {
@@ -318,7 +321,6 @@ public class LauncherSubsystem extends SubsystemBase {
 				new SysIdRoutine.Mechanism(
 						(Measure<Voltage> volts) -> {
 							launcherAngleOneMotor.setVoltage(volts.in(BaseUnits.Voltage));
-							// might need to be inverted
 							launcherAngleTwoMotor.setVoltage(volts.in(BaseUnits.Voltage));
 						},
 						(SysIdRoutineLog log) -> {
@@ -350,7 +352,6 @@ public class LauncherSubsystem extends SubsystemBase {
 				new SysIdRoutine.Mechanism(
 						(Measure<Voltage> volts) -> {
 							launcherTopMotor.setVoltage(volts.in(BaseUnits.Voltage));
-							// might need to be inverted
 							launcherBottomMotor.setVoltage(volts.in(BaseUnits.Voltage));
 						},
 						(SysIdRoutineLog log) -> {
