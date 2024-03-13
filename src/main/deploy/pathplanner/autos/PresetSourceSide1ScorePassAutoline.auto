@@ -20,24 +20,12 @@
         {
           "type": "path",
           "data": {
-            "pathName": "LowSpeakerToMiddleLowNote"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "MiddleLowNoteToLaunch"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "VisionLaunch"
+            "pathName": "LowSpeakerPassAutoLine"
           }
         }
       ]
     }
   },
-  "folder": "Vision Autos",
+  "folder": "Preset Autos",
   "choreoAuto": false
 }

@@ -37,13 +37,13 @@ public class AutoLogic {
 
 	public static enum StartPosition {
 		AMP_SIDE_SUBWOOFER(
-				" Amp Side Subwoofer",
+				"Amp Side Subwoofer",
 				new Pose2d(0.73, 6.62, new Rotation2d(Units.degreesToRadians(-120)))),
 		MID_SIDE_SUBWOOFER(
 				"Mid Side Subwoofer", new Pose2d(1.33, 5.55, new Rotation2d(Units.degreesToRadians(180)))),
 		SOURCE_SIDE_SUBWOOFER(
 				"Source Side Subwoofer",
-				new Pose2d(0.73, 4.46, new Rotation2d(Units.degreesToRadians(120)))),
+				new Pose2d(0.73, 4.47, new Rotation2d(Units.degreesToRadians(120)))),
 		MISC("Misc", null);
 
 		String title;
@@ -65,7 +65,8 @@ public class AutoLogic {
 					new AutoPath("Stand Still", "PresetMid1Score"),
 					new AutoPath("Stand Still", "PresetAmpSide1Score"),
 					// new AutoPath("Pass Auto Line", "PresetSourceSide1ScorePassAutoLine"),
-					new AutoPath("Pass Auto Line", "PresetAmpSide1ScorePassAutoLine"));
+					new AutoPath("Pass Auto Line", "PresetAmpSide1ScorePassAutoLine"),
+					new AutoPath("Pass Auto Line", "PresetSourceSide1ScorePassAutoline"));
 
 	private static List<AutoPath> onePiecePaths =
 			List.of(
@@ -111,7 +112,7 @@ public class AutoLogic {
 	// map (gulp)
 
 	private static Map<Integer, List<AutoPath>> commandsMap =
-			Map.of(0, noPiecePaths, 1, onePiecePaths, 2, twoPiecePaths, 3, threePiecePaths);
+			Map.of(0, noPiecePaths, 1, onePiecePaths, 2, twoPiecePaths, 3, threePiecePaths, 4, fourPiecePaths);
 
 	// vars
 
@@ -130,13 +131,11 @@ public class AutoLogic {
 			new DynamicSendableChooser<AutoPath>();
 	private static SendableChooser<Integer> gameObjects = new SendableChooser<Integer>();
 	private static SendableChooser<Boolean> isVision = new SendableChooser<Boolean>();
-	private static GenericEntry isVisionEntry;
 
 	/** Registers commands in PathPlanner */
 	public static void registerCommands() {
 		// param: String commandName, Command command
 
-		System.out.println("register ");
 		// Intake
 		NamedCommands.registerCommand("StopIntake", new IntakeStopCommand(s.intakeSubsystem));
 		NamedCommands.registerCommand("Intake", new AllInCommand(s.intakeSubsystem));
@@ -199,14 +198,14 @@ public class AutoLogic {
 		isVision.setDefaultOption("Presets", false);
 		isVision.addOption("Vision", true);
 		gameObjects.setDefaultOption("0", 0);
-		for (int i = 1; i <= 3; i++) {
+		for (int i = 1; i < commandsMap.size(); i++) { 
 			gameObjects.addOption(String.valueOf(i), i);
 		}
 
 		tab.add("Starting Position", startPositionChooser).withPosition(8, 0).withSize(2, 1);
-		tab.add("Launch Type", isVision).withPosition(8, 2);
-		tab.add("Game Objects", gameObjects).withPosition(8, 2);
-		tab.add("Available Auto Variants", availableAutos).withPosition(9, 3).withSize(2, 1);
+		tab.add("Launch Type", isVision).withPosition(8, 1);
+		tab.add("Game Objects", gameObjects).withPosition(9, 1);
+		tab.add("Available Auto Variants", availableAutos).withPosition(8, 2).withSize(2, 1);
 
 		isVision.onChange(AutoLogic::filterAutos);
 		startPositionChooser.onChange(AutoLogic::filterAutos);
@@ -218,18 +217,17 @@ public class AutoLogic {
 	/** Takes the auto filtering entries in shuffleboard to provide a list of suitable autos */
 	public static void filterAutos(int numGameObjects) {
 
-		for (AutoPath auto : availableAutos.m_map.values()) {
-			availableAutos.removeOption(auto);
-		}
 
+		// resets/clears all options
+		availableAutos.clearOptions();
+		
+		// filter based off gameobejct count
 		List<AutoPath> autoCommandsList = commandsMap.get(numGameObjects);
 
-		// List<AutoPath> filteredList = new ArrayList<AutoPath>();
-
+		// filter more then add to chooser
 		for (AutoPath auto : autoCommandsList) {
-			if (auto.getStartPose().equals(startPositionChooser.getSelected().startPose)
+			if (auto.getStartPose().equals(startPositionChooser.getSelected())
 					&& auto.isVision() == isVision.getSelected()) {
-				// filteredList.add(auto);
 				availableAutos.addOption(auto.getDisplayName(), auto);
 			}
 		}

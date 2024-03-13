@@ -84,11 +84,12 @@ public class Robot extends TimedRobot {
 		subsystems = new Subsystems();
 		controls = new Controls(subsystems);
 		
+		AutoLogic.registerCommands();
 		// autoChooser = AutoBuilder.buildAutoChooser();
 		if (Subsystems.SubsystemConstants.DRIVEBASE_ENABLED) {
 		AutoLogic.initShuffleBoard();
 		}
-		AutoLogic.registerCommands();
+	
 		// SmartDashboard.putData("Auto Chooser", autoChooser);
 		SmartDashboard.putString("current bot", getTypeFromAddress().toString());
 		// if (Subsystems.SubsystemConstants.DRIVEBASE_ENABLED) {
