@@ -145,11 +145,7 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherAngleOnePIDController.setP(5.0);
 		launcherAngleOnePIDController.setI(0);
 		launcherAngleOnePIDController.setD(3);
-		launcherAngleOnePIDController.setFF(
-				launcherAngleFF.calculate(
-						Units.rotationsToRadians(launcherAngleEncoder.getPosition() - FF_PIVOT_OFFSET),
-						launcherAngleEncoder.getVelocity()));
-		launcherAngleOnePIDController.setOutputRange(-ANGLE_MAX_SPEED, ANGLE_MAX_SPEED);
+		launcherAngleOnePIDController.setFF(0);
 
 		// launcherAngleTwoPIDController.setP(0.1);
 		// launcherAngleTwoPIDController.setI(0);
@@ -212,7 +208,12 @@ public class LauncherSubsystem extends SubsystemBase {
 	public void setAngle(double launcherAngle) {
 		angleSetpoint = launcherAngle;
 		launcherAngleOnePIDController.setReference(
-				Units.degreesToRotations(angleSetpoint), ControlType.kPosition);
+				Units.degreesToRotations(angleSetpoint),
+				ControlType.kPosition,
+				0,
+				launcherAngleFF.calculate(
+						Units.rotationsToRadians(launcherAngleEncoder.getPosition() - FF_PIVOT_OFFSET),
+						launcherAngleEncoder.getVelocity()));
 		// launcherAngleTwoPIDController.setReference(
 		//		Units.degreesToRotations(angleSetpoint), ControlType.kPosition);
 	}
@@ -243,7 +244,13 @@ public class LauncherSubsystem extends SubsystemBase {
 
 		if (Units.degreesToRotations(getAngle()) > 0.71
 				&& Units.degreesToRotations(getAngle()) < 0.95) {
-			launcherAngleOnePIDController.setReference(manualAngleSetpoint, ControlType.kPosition);
+			launcherAngleOnePIDController.setReference(
+					manualAngleSetpoint,
+					ControlType.kPosition,
+					0,
+					launcherAngleFF.calculate(
+							Units.rotationsToRadians(launcherAngleEncoder.getPosition() - FF_PIVOT_OFFSET),
+							launcherAngleEncoder.getVelocity()));
 		}
 	}
 
