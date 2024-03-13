@@ -59,12 +59,16 @@ public class LauncherSubsystem extends SubsystemBase {
 	private final RelativeEncoder launcherBottomEncoder;
 	private final SparkAbsoluteEncoder launcherAngleEncoder;
 	private final SparkPIDController launcherAngleOnePIDController;
-	// private final SparkPIDController launcherAngleTwoPIDController;
+	
+	// arm FF values:
+	// Ks: 0.40434
+	// Kv: 0.096771
+	// Ka: 0.0056403
 
 	private final SparkPIDController launcherTopPIDController;
 	private final SparkPIDController launcherBottomPIDController;
-	private final SimpleMotorFeedforward launcherTopFeedforward = new SimpleMotorFeedforward(0, 0, 0);
-	private final SimpleMotorFeedforward launcherBottomFeedforward = new SimpleMotorFeedforward(0, 0, 0);
+	private final SimpleMotorFeedforward launcherTopFeedforward = new SimpleMotorFeedforward(0, 0.11335, 0.048325);
+	private final SimpleMotorFeedforward launcherBottomFeedforward = new SimpleMotorFeedforward(0, 0.11238, 0.048209);
 
 	private double rpmSetpoint;
 	private double angleSetpoint;
@@ -142,26 +146,18 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherAngleTwoMotor.follow(launcherAngleOneMotor, true);
 
 		// PID
-		launcherAngleOnePIDController.setP(5.0);
+		launcherAngleOnePIDController.setP(5.421);
 		launcherAngleOnePIDController.setI(0);
-		launcherAngleOnePIDController.setD(0);
-		launcherAngleOnePIDController.setFF(0);
+		launcherAngleOnePIDController.setD(0.066248);
 		launcherAngleOnePIDController.setOutputRange(-ANGLE_MAX_SPEED, ANGLE_MAX_SPEED);
 
-		// launcherAngleTwoPIDController.setP(0.1);
-		// launcherAngleTwoPIDController.setI(0);
-		// launcherAngleTwoPIDController.setD(0);
-		// launcherAngleTwoPIDController.setFF(0);
-
-		launcherTopPIDController.setP(0.002);
+		launcherTopPIDController.setP(7.7633E-05);
 		launcherTopPIDController.setI(0);
-		launcherTopPIDController.setD(0.001);
-		launcherTopPIDController.setFF(0);
+		launcherTopPIDController.setD(0);
 
-		launcherBottomPIDController.setP(0.002);
+		launcherBottomPIDController.setP(0.00011722);
 		launcherBottomPIDController.setI(0);
-		launcherBottomPIDController.setD(0.001);
-		launcherBottomPIDController.setFF(0);
+		launcherBottomPIDController.setD(0);
 
 		launcherAngleOneMotor.getEncoder().setPosition(launcherAngleEncoder.getPosition());
 		launcherAngleOneMotor.getEncoder().setPositionConversionFactor(PIVOT_GEARING_RATIO);
