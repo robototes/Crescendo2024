@@ -1,7 +1,5 @@
 package frc.team2412.robot.subsystems;
 
-import java.util.Map;
-
 import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
@@ -11,7 +9,6 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
 import com.revrobotics.SparkPIDController;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
@@ -27,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.team2412.robot.Hardware;
 import frc.team2412.robot.util.SparkPIDWidget;
+import java.util.Map;
 
 public class LauncherSubsystem extends SubsystemBase {
 	// CONSTANTS
@@ -316,32 +314,64 @@ public class LauncherSubsystem extends SubsystemBase {
 
 	private SysIdRoutine getArmSysIdRoutine() {
 		return new SysIdRoutine(
-			new SysIdRoutine.Config(),
-			new SysIdRoutine.Mechanism(
-				(Measure<Voltage> volts) -> {
-					launcherAngleOneMotor.setVoltage(volts.in(BaseUnits.Voltage));
-					// might need to be inverted
-					launcherAngleTwoMotor.setVoltage(volts.in(BaseUnits.Voltage));
-				}, 
-				(SysIdRoutineLog log) -> {
-					log.motor("angle-one").voltage(BaseUnits.Voltage.of(launcherAngleOneMotor.get() * RobotController.getBatteryVoltage())).angularPosition(BaseUnits.Angle.of(launcherAngleOneMotor.getEncoder().getPosition())).angularVelocity(BaseUnits.Angle.per(edu.wpi.first.units.Units.Minute).of(launcherAngleOneMotor.getEncoder().getVelocity()));
-					log.motor("angle-two").voltage(BaseUnits.Voltage.of(launcherAngleTwoMotor.get() * RobotController.getBatteryVoltage())).angularPosition(BaseUnits.Angle.of(launcherAngleTwoMotor.getEncoder().getPosition())).angularVelocity(BaseUnits.Angle.per(edu.wpi.first.units.Units.Minute).of(launcherAngleTwoMotor.getEncoder().getVelocity()));
-				}, this));
+				new SysIdRoutine.Config(),
+				new SysIdRoutine.Mechanism(
+						(Measure<Voltage> volts) -> {
+							launcherAngleOneMotor.setVoltage(volts.in(BaseUnits.Voltage));
+							// might need to be inverted
+							launcherAngleTwoMotor.setVoltage(volts.in(BaseUnits.Voltage));
+						},
+						(SysIdRoutineLog log) -> {
+							log.motor("angle-one")
+									.voltage(
+											BaseUnits.Voltage.of(
+													launcherAngleOneMotor.getAppliedOutput() * RobotController.getBatteryVoltage()))
+									.angularPosition(
+											edu.wpi.first.units.Units.Rotations.of(launcherAngleOneMotor.getEncoder().getPosition()))
+									.angularVelocity(
+											edu.wpi.first.units.Units.Rotations.per(edu.wpi.first.units.Units.Minute)
+													.of(launcherAngleOneMotor.getEncoder().getVelocity()));
+							log.motor("angle-two")
+									.voltage(
+											BaseUnits.Voltage.of(
+													launcherAngleTwoMotor.getAppliedOutput() * RobotController.getBatteryVoltage()))
+									.angularPosition(
+											edu.wpi.first.units.Units.Rotations.of(launcherAngleTwoMotor.getEncoder().getPosition()))
+									.angularVelocity(
+											edu.wpi.first.units.Units.Rotations.per(edu.wpi.first.units.Units.Minute)
+													.of(launcherAngleTwoMotor.getEncoder().getVelocity()));
+						},
+						this));
 	}
 
 	private SysIdRoutine getFlywheelSysIdRoutine() {
 		return new SysIdRoutine(
-			new SysIdRoutine.Config(), 
-			new SysIdRoutine.Mechanism(
-				(Measure<Voltage> volts) -> {
-					launcherTopMotor.setVoltage(volts.in(BaseUnits.Voltage));
-					// might need to be inverted
-					launcherBottomMotor.setVoltage(volts.in(BaseUnits.Voltage));
-				}, 
-				(SysIdRoutineLog log) -> {
-					log.motor("top-flywheel").voltage(BaseUnits.Voltage.of(launcherTopMotor.get() * RobotController.getBatteryVoltage())).angularPosition(BaseUnits.Angle.of(launcherTopEncoder.getPosition())).angularVelocity(BaseUnits.Angle.per(edu.wpi.first.units.Units.Minute).of(launcherTopEncoder.getVelocity()));
-					log.motor("bottom-flywheel").voltage(BaseUnits.Voltage.of(launcherBottomMotor.get() * RobotController.getBatteryVoltage())).angularPosition(BaseUnits.Angle.of(launcherBottomEncoder.getPosition())).angularVelocity(BaseUnits.Angle.per(edu.wpi.first.units.Units.Minute).of(launcherBottomEncoder.getVelocity()));
-				}, this));
+				new SysIdRoutine.Config(),
+				new SysIdRoutine.Mechanism(
+						(Measure<Voltage> volts) -> {
+							launcherTopMotor.setVoltage(volts.in(BaseUnits.Voltage));
+							// might need to be inverted
+							launcherBottomMotor.setVoltage(volts.in(BaseUnits.Voltage));
+						},
+						(SysIdRoutineLog log) -> {
+							log.motor("top-flywheel")
+									.voltage(
+											BaseUnits.Voltage.of(
+													launcherTopMotor.getAppliedOutput() * RobotController.getBatteryVoltage()))
+									.angularPosition(edu.wpi.first.units.Units.Rotations.of(launcherTopEncoder.getPosition()))
+									.angularVelocity(
+											edu.wpi.first.units.Units.Rotations.per(edu.wpi.first.units.Units.Minute)
+													.of(launcherTopEncoder.getVelocity()));
+							log.motor("bottom-flywheel")
+									.voltage(
+											BaseUnits.Voltage.of(
+													launcherBottomMotor.getAppliedOutput() * RobotController.getBatteryVoltage()))
+									.angularPosition(edu.wpi.first.units.Units.Rotations.of(launcherBottomEncoder.getPosition()))
+									.angularVelocity(
+											edu.wpi.first.units.Units.Rotations.per(edu.wpi.first.units.Units.Minute)
+													.of(launcherBottomEncoder.getVelocity()));
+						},
+						this));
 	}
 
 	public Command armSysIdQuasistatic(SysIdRoutine.Direction direction) {
