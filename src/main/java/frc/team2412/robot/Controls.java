@@ -23,6 +23,7 @@ import frc.team2412.robot.commands.launcher.FullTargetCommand;
 import frc.team2412.robot.commands.launcher.ManualAngleCommand;
 import frc.team2412.robot.commands.launcher.SetAngleAmpLaunchCommand;
 import frc.team2412.robot.commands.launcher.SetAngleLaunchCommand;
+import frc.team2412.robot.commands.launcher.SetPivotCommand;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
 
 public class Controls {
@@ -46,6 +47,7 @@ public class Controls {
 	// Launcher
 	private final Trigger launcherAmpPresetButton;
 	private final Trigger launcherSubwooferPresetButton;
+	private final Trigger launcherLowerPresetButton;
 	// private final Trigger launcherPodiumPresetButton;
 	// private final Trigger launcherTrapPresetButton;
 	private final Trigger launcherLaunchButton;
@@ -59,6 +61,7 @@ public class Controls {
 
 		launcherAmpPresetButton = codriveController.x();
 		launcherSubwooferPresetButton = codriveController.a();
+		launcherLowerPresetButton = codriveController.y();
 		// launcherPodiumPresetButton = codriveController.povLeft();
 		// launcherTrapPresetButton = codriveController.y();
 		launcherLaunchButton = codriveController.leftBumper();
@@ -146,6 +149,9 @@ public class Controls {
 										MathUtil.applyDeadband(codriveController.getLeftY(), 0.1)
 												* LauncherSubsystem.ANGLE_MAX_SPEED));
 
+		launcherLowerPresetButton.onTrue(
+			new SetPivotCommand(s.launcherSubsystem, LauncherSubsystem.RETRACTED_ANGLE)
+		);
 		launcherSubwooferPresetButton.onTrue(
 				new SetAngleLaunchCommand(
 						s.launcherSubsystem,
