@@ -244,7 +244,7 @@ public class IntakeSubsystem extends SubsystemBase {
 	public boolean isIntakeOn() {
 		return (intakeMotorFront.get() != 0
 				|| indexMotorUpper.get() != 0
-				|| indexMotorLower.get() != 0
+				|| ingestMotor.get() != 0
 				|| feederMotor.get() != 0);
 	}
 

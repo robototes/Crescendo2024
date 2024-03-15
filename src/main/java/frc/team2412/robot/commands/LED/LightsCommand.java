@@ -29,7 +29,7 @@ public class LightsCommand extends Command {
 	public void execute() {
 		if (launcherSubsystem.isAtSpeed()) { // Checks if launcher is ready
 			ledSubsystem.setGREEN_LED();
-		} else if (intakeSubsystem.getIndexSensor()) { // Checks if note is in feeder
+		} else if (intakeSubsystem.indexSensorHasNote()) { // Checks if note is in feeder
 			ledSubsystem.setBLUE_LED();
 		} else if (intakeSubsystem.isIntakeOn()) { // Checks if intake is on
 			ledSubsystem.setYELLOW_LED();
