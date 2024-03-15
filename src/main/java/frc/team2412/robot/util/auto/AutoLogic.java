@@ -44,8 +44,8 @@ public class AutoLogic {
 				new Pose2d(0.73, 4.47, new Rotation2d(Units.degreesToRadians(120)))),
 		MISC("Misc", null);
 
-		String title;
-		Pose2d startPose;
+		String title; // for shuffleboard display
+		Pose2d startPose; // for identifying path's starting positions for filtering
 
 		StartPosition(String title, Pose2d startPose) {
 			this.title = title;
