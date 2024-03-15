@@ -164,11 +164,13 @@ public class Robot extends TimedRobot {
 	@Override
 	public void disabledInit() {
 		Shuffleboard.stopRecording();
-		Command ledCommand =
-				new LightsCommand(
-								subsystems.ledSubsystem, subsystems.intakeSubsystem, subsystems.launcherSubsystem)
-						.ignoringDisable(true);
-		ledCommand.schedule();
+		if (SubsystemConstants.LED_ENABLED) {
+			Command ledCommand =
+					new LightsCommand(
+									subsystems.ledSubsystem, subsystems.intakeSubsystem, subsystems.launcherSubsystem)
+							.ignoringDisable(true);
+			ledCommand.schedule();
+		}
 		Command coastCommand =
 				new WaitCommand(5)
 						.andThen(
