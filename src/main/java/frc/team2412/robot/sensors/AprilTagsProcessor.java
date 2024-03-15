@@ -13,6 +13,7 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableEvent;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
@@ -62,9 +63,14 @@ public class AprilTagsProcessor {
 	private static final double MAX_POSE_AMBIGUITY = 0.1;
 
 	// Both of these are in radians
-	// Negate pitch to go from robot/target to cam pitch to cam to robot/target pitch
-	private static final double EXPECTED_CAM_TO_TARGET_PITCH = -ROBOT_TO_CAM.getRotation().getY();
+	// Negate to convert robot to cam to cam to robot, and negate again because tag is flipped,
+	// leading to no net effect
+	private static final double EXPECTED_CAM_TO_TARGET_PITCH = ROBOT_TO_CAM.getRotation().getY();
 	private static final double CAM_TO_TARGET_PITCH_TOLERANCE = 0.1;
+
+	static {
+		System.out.println("Expected pitch: " + EXPECTED_CAM_TO_TARGET_PITCH);
+	}
 
 	private static boolean hasCorrectPitch(Transform3d camToTarget) {
 		return Math.abs(camToTarget.getRotation().getY() - EXPECTED_CAM_TO_TARGET_PITCH)
@@ -89,16 +95,40 @@ public class AprilTagsProcessor {
 		var copy = copy(result);
 		for (int i = copy.targets.size() - 1; i >= 0; --i) {
 			var target = copy.targets.get(i);
-			if (target.getPoseAmbiguity() > MAX_POSE_AMBIGUITY) {
-				copy.targets.remove(i);
-				continue;
-			}
 			if (!hasCorrectPitch(target.getBestCameraToTarget())) {
 				if (hasCorrectPitch(target.getAlternateCameraToTarget())) {
 					target = swapBestAndAltTransforms(target);
 					copy.targets.set(i, target);
+					if (canPrint) {
+						System.out.println(
+								"Swapped best and alt transform for target "
+										+ i
+										+ " (best pitch="
+										+ target.getBestCameraToTarget().getRotation().getY()
+										+ ", alt pitch="
+										+ target.getAlternateCameraToTarget().getRotation().getY()
+										+ ")");
+					}
 				} else {
 					copy.targets.remove(i);
+					if (canPrint) {
+						System.out.println(
+								"Removed target "
+										+ i
+										+ " (best pitch="
+										+ target.getBestCameraToTarget().getRotation().getY()
+										+ ", alt pitch="
+										+ target.getAlternateCameraToTarget().getRotation().getY()
+										+ ") because of bad pitch ");
+					}
+					continue;
+				}
+				if (target.getPoseAmbiguity() > MAX_POSE_AMBIGUITY) {
+					copy.targets.remove(i);
+					if (canPrint) {
+						System.out.println(
+								"Excluded target " + i + " with ambiguity " + target.getPoseAmbiguity());
+					}
 					continue;
 				}
 			}
@@ -119,6 +149,9 @@ public class AprilTagsProcessor {
 	// These are only set when there's a valid pose
 	private double lastTimestampSeconds = 0;
 	private Pose2d lastFieldPose = new Pose2d(-1, -1, new Rotation2d());
+
+	private static double lastPrintTimeSeconds = -1;
+	private static boolean canPrint = false;
 
 	private static final AprilTagFieldLayout fieldLayout =
 			AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
@@ -166,10 +199,19 @@ public class AprilTagsProcessor {
 	}
 
 	public void update() {
+		double now = Timer.getFPGATimestamp();
+		canPrint = now - lastPrintTimeSeconds >= 1;
+		if (canPrint) {
+			lastPrintTimeSeconds = now;
+			System.out.println("Got update at " + now);
+		}
 		latestResult = photonCamera.getLatestResult();
 		latestFilteredResult = filteredPipelineResult(latestResult);
 		latestPose = photonPoseEstimator.update(latestFilteredResult);
 		if (latestPose.isPresent()) {
+			if (canPrint) {
+				System.out.println("Have result");
+			}
 			lastTimestampSeconds = latestPose.get().timestampSeconds;
 			lastFieldPose = latestPose.get().estimatedPose.toPose2d();
 			rawVisionFieldObject.setPose(lastFieldPose);
