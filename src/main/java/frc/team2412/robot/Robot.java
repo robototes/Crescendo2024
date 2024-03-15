@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.team2412.robot.Subsystems.SubsystemConstants;
+import frc.team2412.robot.commands.LED.LightsCommand;
 import frc.team2412.robot.commands.diagnostic.IntakeDiagnosticCommand;
 import frc.team2412.robot.commands.diagnostic.LauncherDiagnosticCommand;
 import frc.team2412.robot.util.MACAddress;
@@ -148,7 +149,11 @@ public class Robot extends TimedRobot {
 	@Override
 	public void disabledInit() {
 		Shuffleboard.stopRecording();
-
+		Command ledCommand =
+				new LightsCommand(
+								subsystems.ledSubsystem, subsystems.intakeSubsystem, subsystems.launcherSubsystem)
+						.ignoringDisable(true);
+		ledCommand.schedule();
 		Command coastCommand =
 				new WaitCommand(5)
 						.andThen(

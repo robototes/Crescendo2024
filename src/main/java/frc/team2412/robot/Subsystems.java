@@ -5,6 +5,7 @@ import static frc.team2412.robot.Subsystems.SubsystemConstants.*;
 import frc.team2412.robot.sensors.AprilTagsProcessor;
 import frc.team2412.robot.subsystems.DrivebaseSubsystem;
 import frc.team2412.robot.subsystems.IntakeSubsystem;
+import frc.team2412.robot.subsystems.LEDSubsystem;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
 import frc.team2412.robot.util.DrivebaseWrapper;
 
@@ -19,12 +20,14 @@ public class Subsystems {
 		public static final boolean LAUNCHER_ENABLED = true;
 		public static final boolean INTAKE_ENABLED = true;
 		public static final boolean DRIVEBASE_ENABLED = true;
+		public static final boolean LED_ENABLED = false;
 	}
 
 	public final DrivebaseWrapper drivebaseWrapper;
 	public final DrivebaseSubsystem drivebaseSubsystem;
 	public final LauncherSubsystem launcherSubsystem;
 	public final IntakeSubsystem intakeSubsystem;
+	public final LEDSubsystem ledSubsystem;
 	public final AprilTagsProcessor apriltagsProcessor;
 
 	public Subsystems() {
@@ -50,6 +53,11 @@ public class Subsystems {
 			intakeSubsystem = new IntakeSubsystem();
 		} else {
 			intakeSubsystem = null;
+		}
+		if (LED_ENABLED) {
+			ledSubsystem = new LEDSubsystem();
+		} else {
+			ledSubsystem = null;
 		}
 	}
 }
