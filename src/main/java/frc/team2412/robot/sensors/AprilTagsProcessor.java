@@ -46,7 +46,7 @@ public class AprilTagsProcessor {
 					Units.inchesToMeters(27.0 / 2.0 - 0.94996),
 					0,
 					Units.inchesToMeters(8.12331),
-					new Rotation3d(0, Units.degreesToRadians(-30), 0));
+					new Rotation3d(Units.degreesToRadians(90), Units.degreesToRadians(-30), 0));
 
 	// TODO Measure these
 	private static final Vector<N3> STANDARD_DEVS = VecBuilder.fill(1, 1, Units.degreesToRadians(30));
