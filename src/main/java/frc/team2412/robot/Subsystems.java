@@ -20,7 +20,7 @@ public class Subsystems {
 		public static final boolean LAUNCHER_ENABLED = true;
 		public static final boolean INTAKE_ENABLED = true;
 		public static final boolean DRIVEBASE_ENABLED = true;
-		public static final boolean LED_ENABLED = false;
+		public static final boolean LED_ENABLED = true;
 		public static final boolean USE_APRILTAGS_CORRECTION = true;
 	}
 
