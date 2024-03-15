@@ -23,7 +23,7 @@ public class TrapAlign {
 		// trap that faces mid
 		// DO THIS ONE FIRST
 		// brute force the X lol
-		new Pose2d(new Translation2d(6, 4.10), Rotation2d.fromDegrees(180))
+		new Pose2d(new Translation2d(5.8, 4.10), Rotation2d.fromDegrees(180))
 	};
 
 	private static final Pose2d[] RED_TRAP_POSES = {
@@ -34,20 +34,18 @@ public class TrapAlign {
 		// trap that faces mid
 		// DO THIS ONE FIRST
 		// brute force the X lol
-		new Pose2d(new Translation2d(10, 4.10), Rotation2d.fromDegrees(0))
+		new Pose2d(new Translation2d(10.8, 4.10), Rotation2d.fromDegrees(0))
 	};
 
 	private static Command trapAlign(DrivebaseSubsystem drivebaseSubsystem) {
 		Pose2d robotPose = drivebaseSubsystem.getPose();
-		Pose2d trapPose =
-				robotPose.nearest(
-						List.of(
-								(DriverStation.getAlliance().get().equals(Alliance.Blue))
-										? BLUE_TRAP_POSES
-										: RED_TRAP_POSES));
-
+		boolean isBlue;
+		isBlue = DriverStation.getAlliance().get().equals(Alliance.Blue);
+		// figures out which trap to go to
+		Pose2d trapPose = robotPose.nearest(List.of((isBlue) ? BLUE_TRAP_POSES : RED_TRAP_POSES));
+		// sets the point for the path to go to
 		List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(robotPose, trapPose);
-
+		// this is flipped
 		PathPlannerPath path =
 				new PathPlannerPath(
 						bezierPoints,
@@ -57,6 +55,11 @@ public class TrapAlign {
 								DrivebaseSubsystem.MAX_ANGULAR_VELOCITY,
 								DrivebaseSubsystem.MAX_ANGULAR_ACCELERAITON),
 						new GoalEndState(0.0, trapPose.getRotation()));
+		// path.flipPath(); Returns path except it's flipped
+		// this unflips it
+		if (!isBlue) {
+			path = path.flipPath();
+		}
 		return AutoBuilder.followPath(path);
 	}
 
