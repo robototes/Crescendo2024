@@ -90,15 +90,15 @@ public class AprilTagsProcessor {
 		var copy = copy(result);
 		for (int i = copy.targets.size() - 1; i >= 0; --i) {
 			var target = copy.targets.get(i);
+			if (target.getPoseAmbiguity() > MAX_POSE_AMBIGUITY) {
+				copy.targets.remove(i);
+				continue;
+			}
 			if (!hasCorrectPitch(target.getBestCameraToTarget())) {
 				if (hasCorrectPitch(target.getAlternateCameraToTarget())) {
 					target = swapBestAndAltTransforms(target);
 					copy.targets.set(i, target);
 				} else {
-					copy.targets.remove(i);
-					continue;
-				}
-				if (target.getPoseAmbiguity() > MAX_POSE_AMBIGUITY) {
 					copy.targets.remove(i);
 					continue;
 				}
