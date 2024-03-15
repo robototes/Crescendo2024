@@ -3,7 +3,10 @@ package frc.team2412.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -16,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.team2412.robot.Subsystems.SubsystemConstants;
 import frc.team2412.robot.commands.diagnostic.IntakeDiagnosticCommand;
 import frc.team2412.robot.commands.diagnostic.LauncherDiagnosticCommand;
+import frc.team2412.robot.util.AutoLogic;
 import frc.team2412.robot.util.MACAddress;
 import frc.team2412.robot.util.MatchDashboard;
 
@@ -35,16 +39,21 @@ public class Robot extends TimedRobot {
 		return instance;
 	}
 
+	private static final boolean debugMode = true;
+
 	private final RobotType robotType;
+	private final PowerDistribution PDP;
 	public Controls controls;
 	public Subsystems subsystems;
 	public MatchDashboard dashboard;
+	public AutoLogic autoLogic;
 
 	public SendableChooser<Command> autoChooser;
 
 	protected Robot(RobotType type) {
 		// non public for singleton. Protected so test class can subclass
 		instance = this;
+		PDP = new PowerDistribution(Hardware.PDP_ID, ModuleType.kRev);
 		robotType = type;
 	}
 
@@ -70,10 +79,15 @@ public class Robot extends TimedRobot {
 	@Override
 	public void robotInit() {
 		LiveWindow.disableAllTelemetry();
+		LiveWindow.enableTelemetry(PDP);
 
 		subsystems = new Subsystems();
 		controls = new Controls(subsystems);
+		autoLogic = new AutoLogic();
 
+		autoChooser = AutoBuilder.buildAutoChooser();
+		SmartDashboard.putData("Auto Chooser", autoChooser);
+		SmartDashboard.putString("current bot", getTypeFromAddress().toString());
 		if (Subsystems.SubsystemConstants.DRIVEBASE_ENABLED) {
 			autoChooser = AutoBuilder.buildAutoChooser();
 		} else {
@@ -101,6 +115,8 @@ public class Robot extends TimedRobot {
 		DriverStation.silenceJoystickConnectionWarning(true);
 
 		dashboard = new MatchDashboard(subsystems);
+
+		RobotController.setBrownoutVoltage(5.75);
 	}
 
 	@Override
@@ -126,7 +142,6 @@ public class Robot extends TimedRobot {
 
 		// Checks if FMS is attatched and enables joystick warning if true
 		DriverStation.silenceJoystickConnectionWarning(!DriverStation.isFMSAttached());
-
 		autoChooser.getSelected().schedule();
 	}
 
@@ -172,5 +187,9 @@ public class Robot extends TimedRobot {
 
 	public boolean isCompetition() {
 		return getRobotType() == RobotType.COMPETITION;
+	}
+
+	public static boolean isDebugMode() {
+		return debugMode;
 	}
 }
