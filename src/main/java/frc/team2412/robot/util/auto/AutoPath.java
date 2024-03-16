@@ -10,7 +10,7 @@ import frc.team2412.robot.util.auto.AutoLogic.StartPosition;
 public class AutoPath {
 
 	private final Pose2d startPose2d;
-	private final StartPosition startPosition;
+	private StartPosition startPosition;
 	private final String displayName;
 	private final Command autoCommand;
 	private final boolean vision;
@@ -24,12 +24,16 @@ public class AutoPath {
 		// in the case that the auto for whatever reason's starting pose is slightly off,
 		// is still able to match with a startPosition if it is close enough
 		for (StartPosition pos : StartPosition.values()) {
-			if (matchesStartPosition(pos)) {
+			if (!pos.equals(StartPosition.MISC) && matchesStartPosition(pos)) {
 				startPosition = pos;
-				return;
+				break;
 			}
 		}
-		startPosition = StartPosition.MISC;
+		if (startPosition == null) {
+			startPosition = StartPosition.MISC;
+		}
+		// debug purposes
+		// System.out.println(startPosition + " " + displayName + " " + startPose2d.toString());
 	}
 
 	public AutoPath(String displayName, String pathPlannerAutoName) {

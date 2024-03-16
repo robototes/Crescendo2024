@@ -67,7 +67,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 			Robot.getInstance().getRobotType() == RobotType.PRACTICE
 					? new PIDConstants(5, 0, 0.5) // practice
 					: Robot.getInstance().getRobotType() == RobotType.BONK
-							? new PIDConstants(5, 0, 0.1) // bonk
+							? new PIDConstants(6, 0, 0.1) // bonk
 							: Robot.getInstance().getRobotType() == RobotType.CRANE
 									? new PIDConstants(3.9, 0, 0.2) // crane
 									: new PIDConstants(0.1, 0, 0.1); // bobot TODO: tune

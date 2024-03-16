@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.73,
-        "y": 4.47
+        "x": 2.7713929062062417,
+        "y": 4.07539893464585
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.3566676963984554,
-        "y": 4.493137615644601
+        "x": 2.398060602604697,
+        "y": 4.098536550290452
       },
       "isLocked": false,
-      "linkedName": "LowSpeaker"
+      "linkedName": "Podium"
     },
     {
       "anchor": {
