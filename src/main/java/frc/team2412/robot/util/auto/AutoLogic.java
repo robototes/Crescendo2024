@@ -64,8 +64,8 @@ public class AutoLogic {
 					new AutoPath("Stand Still", "PresetMid1Score"),
 					new AutoPath("Stand Still", "PresetAmpSide1Score"),
 					// new AutoPath("Pass Auto Line", "PresetSourceSide1ScorePassAutoLine"),
-					new AutoPath("Pass Auto Line", "PresetAmpSide1ScorePassAutoline"),
-					new AutoPath("Pass Auto Line", "PresetSourceSide1ScorePassAutoline"));
+					new AutoPath("Pass Autoline", "PresetAmpSide1ScorePassAutoline"),
+					new AutoPath("Pass Autoline", "PresetSourceSide1ScorePassAutoline"));
 
 	private static List<AutoPath> onePiecePaths =
 			List.of(
@@ -73,9 +73,9 @@ public class AutoLogic {
 					new AutoPath("Autoline N1", "PresetAmpSide2Score"),
 					new AutoPath("Autoline N2", "PresetMidAutoline2Score"),
 					new AutoPath("Autoline N3", "PresetSourceSideAutoline2Score"),
-					new AutoPath("CenterLine N5", "PresetSourceSideFar2Score"),
+					new AutoPath("Centerline N5", "PresetSourceSideFar2Score"),
 					// vision
-					new AutoPath("CenterLine N3 N1", "VisionMidFar2Score", true));
+					new AutoPath("Centerline N3 N1", "VisionMidFar2Score", true));
 
 	private static List<AutoPath> twoPiecePaths =
 			List.of(
@@ -104,9 +104,9 @@ public class AutoLogic {
 	private static List<AutoPath> fourPiecePaths =
 			List.of(
 					// presets
-					new AutoPath("Autoline N2 CenterLine N3 N2", "MidFar4Score"),
+					new AutoPath("Autoline N2 Centerline N3 N2", "MidFar4Score"),
 					// vision
-					new AutoPath("Centerline N1 AutoLine N1 N2 N3", "VisionAmpSideAutoLine5Score"),
+					new AutoPath("Centerline N1 Autoline N1 N2 N3", "VisionAmpSideAutoline5Score"),
 					new AutoPath("Autoline N1 Centerline N1 N2 Autoline N2", "VisionAmpSide5Score"));
 
 	private static List<AutoPath> fivePiecePaths;
