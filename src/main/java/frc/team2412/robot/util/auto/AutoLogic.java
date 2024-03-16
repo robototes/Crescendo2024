@@ -96,9 +96,9 @@ public class AutoLogic {
 					new AutoPath("Centerline N1 Autoline Autoline N1 N2", "PresetAmpSideAutolineFar4Score"),
 					// vision
 					new AutoPath("Autoline N1 Centerline N1 N2", "VisionAmpSide4Score", true),
-					new AutoPath("Autoline N1 N2 N3", "VisionAmpSideAutoLine4Score", true),
+					new AutoPath("Autoline N1 N2 N3", "VisionAmpSideAutoline4Score", true),
 					new AutoPath("Autoline N3 N2 N1", "VisionMid4Score", true),
-					new AutoPath("Autoline N3 N2 N1", "VisionSourceSideAutoLine4Score", true),
+					new AutoPath("Autoline N3 N2 N1", "VisionSourceSideAutoline4Score", true),
 					new AutoPath("Autoline N1 Centerline N1 N2", "VisionAmpSide4Score"));
 
 	private static List<AutoPath> fourPiecePaths =
