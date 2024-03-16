@@ -12,9 +12,15 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "SubwooferLaunch"
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "HighSpeakerToHighNoteLaunch"
+            "pathName": "HighSpeakerToHighNoteLaunch2"
           }
         },
         {
@@ -26,7 +32,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "HighNoteToMidNote"
+            "pathName": "HighNoteLaunch2ToFarHighNoteToLaunch"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "VisionLaunch"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "launchSecondNoteLaunch"
           }
         },
         {
@@ -39,6 +57,12 @@
           "type": "path",
           "data": {
             "pathName": "MidNoteToBottomNote"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BottomNoteLaunch"
           }
         },
         {

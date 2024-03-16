@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.73,
-      "y": 6.62
+      "x": 1.33,
+      "y": 5.55
     },
-    "rotation": -120.0
+    "rotation": 180.0
   },
   "command": {
     "type": "sequential",
@@ -20,7 +20,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "HighSpeakerHighNoteReturn"
+            "pathName": "SpeakerToMidNoteReturn"
           }
         },
         {
@@ -32,7 +32,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "HighSpeakerHighNote2Return"
+            "pathName": "SpeakerToLowNote"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LowNoteToSpeaker"
           }
         },
         {
@@ -44,7 +50,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "HighSpeakerLowNoteReturn"
+            "pathName": "SpeakerToHighNoteReturn"
           }
         },
         {

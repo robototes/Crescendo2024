@@ -3,9 +3,9 @@
   "startingPose": {
     "position": {
       "x": 0.73,
-      "y": 6.62
+      "y": 4.47
     },
-    "rotation": -120.0
+    "rotation": 120.0
   },
   "command": {
     "type": "sequential",
@@ -20,7 +20,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "HighSpeakerToHighNoteLaunch2"
+            "pathName": "LowSpeakerToLowNote"
           }
         },
         {
@@ -32,7 +32,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "HighNoteLaunch2ToFarHighNoteToLaunch"
+            "pathName": "LowNoteToLaunch"
           }
         },
         {
@@ -44,25 +44,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "launchSecondNoteLaunch"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "VisionLaunch"
+            "pathName": "LowLaunchToMidNote"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "MidNoteToBottomNote"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "BottomNoteLaunch"
+            "pathName": "MidNoteToHighNoteLaunch"
           }
         },
         {
