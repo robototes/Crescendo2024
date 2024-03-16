@@ -28,9 +28,9 @@ public class TrapAlign {
 
 	private static final Pose2d[] RED_TRAP_POSES = {
 		// trap that faces amp
-		new Pose2d(new Translation2d(12.3, 5.14), Rotation2d.fromDegrees(-60)),
+		new Pose2d(new Translation2d(12.3, 5.14), Rotation2d.fromDegrees(-120)),
 		// trap that faces source
-		new Pose2d(new Translation2d(12.3, 3.09), Rotation2d.fromDegrees(120)),
+		new Pose2d(new Translation2d(12.3, 3.09), Rotation2d.fromDegrees(300)),
 		// trap that faces mid
 		// DO THIS ONE FIRST
 		// brute force the X lol
@@ -40,7 +40,11 @@ public class TrapAlign {
 	private static Command trapAlign(DrivebaseSubsystem drivebaseSubsystem) {
 		Pose2d robotPose = drivebaseSubsystem.getPose();
 		boolean isBlue;
-		isBlue = DriverStation.getAlliance().get().equals(Alliance.Blue);
+		if (DriverStation.getAlliance().isEmpty()) {
+			isBlue = DriverStation.getAlliance().get().equals(Alliance.Blue);
+		} else {
+			isBlue = false;
+		}
 		// figures out which trap to go to
 		Pose2d trapPose = robotPose.nearest(List.of((isBlue) ? BLUE_TRAP_POSES : RED_TRAP_POSES));
 		// sets the point for the path to go to
@@ -86,6 +90,7 @@ public class TrapAlign {
 			trapCommand.initialize();
 			launcherSubsystem.setAngle(LauncherSubsystem.TRAP_AIM_ANGLE);
 			launcherSubsystem.launch(LauncherSubsystem.TRAP_SHOOT_SPEED_RPM);
+			launcherSubsystem.manualSetpoint(LauncherSubsystem.TRAP_AIM_ANGLE);
 		}
 
 		@Override

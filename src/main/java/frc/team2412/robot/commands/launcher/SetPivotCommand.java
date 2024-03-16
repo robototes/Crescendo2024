@@ -17,7 +17,7 @@ public class SetPivotCommand extends Command {
 	@Override
 	public void initialize() {
 		launcherSubsystem.setAngle(angle);
-	}
+		}
 
 	@Override
 	public boolean isFinished() {

@@ -212,8 +212,8 @@ public class LauncherSubsystem extends SubsystemBase {
 				ControlType.kPosition,
 				0,
 				launcherAngleFF.calculate(
-						Units.rotationsToRadians(launcherAngleEncoder.getPosition() - FF_PIVOT_OFFSET),
-						launcherAngleEncoder.getVelocity()));
+						Units.degreesToRadians(launcherAngle - FF_PIVOT_OFFSET), 0));
+		manualAngleSetpoint = launcherAngle;
 		// launcherAngleTwoPIDController.setReference(
 		//		Units.degreesToRotations(angleSetpoint), ControlType.kPosition);
 	}
@@ -249,8 +249,7 @@ public class LauncherSubsystem extends SubsystemBase {
 					ControlType.kPosition,
 					0,
 					launcherAngleFF.calculate(
-							Units.rotationsToRadians(launcherAngleEncoder.getPosition() - FF_PIVOT_OFFSET),
-							launcherAngleEncoder.getVelocity()));
+							Units.degreesToRadians(Units.rotationsToDegrees(manualAngleSetpoint) - FF_PIVOT_OFFSET), 0));
 		}
 	}
 
