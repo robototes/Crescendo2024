@@ -12,9 +12,21 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "SubwooferLaunch"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "HighSpeakerHighNoteReturn"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "SubwooferLaunch"
           }
         },
         {
@@ -24,9 +36,21 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "SubwooferLaunch"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "HighSpeakerLowNoteReturn"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "SubwooferLaunch"
           }
         }
       ]
