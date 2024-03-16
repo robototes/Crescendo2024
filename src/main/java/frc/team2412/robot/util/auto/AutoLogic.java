@@ -80,7 +80,7 @@ public class AutoLogic {
 	private static List<AutoPath> twoPiecePaths =
 			List.of(
 					// presets
-					// new AutoPath("Autoline N1 Centerline N1", "PresetAmpSideAutoline3Score"),
+					new AutoPath("Autoline N1 Centerline N1", "PresetAmpSideAutoline3Score"),
 					new AutoPath("Autoline N2", "PresetMidAutoline3Score"),
 					// vision
 					new AutoPath("Centerline N5 N4", "VisionSourceSide3Score", true),
@@ -90,7 +90,7 @@ public class AutoLogic {
 	private static List<AutoPath> threePiecePaths =
 			List.of(
 					// presets
-					// new AutoPath("Autoline N1 N2 N3", "PresetAmpSideAutoline4Score"),
+					new AutoPath("Autoline N1 N2 N3", "PresetAmpSideAutoline4Score"),
 					new AutoPath("Autoline N2 N3 N1", "PresetMidAutoline4Score"),
 					new AutoPath("Autoline N3 N2 N1", "PresetSourceSideAutoline4Score"),
 					new AutoPath("Centerline N1 Autoline Autoline N1 N2", "PresetAmpSideAutolineFar4Score"),
