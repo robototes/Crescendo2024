@@ -8,24 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.092311041764941,
-        "y": 6.406183098080483
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 6.159294604303494,
-        "y": 6.391523640190138
-      },
-      "prevControl": {
-        "x": 5.7178954724802065,
-        "y": 6.3466355928860745
-      },
-      "nextControl": {
-        "x": 7.024202619833812,
-        "y": 6.479480387532203
+        "x": 4.957219057295258,
+        "y": 6.611415508545304
       },
       "isLocked": false,
       "linkedName": null
@@ -36,24 +20,24 @@
         "y": 7.461664066185276
       },
       "prevControl": {
-        "x": 8.607035964096708,
-        "y": 7.292808820292638
+        "x": 8.602702708501509,
+        "y": 7.283357704346585
       },
       "nextControl": {
-        "x": 7.845520369587389,
-        "y": 7.630519312077913
+        "x": 7.947748466925505,
+        "y": 7.593599187198374
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 4.2095867048876965,
-        "y": 6.831307376900469
+        "x": 5.41,
+        "y": 6.787329003229436
       },
       "prevControl": {
-        "x": 5.543597372909033,
-        "y": 7.0218803294749454
+        "x": 6.670713378569614,
+        "y": 7.227112739939765
       },
       "nextControl": null,
       "isLocked": false,
@@ -62,8 +46,8 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1.6,
-      "rotationDegrees": 145.0,
+      "waypointRelativePos": 0.8,
+      "rotationDegrees": -128.61667081319877,
       "rotateFast": false
     }
   ],
@@ -71,7 +55,7 @@
   "eventMarkers": [
     {
       "name": "New Event Marker",
-      "waypointRelativePos": 1.0999999999999999,
+      "waypointRelativePos": 0.55,
       "command": {
         "type": "parallel",
         "data": {
@@ -95,7 +79,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -156.19405648154228,
+    "rotation": -165.92,
     "rotateFast": false
   },
   "reversed": false,
