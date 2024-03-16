@@ -10,6 +10,7 @@ public class LEDSubsystem extends SubsystemBase {
 	private static final int GREEN_LED_COLOR = 1885;
 	private static final int BLUE_LED_COLOR = 1935;
 	private static final int YELLOW_LED_COLOR = 1845;
+	private static final int VIOLET_LED_COLOR = 1955;
 
 	private final PWM blinkin;
 
@@ -40,5 +41,9 @@ public class LEDSubsystem extends SubsystemBase {
 
 	public void setYELLOW_LED() {
 		setLED(YELLOW_LED_COLOR);
+	}
+
+	public void setVIOLET_LED() {
+		setLED(VIOLET_LED_COLOR);
 	}
 }
