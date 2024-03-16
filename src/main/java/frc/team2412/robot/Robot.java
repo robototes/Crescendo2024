@@ -1,5 +1,7 @@
 package frc.team2412.robot;
 
+import com.ctre.phoenix6.SignalLogger;
+import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -38,6 +40,8 @@ public class Robot extends TimedRobot {
 	}
 
 	private static final boolean debugMode = true;
+	// Really dangerous to keep this enabled as it disables all other controls, use with caution
+	private static final boolean sysIdMode = false;
 
 	private final RobotType robotType;
 	private final PowerDistribution PDP;
@@ -154,6 +158,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopInit() {
 		Shuffleboard.startRecording();
+		SignalLogger.start();
 	}
 
 	@Override
@@ -164,6 +169,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopExit() {
 		CommandScheduler.getInstance().cancelAll();
+		SignalLogger.stop();
 	}
 
 	@Override
@@ -197,5 +203,9 @@ public class Robot extends TimedRobot {
 
 	public static boolean isDebugMode() {
 		return debugMode;
+	}
+
+	public static boolean isSysIdMode() {
+		return sysIdMode;
 	}
 }
