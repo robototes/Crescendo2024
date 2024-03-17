@@ -49,7 +49,7 @@ public class IntakeSubsystem extends SubsystemBase {
 	private final DigitalInput feederSensor;
 
 	private final SparkLimitSwitch intakeFrontSensor;
-	private final SparkLimitSwitch intakeBackSensor;
+	// private final SparkLimitSwitch intakeBackSensor;
 	private final SparkLimitSwitch intakeLeftSensor;
 	private final SparkLimitSwitch intakeRightSensor;
 
@@ -156,16 +156,25 @@ public class IntakeSubsystem extends SubsystemBase {
 		feederSensor = new DigitalInput(FEEDER_SENSOR);
 
 		intakeFrontSensor = intakeMotorFront.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
-		intakeBackSensor = intakeMotorBack.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
+		// intakeBackSensor =
+		// intakeMotorBack.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
 		intakeLeftSensor = intakeMotorLeft.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
 		intakeRightSensor = intakeMotorRight.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
 
+		intakeFrontSensor.enableLimitSwitch(false);
+		intakeLeftSensor.enableLimitSwitch(false);
+		intakeRightSensor.enableLimitSwitch(false);
+
 		resetMotors();
 
+		// show if sensors have notes in shuffleboard
 		ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Intake");
 		shuffleboardTab.addBoolean("Index Sensor - ", this::indexSensorHasNote).withSize(1, 1);
 		shuffleboardTab.addBoolean("Feeder Sensor - ", this::feederSensorHasNote).withSize(1, 1);
-		shuffleboardTab.addBoolean("Intake Sensor - ", this::intakeBackSeesNote).withSize(1, 1);
+		// intake back sensor
+		shuffleboardTab.addBoolean("Intake Front Sensor - ", this::intakeFrontSeesNote).withSize(1, 1);
+		shuffleboardTab.addBoolean("Intake Left Sensor - ", this::intakeLeftSeesNote).withSize(1, 1);
+		shuffleboardTab.addBoolean("Intake Right Sensor - ", this::intakeRightSeesNote).withSize(1, 1);
 	}
 
 	private void configureMotor(CANSparkBase motor, int currentLimit, boolean invert) {
@@ -294,10 +303,6 @@ public class IntakeSubsystem extends SubsystemBase {
 
 	public boolean intakeFrontSeesNote() {
 		return intakeFrontSensor.isPressed();
-	}
-
-	public boolean intakeBackSeesNote() {
-		return intakeBackSensor.isPressed();
 	}
 
 	public boolean intakeLeftSeesNote() {

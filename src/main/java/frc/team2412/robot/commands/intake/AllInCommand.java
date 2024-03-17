@@ -9,6 +9,10 @@ import frc.team2412.robot.subsystems.IntakeSubsystem;
 public class AllInCommand extends Command {
 	private final IntakeSubsystem intakeSubsystem;
 	private final Controls controls;
+	private boolean rumbledIntakeFront = false;
+	private boolean rumbledIntakeLeft = false;
+	private boolean rumbledIntakeRight = false;
+	private boolean rumbledIndex = false;
 
 	public AllInCommand(IntakeSubsystem intakeSubsystem, Controls controls) {
 		this.intakeSubsystem = intakeSubsystem;
@@ -37,26 +41,13 @@ public class AllInCommand extends Command {
 				intakeSubsystem.intakeRightStop();
 			}
 
-			if (controls != null) {
-				Commands.race(new RumbleCommand(controls), new WaitCommand(1)).schedule();
-			}
-		}
-
-		if (intakeSubsystem.intakeBackSeesNote()) {
-			if (!intakeSubsystem.getRejectOverride()) {
-				intakeSubsystem.intakeFrontReject();
-				intakeSubsystem.intakeLeftReject();
-				intakeSubsystem.intakeRightReject();
-			} else {
-				intakeSubsystem.intakeFrontStop();
-				intakeSubsystem.intakeLeftStop();
-				intakeSubsystem.intakeRightStop();
-			}
-
-			if (controls != null) {
+			if (controls != null && !rumbledIntakeFront) {
 				Commands.race(new RumbleCommand(controls), new WaitCommand(2)).schedule();
+				rumbledIntakeFront = true;
 			}
 		}
+
+		// back intake sensor does not exist ._.
 
 		if (intakeSubsystem.intakeLeftSeesNote()) {
 			if (!intakeSubsystem.getRejectOverride()) {
@@ -69,8 +60,9 @@ public class AllInCommand extends Command {
 				intakeSubsystem.intakeRightStop();
 			}
 
-			if (controls != null) {
+			if (controls != null && !rumbledIntakeLeft) {
 				Commands.race(new RumbleCommand(controls), new WaitCommand(2)).schedule();
+				rumbledIntakeLeft = true;
 			}
 		}
 
@@ -85,8 +77,9 @@ public class AllInCommand extends Command {
 				intakeSubsystem.intakeLeftStop();
 			}
 
-			if (controls != null) {
+			if (controls != null && !rumbledIntakeRight) {
 				Commands.race(new RumbleCommand(controls), new WaitCommand(2)).schedule();
+				rumbledIntakeRight = true;
 			}
 		}
 
@@ -98,8 +91,9 @@ public class AllInCommand extends Command {
 				intakeSubsystem.intakeStop();
 			}
 
-			if (controls != null) {
+			if (controls != null && !rumbledIndex) {
 				Commands.race(new RumbleCommand(controls), new WaitCommand(3)).schedule();
+				rumbledIndex = true;
 			}
 		}
 	}
@@ -111,6 +105,7 @@ public class AllInCommand extends Command {
 		} else {
 			intakeSubsystem.intakeStop();
 		}
+
 		intakeSubsystem.indexStop();
 		intakeSubsystem.feederStop();
 

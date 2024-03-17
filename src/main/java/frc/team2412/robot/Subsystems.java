@@ -14,8 +14,8 @@ public class Subsystems {
 		private static final boolean IS_COMP = Robot.getInstance().isCompetition();
 
 		public static final boolean APRILTAGS_ENABLED = true;
-		public static final boolean LIMELIGHT_ENABLED = true;
-		public static final boolean CLIMB_ENABLED = true;
+		public static final boolean LIMELIGHT_ENABLED = false;
+		public static final boolean CLIMB_ENABLED = false;
 		public static final boolean LAUNCHER_ENABLED = true;
 		public static final boolean INTAKE_ENABLED = true;
 		public static final boolean DRIVEBASE_ENABLED = true;
