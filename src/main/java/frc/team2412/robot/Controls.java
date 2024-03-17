@@ -64,8 +64,8 @@ public class Controls {
 		launcherSubwooferPresetButton = codriveController.a();
 		launcherLowerPresetButton = codriveController.y();
 		// launcherPodiumPresetButton = codriveController.povLeft();
-		launcherTrapPresetButton = codriveController.y();
-		launcherLaunchButton = codriveController.leftBumper();
+		launcherTrapPresetButton = codriveController.rightTrigger();
+		launcherLaunchButton = codriveController.rightBumper();
 		// intake controls (confirmed with driveteam)
 		driveIntakeInButton = driveController.a();
 		driveIntakeStopButton = driveController.b();

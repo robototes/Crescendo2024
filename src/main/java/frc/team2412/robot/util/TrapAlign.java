@@ -40,7 +40,7 @@ public class TrapAlign {
 	private static Command trapAlign(DrivebaseSubsystem drivebaseSubsystem) {
 		Pose2d robotPose = drivebaseSubsystem.getPose();
 		boolean isBlue;
-		if (DriverStation.getAlliance().isEmpty()) {
+		if (!DriverStation.getAlliance().isEmpty()) {
 			isBlue = DriverStation.getAlliance().get().equals(Alliance.Blue);
 		} else {
 			isBlue = false;
