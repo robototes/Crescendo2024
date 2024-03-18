@@ -61,15 +61,12 @@ public class AprilTagsProcessor {
 
 	private static final double MAX_POSE_AMBIGUITY = 0.1;
 
-	// Both of these are in radians
-	// Negate to convert robot to cam to cam to robot, and negate again because tag is flipped,
-	// leading to no net effect
-	private static final double EXPECTED_CAM_TO_TARGET_PITCH = ROBOT_TO_CAM.getRotation().getY();
-	private static final double CAM_TO_TARGET_PITCH_TOLERANCE = 0.1;
+	// Radians
+	private static final double ROBOT_TO_TARGET_PITCH_TOLERANCE = 0.1;
 
 	private static boolean hasCorrectPitch(Transform3d camToTarget) {
-		return Math.abs(camToTarget.getRotation().getY() - EXPECTED_CAM_TO_TARGET_PITCH)
-				< CAM_TO_TARGET_PITCH_TOLERANCE;
+		return Math.abs(ROBOT_TO_CAM.getRotation().plus(camToTarget.getRotation()).getY())
+				< ROBOT_TO_TARGET_PITCH_TOLERANCE;
 	}
 
 	private static PhotonTrackedTarget swapBestAndAltTransforms(PhotonTrackedTarget target) {
