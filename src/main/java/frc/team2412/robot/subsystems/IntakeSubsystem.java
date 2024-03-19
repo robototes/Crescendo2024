@@ -256,6 +256,7 @@ public class IntakeSubsystem extends SubsystemBase {
 				|| ingestMotor.get() > 0
 				|| feederMotor.get() > 0);
 	}
+
 	// logging
 	public void initShuffleboard() {
 		if (Robot.isDebugMode()) {
