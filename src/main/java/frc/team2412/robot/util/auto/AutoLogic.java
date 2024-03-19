@@ -183,13 +183,15 @@ public class AutoLogic {
 		// Complex Autos
 		NamedCommands.registerCommand("AutoLogicTest", ComplexAutoPaths.testAuto);
 		NamedCommands.registerCommand(
-				"MidSpeakerCenterLineN5N4N3", ComplexAutoPaths.midSpeakerCenterLineN3N2N1);
+				"MidSpeakerCenterLineN3N2N1", ComplexAutoPaths.midSpeakerCenterLineN3N2N1);
 		NamedCommands.registerCommand(
 				"LowSpeakerCenterLineN5N4N3", ComplexAutoPaths.lowSpeakerCenterLineN5N4N3);
 		NamedCommands.registerCommand(
-				"TopSpeakerCenterLineN1N2AutoLine1", ComplexAutoPaths.TopSpeakerCenterLineN1N2AutoLineN1);
+				"LowSpeakerCenterLineN5N4", ComplexAutoPaths.lowSpeakerCenterLineN5N4);
 		NamedCommands.registerCommand(
-				"TopSpeakerCenterLineN1N2AutoLine1", ComplexAutoPaths.TopSpeakerCenterLineN1N2N3);
+				"TopSpeakerCenterLineN1N2AutoLineN1", ComplexAutoPaths.TopSpeakerCenterLineN1N2AutoLineN1);
+		NamedCommands.registerCommand(
+				"TopSpeakerCenterLineN1N2N3", ComplexAutoPaths.TopSpeakerCenterLineN1N2N3);
 	}
 
 	// public Command getConditionalCommand(){}
