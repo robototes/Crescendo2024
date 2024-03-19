@@ -225,10 +225,10 @@ public class IntakeSubsystem extends SubsystemBase {
 				shuffleboardTab.add("Feeder in speed - ", FEEDER_IN_SPEED).withSize(1, 1).getEntry();
 
 		sensorOverride =
-			Shuffleboard.getTab("Intake")
-			.add("Override Sensors", false)
-			.withSize(1, 1)
-			.withWidget(BuiltInWidgets.kToggleSwitch)
-			.getEntry();
+				Shuffleboard.getTab("Intake")
+						.add("Override Sensors", false)
+						.withSize(1, 1)
+						.withWidget(BuiltInWidgets.kToggleSwitch)
+						.getEntry();
 	}
 }
