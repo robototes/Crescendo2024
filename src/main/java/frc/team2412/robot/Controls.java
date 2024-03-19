@@ -132,7 +132,7 @@ public class Controls {
 	// leaving this code in in case we need to test outside of auto
 	/*
 	public void bindLimelightControls() {
-		getWithinDistanceTrigger.onTrue(
+		getWithinDistanceTrigger.whileTrue(
 				new DriveToNoteCommand(s.drivebaseSubsystem, s.limelightSubsystem));
 	}
 	*/

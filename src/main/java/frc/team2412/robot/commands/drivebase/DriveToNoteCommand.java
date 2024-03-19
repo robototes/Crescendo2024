@@ -24,19 +24,21 @@ public class DriveToNoteCommand extends Command {
 
 	@Override
 	public void execute() {
-		Translation2d move =
-				new Translation2d(
-						INVERT_DRIVE_DIRECTION
-								* Units.inchesToMeters(limelightSubsystem.getDistanceFromTargetInches()),
-						0.0);
-		Rotation2d turn =
-				new Rotation2d()
-						.fromDegrees(2 * INVERT_DRIVE_DIRECTION * limelightSubsystem.getHorizontalOffset());
-		drivebaseSubsystem.drive(move, turn, false);
+		if(limelightSubsystem.hasTargets()){
+			Translation2d move =
+					new Translation2d(
+							INVERT_DRIVE_DIRECTION
+									* Units.inchesToMeters(limelightSubsystem.getDistanceFromTargetInches()),
+							0.0);
+			Rotation2d turn =
+					new Rotation2d()
+							.fromDegrees(2 * INVERT_DRIVE_DIRECTION * limelightSubsystem.getHorizontalOffset());
+			drivebaseSubsystem.drive(move, turn, false);
+		}
 	}
 
 	@Override
 	public boolean isFinished() {
-		return (limelightSubsystem.isWithinDistance());
+		return (limelightSubsystem.isWithinDistance() || !limelightSubsystem.hasTargets());
 	}
 }
