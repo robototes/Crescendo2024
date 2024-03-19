@@ -20,7 +20,6 @@ import frc.team2412.robot.commands.intake.AllReverseCommand;
 import frc.team2412.robot.commands.intake.AllStopCommand;
 import frc.team2412.robot.commands.intake.FeederInCommand;
 import frc.team2412.robot.commands.intake.IntakeRejectCommand;
-import frc.team2412.robot.commands.intake.RumbleCommand;
 import frc.team2412.robot.commands.launcher.FullTargetCommand;
 import frc.team2412.robot.commands.launcher.ManualAngleCommand;
 import frc.team2412.robot.commands.launcher.SetAngleAmpLaunchCommand;

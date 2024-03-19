@@ -91,8 +91,7 @@ public class IntakeSubsystem extends SubsystemBase {
 		intakeLeftSensor = intakeMotorLeft.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
 		intakeRightSensor = intakeMotorRight.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
 
-
-	//todo: MOVE THIS TO CONFIGURE MOTOR
+		// todo: MOVE THIS TO CONFIGURE MOTOR
 		intakeFrontSensor.enableLimitSwitch(false);
 		intakeLeftSensor.enableLimitSwitch(false);
 		intakeRightSensor.enableLimitSwitch(false);
@@ -250,7 +249,7 @@ public class IntakeSubsystem extends SubsystemBase {
 	public boolean getRejectOverride() {
 		return rejectOverride.getBoolean(false);
 	}
-	
+
 	// logging
 	public void initShuffleboard() {
 		if (Robot.isDebugMode()) {
@@ -291,7 +290,7 @@ public class IntakeSubsystem extends SubsystemBase {
 		shuffleboardTab.addBoolean("Intake Front Sensor - ", this::intakeFrontSeesNote).withSize(1, 1);
 		shuffleboardTab.addBoolean("Intake Left Sensor - ", this::intakeLeftSeesNote).withSize(1, 1);
 		shuffleboardTab.addBoolean("Intake Right Sensor - ", this::intakeRightSeesNote).withSize(1, 1);
-		
+
 		setIntakeInSpeedEntry =
 				shuffleboardTab
 						.addPersistent("Intake in speed - ", INTAKE_IN_SPEED)
