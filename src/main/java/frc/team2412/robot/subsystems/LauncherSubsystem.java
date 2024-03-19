@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.team2412.robot.Hardware;
+import frc.team2412.robot.Robot;
 import frc.team2412.robot.util.SparkPIDWidget;
 import java.util.Map;
 
@@ -91,10 +92,6 @@ public class LauncherSubsystem extends SubsystemBase {
 	private GenericEntry launcherSpeedEntry;
 
 	private GenericEntry launcherAngleSpeedEntry;
-
-	private GenericEntry launcherTopFlywheelTemp;
-
-	private GenericEntry launcherBottomFlyWheelTemp;
 
 	private GenericEntry launcherIsAtSpeed;
 
@@ -276,13 +273,22 @@ public class LauncherSubsystem extends SubsystemBase {
 	}
 
 	private void initShuffleboard() {
-		launcherBottomFlyWheelTemp =
-				Shuffleboard.getTab("Launcher")
-						.add("bottom Flywheel temp", 0)
-						.withSize(2, 1)
-						.withWidget(BuiltInWidgets.kTextView)
-						.withPosition(0, 3)
-						.getEntry();
+		if (Robot.isDebugMode()) {
+			Shuffleboard.getTab("Launcher")
+					.add(new SparkPIDWidget(launcherAngleOnePIDController, "launcherAnglePID"))
+					.withPosition(2, 0);
+			Shuffleboard.getTab("Launcher")
+					.add(new SparkPIDWidget(launcherTopPIDController, "launcherTopPID"))
+					.withPosition(0, 0);
+			Shuffleboard.getTab("Launcher")
+					.add(new SparkPIDWidget(launcherBottomPIDController, "launcherBottomPID"))
+					.withPosition(1, 0);
+
+			Shuffleboard.getTab("Launcher")
+					.addDouble("Bottom FlyWheel Temp", () -> launcherBottomMotor.getMotorTemperature());
+			Shuffleboard.getTab("Launcher")
+					.addDouble("Top FlyWheel Temp", () -> launcherTopMotor.getMotorTemperature());
+		}
 
 		launcherIsAtSpeed =
 				Shuffleboard.getTab("Launcher")
@@ -290,13 +296,6 @@ public class LauncherSubsystem extends SubsystemBase {
 						.withSize(1, 1)
 						.withWidget(BuiltInWidgets.kBooleanBox)
 						.withPosition(0, 2)
-						.getEntry();
-		launcherTopFlywheelTemp =
-				Shuffleboard.getTab("Launcher")
-						.add("top Flywheel temp", 0)
-						.withSize(2, 1)
-						.withWidget(BuiltInWidgets.kTextView)
-						.withPosition(2, 3)
 						.getEntry();
 		launcherAngleSpeedEntry =
 				Shuffleboard.getTab("Launcher")
@@ -327,23 +326,13 @@ public class LauncherSubsystem extends SubsystemBase {
 						.withProperties(Map.of("Min", -MAX_FREE_SPEED_RPM, "Max", MAX_FREE_SPEED_RPM))
 						.withPosition(5, 0)
 						.getEntry();
+
 		launcherAngleManual =
 				Shuffleboard.getTab("Launcher")
 						.add("Launcher manual increase", 0)
 						.withSize(1, 1)
 						.withWidget(BuiltInWidgets.kTextView)
 						.getEntry();
-		Shuffleboard.getTab("Launcher")
-				.add(new SparkPIDWidget(launcherAngleOnePIDController, "launcherAnglePID"))
-				.withPosition(2, 0);
-		// Shuffleboard.getTab("Launcher")
-		//		.add(new SparkPIDWidget(launcherAngleTwoPIDController, "launcherAngleTwoPIDController"));
-		Shuffleboard.getTab("Launcher")
-				.add(new SparkPIDWidget(launcherTopPIDController, "launcherTopPID"))
-				.withPosition(0, 0);
-		Shuffleboard.getTab("Launcher")
-				.add(new SparkPIDWidget(launcherBottomPIDController, "launcherBottomPID"))
-				.withPosition(1, 0);
 	}
 
 	@Override
@@ -351,8 +340,6 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherAngleEntry.setDouble(getAngle());
 		launcherSpeedEntry.setDouble(getLauncherSpeed());
 		launcherAngleSpeedEntry.setDouble(getAngleSpeed());
-		launcherTopFlywheelTemp.setDouble(launcherTopMotor.getMotorTemperature());
-		launcherBottomFlyWheelTemp.setDouble(launcherTopMotor.getMotorTemperature());
 		launcherIsAtSpeed.setBoolean(isAtSpeed());
 		launcherAngleManual.setDouble(manualAngleSetpoint);
 	}
