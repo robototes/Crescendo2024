@@ -166,9 +166,13 @@ public class IntakeSubsystem extends SubsystemBase {
 		configureMotor(intakeMotorRight, true);
 
 		configureMotor(ingestMotor, false);
-		configureMotor(indexMotorUpper, 40, true);
+		configureMotor(indexMotorUpper, 40, false);
 
-		configureMotor(feederMotor, 40, true);
+		configureMotor(feederMotor, 40, false);
+		indexMotorUpper
+				.getForwardLimitSwitch(com.revrobotics.SparkLimitSwitch.Type.kNormallyOpen)
+				.enableLimitSwitch(false);
+		indexMotorUpper.burnFlash();
 	}
 
 	public void intakeSet(double speed) {
