@@ -54,7 +54,7 @@ public class Controls {
 	private final Trigger launcherTrapPresetButton;
 	private final Trigger launcherLaunchButton;
 
-	private final Subsystems s; 
+	private final Subsystems s;
 
 	public Controls(Subsystems s) {
 		driveController = new CommandXboxController(CONTROLLER_PORT);
