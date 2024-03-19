@@ -321,7 +321,7 @@ public class LauncherSubsystem extends SubsystemBase {
 						.withProperties(Map.of("Min", -MAX_FREE_SPEED_RPM, "Max", MAX_FREE_SPEED_RPM))
 						.withPosition(5, 0)
 						.getEntry();
-    
+
 		launcherAngleManual =
 				Shuffleboard.getTab("Launcher")
 						.add("Launcher manual increase", 0)
@@ -339,7 +339,6 @@ public class LauncherSubsystem extends SubsystemBase {
 		Shuffleboard.getTab("Launcher")
 				.add(new SparkPIDWidget(launcherBottomPIDController, "launcherBottomPID"))
 				.withPosition(1, 0);
-
 	}
 
 	@Override
