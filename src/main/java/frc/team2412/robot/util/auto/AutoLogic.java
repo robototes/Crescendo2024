@@ -26,6 +26,7 @@ import frc.team2412.robot.commands.launcher.SetAngleLaunchCommand;
 import frc.team2412.robot.commands.launcher.StopLauncherCommand;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
 import frc.team2412.robot.util.DynamicSendableChooser;
+import frc.team2412.robot.util.PathPlannerAutos;
 import java.util.List;
 import java.util.Map;
 
@@ -143,13 +144,20 @@ public class AutoLogic {
 	private static SendableChooser<Integer> gameObjects = new SendableChooser<Integer>();
 	private static SendableChooser<Boolean> isVision = new SendableChooser<Boolean>();
 
+	// methods
+
+	public static Command registerAuto(String autoName, Command command, String... primaryPathNames) {
+		PathPlannerAutos.registerAuto(autoName, primaryPathNames);
+		return command.withName(autoName);
+	}
+
 	/** Registers commands in PathPlanner */
 	public static void registerCommands() {
 		// param: String commandName, Command command
 
 		// Intake
 		NamedCommands.registerCommand("StopIntake", new IntakeStopCommand(s.intakeSubsystem));
-		NamedCommands.registerCommand("Intake", new AllInCommand(s.intakeSubsystem));
+		NamedCommands.registerCommand("Intake", new AllInCommand(s.intakeSubsystem, null));
 		NamedCommands.registerCommand(
 				"IntakeSensorOverride", new AllInSensorOverrideCommand(s.intakeSubsystem));
 		// Launcher
@@ -179,7 +187,7 @@ public class AutoLogic {
 		NamedCommands.registerCommand(
 				"LowSpeakerCenterLineN5N4N3", ComplexAutoPaths.lowSpeakerCenterLineN5N4N3);
 		NamedCommands.registerCommand(
-				"TopSpeakerCenterLineN1N2AutoLine1", ComplexAutoPaths.TopSpeakerCenterLineN1N2AutoLine1);
+				"TopSpeakerCenterLineN1N2AutoLine1", ComplexAutoPaths.TopSpeakerCenterLineN1N2AutoLineN1);
 		NamedCommands.registerCommand(
 				"TopSpeakerCenterLineN1N2AutoLine1", ComplexAutoPaths.TopSpeakerCenterLineN1N2N3);
 	}
