@@ -62,12 +62,14 @@ public class AprilTagsProcessor {
 	private static final double MAX_POSE_AMBIGUITY = 0.1;
 
 	// Radians
+	private static final double ROBOT_TO_TARGET_ROLL_TOLERANCE = 0.1;
 	private static final double ROBOT_TO_TARGET_PITCH_TOLERANCE = 0.1;
 
-	private static boolean hasCorrectPitch(Transform3d camToTarget) {
+	private static boolean hasValidRotation(Transform3d camToTarget) {
 		// Intrinsic robot to cam + cam to target = extrinsic cam to target + robot to cam
-		return Math.abs(camToTarget.getRotation().plus(ROBOT_TO_CAM.getRotation()).getY())
-				< ROBOT_TO_TARGET_PITCH_TOLERANCE;
+		var robotToTargetRotation = camToTarget.getRotation().plus(ROBOT_TO_CAM.getRotation());
+		return (Math.abs(robotToTargetRotation.getX()) < ROBOT_TO_TARGET_ROLL_TOLERANCE)
+				&& (Math.abs(robotToTargetRotation.getY()) < ROBOT_TO_TARGET_PITCH_TOLERANCE);
 	}
 
 	private static PhotonTrackedTarget swapBestAndAltTransforms(PhotonTrackedTarget target) {
@@ -92,8 +94,8 @@ public class AprilTagsProcessor {
 				copy.targets.remove(i);
 				continue;
 			}
-			if (!hasCorrectPitch(target.getBestCameraToTarget())) {
-				if (hasCorrectPitch(target.getAlternateCameraToTarget())) {
+			if (!hasValidRotation(target.getBestCameraToTarget())) {
+				if (hasValidRotation(target.getAlternateCameraToTarget())) {
 					target = swapBestAndAltTransforms(target);
 					copy.targets.set(i, target);
 				} else {
