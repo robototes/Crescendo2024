@@ -5,7 +5,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StringSubscriber;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.Watchdog;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -39,7 +41,19 @@ public class AutonomousField {
 						.subscribe("");
 		var autonomousField =
 				new AutonomousField(() -> speedMultiplier.getDouble(DEFAULT_PLAYBACK_SPEED));
-		addPeriodic.accept(() -> autonomousField.update(activeAutoSub.get()), UPDATE_RATE);
+		var watchdog =
+				new Watchdog(0.001, () -> DriverStation.reportWarning("auto field loop overrun", false));
+		addPeriodic.accept(
+				() -> {
+					watchdog.reset();
+					autonomousField.update(activeAutoSub.get());
+					watchdog.addEpoch("AutonomousField.update()");
+					watchdog.disable();
+					if (watchdog.isExpired()) {
+						watchdog.printEpochs();
+					}
+				},
+				UPDATE_RATE);
 		tab.add("Selected auto", autonomousField.getField())
 				.withPosition(columnIndex, rowIndex)
 				.withSize(2, 2);
@@ -49,6 +63,7 @@ public class AutonomousField {
 	private final Field2d field = new Field2d();
 
 	// Keeping track of the current trajectory
+	private PathPlannerAutos.Auto auto;
 	private List<PathPlannerTrajectory> trajectories;
 	private int trajectoryIndex = 0;
 
@@ -92,12 +107,16 @@ public class AutonomousField {
 		double fpgaTime = Timer.getFPGATimestamp();
 		if (lastName.isEmpty() || !lastName.get().equals(autoName)) {
 			lastName = Optional.of(autoName);
-			trajectories = PathPlannerAutos.getAutoTrajectories(autoName);
+			auto = PathPlannerAutos.getAuto(autoName);
+			trajectories = auto.trajectories;
 			trajectoryIndex = 0;
 			lastFPGATime = fpgaTime;
 			lastTrajectoryTimeOffset = 0;
 		}
 		if (trajectories.isEmpty()) {
+			if (auto.startingPose != null) {
+				return auto.startingPose;
+			}
 			return new Pose2d();
 		}
 		lastTrajectoryTimeOffset += (fpgaTime - lastFPGATime) * speed;
@@ -115,11 +134,16 @@ public class AutonomousField {
 	}
 
 	/**
-	 * Updates the {@link Field2d} robot pose.
+	 * Updates the {@link Field2d} robot pose. If the robot is enabled, does nothing and the
+	 * trajectory will restart when the robot is disabled.
 	 *
 	 * @param autoName The name of the selected PathPlanner autonomous routine.
 	 */
 	public void update(String autoName) {
+		if (DriverStation.isEnabled()) {
+			lastName = Optional.empty();
+			return;
+		}
 		field.setRobotPose(getUpdatedPose(autoName));
 	}
 }
