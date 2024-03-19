@@ -249,10 +249,10 @@ public class LauncherSubsystem extends SubsystemBase {
 
 	public void setAngleManual(double joystickInput) {
 		manualAngleSetpoint =
-				MathUtil.clamp(manualAngleSetpoint + joystickInput * MANUAL_MODIFIER, 0.71f, 0.95f);
+				MathUtil.clamp(manualAngleSetpoint + joystickInput * MANUAL_MODIFIER, 0.80f, 0.96f);
 
-		if (Units.degreesToRotations(getAngle()) > 0.71
-				&& Units.degreesToRotations(getAngle()) < 0.95) {
+		if (Units.degreesToRotations(getAngle()) > 0.80
+				&& Units.degreesToRotations(getAngle()) < 0.96) {
 			launcherAngleOnePIDController.setReference(
 					manualAngleSetpoint,
 					ControlType.kPosition,
