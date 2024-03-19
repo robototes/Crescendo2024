@@ -270,8 +270,6 @@ public class LauncherSubsystem extends SubsystemBase {
 			Shuffleboard.getTab("Launcher")
 					.add(new SparkPIDWidget(launcherAngleOnePIDController, "launcherAnglePID"))
 					.withPosition(2, 0);
-			// Shuffleboard.getTab("Launcher")
-			//		.add(new SparkPIDWidget(launcherAngleTwoPIDController, "launcherAngleTwoPIDController"));
 			Shuffleboard.getTab("Launcher")
 					.add(new SparkPIDWidget(launcherTopPIDController, "launcherTopPID"))
 					.withPosition(0, 0);
@@ -328,17 +326,6 @@ public class LauncherSubsystem extends SubsystemBase {
 						.withSize(1, 1)
 						.withWidget(BuiltInWidgets.kTextView)
 						.getEntry();
-		Shuffleboard.getTab("Launcher")
-				.add(new SparkPIDWidget(launcherAngleOnePIDController, "launcherAnglePID"))
-				.withPosition(2, 0);
-		// Shuffleboard.getTab("Launcher")
-		//		.add(new SparkPIDWidget(launcherAngleTwoPIDController, "launcherAngleTwoPIDController"));
-		Shuffleboard.getTab("Launcher")
-				.add(new SparkPIDWidget(launcherTopPIDController, "launcherTopPID"))
-				.withPosition(0, 0);
-		Shuffleboard.getTab("Launcher")
-				.add(new SparkPIDWidget(launcherBottomPIDController, "launcherBottomPID"))
-				.withPosition(1, 0);
 	}
 
 	@Override
