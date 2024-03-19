@@ -47,7 +47,7 @@ public class AllInCommand extends Command {
 			}
 		}
 
-		// back intake sensor does not exist ._.
+		// back intake sensor does not exist (but it might?)
 
 		if (intakeSubsystem.intakeLeftSeesNote()) {
 			if (!intakeSubsystem.getRejectOverride()) {
@@ -112,6 +112,11 @@ public class AllInCommand extends Command {
 		if (controls != null) {
 			Commands.race(new RumbleCommand(controls), new WaitCommand(3)).schedule();
 		}
+
+		rumbledIntakeFront = false;
+		rumbledIntakeLeft = false;
+		rumbledIntakeRight = false;
+		rumbledIndex = false;
 	}
 
 	@Override
