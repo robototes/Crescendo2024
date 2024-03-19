@@ -131,11 +131,12 @@ public class Controls {
 	private void bindIntakeControls() {
 		// CommandScheduler.getInstance()
 		// 		.setDefaultCommand(s.intakeSubsystem, new IntakeStopCommand(s.intakeSubsystem));
-		driveIntakeInButton.onTrue(new AllInCommand(s.intakeSubsystem));
-		// driveIntakeStopButton.onTrue(new AllStopCommand(s.intakeSubsystem));
+		driveIntakeInButton.onTrue(new AllInCommand(s.intakeSubsystem, this));
+		driveIntakeStopButton.onTrue(new AllStopCommand(s.intakeSubsystem));
+
 		driveIntakeReverseButton.onTrue(new AllReverseCommand(s.intakeSubsystem));
 		driveIntakeRejectButton.onTrue(new IntakeRejectCommand(s.intakeSubsystem));
-		codriveIntakeInButton.onTrue(new AllInCommand(s.intakeSubsystem));
+		codriveIntakeInButton.onTrue(new AllInCommand(s.intakeSubsystem, this));
 		codriveIntakeStopButton.onTrue(new AllStopCommand(s.intakeSubsystem));
 		codriveIntakeReverseButton.onTrue(new AllReverseCommand(s.intakeSubsystem));
 		codriveIntakeRejectButton.onTrue(new IntakeRejectCommand(s.intakeSubsystem));
@@ -211,6 +212,7 @@ public class Controls {
 	public void vibrateDriveController(double vibration) {
 		if (!DriverStation.isAutonomous()) {
 			driveController.getHID().setRumble(RumbleType.kBothRumble, vibration);
+			codriveController.getHID().setRumble(RumbleType.kBothRumble, vibration);
 		}
 	}
 }
