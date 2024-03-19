@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.team2412.robot.commands.intake.AllInCommand;
 import frc.team2412.robot.commands.intake.AllReverseCommand;
 import frc.team2412.robot.commands.intake.AllStopCommand;
@@ -76,6 +77,10 @@ public class Controls {
 		codriveIntakeReverseButton = codriveController.povLeft();
 		codriveIntakeRejectButton = codriveController.povDown();
 
+		if (Robot.isSysIdMode() && LAUNCHER_ENABLED) {
+			bindSysIdControls();
+			return;
+		}
 		if (DRIVEBASE_ENABLED) {
 			bindDrivebaseControls();
 		}
@@ -179,6 +184,28 @@ public class Controls {
 		// 						s.launcherSubsystem::launch, s.launcherSubsystem::stopLauncher));
 
 		driveController.b().onTrue(new InstantCommand(() -> s.launcherSubsystem.launch(4000)));
+	}
+
+	private void bindSysIdControls() {
+		// only one routine can be run in one robot log
+		// switch these between arm and flywheel in code when tuning
+		driveController
+				.leftBumper()
+				.whileTrue(s.launcherSubsystem.armSysIdQuasistatic(Direction.kForward));
+		driveController
+				.rightBumper()
+				.whileTrue(s.launcherSubsystem.armSysIdQuasistatic(Direction.kReverse));
+		driveController
+				.leftTrigger()
+				.whileTrue(s.launcherSubsystem.armSysIdDynamic(Direction.kForward));
+		driveController
+				.rightTrigger()
+				.whileTrue(s.launcherSubsystem.armSysIdDynamic(Direction.kReverse));
+		// switch these between angle and drive tests in code when tuning
+		driveController.x().whileTrue(s.drivebaseSubsystem.driveSysIdQuasistatic(Direction.kForward));
+		driveController.y().whileTrue(s.drivebaseSubsystem.driveSysIdQuasistatic(Direction.kReverse));
+		driveController.a().whileTrue(s.drivebaseSubsystem.driveSysIdDynamic(Direction.kForward));
+		driveController.b().whileTrue(s.drivebaseSubsystem.driveSysIdDynamic(Direction.kReverse));
 	}
 
 	public void vibrateDriveController(double vibration) {
