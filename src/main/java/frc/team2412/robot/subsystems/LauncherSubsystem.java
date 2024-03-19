@@ -10,11 +10,19 @@ import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
 import com.revrobotics.SparkPIDController;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.units.BaseUnits;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.Voltage;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.team2412.robot.Hardware;
 import frc.team2412.robot.Robot;
 import frc.team2412.robot.util.SparkPIDWidget;
@@ -52,10 +60,18 @@ public class LauncherSubsystem extends SubsystemBase {
 	private final RelativeEncoder launcherBottomEncoder;
 	private final SparkAbsoluteEncoder launcherAngleEncoder;
 	private final SparkPIDController launcherAngleOnePIDController;
-	// private final SparkPIDController launcherAngleTwoPIDController;
+
+	// arm FF values:
+	// Ks: 0.40434
+	// Kv: 0.096771
+	// Ka: 0.0056403
 
 	private final SparkPIDController launcherTopPIDController;
 	private final SparkPIDController launcherBottomPIDController;
+	private final SimpleMotorFeedforward launcherTopFeedforward =
+			new SimpleMotorFeedforward(0, 0.11335, 0.048325);
+	private final SimpleMotorFeedforward launcherBottomFeedforward =
+			new SimpleMotorFeedforward(0, 0.11238, 0.048209);
 
 	private double rpmSetpoint;
 	private double angleSetpoint;
@@ -129,26 +145,18 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherAngleTwoMotor.follow(launcherAngleOneMotor, true);
 
 		// PID
-		launcherAngleOnePIDController.setP(5.0);
+		launcherAngleOnePIDController.setP(5.421);
 		launcherAngleOnePIDController.setI(0);
-		launcherAngleOnePIDController.setD(0);
-		launcherAngleOnePIDController.setFF(0);
+		launcherAngleOnePIDController.setD(0.066248);
 		launcherAngleOnePIDController.setOutputRange(-ANGLE_MAX_SPEED, ANGLE_MAX_SPEED);
 
-		// launcherAngleTwoPIDController.setP(0.1);
-		// launcherAngleTwoPIDController.setI(0);
-		// launcherAngleTwoPIDController.setD(0);
-		// launcherAngleTwoPIDController.setFF(0);
-
-		launcherTopPIDController.setP(0.002);
+		launcherTopPIDController.setP(7.7633E-05);
 		launcherTopPIDController.setI(0);
-		launcherTopPIDController.setD(0.001);
-		launcherTopPIDController.setFF(0);
+		launcherTopPIDController.setD(0);
 
-		launcherBottomPIDController.setP(0.002);
+		launcherBottomPIDController.setP(0.00011722);
 		launcherBottomPIDController.setI(0);
-		launcherBottomPIDController.setD(0.001);
-		launcherBottomPIDController.setFF(0);
+		launcherBottomPIDController.setD(0);
 
 		launcherAngleOneMotor.getEncoder().setPosition(launcherAngleEncoder.getPosition());
 		launcherAngleOneMotor.getEncoder().setPositionConversionFactor(PIVOT_GEARING_RATIO);
@@ -169,18 +177,20 @@ public class LauncherSubsystem extends SubsystemBase {
 	// uses the value from the entry
 	public void launch() {
 		rpmSetpoint = setLauncherSpeedEntry.getDouble(SPEAKER_SHOOT_SPEED_RPM);
-		launcherTopPIDController.setReference(rpmSetpoint, ControlType.kVelocity);
-		launcherBottomPIDController.setReference(rpmSetpoint, ControlType.kVelocity);
+		launch(rpmSetpoint);
 	}
 	// used for presets
 	public void launch(double speed) {
 		rpmSetpoint = speed;
-		launcherTopPIDController.setReference(rpmSetpoint, ControlType.kVelocity);
-		launcherBottomPIDController.setReference(rpmSetpoint, ControlType.kVelocity);
+		launcherTopPIDController.setReference(
+				rpmSetpoint, ControlType.kVelocity, 0, launcherTopFeedforward.calculate(speed));
+		launcherBottomPIDController.setReference(
+				rpmSetpoint, ControlType.kVelocity, 0, launcherBottomFeedforward.calculate(speed));
 	}
 
 	public void ampLaunch(double speed) {
-		launcherTopPIDController.setReference(-speed, ControlType.kVelocity);
+		launcherTopPIDController.setReference(
+				-speed, ControlType.kVelocity, 0, launcherTopFeedforward.calculate(-speed));
 		launcherBottomMotor.disable();
 	}
 
@@ -291,5 +301,89 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherSpeedEntry.setDouble(getLauncherSpeed());
 		launcherAngleSpeedEntry.setDouble(getAngleSpeed());
 		launcherIsAtSpeed.setBoolean(isAtSpeed());
+	}
+
+	private SysIdRoutine getArmSysIdRoutine() {
+		return new SysIdRoutine(
+				new SysIdRoutine.Config(),
+				new SysIdRoutine.Mechanism(
+						(Measure<Voltage> volts) -> {
+							launcherAngleOneMotor.setVoltage(volts.in(BaseUnits.Voltage));
+							launcherAngleTwoMotor.setVoltage(volts.in(BaseUnits.Voltage));
+						},
+						(SysIdRoutineLog log) -> {
+							log.motor("angle-one")
+									.voltage(
+											BaseUnits.Voltage.of(
+													launcherAngleOneMotor.getAppliedOutput()
+															* RobotController.getBatteryVoltage()))
+									.angularPosition(
+											edu.wpi.first.units.Units.Rotations.of(
+													launcherAngleOneMotor.getEncoder().getPosition()))
+									.angularVelocity(
+											edu.wpi.first.units.Units.Rotations.per(edu.wpi.first.units.Units.Minute)
+													.of(launcherAngleOneMotor.getEncoder().getVelocity()));
+							log.motor("angle-two")
+									.voltage(
+											BaseUnits.Voltage.of(
+													launcherAngleTwoMotor.getAppliedOutput()
+															* RobotController.getBatteryVoltage()))
+									.angularPosition(
+											edu.wpi.first.units.Units.Rotations.of(
+													launcherAngleTwoMotor.getEncoder().getPosition()))
+									.angularVelocity(
+											edu.wpi.first.units.Units.Rotations.per(edu.wpi.first.units.Units.Minute)
+													.of(launcherAngleTwoMotor.getEncoder().getVelocity()));
+						},
+						this));
+	}
+
+	private SysIdRoutine getFlywheelSysIdRoutine() {
+		return new SysIdRoutine(
+				new SysIdRoutine.Config(),
+				new SysIdRoutine.Mechanism(
+						(Measure<Voltage> volts) -> {
+							launcherTopMotor.setVoltage(volts.in(BaseUnits.Voltage));
+							launcherBottomMotor.setVoltage(volts.in(BaseUnits.Voltage));
+						},
+						(SysIdRoutineLog log) -> {
+							log.motor("top-flywheel")
+									.voltage(
+											BaseUnits.Voltage.of(
+													launcherTopMotor.getAppliedOutput()
+															* RobotController.getBatteryVoltage()))
+									.angularPosition(
+											edu.wpi.first.units.Units.Rotations.of(launcherTopEncoder.getPosition()))
+									.angularVelocity(
+											edu.wpi.first.units.Units.Rotations.per(edu.wpi.first.units.Units.Minute)
+													.of(launcherTopEncoder.getVelocity()));
+							log.motor("bottom-flywheel")
+									.voltage(
+											BaseUnits.Voltage.of(
+													launcherBottomMotor.getAppliedOutput()
+															* RobotController.getBatteryVoltage()))
+									.angularPosition(
+											edu.wpi.first.units.Units.Rotations.of(launcherBottomEncoder.getPosition()))
+									.angularVelocity(
+											edu.wpi.first.units.Units.Rotations.per(edu.wpi.first.units.Units.Minute)
+													.of(launcherBottomEncoder.getVelocity()));
+						},
+						this));
+	}
+
+	public Command armSysIdQuasistatic(SysIdRoutine.Direction direction) {
+		return getArmSysIdRoutine().quasistatic(direction);
+	}
+
+	public Command armSysIdDynamic(SysIdRoutine.Direction direction) {
+		return getArmSysIdRoutine().dynamic(direction);
+	}
+
+	public Command flywheelSysIdQuasistatic(SysIdRoutine.Direction direction) {
+		return getFlywheelSysIdRoutine().quasistatic(direction);
+	}
+
+	public Command flywheelSysIdDynamic(SysIdRoutine.Direction direction) {
+		return getFlywheelSysIdRoutine().dynamic(direction);
 	}
 }
