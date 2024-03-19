@@ -161,6 +161,8 @@ public class IntakeSubsystem extends SubsystemBase {
 		intakeLeftSensor = intakeMotorLeft.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
 		intakeRightSensor = intakeMotorRight.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
 
+
+	//todo: MOVE THIS TO CONFIGURE MOTOR
 		intakeFrontSensor.enableLimitSwitch(false);
 		intakeLeftSensor.enableLimitSwitch(false);
 		intakeRightSensor.enableLimitSwitch(false);
