@@ -65,7 +65,8 @@ public class AprilTagsProcessor {
 	private static final double ROBOT_TO_TARGET_PITCH_TOLERANCE = 0.1;
 
 	private static boolean hasCorrectPitch(Transform3d camToTarget) {
-		return Math.abs(ROBOT_TO_CAM.getRotation().plus(camToTarget.getRotation()).getY())
+		// Intrinsic robot to cam + cam to target = extrinsic cam to target + robot to cam
+		return Math.abs(camToTarget.getRotation().plus(ROBOT_TO_CAM.getRotation()).getY())
 				< ROBOT_TO_TARGET_PITCH_TOLERANCE;
 	}
 
