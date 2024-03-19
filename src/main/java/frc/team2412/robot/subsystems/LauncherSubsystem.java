@@ -152,8 +152,10 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherAngleOneMotor.setSmartCurrentLimit(60);
 		launcherAngleTwoMotor.setSmartCurrentLimit(60);
 
-		launcherAngleOneMotor.setSoftLimit(CANSparkBase.SoftLimitDirection.kForward, PIVOT_SOFTSTOP_FORWARD);
-		launcherAngleOneMotor.setSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, PIVOT_SOFTSTOP_BACKWARD);
+		launcherAngleOneMotor.setSoftLimit(
+				CANSparkBase.SoftLimitDirection.kForward, PIVOT_SOFTSTOP_FORWARD);
+		launcherAngleOneMotor.setSoftLimit(
+				CANSparkBase.SoftLimitDirection.kReverse, PIVOT_SOFTSTOP_BACKWARD);
 		launcherAngleOneMotor.enableSoftLimit(CANSparkBase.SoftLimitDirection.kForward, true);
 		launcherAngleOneMotor.enableSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, true);
 
@@ -251,7 +253,10 @@ public class LauncherSubsystem extends SubsystemBase {
 
 	public void setAngleManual(double joystickInput) {
 		manualAngleSetpoint =
-				MathUtil.clamp(manualAngleSetpoint + joystickInput * MANUAL_MODIFIER, PIVOT_SOFTSTOP_BACKWARD, PIVOT_SOFTSTOP_FORWARD);
+				MathUtil.clamp(
+						manualAngleSetpoint + joystickInput * MANUAL_MODIFIER,
+						PIVOT_SOFTSTOP_BACKWARD,
+						PIVOT_SOFTSTOP_FORWARD);
 
 		if (Units.degreesToRotations(getAngle()) > PIVOT_SOFTSTOP_BACKWARD
 				&& Units.degreesToRotations(getAngle()) < PIVOT_SOFTSTOP_FORWARD) {
