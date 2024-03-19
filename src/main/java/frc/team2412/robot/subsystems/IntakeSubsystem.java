@@ -80,12 +80,20 @@ public class IntakeSubsystem extends SubsystemBase {
 		initShuffleboard();
 	}
 
-	private void configureMotor(CANSparkBase motor, int currentLimit, boolean invert) {
+	private void configureMotor(
+			CANSparkBase motor, int currentLimit, boolean invert, boolean enableLimitSwitch) {
 		motor.restoreFactoryDefaults();
 		motor.setIdleMode(IdleMode.kBrake);
 		motor.setSmartCurrentLimit(currentLimit);
 		motor.setInverted(invert);
+		motor
+				.getForwardLimitSwitch(com.revrobotics.SparkLimitSwitch.Type.kNormallyOpen)
+				.enableLimitSwitch(enableLimitSwitch);
 		motor.burnFlash();
+	}
+
+	private void configureMotor(CANSparkBase motor, int currentLimit, boolean invert) {
+		configureMotor(motor, currentLimit, invert, false);
 	}
 
 	private void configureMotor(CANSparkBase motor, boolean invert) {
@@ -101,10 +109,8 @@ public class IntakeSubsystem extends SubsystemBase {
 		configureMotor(ingestMotor, false);
 		configureMotor(indexMotorUpper, 40, false);
 
-		configureMotor(feederMotor, 40, false);
-		indexMotorUpper
-				.getForwardLimitSwitch(com.revrobotics.SparkLimitSwitch.Type.kNormallyOpen)
-				.enableLimitSwitch(false);
+		configureMotor(feederMotor, 40, true);
+
 		indexMotorUpper.burnFlash();
 	}
 
