@@ -80,7 +80,7 @@ public class AutoLogic {
 				"MidSpeakerCenterLineN5N4N3", AutoPaths.midSpeakerCenterLineN3N2N1);
 		NamedCommands.registerCommand(
 				"LowSpeakerCenterLineN5N4N3", AutoPaths.lowSpeakerCenterLineN5N4N3);
-		NamedCommands.registerCommand("LowSpeakerCenterLineN5N4N3", AutoPaths.lowSpeakerCenterLineN5N4);
+		NamedCommands.registerCommand("LowSpeakerCenterLineN5N4", AutoPaths.lowSpeakerCenterLineN5N4);
 		NamedCommands.registerCommand(
 				"TopSpeakerCenterLineN1N2AutoLine1", AutoPaths.TopSpeakerCenterLineN1N2AutoLine1);
 		NamedCommands.registerCommand(

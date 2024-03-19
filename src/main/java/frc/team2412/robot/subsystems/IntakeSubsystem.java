@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.team2412.robot.Robot;
 import java.util.Map;
 
 public class IntakeSubsystem extends SubsystemBase {
@@ -54,91 +55,20 @@ public class IntakeSubsystem extends SubsystemBase {
 	private final SparkLimitSwitch intakeRightSensor;
 
 	// Shuffleboard
-	// control intake speed
-	private final GenericEntry setIntakeInSpeedEntry =
-			Shuffleboard.getTab("Intake")
-					.addPersistent("Intake in speed - ", INTAKE_IN_SPEED)
-					.withSize(2, 1)
-					.withProperties(Map.of("Min", -1, "Max", 1))
-					.getEntry();
 
-	private final GenericEntry setIndexInSpeedEntry =
-			Shuffleboard.getTab("Intake")
-					.add("Index in speed - ", INDEX_UPPER_IN_SPEED)
-					.withSize(1, 1)
-					.getEntry();
+	private final ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Intake");
+	// speed
+	private GenericEntry setIntakeInSpeedEntry;
 
-	private final GenericEntry setFeederInSpeedEntry =
-			Shuffleboard.getTab("Intake")
-					.add("Feeder in speed - ", FEEDER_IN_SPEED)
-					.withSize(1, 1)
-					.getEntry();
+	private GenericEntry setIndexInSpeedEntry;
 
-	// motor temperature
-	private final GenericEntry intakeMotorFrontTemp =
-			Shuffleboard.getTab("Intake")
-					.add("Front Intake temp", 0)
-					.withSize(1, 1)
-					.withWidget(BuiltInWidgets.kTextView)
-					.getEntry();
-
-	private final GenericEntry intakeMotorBackTemp =
-			Shuffleboard.getTab("Intake")
-					.add("Back Intake temp", 0)
-					.withSize(1, 1)
-					.withWidget(BuiltInWidgets.kTextView)
-					.getEntry();
-
-	private final GenericEntry intakeMotorLeftTemp =
-			Shuffleboard.getTab("Intake")
-					.add("Left Intake temp", 0)
-					.withSize(1, 1)
-					.withWidget(BuiltInWidgets.kTextView)
-					.getEntry();
-
-	private final GenericEntry intakeMotorRightTemp =
-			Shuffleboard.getTab("Intake")
-					.add("Right Intake temp", 0)
-					.withSize(1, 1)
-					.withWidget(BuiltInWidgets.kTextView)
-					.getEntry();
-
-	private final GenericEntry indexMotorUpperTemp =
-			Shuffleboard.getTab("Intake")
-					.add("Upper Index temp", 0)
-					.withSize(1, 1)
-					.withWidget(BuiltInWidgets.kTextView)
-					.getEntry();
-
-	private final GenericEntry ingestMotorTemp =
-			Shuffleboard.getTab("Intake")
-					.add("Ingest temp", 0)
-					.withSize(1, 1)
-					.withWidget(BuiltInWidgets.kTextView)
-					.getEntry();
-
-	private final GenericEntry feederMotorTemp =
-			Shuffleboard.getTab("Intake")
-					.add("Feeder temp", 0)
-					.withSize(1, 1)
-					.withWidget(BuiltInWidgets.kTextView)
-					.getEntry();
+	private GenericEntry setFeederInSpeedEntry;
 
 	// sensor override
-	private final GenericEntry sensorOverride =
-			Shuffleboard.getTab("Intake")
-					.add("Override Sensors", false)
-					.withSize(1, 1)
-					.withWidget(BuiltInWidgets.kToggleSwitch)
-					.getEntry();
+	private GenericEntry sensorOverride;
 
 	// reject override
-	private final GenericEntry rejectOverride =
-			Shuffleboard.getTab("Intake")
-					.add("Override Intake Reject", false)
-					.withSize(1, 1)
-					.withWidget(BuiltInWidgets.kToggleSwitch)
-					.getEntry();
+	private GenericEntry rejectOverride;
 
 	public IntakeSubsystem() {
 
@@ -169,14 +99,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
 		resetMotors();
 
-		// show if sensors have notes in shuffleboard
-		ShuffleboardTab shuffleboardTab = Shuffleboard.getTab("Intake");
-		shuffleboardTab.addBoolean("Index Sensor - ", this::indexSensorHasNote).withSize(1, 1);
-		shuffleboardTab.addBoolean("Feeder Sensor - ", this::feederSensorHasNote).withSize(1, 1);
-		// intake back sensor
-		shuffleboardTab.addBoolean("Intake Front Sensor - ", this::intakeFrontSeesNote).withSize(1, 1);
-		shuffleboardTab.addBoolean("Intake Left Sensor - ", this::intakeLeftSeesNote).withSize(1, 1);
-		shuffleboardTab.addBoolean("Intake Right Sensor - ", this::intakeRightSeesNote).withSize(1, 1);
+		initShuffleboard();
 	}
 
 	private void configureMotor(CANSparkBase motor, int currentLimit, boolean invert) {
@@ -198,9 +121,13 @@ public class IntakeSubsystem extends SubsystemBase {
 		configureMotor(intakeMotorRight, true);
 
 		configureMotor(ingestMotor, false);
-		configureMotor(indexMotorUpper, 40, true);
+		configureMotor(indexMotorUpper, 40, false);
 
-		configureMotor(feederMotor, 40, true);
+		configureMotor(feederMotor, 40, false);
+		indexMotorUpper
+				.getForwardLimitSwitch(com.revrobotics.SparkLimitSwitch.Type.kNormallyOpen)
+				.enableLimitSwitch(false);
+		indexMotorUpper.burnFlash();
 	}
 
 	public void intakeSet(double speed) {
@@ -323,18 +250,73 @@ public class IntakeSubsystem extends SubsystemBase {
 	public boolean getRejectOverride() {
 		return rejectOverride.getBoolean(false);
 	}
+	
+	// logging
+	public void initShuffleboard() {
+		if (Robot.isDebugMode()) {
+			shuffleboardTab
+					.addDouble("Front Intake Motor Temp", () -> intakeMotorFront.getMotorTemperature())
+					.withSize(1, 1)
+					.withWidget(BuiltInWidgets.kTextView);
+			shuffleboardTab
+					.addDouble("Back Intake Motor Temp", () -> intakeMotorBack.getMotorTemperature())
+					.withSize(1, 1)
+					.withWidget(BuiltInWidgets.kTextView);
+			shuffleboardTab
+					.addDouble("Left Intake Motor Temp", () -> intakeMotorLeft.getMotorTemperature())
+					.withSize(1, 1)
+					.withWidget(BuiltInWidgets.kTextView);
+			shuffleboardTab
+					.addDouble("Right Intake Motor Temp", () -> intakeMotorRight.getMotorTemperature())
+					.withSize(1, 1)
+					.withWidget(BuiltInWidgets.kTextView);
+			shuffleboardTab
+					.addDouble("Ingest Motor Temp", () -> ingestMotor.getMotorTemperature())
+					.withSize(1, 1)
+					.withWidget(BuiltInWidgets.kTextView);
+			shuffleboardTab
+					.addDouble("Index Motor Temp", () -> indexMotorUpper.getMotorTemperature())
+					.withSize(1, 1)
+					.withWidget(BuiltInWidgets.kTextView);
+			shuffleboardTab
+					.addDouble("Feeder Motor Temp", () -> feederMotor.getMotorTemperature())
+					.withSize(1, 1)
+					.withWidget(BuiltInWidgets.kTextView);
+		}
 
-	@Override
-	public void periodic() {
-		intakeMotorFrontTemp.setDouble(intakeMotorFront.getMotorTemperature());
-		intakeMotorBackTemp.setDouble(intakeMotorBack.getMotorTemperature());
-		intakeMotorRightTemp.setDouble(intakeMotorRight.getMotorTemperature());
-		intakeMotorLeftTemp.setDouble(intakeMotorLeft.getMotorTemperature());
+		shuffleboardTab.addBoolean("Index Sensor - ", this::indexSensorHasNote).withSize(1, 1);
+		shuffleboardTab.addBoolean("Feeder Sensor - ", this::feederSensorHasNote).withSize(1, 1);
 
-		ingestMotorTemp.setDouble(ingestMotor.getMotorTemperature());
+		// no intake back sensor
+		shuffleboardTab.addBoolean("Intake Front Sensor - ", this::intakeFrontSeesNote).withSize(1, 1);
+		shuffleboardTab.addBoolean("Intake Left Sensor - ", this::intakeLeftSeesNote).withSize(1, 1);
+		shuffleboardTab.addBoolean("Intake Right Sensor - ", this::intakeRightSeesNote).withSize(1, 1);
+		
+		setIntakeInSpeedEntry =
+				shuffleboardTab
+						.addPersistent("Intake in speed - ", INTAKE_IN_SPEED)
+						.withSize(2, 1)
+						.withProperties(Map.of("Min", -1, "Max", 1))
+						.getEntry();
 
-		indexMotorUpperTemp.setDouble(indexMotorUpper.getMotorTemperature());
+		setIndexInSpeedEntry =
+				shuffleboardTab.add("Index in speed - ", INDEX_UPPER_IN_SPEED).withSize(1, 1).getEntry();
 
-		feederMotorTemp.setDouble(feederMotor.getMotorTemperature());
+		setFeederInSpeedEntry =
+				shuffleboardTab.add("Feeder in speed - ", FEEDER_IN_SPEED).withSize(1, 1).getEntry();
+
+		sensorOverride =
+				Shuffleboard.getTab("Intake")
+						.add("Override Sensors", false)
+						.withSize(1, 1)
+						.withWidget(BuiltInWidgets.kToggleSwitch)
+						.getEntry();
+
+		rejectOverride =
+				Shuffleboard.getTab("Intake")
+						.add("Override Intake Reject", false)
+						.withSize(1, 1)
+						.withWidget(BuiltInWidgets.kToggleSwitch)
+						.getEntry();
 	}
 }

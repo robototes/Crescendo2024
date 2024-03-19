@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.team2412.robot.commands.intake.AllInCommand;
 import frc.team2412.robot.commands.intake.AllReverseCommand;
 import frc.team2412.robot.commands.intake.AllStopCommand;
@@ -21,10 +22,12 @@ import frc.team2412.robot.commands.intake.FeederInCommand;
 import frc.team2412.robot.commands.intake.IntakeRejectCommand;
 import frc.team2412.robot.commands.intake.RumbleCommand;
 import frc.team2412.robot.commands.launcher.FullTargetCommand;
+import frc.team2412.robot.commands.launcher.ManualAngleCommand;
 import frc.team2412.robot.commands.launcher.SetAngleAmpLaunchCommand;
-import frc.team2412.robot.commands.launcher.SetAngleCommand;
 import frc.team2412.robot.commands.launcher.SetAngleLaunchCommand;
+import frc.team2412.robot.commands.launcher.SetPivotCommand;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
+import frc.team2412.robot.util.TrapAlign;
 
 public class Controls {
 	public static class ControlConstants {
@@ -47,8 +50,9 @@ public class Controls {
 	// Launcher
 	private final Trigger launcherAmpPresetButton;
 	private final Trigger launcherSubwooferPresetButton;
+	private final Trigger launcherLowerPresetButton;
 	// private final Trigger launcherPodiumPresetButton;
-	// private final Trigger launcherTrapPresetButton;
+	private final Trigger launcherTrapPresetButton;
 	private final Trigger launcherLaunchButton;
 
 	private final Subsystems s;
@@ -60,9 +64,10 @@ public class Controls {
 
 		launcherAmpPresetButton = codriveController.x();
 		launcherSubwooferPresetButton = codriveController.a();
+		launcherLowerPresetButton = codriveController.y();
 		// launcherPodiumPresetButton = codriveController.povLeft();
-		// launcherTrapPresetButton = codriveController.y();
-		launcherLaunchButton = codriveController.leftBumper();
+		launcherTrapPresetButton = codriveController.rightTrigger();
+		launcherLaunchButton = codriveController.rightBumper();
 		// intake controls (confirmed with driveteam)
 		driveIntakeInButton = driveController.a();
 		driveIntakeStopButton = driveController.b();
@@ -73,6 +78,10 @@ public class Controls {
 		codriveIntakeReverseButton = codriveController.povLeft();
 		codriveIntakeRejectButton = codriveController.povDown();
 
+		if (Robot.isSysIdMode() && LAUNCHER_ENABLED) {
+			bindSysIdControls();
+			return;
+		}
 		if (DRIVEBASE_ENABLED) {
 			bindDrivebaseControls();
 		}
@@ -110,7 +119,7 @@ public class Controls {
 								() -> Rotation2d.fromRotations(driveController.getRightX())));
 		driveController.start().onTrue(new InstantCommand(s.drivebaseSubsystem::resetGyro));
 		driveController.rightStick().onTrue(new InstantCommand(s.drivebaseSubsystem::toggleXWheels));
-		// driveController
+		// driveController		x
 		// 		.back()
 		// 		.onTrue(
 		// 				new InstantCommand(
@@ -142,12 +151,14 @@ public class Controls {
 		CommandScheduler.getInstance()
 				.setDefaultCommand(
 						s.launcherSubsystem,
-						new SetAngleCommand(
+						new ManualAngleCommand(
 								s.launcherSubsystem,
 								() ->
 										MathUtil.applyDeadband(codriveController.getLeftY(), 0.1)
 												* LauncherSubsystem.ANGLE_MAX_SPEED));
 
+		launcherLowerPresetButton.onTrue(
+				new SetPivotCommand(s.launcherSubsystem, LauncherSubsystem.RETRACTED_ANGLE));
 		launcherSubwooferPresetButton.onTrue(
 				new SetAngleLaunchCommand(
 						s.launcherSubsystem,
@@ -163,8 +174,8 @@ public class Controls {
 						s.launcherSubsystem,
 						LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
 						LauncherSubsystem.AMP_AIM_ANGLE));
-		// launcherTrapPresetButton.onTrue(
-		//		TrapAlign.trapPreset(s.drivebaseSubsystem, s.launcherSubsystem));
+		launcherTrapPresetButton.onTrue(
+				TrapAlign.trapPreset(s.drivebaseSubsystem, s.launcherSubsystem));
 
 		codriveController.b().whileTrue(s.launcherSubsystem.run(s.launcherSubsystem::stopLauncher));
 
@@ -175,6 +186,28 @@ public class Controls {
 		// 						s.launcherSubsystem::launch, s.launcherSubsystem::stopLauncher));
 
 		driveController.b().onTrue(new InstantCommand(() -> s.launcherSubsystem.launch(4000)));
+	}
+
+	private void bindSysIdControls() {
+		// only one routine can be run in one robot log
+		// switch these between arm and flywheel in code when tuning
+		driveController
+				.leftBumper()
+				.whileTrue(s.launcherSubsystem.armSysIdQuasistatic(Direction.kForward));
+		driveController
+				.rightBumper()
+				.whileTrue(s.launcherSubsystem.armSysIdQuasistatic(Direction.kReverse));
+		driveController
+				.leftTrigger()
+				.whileTrue(s.launcherSubsystem.armSysIdDynamic(Direction.kForward));
+		driveController
+				.rightTrigger()
+				.whileTrue(s.launcherSubsystem.armSysIdDynamic(Direction.kReverse));
+		// switch these between angle and drive tests in code when tuning
+		driveController.x().whileTrue(s.drivebaseSubsystem.driveSysIdQuasistatic(Direction.kForward));
+		driveController.y().whileTrue(s.drivebaseSubsystem.driveSysIdQuasistatic(Direction.kReverse));
+		driveController.a().whileTrue(s.drivebaseSubsystem.driveSysIdDynamic(Direction.kForward));
+		driveController.b().whileTrue(s.drivebaseSubsystem.driveSysIdDynamic(Direction.kReverse));
 	}
 
 	public void vibrateDriveController(double vibration) {
