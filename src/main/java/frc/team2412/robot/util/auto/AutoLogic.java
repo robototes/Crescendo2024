@@ -6,6 +6,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -135,6 +136,7 @@ public class AutoLogic {
 					new WaitCommand(1.5),
 					new InstantCommand(() -> controls.vibrateDriveController(0.0)));
 
+	// shuffleboard
 	private static ShuffleboardTab tab = Shuffleboard.getTab("Match");
 
 	private static SendableChooser<StartPosition> startPositionChooser =
@@ -143,6 +145,8 @@ public class AutoLogic {
 			new DynamicSendableChooser<AutoPath>();
 	private static SendableChooser<Integer> gameObjects = new SendableChooser<Integer>();
 	private static SendableChooser<Boolean> isVision = new SendableChooser<Boolean>();
+
+	private static GenericEntry autoDelayEntry;
 
 	// methods
 
@@ -227,6 +231,7 @@ public class AutoLogic {
 		tab.add("Launch Type", isVision).withPosition(8, 1);
 		tab.add("Game Objects", gameObjects).withPosition(9, 1);
 		tab.add("Available Auto Variants", availableAutos).withPosition(8, 2).withSize(2, 1);
+		autoDelayEntry = tab.add("Auto Delay", 0).withPosition(8, 3).withSize(1, 1).getEntry();
 
 		isVision.onChange(AutoLogic::filterAutos);
 		startPositionChooser.onChange(AutoLogic::filterAutos);
@@ -262,7 +267,11 @@ public class AutoLogic {
 		filterAutos(gameObjects.getSelected());
 	}
 
-	public static Command getSelected() {
-		return availableAutos.getSelected().getAutoCommand();
+	// get auto
+
+	public static Command getSelectedAuto() {
+		return Commands.sequence(
+				Commands.waitSeconds(autoDelayEntry.getDouble(0)),
+				availableAutos.getSelected().getAutoCommand());
 	}
 }

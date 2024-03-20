@@ -139,8 +139,8 @@ public class Robot extends TimedRobot {
 		// Checks if FMS is attatched and enables joystick warning if true
 		DriverStation.silenceJoystickConnectionWarning(!DriverStation.isFMSAttached());
 		// System.out.println(AutoLogic.getSelected() != null);
-		if (AutoLogic.getSelected() != null) {
-			AutoLogic.getSelected().schedule();
+		if (AutoLogic.getSelectedAuto() != null) {
+			AutoLogic.getSelectedAuto().schedule();
 		}
 	}
 
