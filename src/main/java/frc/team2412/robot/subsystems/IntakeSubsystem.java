@@ -36,7 +36,6 @@ public class IntakeSubsystem extends SubsystemBase {
 
 	// Motors
 	private final CANSparkMax intakeMotorFront;
-	private final CANSparkMax intakeMotorBack;
 	private final CANSparkMax intakeMotorLeft;
 	private final CANSparkMax intakeMotorRight;
 
@@ -73,7 +72,6 @@ public class IntakeSubsystem extends SubsystemBase {
 	public IntakeSubsystem() {
 
 		intakeMotorFront = new CANSparkMax(INTAKE_MOTOR_FRONT, MotorType.kBrushless);
-		intakeMotorBack = new CANSparkMax(INTAKE_MOTOR_BACK, MotorType.kBrushless);
 		intakeMotorLeft = new CANSparkMax(INTAKE_MOTOR_LEFT, MotorType.kBrushless);
 		intakeMotorRight = new CANSparkMax(INTAKE_MOTOR_RIGHT, MotorType.kBrushless);
 
@@ -123,7 +121,6 @@ public class IntakeSubsystem extends SubsystemBase {
 
 	private void resetMotors() {
 		configureMotor(intakeMotorFront, true);
-		configureMotor(intakeMotorBack, true);
 		configureMotor(intakeMotorLeft, true);
 		configureMotor(intakeMotorRight, true);
 
@@ -139,8 +136,6 @@ public class IntakeSubsystem extends SubsystemBase {
 		intakeMotorFront.set(speed);
 		intakeMotorLeft.set(speed);
 		intakeMotorRight.set(speed);
-		intakeMotorBack.set(speed);
-
 		ingestMotor.set(speed);
 	}
 
@@ -162,10 +157,6 @@ public class IntakeSubsystem extends SubsystemBase {
 		intakeMotorFront.set(0);
 	}
 
-	public void intakeBackStop() {
-		intakeMotorBack.set(0);
-	}
-
 	public void intakeLeftStop() {
 		intakeMotorLeft.set(0);
 	}
@@ -181,10 +172,6 @@ public class IntakeSubsystem extends SubsystemBase {
 
 	public void intakeFrontReject() {
 		intakeMotorFront.set(INTAKE_REJECT_SPEED);
-	}
-
-	public void intakeBackReject() {
-		intakeMotorBack.set(INTAKE_REJECT_SPEED);
 	}
 
 	public void intakeLeftReject() {
@@ -261,10 +248,6 @@ public class IntakeSubsystem extends SubsystemBase {
 		if (Robot.isDebugMode()) {
 			shuffleboardTab
 					.addDouble("Front Intake Motor Temp", () -> intakeMotorFront.getMotorTemperature())
-					.withSize(1, 1)
-					.withWidget(BuiltInWidgets.kTextView);
-			shuffleboardTab
-					.addDouble("Back Intake Motor Temp", () -> intakeMotorBack.getMotorTemperature())
 					.withSize(1, 1)
 					.withWidget(BuiltInWidgets.kTextView);
 			shuffleboardTab

@@ -219,10 +219,10 @@ public class LauncherSubsystem extends SubsystemBase {
 	public void setAngle(double launcherAngle) {
 		angleSetpoint = launcherAngle;
 		launcherAngleOnePIDController.setReference(
-				Units.degreesToRotations(angleSetpoint),
+				angleSetpoint,
 				ControlType.kPosition,
 				0,
-				launcherPivotFF.calculate(Units.degreesToRadians(launcherAngle - FF_PIVOT_OFFSET), 0));
+				launcherPivotFF.calculate(Units.rotationsToRadians(launcherAngle - FF_PIVOT_OFFSET), 0));
 		manualAngleSetpoint = launcherAngle;
 		// launcherAngleTwoPIDController.setReference(
 		//		Units.degreesToRotations(angleSetpoint), ControlType.kPosition);
