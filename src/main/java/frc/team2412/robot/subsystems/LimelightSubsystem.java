@@ -1,9 +1,5 @@
 package frc.team2412.robot.subsystems;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -102,7 +98,7 @@ public class LimelightSubsystem extends SubsystemBase {
 			return 0.0;
 		}
 	}
-	
+
 	public String getCurrentPoseString() {
 		return currentPoseString;
 	}
