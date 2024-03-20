@@ -5,21 +5,19 @@ import frc.team2412.robot.subsystems.LauncherSubsystem;
 import java.util.function.DoubleSupplier;
 // this command adjusts the angle using a speed that is input by the user
 
-public class SetAngleCommand extends Command {
+public class ManualAngleCommand extends Command {
 	private final LauncherSubsystem launcherSubsystem;
-	private final DoubleSupplier launcherAngleSpeed;
+	private final DoubleSupplier launcherAngle;
 
-	public SetAngleCommand(LauncherSubsystem launcherSubsystem, DoubleSupplier angleSpeed) {
+	public ManualAngleCommand(LauncherSubsystem launcherSubsystem, DoubleSupplier angleSpeed) {
 		this.launcherSubsystem = launcherSubsystem;
-		this.launcherAngleSpeed = angleSpeed;
+		this.launcherAngle = angleSpeed;
 		addRequirements(launcherSubsystem);
 	}
 
 	@Override
 	public void execute() {
-		if (launcherAngleSpeed.getAsDouble() != 0.0) {
-			launcherSubsystem.setAngleSpeed(launcherAngleSpeed.getAsDouble());
-		}
+		launcherSubsystem.setAngleManual(launcherAngle.getAsDouble());
 	}
 
 	@Override

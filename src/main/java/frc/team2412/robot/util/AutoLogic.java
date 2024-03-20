@@ -52,7 +52,7 @@ public class AutoLogic {
 
 		// Intake
 		NamedCommands.registerCommand("StopIntake", new IntakeStopCommand(s.intakeSubsystem));
-		NamedCommands.registerCommand("Intake", new AllInCommand(s.intakeSubsystem));
+		NamedCommands.registerCommand("Intake", new AllInCommand(s.intakeSubsystem, null));
 		NamedCommands.registerCommand(
 				"IntakeSensorOverride", new AllInSensorOverrideCommand(s.intakeSubsystem));
 		// Launcher
@@ -74,14 +74,13 @@ public class AutoLogic {
 		NamedCommands.registerCommand(
 				"RetractPivot",
 				new SetAngleLaunchCommand(s.launcherSubsystem, 0, 0)); // TODO: add retract angle
-
 		// Complex Autos
 		NamedCommands.registerCommand("AutoLogicTest", AutoPaths.testAuto);
 		NamedCommands.registerCommand(
 				"MidSpeakerCenterLineN5N4N3", AutoPaths.midSpeakerCenterLineN3N2N1);
 		NamedCommands.registerCommand(
 				"LowSpeakerCenterLineN5N4N3", AutoPaths.lowSpeakerCenterLineN5N4N3);
-		NamedCommands.registerCommand("LowSpeakerCenterLineN5N4N3", AutoPaths.lowSpeakerCenterLineN5N4);
+		NamedCommands.registerCommand("LowSpeakerCenterLineN5N4", AutoPaths.lowSpeakerCenterLineN5N4);
 		NamedCommands.registerCommand(
 				"TopSpeakerCenterLineN1N2AutoLine1", AutoPaths.TopSpeakerCenterLineN1N2AutoLine1);
 		NamedCommands.registerCommand(
