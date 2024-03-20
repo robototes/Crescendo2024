@@ -24,7 +24,7 @@ public class DriveToNoteCommand extends Command {
 
 	@Override
 	public void execute() {
-		if(limelightSubsystem.hasTargets()){
+		if (limelightSubsystem.hasTargets()) {
 			Translation2d move =
 					new Translation2d(
 							INVERT_DRIVE_DIRECTION

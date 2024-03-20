@@ -102,9 +102,9 @@ public class LimelightSubsystem extends SubsystemBase {
 
 		// distance = (W x F) / P
 		// returns inches for testing purposes, will divide by 39.3700787 to return meters
-		if(hasTargets()){
+		if (hasTargets()) {
 			return (14 * focal_length) / getBoxWidth();
-		}else{
+		} else {
 			return 0.0;
 		}
 	}
