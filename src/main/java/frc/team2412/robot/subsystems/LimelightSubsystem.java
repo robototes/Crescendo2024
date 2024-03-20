@@ -23,7 +23,6 @@ public class LimelightSubsystem extends SubsystemBase {
 	final NetworkTable networkTable;
 
 	String currentPoseString;
-	String targetPoseString;
 
 	// network tables
 
@@ -34,7 +33,6 @@ public class LimelightSubsystem extends SubsystemBase {
 
 		// logging
 		currentPoseString = "";
-		targetPoseString = "";
 
 		networkTable = NetworkTableInstance.getDefault().getTable("limelight");
 		ShuffleboardTab limelightTab = Shuffleboard.getTab("Limelight");
@@ -58,10 +56,6 @@ public class LimelightSubsystem extends SubsystemBase {
 		limelightTab
 				.addString("Current Pose ", this::getCurrentPoseString)
 				.withPosition(0, 1)
-				.withSize(4, 1);
-		limelightTab
-				.addString("Target Pose ", this::getTargetPoseString)
-				.withPosition(0, 2)
 				.withSize(4, 1);
 		GOAL_DISTANCE_FROM_NOTE =
 				limelightTab
@@ -108,36 +102,9 @@ public class LimelightSubsystem extends SubsystemBase {
 			return 0.0;
 		}
 	}
-	// tan(degree) * distance = sideways distance
-
-	// target height / tan(vertical angle)
-
-	public Pose2d getTargetPose(Pose2d currentPose) {
-
-		// math thing to get target pose using current pose
-
-		Rotation2d targetHeading =
-				new Rotation2d(
-						currentPose.getRotation().getRadians() + Units.degreesToRadians(getHorizontalOffset()));
-
-		double targetDistance = Units.inchesToMeters(getDistanceFromTargetInches());
-
-		Translation2d translationOffset = new Translation2d(targetDistance, targetHeading);
-		Pose2d targetPose =
-				new Pose2d(currentPose.getTranslation().plus(translationOffset), targetHeading);
-
-		currentPoseString = currentPose.toString();
-		targetPoseString = targetPose.toString();
-
-		return targetPose;
-	}
-
+	
 	public String getCurrentPoseString() {
 		return currentPoseString;
-	}
-
-	public String getTargetPoseString() {
-		return targetPoseString;
 	}
 
 	public boolean isWithinDistance() {
