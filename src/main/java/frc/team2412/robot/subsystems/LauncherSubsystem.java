@@ -346,9 +346,12 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherAngleManual.setDouble(manualAngleSetpoint);
 
 		// sanity check the pivot encoder
-		if (launcherAngleEncoder.getPosition() >= PIVOT_SOFTSTOP_FORWARD + PIVOT_DISABLE_OFFSET || launcherAngleEncoder.getPosition() <= PIVOT_SOFTSTOP_BACKWARD - PIVOT_DISABLE_OFFSET) {
+		if (launcherAngleEncoder.getPosition() >= PIVOT_SOFTSTOP_FORWARD + PIVOT_DISABLE_OFFSET
+				|| launcherAngleEncoder.getPosition() <= PIVOT_SOFTSTOP_BACKWARD - PIVOT_DISABLE_OFFSET) {
 			launcherAngleOneMotor.disable();
-			DriverStation.reportError("Launcher encoder angle is insane!!!! Reports angle of " + getAngle() + " degrees.", true);
+			DriverStation.reportError(
+					"Launcher encoder angle is insane!!!! Reports angle of " + getAngle() + " degrees.",
+					true);
 		}
 	}
 
