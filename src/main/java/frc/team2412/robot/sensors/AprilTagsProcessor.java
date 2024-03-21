@@ -51,14 +51,6 @@ public class AprilTagsProcessor {
 	// TODO Measure these
 	private static final Vector<N3> STANDARD_DEVS = VecBuilder.fill(1, 1, Units.degreesToRadians(30));
 
-	private static PhotonPipelineResult copy(PhotonPipelineResult result) {
-		var copy =
-				new PhotonPipelineResult(
-						result.getLatencyMillis(), result.targets, result.getMultiTagResult());
-		copy.setTimestampSeconds(result.getTimestampSeconds());
-		return copy;
-	}
-
 	private static final double MAX_POSE_AMBIGUITY = 0.1;
 
 	// Radians
@@ -72,39 +64,16 @@ public class AprilTagsProcessor {
 				&& (Math.abs(robotToTargetRotation.getY()) < ROBOT_TO_TARGET_PITCH_TOLERANCE);
 	}
 
-	private static PhotonTrackedTarget swapBestAndAltTransforms(PhotonTrackedTarget target) {
-		return new PhotonTrackedTarget(
-				target.getYaw(),
-				target.getPitch(),
-				target.getArea(),
-				target.getSkew(),
-				target.getFiducialId(),
-				target.getAlternateCameraToTarget(), // Swap
-				target.getBestCameraToTarget(),
-				target.getPoseAmbiguity(),
-				target.getMinAreaRectCorners(),
-				target.getDetectedCorners());
-	}
-
-	private static PhotonPipelineResult filteredPipelineResult(PhotonPipelineResult result) {
-		var copy = copy(result);
-		for (int i = copy.targets.size() - 1; i >= 0; --i) {
-			var target = copy.targets.get(i);
+	private static boolean resultIsValid(PhotonPipelineResult result) {
+		for (var target : result.targets) {
 			if (target.getPoseAmbiguity() > MAX_POSE_AMBIGUITY) {
-				copy.targets.remove(i);
-				continue;
+				return false;
 			}
 			if (!hasValidRotation(target.getBestCameraToTarget())) {
-				if (hasValidRotation(target.getAlternateCameraToTarget())) {
-					target = swapBestAndAltTransforms(target);
-					copy.targets.set(i, target);
-				} else {
-					copy.targets.remove(i);
-					continue;
-				}
+				return false;
 			}
 		}
-		return copy;
+		return true;
 	}
 
 	private final PhotonCamera photonCamera;
@@ -115,7 +84,9 @@ public class AprilTagsProcessor {
 	// These are always set with every pipeline result
 	private double lastRawTimestampSeconds = 0;
 	private PhotonPipelineResult latestResult = null;
-	private PhotonPipelineResult latestFilteredResult = null;
+	private boolean latestResultIsValid = false;
+
+	// This is set for every non-filtered pipeline result
 	private Optional<EstimatedRobotPose> latestPose = Optional.empty();
 
 	// These are only set when there's a valid pose
@@ -138,7 +109,7 @@ public class AprilTagsProcessor {
 		photonCamera = new PhotonCamera(Hardware.PHOTON_CAM);
 		photonPoseEstimator =
 				new PhotonPoseEstimator(
-						fieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_RIO, photonCamera, ROBOT_TO_CAM);
+						fieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, photonCamera, ROBOT_TO_CAM);
 
 		photonPoseEstimator.setLastPose(aprilTagsHelper.getEstimatedPosition());
 		photonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.CLOSEST_TO_LAST_POSE);
@@ -157,20 +128,16 @@ public class AprilTagsProcessor {
 				.withPosition(0, 0)
 				.withSize(1, 1);
 		shuffleboardTab
-				.addInteger("Raw num targets", this::getRawNumTargets)
+				.addInteger("Num targets", this::getNumTargets)
 				.withPosition(0, 1)
-				.withSize(1, 1);
-		shuffleboardTab
-				.addInteger("Filtered num targets", this::getFilteredNumTargets)
-				.withPosition(1, 1)
-				.withSize(1, 1);
-		shuffleboardTab
-				.addBoolean("Has valid targets", this::hasTargets)
-				.withPosition(1, 2)
 				.withSize(1, 1);
 		shuffleboardTab
 				.addDouble("Last timestamp", this::getLastValidTimestampSeconds)
 				.withPosition(1, 0)
+				.withSize(1, 1);
+		shuffleboardTab
+				.addBoolean("Has valid targets", this::hasTargets)
+				.withPosition(1, 1)
 				.withSize(1, 1);
 		shuffleboardTab
 				.add("3d pose on field", new SendablePose3d(this::getRobotPose))
@@ -180,9 +147,12 @@ public class AprilTagsProcessor {
 
 	public void update() {
 		latestResult = photonCamera.getLatestResult();
-		latestFilteredResult = filteredPipelineResult(latestResult);
+		latestResultIsValid = resultIsValid(latestResult);
 		lastRawTimestampSeconds = latestResult.getTimestampSeconds();
-		latestPose = photonPoseEstimator.update(latestFilteredResult);
+		if (!latestResultIsValid) {
+			return;
+		}
+		latestPose = photonPoseEstimator.update(latestResult);
 		if (latestPose.isPresent()) {
 			lastValidTimestampSeconds = latestPose.get().timestampSeconds;
 			lastFieldPose = latestPose.get().estimatedPose.toPose2d();
@@ -204,12 +174,8 @@ public class AprilTagsProcessor {
 		return lastRawTimestampSeconds;
 	}
 
-	public int getRawNumTargets() {
+	public int getNumTargets() {
 		return latestResult == null ? -1 : latestResult.getTargets().size();
-	}
-
-	public int getFilteredNumTargets() {
-		return latestFilteredResult == null ? -1 : latestFilteredResult.getTargets().size();
 	}
 
 	public boolean hasTargets() {
