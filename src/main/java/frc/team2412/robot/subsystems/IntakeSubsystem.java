@@ -272,6 +272,13 @@ public class IntakeSubsystem extends SubsystemBase {
 					.withWidget(BuiltInWidgets.kTextView);
 		}
 
+		sensorOverride =
+				Shuffleboard.getTab("Intake")
+						.add("Override Sensors", false)
+						.withSize(1, 1)
+						.withWidget(BuiltInWidgets.kToggleSwitch)
+						.getEntry();
+
 		shuffleboardTab.addBoolean("Index Sensor - ", this::indexSensorHasNote).withSize(1, 1);
 		shuffleboardTab.addBoolean("Feeder Sensor - ", this::feederSensorHasNote).withSize(1, 1);
 
@@ -292,13 +299,6 @@ public class IntakeSubsystem extends SubsystemBase {
 
 		setFeederInSpeedEntry =
 				shuffleboardTab.add("Feeder in speed - ", FEEDER_IN_SPEED).withSize(1, 1).getEntry();
-
-		sensorOverride =
-				Shuffleboard.getTab("Intake")
-						.add("Override Sensors", false)
-						.withSize(1, 1)
-						.withWidget(BuiltInWidgets.kToggleSwitch)
-						.getEntry();
 
 		rejectOverride =
 				Shuffleboard.getTab("Intake")

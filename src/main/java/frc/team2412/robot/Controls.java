@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.team2412.robot.commands.intake.AllInCommand;
 import frc.team2412.robot.commands.intake.AllReverseCommand;
 import frc.team2412.robot.commands.intake.AllStopCommand;
-import frc.team2412.robot.commands.intake.FeederInCommand;
+import frc.team2412.robot.commands.intake.FeederShootCommand;
 import frc.team2412.robot.commands.intake.IntakeRejectCommand;
 import frc.team2412.robot.commands.launcher.FullTargetCommand;
 import frc.team2412.robot.commands.launcher.ManualAngleCommand;
@@ -142,8 +142,8 @@ public class Controls {
 		codriveIntakeRejectButton.onTrue(new IntakeRejectCommand(s.intakeSubsystem));
 
 		// feeder shoot note out
-		launcherLaunchButton.whileTrue(new FeederInCommand(s.intakeSubsystem));
-		driveController.rightBumper().whileTrue(new FeederInCommand(s.intakeSubsystem));
+		launcherLaunchButton.whileTrue(new FeederShootCommand(s.intakeSubsystem));
+		driveController.rightBumper().whileTrue(new FeederShootCommand(s.intakeSubsystem));
 	}
 
 	private void bindLauncherControls() {
@@ -157,7 +157,7 @@ public class Controls {
 												* LauncherSubsystem.ANGLE_MAX_SPEED));
 
 		launcherLowerPresetButton.onTrue(
-				new SetPivotCommand(s.launcherSubsystem, LauncherSubsystem.RETRACTED_ANGLE));
+				s.launcherSubsystem.run(s.launcherSubsystem::stopLauncher).andThen(new SetPivotCommand(s.launcherSubsystem, LauncherSubsystem.RETRACTED_ANGLE)));
 		launcherSubwooferPresetButton.onTrue(
 				new SetAngleLaunchCommand(
 						s.launcherSubsystem,
@@ -192,16 +192,16 @@ public class Controls {
 		// switch these between arm and flywheel in code when tuning
 		driveController
 				.leftBumper()
-				.whileTrue(s.launcherSubsystem.armSysIdQuasistatic(Direction.kForward));
+				.whileTrue(s.launcherSubsystem.flywheelSysIdQuasistatic(Direction.kForward));
 		driveController
 				.rightBumper()
-				.whileTrue(s.launcherSubsystem.armSysIdQuasistatic(Direction.kReverse));
+				.whileTrue(s.launcherSubsystem.flywheelSysIdQuasistatic(Direction.kReverse));
 		driveController
 				.leftTrigger()
-				.whileTrue(s.launcherSubsystem.armSysIdDynamic(Direction.kForward));
+				.whileTrue(s.launcherSubsystem.flywheelSysIdDynamic(Direction.kForward));
 		driveController
 				.rightTrigger()
-				.whileTrue(s.launcherSubsystem.armSysIdDynamic(Direction.kReverse));
+				.whileTrue(s.launcherSubsystem.flywheelSysIdDynamic(Direction.kReverse));
 		// switch these between angle and drive tests in code when tuning
 		driveController.x().whileTrue(s.drivebaseSubsystem.driveSysIdQuasistatic(Direction.kForward));
 		driveController.y().whileTrue(s.drivebaseSubsystem.driveSysIdQuasistatic(Direction.kReverse));

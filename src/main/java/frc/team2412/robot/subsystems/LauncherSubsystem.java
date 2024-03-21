@@ -35,18 +35,18 @@ public class LauncherSubsystem extends SubsystemBase {
 
 	// HARDWARE
 	private static final double PIVOT_GEARING_RATIO = 1.0 / 180.0;
-	private static final float PIVOT_SOFTSTOP_FORWARD = 0.97f;
-	private static final float PIVOT_SOFTSTOP_BACKWARD = 0.82f;
+	private static final float PIVOT_SOFTSTOP_FORWARD = 0.84f;
+	private static final float PIVOT_SOFTSTOP_BACKWARD = 0.635f;
 	private static final float PIVOT_DISABLE_OFFSET = 0.04f;
 	// ANGLE VALUES
-	public static final int AMP_AIM_ANGLE = 335;
-	public static final int SUBWOOFER_AIM_ANGLE = 298;
-	public static final int PODIUM_AIM_ANGLE = 39;
+	public static final int AMP_AIM_ANGLE = 288;
+	public static final int SUBWOOFER_AIM_ANGLE = 252;
+	public static final int PODIUM_AIM_ANGLE = 238;
 	public static final int TRAP_AIM_ANGLE = 317;
 	public static final double MANUAL_MODIFIER = 0.02;
-	public static final double RETRACTED_ANGLE = 255;
+	public static final double RETRACTED_ANGLE = 230;
 	// offset for FF so parallel to floor is 0
-	public static final double FF_PIVOT_OFFSET = 250;
+	public static final double FF_PIVOT_OFFSET = 225;
 
 	// MOTOR VALUES
 	// max Free Speed: 6784 RPM
@@ -54,8 +54,8 @@ public class LauncherSubsystem extends SubsystemBase {
 	public static final double ANGLE_TOLERANCE = 5;
 	public static final double RPM_TOLERANCE = 200;
 	// RPM
-	public static final int SPEAKER_SHOOT_SPEED_RPM = 3850;
-	public static final int TRAP_SHOOT_SPEED_RPM = 4000;
+	public static final int SPEAKER_SHOOT_SPEED_RPM = 1500;
+	public static final int TRAP_SHOOT_SPEED_RPM = 3300;
 	public static final double ANGLE_MAX_SPEED = 0.2;
 	// 3392 RPM = 50% Speed
 	// 1356 RPM = 20% Speed
@@ -78,10 +78,10 @@ public class LauncherSubsystem extends SubsystemBase {
 	// Ka: 0.0056403
 	private final SparkPIDController launcherTopPIDController;
 	private final SparkPIDController launcherBottomPIDController;
-	private final SimpleMotorFeedforward launcherTopFeedforward =
-			new SimpleMotorFeedforward(0, 0.11335, 0.048325);
-	private final SimpleMotorFeedforward launcherBottomFeedforward =
-			new SimpleMotorFeedforward(0, 0.11238, 0.048209);
+	// private final SimpleMotorFeedforward launcherTopFeedforward =
+	// 		new SimpleMotorFeedforward(0, 0.11335, 0.048325);
+	// private final SimpleMotorFeedforward launcherBottomFeedforward =
+	// 		new SimpleMotorFeedforward(0, 0.11238, 0.048209);
 
 	private double rpmSetpoint;
 	private double angleSetpoint;
@@ -165,13 +165,13 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherAngleOnePIDController.setI(0);
 		launcherAngleOnePIDController.setD(0.066248);
 		launcherAngleOnePIDController.setOutputRange(-ANGLE_MAX_SPEED, ANGLE_MAX_SPEED);
-		launcherTopPIDController.setP(7.7633E-05);
+		launcherTopPIDController.setP(0.002);//7.7633E-05);
 		launcherTopPIDController.setI(0);
-		launcherTopPIDController.setD(0);
+		launcherTopPIDController.setD(0.001);
 
-		launcherBottomPIDController.setP(0.00011722);
+		launcherBottomPIDController.setP(0.002);//0.00011722);
 		launcherBottomPIDController.setI(0);
-		launcherBottomPIDController.setD(0);
+		launcherBottomPIDController.setD(0.001);
 
 		launcherAngleOneMotor.getEncoder().setPosition(launcherAngleEncoder.getPosition());
 		launcherAngleOneMotor.getEncoder().setPositionConversionFactor(PIVOT_GEARING_RATIO);
@@ -198,14 +198,14 @@ public class LauncherSubsystem extends SubsystemBase {
 	public void launch(double speed) {
 		rpmSetpoint = speed;
 		launcherTopPIDController.setReference(
-				rpmSetpoint, ControlType.kVelocity, 0, launcherTopFeedforward.calculate(speed));
+				rpmSetpoint, ControlType.kVelocity, 0);//launcherTopFeedforward.calculate(speed));
 		launcherBottomPIDController.setReference(
-				rpmSetpoint, ControlType.kVelocity, 0, launcherBottomFeedforward.calculate(speed));
+				rpmSetpoint, ControlType.kVelocity, 0);//launcherBottomFeedforward.calculate(speed));
 	}
 
 	public void ampLaunch(double speed) {
 		launcherTopPIDController.setReference(
-				-speed, ControlType.kVelocity, 0, launcherTopFeedforward.calculate(-speed));
+				-speed, ControlType.kVelocity, 0);//launcherTopFeedforward.calculate(-speed));
 		launcherBottomMotor.disable();
 	}
 
@@ -225,7 +225,7 @@ public class LauncherSubsystem extends SubsystemBase {
 				ControlType.kPosition,
 				0,
 				launcherPivotFF.calculate(Units.degreesToRadians(launcherAngle - FF_PIVOT_OFFSET), 0));
-		manualAngleSetpoint = launcherAngle;
+		manualAngleSetpoint = Units.degreesToRotations(launcherAngle);
 		// launcherAngleTwoPIDController.setReference(
 		//		Units.degreesToRotations(angleSetpoint), ControlType.kPosition);
 	}
@@ -268,10 +268,6 @@ public class LauncherSubsystem extends SubsystemBase {
 									Units.rotationsToDegrees(manualAngleSetpoint) - FF_PIVOT_OFFSET),
 							0));
 		}
-	}
-
-	public void manualSetpoint(double setpoint) {
-		manualAngleSetpoint = setpoint;
 	}
 
 	private void initShuffleboard() {
