@@ -3,6 +3,7 @@ package frc.team2412.robot.util.auto;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.path.PathPlannerTrajectory;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
@@ -28,6 +29,7 @@ import frc.team2412.robot.commands.launcher.StopLauncherCommand;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
 import frc.team2412.robot.util.DynamicSendableChooser;
 import frc.team2412.robot.util.PathPlannerAutos;
+import frc.team2412.robot.util.PathPlannerAutos.Auto;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -240,11 +242,11 @@ public class AutoLogic {
 		tab.add("Available Auto Variants", availableAutos).withPosition(7, 2).withSize(2, 1);
 		autoDelayEntry = tab.add("Auto Delay", 0).withPosition(7, 3).withSize(1, 1).getEntry();
 
-		isVision.onChange(AutoLogic::filterAutos);
-		startPositionChooser.onChange(AutoLogic::filterAutos);
-		gameObjects.onChange(AutoLogic::filterAutos);
+		isVision.onChange((dummyVar) -> AutoLogic.filterAutos(gameObjects.getSelected()));
+		startPositionChooser.onChange((dummyVar) -> AutoLogic.filterAutos(gameObjects.getSelected()));
+		gameObjects.onChange((dummyVar) -> AutoLogic.filterAutos(gameObjects.getSelected()));
 
-		filterAutos(startPositionChooser.getSelected());
+		filterAutos(gameObjects.getSelected());
 	}
 
 	/** Takes the auto filtering entries in shuffleboard to provide a list of suitable autos */
@@ -265,15 +267,6 @@ public class AutoLogic {
 		}
 	}
 
-	// auto filtering stuff
-	public static void filterAutos(StartPosition startPosition) {
-		filterAutos(gameObjects.getSelected());
-	}
-
-	public static void filterAutos(Boolean isVision) {
-		filterAutos(gameObjects.getSelected());
-	}
-
 	// get auto
 
 	public static Optional<String> getSelectedAutoName() {
@@ -291,5 +284,34 @@ public class AutoLogic {
 		return Commands.sequence(
 				Commands.waitSeconds(autoDelayEntry.getDouble(0)),
 				availableAutos.getSelected().getAutoCommand());
+	}
+
+	/**
+	 * Takes all of the trajectories of an auto to find the total estimated duration of an auto
+	 *
+	 * @return auto duration in seconds
+	 */
+	public static double getEstimatedAutoDuration() {
+		if (getSelectedAutoName().isPresent()) {
+
+			Auto auto = PathPlannerAutos.getAuto(getSelectedAutoName().get());
+			double autoTime = 0;
+
+			for (PathPlannerTrajectory trajectory : auto.trajectories) {
+				autoTime += trajectory.getTotalTimeSeconds();
+			}
+
+			// TODO: more accurate estimating by viewing named commands involved
+
+			// rounds time to two decimals
+			autoTime *= 100;
+			autoTime = ((double) ((int) autoTime)) / 100;
+
+			// add autoDelay to estimation as well
+			autoTime += autoDelayEntry.getDouble(0);
+
+			return autoTime;
+		}
+		return 0;
 	}
 }

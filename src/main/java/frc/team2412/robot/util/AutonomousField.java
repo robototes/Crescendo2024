@@ -33,6 +33,9 @@ public class AutonomousField {
 						.withPosition(columnIndex, rowIndex + 3) // Offset by height of Field2d display
 						.withSize(4, 1)
 						.getEntry();
+
+		tab.addDouble("Est. Time", AutoLogic::getEstimatedAutoDuration).withPosition(8, 3);
+
 		// StringSubscriber activeAutoSub =
 		// 		NetworkTableInstance.getDefault()
 		// 				.getTable("Shuffleboard/Match/" + autoChooserName)
