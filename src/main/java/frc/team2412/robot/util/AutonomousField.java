@@ -34,7 +34,8 @@ public class AutonomousField {
 						.withSize(3, 1)
 						.getEntry();
 
-		tab.addDouble("Est. Time", AutoLogic::getEstimatedAutoDuration).withPosition(columnIndex, rowIndex + 3);
+		tab.addDouble("Est. Time", AutoLogic::getEstimatedAutoDuration)
+				.withPosition(columnIndex, rowIndex + 3);
 
 		// StringSubscriber activeAutoSub =
 		// 		NetworkTableInstance.getDefault()
