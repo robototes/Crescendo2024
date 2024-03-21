@@ -157,7 +157,9 @@ public class Controls {
 												* LauncherSubsystem.ANGLE_MAX_SPEED));
 
 		launcherLowerPresetButton.onTrue(
-				s.launcherSubsystem.run(s.launcherSubsystem::stopLauncher).andThen(new SetPivotCommand(s.launcherSubsystem, LauncherSubsystem.RETRACTED_ANGLE)));
+				s.launcherSubsystem
+						.run(s.launcherSubsystem::stopLauncher)
+						.andThen(new SetPivotCommand(s.launcherSubsystem, LauncherSubsystem.RETRACTED_ANGLE)));
 		launcherSubwooferPresetButton.onTrue(
 				new SetAngleLaunchCommand(
 						s.launcherSubsystem,

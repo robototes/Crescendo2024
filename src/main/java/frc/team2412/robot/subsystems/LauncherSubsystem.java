@@ -11,7 +11,6 @@ import com.revrobotics.SparkAbsoluteEncoder.Type;
 import com.revrobotics.SparkPIDController;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.units.BaseUnits;
@@ -54,7 +53,7 @@ public class LauncherSubsystem extends SubsystemBase {
 	public static final double ANGLE_TOLERANCE = 5;
 	public static final double RPM_TOLERANCE = 200;
 	// RPM
-	public static final int SPEAKER_SHOOT_SPEED_RPM = 1500;
+	public static final int SPEAKER_SHOOT_SPEED_RPM = 3300;
 	public static final int TRAP_SHOOT_SPEED_RPM = 3300;
 	public static final double ANGLE_MAX_SPEED = 0.2;
 	// 3392 RPM = 50% Speed
@@ -165,11 +164,11 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherAngleOnePIDController.setI(0);
 		launcherAngleOnePIDController.setD(0.066248);
 		launcherAngleOnePIDController.setOutputRange(-ANGLE_MAX_SPEED, ANGLE_MAX_SPEED);
-		launcherTopPIDController.setP(0.002);//7.7633E-05);
+		launcherTopPIDController.setP(0.002); // 7.7633E-05);
 		launcherTopPIDController.setI(0);
 		launcherTopPIDController.setD(0.001);
 
-		launcherBottomPIDController.setP(0.002);//0.00011722);
+		launcherBottomPIDController.setP(0.002); // 0.00011722);
 		launcherBottomPIDController.setI(0);
 		launcherBottomPIDController.setD(0.001);
 
@@ -198,14 +197,14 @@ public class LauncherSubsystem extends SubsystemBase {
 	public void launch(double speed) {
 		rpmSetpoint = speed;
 		launcherTopPIDController.setReference(
-				rpmSetpoint, ControlType.kVelocity, 0);//launcherTopFeedforward.calculate(speed));
+				rpmSetpoint, ControlType.kVelocity, 0); // launcherTopFeedforward.calculate(speed));
 		launcherBottomPIDController.setReference(
-				rpmSetpoint, ControlType.kVelocity, 0);//launcherBottomFeedforward.calculate(speed));
+				rpmSetpoint, ControlType.kVelocity, 0); // launcherBottomFeedforward.calculate(speed));
 	}
 
 	public void ampLaunch(double speed) {
 		launcherTopPIDController.setReference(
-				-speed, ControlType.kVelocity, 0);//launcherTopFeedforward.calculate(-speed));
+				-speed, ControlType.kVelocity, 0); // launcherTopFeedforward.calculate(-speed));
 		launcherBottomMotor.disable();
 	}
 
