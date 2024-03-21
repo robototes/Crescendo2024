@@ -1,17 +1,9 @@
 package frc.team2412.robot.util.auto;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.path.PathPlannerTrajectory;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.team2412.robot.util.auto.AutoLogic.StartPosition;
 
@@ -23,7 +15,6 @@ public class AutoPath {
 	private final String displayName;
 	private final Command autoCommand;
 	private final boolean vision;
-
 
 	public AutoPath(String displayName, String pathPlannerAutoName, boolean vision) {
 		this.displayName = displayName;
@@ -91,6 +82,4 @@ public class AutoPath {
 						startPose2d.getRotation().getDegrees(),
 						5));
 	}
-
-	
 }

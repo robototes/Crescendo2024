@@ -45,7 +45,7 @@ public class AutonomousField {
 		addPeriodic.accept(
 				() -> {
 					watchdog.reset();
-					
+
 					autonomousField.update(AutoLogic.getSelectedAutoName());
 					watchdog.addEpoch("AutonomousField.update()");
 					watchdog.disable();
