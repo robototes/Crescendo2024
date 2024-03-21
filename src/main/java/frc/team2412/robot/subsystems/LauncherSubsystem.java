@@ -35,8 +35,8 @@ public class LauncherSubsystem extends SubsystemBase {
 
 	// HARDWARE
 	private static final double PIVOT_GEARING_RATIO = 1.0 / 180.0;
-	private static final float PIVOT_SOFTSTOP_FORWARD = 0.96f;
-	private static final float PIVOT_SOFTSTOP_BACKWARD = 0.80f;
+	private static final float PIVOT_SOFTSTOP_FORWARD = 0.97f;
+	private static final float PIVOT_SOFTSTOP_BACKWARD = 0.82f;
 	private static final float PIVOT_DISABLE_OFFSET = 0.04f;
 	// ANGLE VALUES
 	public static final int AMP_AIM_ANGLE = 335;
