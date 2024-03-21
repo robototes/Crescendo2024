@@ -30,11 +30,11 @@ public class AutonomousField {
 				tab.add("Auto display speed", DEFAULT_PLAYBACK_SPEED)
 						.withWidget(BuiltInWidgets.kNumberSlider)
 						.withProperties(Map.of("Min", 0.5, "Max", 2.5))
-						.withPosition(columnIndex, rowIndex + 3) // Offset by height of Field2d display
-						.withSize(4, 1)
+						.withPosition(columnIndex + 1, rowIndex + 3) // Offset by height of Field2d display
+						.withSize(3, 1)
 						.getEntry();
 
-		tab.addDouble("Est. Time", AutoLogic::getEstimatedAutoDuration).withPosition(8, 3);
+		tab.addDouble("Est. Time", AutoLogic::getEstimatedAutoDuration).withPosition(columnIndex, rowIndex + 3);
 
 		// StringSubscriber activeAutoSub =
 		// 		NetworkTableInstance.getDefault()

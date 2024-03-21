@@ -71,6 +71,8 @@ public class AutoLogic {
 					// presets
 					new AutoPath("Test Path Rotate", "5mForwardRotate180"),
 					new AutoPath("Test Path", "DiameterTest"),
+					new AutoPath("Tune Translational PID", "TuneTranslationalPID"),
+					new AutoPath("Tune Rotational PID", "TuneRotationalPID"),
 					new AutoPath("Stand Still", "PresetSourceSide1Score"),
 					new AutoPath("Stand Still", "PresetMid1Score"),
 					new AutoPath("Stand Still", "PresetAmpSide1Score"),
@@ -109,13 +111,14 @@ public class AutoLogic {
 					new AutoPath("Autoline N1 Centerline N1 N2", "VisionAmpSide4Score", true),
 					new AutoPath("Autoline N1 N2 N3", "VisionAmpSideAutoline4Score", true),
 					new AutoPath("Autoline N3 N2 N1", "VisionMid4Score", true),
+					new AutoPath("Autoline N2 Centerline N3 N1", "VisionMidFar4Score2", true),
+					new AutoPath("Autoline N2 Centerline N3 N2", "VisionMidFar4Score3", true),
 					new AutoPath("Autoline N3 N2 N1", "VisionSourceSideAutoline4Score", true),
-					new AutoPath("Autoline N1 Centerline N1 N2", "VisionAmpSide4Score"));
+					new AutoPath("Autoline N1 Centerline N1 N2", "VisionAmpSide4Score", true));
 
 	private static List<AutoPath> fourPiecePaths =
 			List.of(
 					// presets
-					new AutoPath("Autoline N2 Centerline N3 N2", "MidFar4Score"),
 					// vision
 					new AutoPath("Centerline N1 Autoline N1 N2 N3", "VisionAmpSideAutoline5Score"),
 					new AutoPath("Autoline N1 Centerline N1 N2 Autoline N2", "VisionAmpSide5Score"));
