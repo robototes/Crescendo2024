@@ -30,6 +30,7 @@ import frc.team2412.robot.util.DynamicSendableChooser;
 import frc.team2412.robot.util.PathPlannerAutos;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class AutoLogic {
 	public static Robot r = Robot.getInstance();
@@ -46,8 +47,8 @@ public class AutoLogic {
 				new Pose2d(0.73, 4.47, new Rotation2d(Units.degreesToRadians(120)))),
 		MISC("Misc", null);
 
-		String title; // for shuffleboard display
-		Pose2d startPose; // for identifying path's starting positions for filtering
+		final String title; // for shuffleboard display
+		final Pose2d startPose; // for identifying path's starting positions for filtering
 
 		StartPosition(String title, Pose2d startPose) {
 			this.title = title;
@@ -55,7 +56,13 @@ public class AutoLogic {
 		}
 	};
 
+	static {
+		registerCommands();
+	}
+
 	// paths lists
+
+	private static AutoPath defaultPath = new AutoPath("do nothing", "nothing");
 
 	private static List<AutoPath> noPiecePaths =
 			List.of(
@@ -227,11 +234,11 @@ public class AutoLogic {
 			gameObjects.addOption(String.valueOf(i), i);
 		}
 
-		tab.add("Starting Position", startPositionChooser).withPosition(8, 0).withSize(2, 1);
-		tab.add("Launch Type", isVision).withPosition(8, 1);
-		tab.add("Game Objects", gameObjects).withPosition(9, 1);
-		tab.add("Available Auto Variants", availableAutos).withPosition(8, 2).withSize(2, 1);
-		autoDelayEntry = tab.add("Auto Delay", 0).withPosition(8, 3).withSize(1, 1).getEntry();
+		tab.add("Starting Position", startPositionChooser).withPosition(7, 0).withSize(2, 1);
+		tab.add("Launch Type", isVision).withPosition(7, 1);
+		tab.add("Game Objects", gameObjects).withPosition(8, 1);
+		tab.add("Available Auto Variants", availableAutos).withPosition(7, 2).withSize(2, 1);
+		autoDelayEntry = tab.add("Auto Delay", 0).withPosition(7, 3).withSize(1, 1).getEntry();
 
 		isVision.onChange(AutoLogic::filterAutos);
 		startPositionChooser.onChange(AutoLogic::filterAutos);
@@ -268,6 +275,17 @@ public class AutoLogic {
 	}
 
 	// get auto
+
+	public static Optional<String> getSelectedAutoName() {
+		if (availableAutos.getSelected() == null) {
+			return Optional.empty();
+		}
+		return Optional.of(availableAutos.getSelected().getAutoName());
+	}
+
+	public static boolean chooserHasAutoSelected() {
+		return availableAutos.getSelected() != null;
+	}
 
 	public static Command getSelectedAuto() {
 		return Commands.sequence(
