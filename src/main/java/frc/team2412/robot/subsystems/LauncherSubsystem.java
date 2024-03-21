@@ -17,6 +17,7 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.units.BaseUnits;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Voltage;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -36,6 +37,7 @@ public class LauncherSubsystem extends SubsystemBase {
 	private static final double PIVOT_GEARING_RATIO = 1.0 / 180.0;
 	private static final float PIVOT_SOFTSTOP_FORWARD = 0.96f;
 	private static final float PIVOT_SOFTSTOP_BACKWARD = 0.80f;
+	private static final float PIVOT_DISABLE_OFFSET = 0.04f;
 	// ANGLE VALUES
 	public static final int AMP_AIM_ANGLE = 335;
 	public static final int SUBWOOFER_AIM_ANGLE = 298;
@@ -54,7 +56,7 @@ public class LauncherSubsystem extends SubsystemBase {
 	// RPM
 	public static final int SPEAKER_SHOOT_SPEED_RPM = 3850;
 	public static final int TRAP_SHOOT_SPEED_RPM = 4000;
-	public static final double ANGLE_MAX_SPEED = 1.0;
+	public static final double ANGLE_MAX_SPEED = 0.2;
 	// 3392 RPM = 50% Speed
 	// 1356 RPM = 20% Speed
 	// 1017 RPM = 15% Speed
@@ -219,10 +221,10 @@ public class LauncherSubsystem extends SubsystemBase {
 	public void setAngle(double launcherAngle) {
 		angleSetpoint = launcherAngle;
 		launcherAngleOnePIDController.setReference(
-				angleSetpoint,
+				Units.degreesToRotations(angleSetpoint),
 				ControlType.kPosition,
 				0,
-				launcherPivotFF.calculate(Units.rotationsToRadians(launcherAngle - FF_PIVOT_OFFSET), 0));
+				launcherPivotFF.calculate(Units.degreesToRadians(launcherAngle - FF_PIVOT_OFFSET), 0));
 		manualAngleSetpoint = launcherAngle;
 		// launcherAngleTwoPIDController.setReference(
 		//		Units.degreesToRotations(angleSetpoint), ControlType.kPosition);
@@ -342,6 +344,12 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherAngleSpeedEntry.setDouble(getAngleSpeed());
 		launcherIsAtSpeed.setBoolean(isAtSpeed());
 		launcherAngleManual.setDouble(manualAngleSetpoint);
+
+		// sanity check the pivot encoder
+		if (launcherAngleEncoder.getPosition() >= PIVOT_SOFTSTOP_FORWARD + PIVOT_DISABLE_OFFSET || launcherAngleEncoder.getPosition() <= PIVOT_SOFTSTOP_BACKWARD - PIVOT_DISABLE_OFFSET) {
+			launcherAngleOneMotor.disable();
+			DriverStation.reportError("Launcher encoder angle is insane!!!! Reports angle of " + getAngle() + " degrees.", true);
+		}
 	}
 
 	private SysIdRoutine getArmSysIdRoutine() {

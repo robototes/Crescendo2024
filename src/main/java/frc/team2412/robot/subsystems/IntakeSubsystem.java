@@ -45,7 +45,7 @@ public class IntakeSubsystem extends SubsystemBase {
 	private final CANSparkFlex feederMotor;
 
 	// Sensors
-	private final DigitalInput indexSensor;
+	private final SparkLimitSwitch indexSensor;
 	private final DigitalInput feederSensor;
 
 	private final SparkLimitSwitch intakeFrontSensor;
@@ -80,7 +80,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
 		feederMotor = new CANSparkFlex(FEEDER_MOTOR, MotorType.kBrushless);
 
-		indexSensor = new DigitalInput(INDEX_SENSOR);
+		indexSensor = indexMotorUpper.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
 		feederSensor = new DigitalInput(FEEDER_SENSOR);
 
 		intakeFrontSensor = intakeMotorFront.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
@@ -124,7 +124,7 @@ public class IntakeSubsystem extends SubsystemBase {
 		configureMotor(intakeMotorLeft, true);
 		configureMotor(intakeMotorRight, true);
 
-		configureMotor(ingestMotor, false);
+		configureMotor(ingestMotor, true);
 		configureMotor(indexMotorUpper, 40, false);
 
 		configureMotor(feederMotor, 40, true);
@@ -215,7 +215,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
 	// sensor methods
 	public boolean indexSensorHasNote() {
-		return !indexSensor.get() && !getSensorOverride();
+		return indexSensor.isPressed();
 	}
 
 	public boolean feederSensorHasNote() {
