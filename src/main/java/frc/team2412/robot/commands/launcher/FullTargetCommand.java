@@ -6,6 +6,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Filesystem;
@@ -32,6 +33,7 @@ public class FullTargetCommand extends Command {
 	private Command yawAlignmentCommand;
 	private Rotation2d yawTarget;
 	private Controls controls;
+	static GenericEntry distanceEntry;
 
 	public FullTargetCommand(
 			LauncherSubsystem launcherSubsystem,
@@ -66,9 +68,9 @@ public class FullTargetCommand extends Command {
 						Math.atan2(relativeSpeaker.getY(), relativeSpeaker.getX()) + Math.PI);
 		double distance = relativeSpeaker.getTranslation().getNorm();
 		LauncherDataPoint dataPoint = LAUNCHER_DATA.get(distance);
-
 		launcherSubsystem.setAngle(dataPoint.angle);
 		launcherSubsystem.launch(dataPoint.rpm);
+		launcherSubsystem.updateDistanceEntry(distance);
 
 		if (MathUtil.isNear(
 						yawTarget.getDegrees(),

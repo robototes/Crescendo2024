@@ -98,6 +98,8 @@ public class LauncherSubsystem extends SubsystemBase {
 
 	private GenericEntry launcherAngleManual;
 
+	private GenericEntry speakerDistanceEntry;
+
 	// Constructors
 	public LauncherSubsystem() {
 
@@ -285,6 +287,8 @@ public class LauncherSubsystem extends SubsystemBase {
 					.addDouble("Bottom FlyWheel Temp", () -> launcherBottomMotor.getMotorTemperature());
 			Shuffleboard.getTab("Launcher")
 					.addDouble("Top FlyWheel Temp", () -> launcherTopMotor.getMotorTemperature());
+
+			speakerDistanceEntry = Shuffleboard.getTab("Launcher").add("Speaker dist.", 0).getEntry();
 		}
 
 		launcherIsAtSpeed =
@@ -330,6 +334,10 @@ public class LauncherSubsystem extends SubsystemBase {
 						.withSize(1, 1)
 						.withWidget(BuiltInWidgets.kTextView)
 						.getEntry();
+	}
+
+	public void updateDistanceEntry(double distance) {
+		speakerDistanceEntry.setDouble(distance);
 	}
 
 	@Override

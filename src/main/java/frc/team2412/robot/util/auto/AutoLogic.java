@@ -208,7 +208,7 @@ public class AutoLogic {
 		NamedCommands.registerCommand(
 				"RetractPivot",
 				(LAUNCHER_ENABLED && INTAKE_ENABLED
-						? new SetAngleLaunchCommand(s.launcherSubsystem, 0, 0)
+						? new SetAngleLaunchCommand(s.launcherSubsystem, 0, LauncherSubsystem.RETRACTED_ANGLE)
 						: Commands.none())); // TODO: add retract angle
 
 		// Complex Autos
@@ -300,9 +300,7 @@ public class AutoLogic {
 	}
 
 	public static Command getSelectedAuto() {
-		return Commands.sequence(
-				Commands.waitSeconds(autoDelayEntry.getDouble(0)),
-				availableAutos.getSelected().getAutoCommand());
+		return availableAutos.getSelected().getAutoCommand();
 	}
 
 	/**
