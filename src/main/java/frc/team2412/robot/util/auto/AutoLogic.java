@@ -122,8 +122,8 @@ public class AutoLogic {
 			List.of(
 					// presets
 					// vision
-					new AutoPath("Centerline N1 Autoline N1 N2 N3", "VisionAmpSideAutoline5Score"),
-					new AutoPath("Autoline N1 Centerline N1 N2 Autoline N2", "VisionAmpSide5Score"));
+					new AutoPath("Centerline N1 Autoline N1 N2 N3", "VisionAmpSideAutoline5Score", true),
+					new AutoPath("Autoline N1 Centerline N1 N2 Autoline N2", "VisionAmpSide5Score", true));
 
 	private static List<AutoPath> fivePiecePaths;
 
