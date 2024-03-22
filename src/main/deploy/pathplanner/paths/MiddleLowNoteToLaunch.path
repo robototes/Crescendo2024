@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.3,
-        "y": 0.8
+        "x": 9.01,
+        "y": 0.81
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.795424362277297,
-        "y": 1.0847998838854824
+        "x": 6.502808157044885,
+        "y": 1.2707133785696143
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "CenterLineN5"
     },
     {
       "anchor": {
@@ -20,8 +20,8 @@
         "y": 1.9539173222406319
       },
       "prevControl": {
-        "x": 4.517435320584927,
-        "y": 1.275372836459959
+        "x": 4.649370441598027,
+        "y": 1.5685619942668465
       },
       "nextControl": null,
       "isLocked": false,
