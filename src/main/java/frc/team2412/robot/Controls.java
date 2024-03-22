@@ -36,6 +36,8 @@ public class Controls {
 
 	private final CommandXboxController driveController;
 	private final CommandXboxController codriveController;
+	// leaving this code in in case we need to test outside of auto
+	// private final Trigger getWithinDistanceTrigger;
 
 	// Intake
 	private final Trigger driveIntakeInButton;
@@ -59,6 +61,9 @@ public class Controls {
 	public Controls(Subsystems s) {
 		driveController = new CommandXboxController(CONTROLLER_PORT);
 		codriveController = new CommandXboxController(CODRIVER_CONTROLLER_PORT);
+		// not sure what drive team wants (or if the trigger is even needed since we are only using the
+		// command in auto)
+		// getWithinDistanceTrigger = driveController.start();
 		this.s = s;
 
 		launcherAmpPresetButton = codriveController.x();
@@ -84,6 +89,12 @@ public class Controls {
 		if (DRIVEBASE_ENABLED) {
 			bindDrivebaseControls();
 		}
+		// leaving this code in in case we need to test outside of auto
+		/*
+		if (LIMELIGHT_ENABLED) {
+			bindLimelightControls();
+		}
+		*/
 		if (LAUNCHER_ENABLED) {
 			bindLauncherControls();
 		}
@@ -116,9 +127,9 @@ public class Controls {
 								driveController::getLeftY,
 								driveController::getLeftX,
 								() -> Rotation2d.fromRotations(driveController.getRightX())));
-		driveController.start().onTrue(new InstantCommand(s.drivebaseSubsystem::resetGyro));
 		driveController.rightStick().onTrue(new InstantCommand(s.drivebaseSubsystem::toggleXWheels));
-		// driveController		x
+		driveController.start().onTrue(new InstantCommand(s.drivebaseSubsystem::resetGyro));
+		// driveController
 		// 		.back()
 		// 		.onTrue(
 		// 				new InstantCommand(
@@ -126,6 +137,14 @@ public class Controls {
 		// 								s.drivebaseSubsystem.setPose(
 		// 										new Pose2d(new Translation2d(1.3, 5.55), new Rotation2d(180)))));
 	}
+
+	// leaving this code in in case we need to test outside of auto
+	/*
+	public void bindLimelightControls() {
+		getWithinDistanceTrigger.whileTrue(
+				new DriveToNoteCommand(s.drivebaseSubsystem, s.limelightSubsystem));
+	}
+	*/
 
 	// intake controls
 	private void bindIntakeControls() {
