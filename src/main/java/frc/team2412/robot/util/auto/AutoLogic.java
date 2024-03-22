@@ -1,5 +1,7 @@
 package frc.team2412.robot.util.auto;
 
+import static frc.team2412.robot.Subsystems.SubsystemConstants.*;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathPlannerPath;
@@ -172,32 +174,46 @@ public class AutoLogic {
 		// param: String commandName, Command command
 
 		// Intake
-		NamedCommands.registerCommand("StopIntake", new IntakeStopCommand(s.intakeSubsystem));
-		NamedCommands.registerCommand("Intake", new AllInCommand(s.intakeSubsystem, null));
 		NamedCommands.registerCommand(
-				"IntakeSensorOverride", new AllInSensorOverrideCommand(s.intakeSubsystem));
+				"StopIntake",
+				(INTAKE_ENABLED ? new IntakeStopCommand(s.intakeSubsystem) : Commands.none()));
+		NamedCommands.registerCommand(
+				"Intake", (INTAKE_ENABLED ? new AllInCommand(s.intakeSubsystem, null) : Commands.none()));
+		NamedCommands.registerCommand(
+				"IntakeSensorOverride",
+				(INTAKE_ENABLED ? new AllInSensorOverrideCommand(s.intakeSubsystem) : Commands.none()));
 		// Launcher
 		NamedCommands.registerCommand(
 				"VisionLaunch",
-				Commands.sequence(
-						new FullTargetCommand(s.launcherSubsystem, s.drivebaseSubsystem, controls),
-						new FeederInCommand(s.intakeSubsystem)));
+				(LAUNCHER_ENABLED && INTAKE_ENABLED && APRILTAGS_ENABLED
+						? Commands.sequence(
+								new FullTargetCommand(s.launcherSubsystem, s.drivebaseSubsystem, controls),
+								new FeederInCommand(s.intakeSubsystem))
+						: Commands.none()));
 
 		NamedCommands.registerCommand(
 				"SubwooferLaunch",
-				new SetAngleLaunchCommand(
-								s.launcherSubsystem,
-								LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
-								LauncherSubsystem.SUBWOOFER_AIM_ANGLE)
-						.andThen(new WaitCommand(1))
-						.andThen(new FeederInCommand(s.intakeSubsystem).andThen(new WaitCommand(0.5))));
-		NamedCommands.registerCommand("StopLaunch", new StopLauncherCommand(s.launcherSubsystem));
+				(LAUNCHER_ENABLED && INTAKE_ENABLED
+						? new SetAngleLaunchCommand(
+										s.launcherSubsystem,
+										LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
+										LauncherSubsystem.SUBWOOFER_AIM_ANGLE)
+								.andThen(new WaitCommand(1))
+								.andThen(new FeederInCommand(s.intakeSubsystem))
+								.andThen(new WaitCommand(0.5))
+						: Commands.none()));
+		NamedCommands.registerCommand(
+				"StopLaunch",
+				(LAUNCHER_ENABLED ? new StopLauncherCommand(s.launcherSubsystem) : Commands.none()));
 		NamedCommands.registerCommand(
 				"RetractPivot",
-				new SetAngleLaunchCommand(s.launcherSubsystem, 0, 0)); // TODO: add retract angle
+				(LAUNCHER_ENABLED && INTAKE_ENABLED
+						? new SetAngleLaunchCommand(s.launcherSubsystem, 0, 0)
+						: Commands.none())); // TODO: add retract angle
 
 		// Complex Autos
 		NamedCommands.registerCommand("AutoLogicTest", ComplexAutoPaths.testAuto);
+
 		NamedCommands.registerCommand(
 				"MidSpeakerCenterLineN3N2N1", ComplexAutoPaths.midSpeakerCenterLineN3N2N1);
 		NamedCommands.registerCommand(
@@ -239,11 +255,11 @@ public class AutoLogic {
 			gameObjects.addOption(String.valueOf(i), i);
 		}
 
-		tab.add("Starting Position", startPositionChooser).withPosition(7, 0).withSize(2, 1);
-		tab.add("Launch Type", isVision).withPosition(7, 1);
-		tab.add("Game Objects", gameObjects).withPosition(8, 1);
-		tab.add("Available Auto Variants", availableAutos).withPosition(7, 2).withSize(2, 1);
-		autoDelayEntry = tab.add("Auto Delay", 0).withPosition(7, 3).withSize(1, 1).getEntry();
+		tab.add("Starting Position", startPositionChooser).withPosition(5, 0).withSize(2, 1);
+		tab.add("Launch Type", isVision).withPosition(5, 1);
+		tab.add("Game Objects", gameObjects).withPosition(6, 1);
+		tab.add("Available Auto Variants", availableAutos).withPosition(5, 2).withSize(2, 1);
+		autoDelayEntry = tab.add("Auto Delay", 0).withPosition(5, 3).withSize(1, 1).getEntry();
 
 		isVision.onChange((dummyVar) -> AutoLogic.filterAutos(gameObjects.getSelected()));
 		startPositionChooser.onChange((dummyVar) -> AutoLogic.filterAutos(gameObjects.getSelected()));

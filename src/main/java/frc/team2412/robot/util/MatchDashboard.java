@@ -20,6 +20,6 @@ public class MatchDashboard {
 		tab.add(new FMSWidget()).withPosition(0, 0).withSize(4, 1);
 		tab.add(field).withPosition(0, 1).withSize(4, 3);
 		Robot r = Robot.getInstance();
-		AutonomousField.configureShuffleboardTab(tab, 9, 0, "Available Auto Variants", r::addPeriodic);
+		AutonomousField.configureShuffleboardTab(tab, 7, 0, "Available Auto Variants", r::addPeriodic);
 	}
 }

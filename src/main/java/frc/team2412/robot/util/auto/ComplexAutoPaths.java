@@ -1,5 +1,6 @@
 package frc.team2412.robot.util.auto;
 
+import static frc.team2412.robot.Subsystems.SubsystemConstants.*;
 import static frc.team2412.robot.util.auto.AutoLogic.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -157,17 +158,21 @@ public class ComplexAutoPaths {
 	// new command getters
 
 	public static final Command VisionLaunchCommand() {
-		return new FullTargetCommand(s.launcherSubsystem, s.drivebaseSubsystem, controls);
+		return (LAUNCHER_ENABLED && INTAKE_ENABLED && APRILTAGS_ENABLED
+				? new FullTargetCommand(s.launcherSubsystem, s.drivebaseSubsystem, controls)
+				: Commands.none());
 	}
 
 	public static final Command SubwooferLaunchCommand() {
-		return new SetAngleLaunchCommand(
-				s.launcherSubsystem,
-				LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
-				LauncherSubsystem.SUBWOOFER_AIM_ANGLE);
+		return (LAUNCHER_ENABLED
+				? new SetAngleLaunchCommand(
+						s.launcherSubsystem,
+						LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
+						LauncherSubsystem.SUBWOOFER_AIM_ANGLE)
+				: Commands.none());
 	}
 
 	public static BooleanSupplier checkForTargets() {
-		return (s.limelightSubsystem != null ? s.limelightSubsystem::hasTargets : () -> true);
+		return (LIMELIGHT_ENABLED ? s.limelightSubsystem::hasTargets : () -> true);
 	}
 }

@@ -113,7 +113,6 @@ public class AutonomousField {
 			lastName = Optional.of(autoName);
 			auto = PathPlannerAutos.getAuto(autoName);
 			trajectories = auto.trajectories;
-			System.out.println("num trajectories: " + trajectories.size());
 			trajectoryIndex = 0;
 			lastFPGATime = fpgaTime;
 			lastTrajectoryTimeOffset = 0;
