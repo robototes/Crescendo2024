@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team2412.robot.commands.launcher.FullTargetCommand;
 import frc.team2412.robot.commands.launcher.SetAngleLaunchCommand;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
+import java.util.function.BooleanSupplier;
 
 public class ComplexAutoPaths {
 
@@ -22,7 +23,7 @@ public class ComplexAutoPaths {
 							new ConditionalCommand(
 									AutoLogic.getAutoCommand("TestPathTrue"),
 									AutoLogic.getAutoCommand("TestPathFalse"),
-									() -> false)),
+									checkForTargets())),
 					"TestPath",
 					"TestPathTrue");
 
@@ -47,8 +48,8 @@ public class ComplexAutoPaths {
 															VisionLaunchCommand(),
 															getAutoCommand("LCenterLineN2LAutoLineN1")),
 													Commands.sequence(getAutoCommand("QCenterLineN2LAutoLineN1")),
-													() -> true)),
-									() -> true),
+													checkForTargets())),
+									checkForTargets()),
 							VisionLaunchCommand()),
 					"TopSpeakerQCenterLineN1",
 					"QCenterLineN1LCenterLineN1",
@@ -73,8 +74,8 @@ public class ComplexAutoPaths {
 															VisionLaunchCommand(),
 															getAutoCommand("LCenterLineN2LCenterLineN3")),
 													Commands.sequence(getAutoCommand("QCenterLineN2LCenterLineN3")),
-													() -> true)),
-									() -> true),
+													checkForTargets())),
+									checkForTargets()),
 							VisionLaunchCommand()),
 					"TopSpeakerQCenterLineN1",
 					"QCenterLineN1LCenterLineN1",
@@ -97,11 +98,11 @@ public class ComplexAutoPaths {
 															VisionLaunchCommand(),
 															getAutoCommand("N3LCenterLineN2LCenterLineN1")),
 													getAutoCommand("QCenterLineN2LCenterLineN1"),
-													() -> true)),
+													checkForTargets())),
 									Commands.sequence(
 											getAutoCommand("QCenterLineN3QCenterLineN2"),
 											getAutoCommand("QCenterLineN2LCenterLineN2")),
-									() -> true),
+									checkForTargets()),
 							VisionLaunchCommand()),
 					"MidSpeakerQCenterLineN3",
 					"QCenterLineN3LCenterLineN3",
@@ -121,7 +122,7 @@ public class ComplexAutoPaths {
 											Commands.waitSeconds(0.5),
 											getAutoCommand("LCenterLineN5LCenterLineN4")),
 									Commands.sequence(getAutoCommand("QCenterLineN5LCenterLineN4")),
-									() -> false)),
+									checkForTargets())),
 					"LowSpeakerQCenterLineN5",
 					"QCenterLineN5LCenterLineN5",
 					"LCenterLineN5LCenterLineN4");
@@ -141,12 +142,12 @@ public class ComplexAutoPaths {
 															VisionLaunchCommand(),
 															getAutoCommand("LCenterLineN4LCenterLineN3")),
 													Commands.sequence(getAutoCommand("QCenterLineN4LCenterLineN3")),
-													() -> true)),
+													checkForTargets())),
 									Commands.sequence(
 											getAutoCommand("QCenterLineN5LCenterLineN4"),
 											VisionLaunchCommand(),
 											getAutoCommand("LCenterLineN4LCenterLineN3")),
-									() -> false),
+									checkForTargets()),
 							VisionLaunchCommand()),
 					"LowSpeakerQCenterLineN5",
 					"QCenterLineN5QCenterLineN4",
@@ -164,5 +165,9 @@ public class ComplexAutoPaths {
 				s.launcherSubsystem,
 				LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
 				LauncherSubsystem.SUBWOOFER_AIM_ANGLE);
+	}
+
+	public static BooleanSupplier checkForTargets() {
+		return (s.limelightSubsystem != null ? s.limelightSubsystem::hasTargets : () -> true);
 	}
 }
