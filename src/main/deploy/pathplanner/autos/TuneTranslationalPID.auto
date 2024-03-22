@@ -2,24 +2,24 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.33,
-      "y": 5.55
+      "x": 2.3,
+      "y": 7.0
     },
-    "rotation": 180.0
+    "rotation": 0
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "SubwooferLaunch"
+            "pathName": "TuneTranslationalPID"
           }
         }
       ]
     }
   },
-  "folder": "Preset Autos",
+  "folder": "Test",
   "choreoAuto": false
 }

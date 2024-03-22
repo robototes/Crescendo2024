@@ -3,14 +3,13 @@ package frc.team2412.robot.util;
 import com.pathplanner.lib.path.PathPlannerTrajectory;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.StringSubscriber;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Watchdog;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import frc.team2412.robot.util.auto.AutoLogic;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -31,14 +30,18 @@ public class AutonomousField {
 				tab.add("Auto display speed", DEFAULT_PLAYBACK_SPEED)
 						.withWidget(BuiltInWidgets.kNumberSlider)
 						.withProperties(Map.of("Min", 0.5, "Max", 2.5))
-						.withPosition(columnIndex, rowIndex + 2) // Offset by height of Field2d display
-						.withSize(2, 1)
+						.withPosition(columnIndex + 1, rowIndex + 3) // Offset by height of Field2d display
+						.withSize(3, 1)
 						.getEntry();
-		StringSubscriber activeAutoSub =
-				NetworkTableInstance.getDefault()
-						.getTable("Shuffleboard/Match/Auto Chooser")
-						.getStringTopic("active")
-						.subscribe("");
+
+		tab.addDouble("Est. Time", AutoLogic::getEstimatedAutoDuration)
+				.withPosition(columnIndex, rowIndex + 3);
+
+		// StringSubscriber activeAutoSub =
+		// 		NetworkTableInstance.getDefault()
+		// 				.getTable("Shuffleboard/Match/" + autoChooserName)
+		// 				.getStringTopic("active")
+		// 				.subscribe("");
 		var autonomousField =
 				new AutonomousField(() -> speedMultiplier.getDouble(DEFAULT_PLAYBACK_SPEED));
 		var watchdog =
@@ -46,7 +49,8 @@ public class AutonomousField {
 		addPeriodic.accept(
 				() -> {
 					watchdog.reset();
-					autonomousField.update(activeAutoSub.get());
+
+					autonomousField.update(AutoLogic.getSelectedAutoName());
 					watchdog.addEpoch("AutonomousField.update()");
 					watchdog.disable();
 					if (watchdog.isExpired()) {
@@ -56,7 +60,7 @@ public class AutonomousField {
 				UPDATE_RATE);
 		tab.add("Selected auto", autonomousField.getField())
 				.withPosition(columnIndex, rowIndex)
-				.withSize(2, 2);
+				.withSize(4, 3);
 	}
 
 	// Display
@@ -123,6 +127,7 @@ public class AutonomousField {
 		lastFPGATime = fpgaTime;
 		while (lastTrajectoryTimeOffset > trajectories.get(trajectoryIndex).getTotalTimeSeconds()) {
 			lastTrajectoryTimeOffset -= trajectories.get(trajectoryIndex).getTotalTimeSeconds();
+			trajectoryIndex++;
 			if (trajectoryIndex >= trajectories.size()) {
 				trajectoryIndex = 0;
 			}
@@ -139,11 +144,14 @@ public class AutonomousField {
 	 *
 	 * @param autoName The name of the selected PathPlanner autonomous routine.
 	 */
-	public void update(String autoName) {
+	public void update(Optional<String> autoName) {
 		if (DriverStation.isEnabled()) {
 			lastName = Optional.empty();
 			return;
 		}
-		field.setRobotPose(getUpdatedPose(autoName));
+
+		if (autoName.isPresent()) {
+			field.setRobotPose(getUpdatedPose(autoName.get()));
+		}
 	}
 }

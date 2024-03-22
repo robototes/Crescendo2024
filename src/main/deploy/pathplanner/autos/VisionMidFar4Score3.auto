@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.73,
-      "y": 4.47
+      "x": 1.33,
+      "y": 5.55
     },
-    "rotation": 120.0
+    "rotation": 180.0
   },
   "command": {
     "type": "sequential",
@@ -14,31 +14,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "LowSpeakerToMiddleLowNote"
+            "pathName": "SpeakerToMidNote"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "MiddleLowNoteToLaunch"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "VisionLaunch"
+            "pathName": "MidNoteToCenterMidNodeLaunch"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "LowLaunchNoteFourCenterLine"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "VisionLaunch"
+            "pathName": "launchPosSecondCenterLineNoteLaunch"
           }
         }
       ]
