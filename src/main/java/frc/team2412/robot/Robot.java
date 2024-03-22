@@ -40,6 +40,7 @@ public class Robot extends TimedRobot {
 		return instance;
 	}
 
+	// increases logging
 	private static final boolean debugMode = true;
 	// Really dangerous to keep this enabled as it disables all other controls, use with caution
 	private static final boolean sysIdMode = false;
