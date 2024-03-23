@@ -2,7 +2,6 @@ package frc.team2412.robot.commands.launcher;
 
 import static frc.team2412.robot.Subsystems.SubsystemConstants.*;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
@@ -72,7 +71,7 @@ public class FullTargetCommand extends Command {
 		launcherSubsystem.updateDistanceEntry(distance);
 
 		// launcher angle checker
-		if (launcherSubsystem.isAtAngle()&& launcherSubsystem.isAtSpeed()) {
+		if (launcherSubsystem.isAtAngle() && launcherSubsystem.isAtSpeed()) {
 			controls.vibrateDriveController(ControlConstants.RUMBLE_VIBRATION);
 		} else {
 			controls.vibrateDriveController(0.0);

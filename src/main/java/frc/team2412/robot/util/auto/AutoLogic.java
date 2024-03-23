@@ -81,9 +81,11 @@ public class AutoLogic {
 					new AutoPath("Stand Still", "PresetSourceSide1Score"),
 					new AutoPath("Stand Still", "PresetMid1Score"),
 					new AutoPath("Stand Still", "PresetAmpSide1Score"),
+					new AutoPath("Subwoofer Launch Test", "SubwooferLaunchTest"),
 					// new AutoPath("Pass Auto Line", "PresetSourceSide1ScorePassAutoLine"),
 					new AutoPath("Pass Autoline", "PresetAmpSide1ScorePassAutoline"),
-					new AutoPath("Pass Autoline", "PresetSourceSide1ScorePassAutoline"));
+					new AutoPath("Pass Autoline", "PresetSourceSide1ScorePassAutoline"),
+					new AutoPath("Vision Launch Test", "VisionLaunchTest", true));
 
 	private static List<AutoPath> onePiecePaths =
 			List.of(

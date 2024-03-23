@@ -56,6 +56,7 @@ public class LauncherSubsystem extends SubsystemBase {
 	public static final int SPEAKER_SHOOT_SPEED_RPM = 3300;
 	public static final int TRAP_SHOOT_SPEED_RPM = 3300;
 	public static final double ANGLE_MAX_SPEED = 1;
+	public static final double MAX_SET_ANGLE_OFFSET = 20;
 	// 3392 RPM = 50% Speed
 	// 1356 RPM = 20% Speed
 	// 1017 RPM = 15% Speed
@@ -151,8 +152,8 @@ public class LauncherSubsystem extends SubsystemBase {
 		// current limit
 		launcherTopMotor.setSmartCurrentLimit(40);
 		launcherBottomMotor.setSmartCurrentLimit(40);
-		launcherAngleOneMotor.setSmartCurrentLimit(60);
-		launcherAngleTwoMotor.setSmartCurrentLimit(60);
+		launcherAngleOneMotor.setSmartCurrentLimit(100);
+		launcherAngleTwoMotor.setSmartCurrentLimit(100);
 
 		launcherAngleOneMotor.setSoftLimit(
 				CANSparkBase.SoftLimitDirection.kForward, PIVOT_SOFTSTOP_FORWARD);
@@ -222,7 +223,11 @@ public class LauncherSubsystem extends SubsystemBase {
 	}
 
 	public void setAngle(double launcherAngle) {
-		angleSetpoint = launcherAngle += setAngleOffsetEntry.getDouble(0);
+		if (launcherAngle != AMP_AIM_ANGLE) {
+			angleSetpoint = launcherAngle + setAngleOffsetEntry.getDouble(0);
+		} else {
+			angleSetpoint = launcherAngle;
+		}
 		launcherAngleOnePIDController.setReference(
 				Units.degreesToRotations(angleSetpoint),
 				ControlType.kPosition,
@@ -340,8 +345,10 @@ public class LauncherSubsystem extends SubsystemBase {
 		setAngleOffsetEntry =
 				Shuffleboard.getTab("Match")
 						.add("Set Angle Offset", 0)
-						.withPosition(2, 1)
-						.withSize(1, 2)
+						.withPosition(4, 3)
+						.withSize(2, 1)
+						.withWidget(BuiltInWidgets.kNumberSlider)
+						.withProperties(Map.of("Min", -MAX_SET_ANGLE_OFFSET, "Max", MAX_SET_ANGLE_OFFSET))
 						.getEntry();
 	}
 
