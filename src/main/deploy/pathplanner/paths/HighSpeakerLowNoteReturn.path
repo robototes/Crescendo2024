@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.4199314885116259,
-        "y": 6.600718066300997
+        "x": 1.9231639413397603,
+        "y": 7.107573740088099
       },
       "isLocked": false,
       "linkedName": "TopSpeaker"
     },
     {
       "anchor": {
-        "x": 1.7804749123011758,
-        "y": 5.898120625070079
+        "x": 2.4983996761342704,
+        "y": 5.615860732909115
       },
       "prevControl": {
-        "x": 1.514854202566117,
-        "y": 6.248257015175384
+        "x": 2.4691504014837027,
+        "y": 6.600586312811582
       },
       "nextControl": {
-        "x": 1.9838583821311784,
-        "y": 5.630024233021438
+        "x": 2.5302901239377382,
+        "y": 4.542215656859015
       },
       "isLocked": false,
       "linkedName": null
@@ -36,31 +36,15 @@
         "y": 4.07539893464585
       },
       "prevControl": {
-        "x": 2.7954992632163718,
-        "y": 4.0608860165816605
+        "x": 2.729283701797769,
+        "y": 3.506924675131468
       },
       "nextControl": {
-        "x": 2.5385405725766406,
-        "y": 4.215584647385511
+        "x": 2.810391939073666,
+        "y": 4.6018858783560805
       },
       "isLocked": false,
       "linkedName": "Podium"
-    },
-    {
-      "anchor": {
-        "x": 2.0947948202202706,
-        "y": 5.18627848066507
-      },
-      "prevControl": {
-        "x": 2.3979195267252282,
-        "y": 4.703524318453471
-      },
-      "nextControl": {
-        "x": 1.8451878345198125,
-        "y": 5.583800717150984
-      },
-      "isLocked": false,
-      "linkedName": null
     },
     {
       "anchor": {
@@ -68,8 +52,8 @@
         "y": 6.62
       },
       "prevControl": {
-        "x": 1.3274844567707151,
-        "y": 6.6931650980419075
+        "x": 2.6933948404713925,
+        "y": 7.380566970160069
       },
       "nextControl": null,
       "isLocked": false,
@@ -78,12 +62,12 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1.6,
+      "waypointRelativePos": 1.0,
       "rotationDegrees": 180.0,
       "rotateFast": false
     },
     {
-      "waypointRelativePos": 2.2,
+      "waypointRelativePos": 2.4,
       "rotationDegrees": 180.0,
       "rotateFast": false
     }

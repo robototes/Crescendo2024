@@ -81,6 +81,7 @@ public class FullTargetCommand extends Command {
 	@Override
 	public void end(boolean interrupted) {
 		yawAlignmentCommand.cancel();
+		// launcherSubsystem.launch(2000);
 		launcherSubsystem.stopLauncher();
 		controls.vibrateDriveController(0.0);
 	}

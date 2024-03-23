@@ -39,7 +39,7 @@ public class LauncherSubsystem extends SubsystemBase {
 	private static final float PIVOT_DISABLE_OFFSET = 0.04f;
 	// ANGLE VALUES
 	public static final int AMP_AIM_ANGLE = 288;
-	public static final int SUBWOOFER_AIM_ANGLE = 252;
+	public static final int SUBWOOFER_AIM_ANGLE = 254;
 	public static final int PODIUM_AIM_ANGLE = 238;
 	public static final int TRAP_AIM_ANGLE = 317;
 	public static final double MANUAL_MODIFIER = 0.02;
@@ -51,10 +51,10 @@ public class LauncherSubsystem extends SubsystemBase {
 	// max Free Speed: 6784 RPM
 	private static final int MAX_FREE_SPEED_RPM = 6784;
 	public static final double ANGLE_TOLERANCE = 5;
-	public static final double RPM_TOLERANCE = 200;
+	public static final double RPM_TOLERANCE = 500;
 	// RPM
-	public static final int SPEAKER_SHOOT_SPEED_RPM = 3300;
-	public static final int TRAP_SHOOT_SPEED_RPM = 3300;
+	public static final int SPEAKER_SHOOT_SPEED_RPM = 4500;
+	public static final int TRAP_SHOOT_SPEED_RPM = 4500;
 	public static final double ANGLE_MAX_SPEED = 1;
 	public static final double MAX_SET_ANGLE_OFFSET = 20;
 	// 3392 RPM = 50% Speed
@@ -150,10 +150,10 @@ public class LauncherSubsystem extends SubsystemBase {
 		// launcherAngleTwoMotor.setInverted(true);
 
 		// current limit
-		launcherTopMotor.setSmartCurrentLimit(40);
-		launcherBottomMotor.setSmartCurrentLimit(40);
-		launcherAngleOneMotor.setSmartCurrentLimit(100);
-		launcherAngleTwoMotor.setSmartCurrentLimit(100);
+		launcherTopMotor.setSmartCurrentLimit(60);
+		launcherBottomMotor.setSmartCurrentLimit(60);
+		launcherAngleOneMotor.setSmartCurrentLimit(40);
+		launcherAngleTwoMotor.setSmartCurrentLimit(40);
 
 		launcherAngleOneMotor.setSoftLimit(
 				CANSparkBase.SoftLimitDirection.kForward, PIVOT_SOFTSTOP_FORWARD);
@@ -172,10 +172,12 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherTopPIDController.setP(0.002); // 7.7633E-05);
 		launcherTopPIDController.setI(0);
 		launcherTopPIDController.setD(0.001);
+		launcherTopMotor.setClosedLoopRampRate(0.25);
 
 		launcherBottomPIDController.setP(0.002); // 0.00011722);
 		launcherBottomPIDController.setI(0);
 		launcherBottomPIDController.setD(0.001);
+		launcherBottomMotor.setClosedLoopRampRate(0.25);
 
 		launcherAngleOneMotor.getEncoder().setPosition(launcherAngleEncoder.getPosition());
 		launcherAngleOneMotor.getEncoder().setPositionConversionFactor(PIVOT_GEARING_RATIO);

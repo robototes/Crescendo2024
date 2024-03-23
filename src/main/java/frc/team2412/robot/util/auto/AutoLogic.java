@@ -41,6 +41,8 @@ public class AutoLogic {
 	public static final Subsystems s = r.subsystems;
 	public static final Controls controls = r.controls;
 
+	public static final double FEEDER_DELAY = 0.1;
+
 	public static enum StartPosition {
 		AMP_SIDE_SUBWOOFER(
 				"Amp Side Subwoofer", new Pose2d(0.73, 6.62, new Rotation2d(Units.degreesToRadians(-120)))),
@@ -198,7 +200,8 @@ public class AutoLogic {
 						? Commands.sequence(
 								new FullTargetCommand(s.launcherSubsystem, s.drivebaseSubsystem, controls)
 										.until(
-												() -> (s.launcherSubsystem.isAtAngle() && s.launcherSubsystem.isAtSpeed())),
+												() -> (s.launcherSubsystem.isAtAngle() && s.launcherSubsystem.isAtSpeed()))
+										.andThen(new WaitCommand(FEEDER_DELAY)),
 								new FeederInCommand(s.intakeSubsystem)
 										.until(() -> !s.intakeSubsystem.feederSensorHasNote()))
 						: Commands.none()));
@@ -211,6 +214,7 @@ public class AutoLogic {
 										LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
 										LauncherSubsystem.SUBWOOFER_AIM_ANGLE)
 								.until(() -> (s.launcherSubsystem.isAtAngle() && s.launcherSubsystem.isAtSpeed()))
+								.andThen(new WaitCommand(FEEDER_DELAY))
 								.andThen(new FeederInCommand(s.intakeSubsystem))
 								.until(() -> !s.intakeSubsystem.feederSensorHasNote())
 								.andThen(new WaitCommand(0.4))
