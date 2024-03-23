@@ -43,7 +43,7 @@ public class LauncherSubsystem extends SubsystemBase {
 	public static final int PODIUM_AIM_ANGLE = 238;
 	public static final int TRAP_AIM_ANGLE = 317;
 	public static final double MANUAL_MODIFIER = 0.02;
-	public static final double RETRACTED_ANGLE = 240;
+	public static final double RETRACTED_ANGLE = 242;
 	// offset for FF so parallel to floor is 0
 	public static final double FF_PIVOT_OFFSET = 225;
 
@@ -333,7 +333,7 @@ public class LauncherSubsystem extends SubsystemBase {
 						.withWidget(BuiltInWidgets.kTextView)
 						.getEntry();
 		speakerDistanceEntry =
-					Shuffleboard.getTab("Launcher").add("Speaker dist.", 0).withPosition(2, 2).getEntry();
+				Shuffleboard.getTab("Launcher").add("Speaker dist.", 0).withPosition(1, 2).getEntry();
 	}
 
 	public void updateDistanceEntry(double distance) {
