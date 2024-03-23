@@ -61,7 +61,9 @@ public class AutoLogic {
 	};
 
 	static {
-		registerCommands();
+		if (DRIVEBASE_ENABLED) {
+				registerCommands();
+		}
 	}
 
 	// paths lists
