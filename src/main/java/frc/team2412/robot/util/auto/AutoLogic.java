@@ -91,9 +91,9 @@ public class AutoLogic {
 					new AutoPath("Autoline N1", "PresetAmpSide2Score"),
 					new AutoPath("Autoline N2", "PresetMidAutoline2Score"),
 					new AutoPath("Autoline N3", "PresetSourceSideAutoline2Score"),
-					new AutoPath("Centerline N5", "PresetSourceSideFar2Score"),
+					new AutoPath("Centerline N5", "PresetSourceSideFar2Score")
 					// vision
-					new AutoPath("Centerline N3 N1", "VisionMidFar2Score", true));
+			);
 
 	private static List<AutoPath> twoPiecePaths =
 			List.of(
@@ -101,7 +101,8 @@ public class AutoLogic {
 					new AutoPath("Autoline N1 Centerline N1", "PresetAmpSideAutoline3Score"),
 					new AutoPath("Autoline N2 N1", "PresetMidAutoline3Score"),
 					// vision
-					new AutoPath("Centerline N5 N4", "VisionSourceSide3Score", true));
+					new AutoPath("Centerline N5 N4", "VisionSourceSide3Score", true), 
+					new AutoPath("Centerline N3 N1", "VisionMidFar2Score", true));
 
 	private static List<AutoPath> threePiecePaths =
 			List.of(
@@ -178,7 +179,13 @@ public class AutoLogic {
 				"StopIntake",
 				(INTAKE_ENABLED ? new IntakeStopCommand(s.intakeSubsystem) : Commands.none()));
 		NamedCommands.registerCommand(
-				"Intake", (INTAKE_ENABLED ? new AllInCommand(s.intakeSubsystem, null) : Commands.none()));
+				"Intake",
+				(INTAKE_ENABLED
+						? Commands.parallel(
+								new AllInCommand(s.intakeSubsystem, null),
+								new SetAngleLaunchCommand(
+										s.launcherSubsystem, 0, LauncherSubsystem.RETRACTED_ANGLE))
+						: Commands.none()));
 		NamedCommands.registerCommand(
 				"IntakeSensorOverride",
 				(INTAKE_ENABLED ? new AllInSensorOverrideCommand(s.intakeSubsystem) : Commands.none()));
@@ -187,7 +194,9 @@ public class AutoLogic {
 				"VisionLaunch",
 				(LAUNCHER_ENABLED && INTAKE_ENABLED && APRILTAGS_ENABLED
 						? Commands.sequence(
-								new FullTargetCommand(s.launcherSubsystem, s.drivebaseSubsystem, controls),
+								new FullTargetCommand(s.launcherSubsystem, s.drivebaseSubsystem, controls)
+										.until(
+												() -> (s.launcherSubsystem.isAtAngle() && s.launcherSubsystem.isAtSpeed())),
 								new FeederInCommand(s.intakeSubsystem)
 										.until(() -> !s.intakeSubsystem.feederSensorHasNote()))
 						: Commands.none()));
@@ -199,7 +208,7 @@ public class AutoLogic {
 										s.launcherSubsystem,
 										LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
 										LauncherSubsystem.SUBWOOFER_AIM_ANGLE)
-								.until(s.launcherSubsystem::isAtAngle)
+								.until(() -> (s.launcherSubsystem.isAtAngle() && s.launcherSubsystem.isAtSpeed()))
 								.andThen(new FeederInCommand(s.intakeSubsystem))
 								.until(() -> !s.intakeSubsystem.feederSensorHasNote())
 								.andThen(new WaitCommand(0.4))
