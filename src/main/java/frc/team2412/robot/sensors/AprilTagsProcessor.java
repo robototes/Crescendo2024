@@ -40,6 +40,8 @@ import org.photonvision.targeting.PhotonPipelineResult;
  * <p>2D field poses are just the projection of the 3D pose onto the XY plane.
  */
 public class AprilTagsProcessor {
+	private static class FilterInfo {}
+
 	public static final Transform3d ROBOT_TO_CAM =
 			new Transform3d(
 					Units.inchesToMeters(27.0 / 2.0 - 0.94996),

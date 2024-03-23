@@ -103,6 +103,8 @@ public class LauncherSubsystem extends SubsystemBase {
 
 	private GenericEntry setAngleOffsetEntry;
 
+	private GenericEntry angleSetpointEntry;
+
 	// Constructors
 	public LauncherSubsystem() {
 
@@ -152,8 +154,8 @@ public class LauncherSubsystem extends SubsystemBase {
 		// current limit
 		launcherTopMotor.setSmartCurrentLimit(60);
 		launcherBottomMotor.setSmartCurrentLimit(60);
-		launcherAngleOneMotor.setSmartCurrentLimit(40);
-		launcherAngleTwoMotor.setSmartCurrentLimit(40);
+		launcherAngleOneMotor.setSmartCurrentLimit(100);
+		launcherAngleTwoMotor.setSmartCurrentLimit(100);
 
 		launcherAngleOneMotor.setSoftLimit(
 				CANSparkBase.SoftLimitDirection.kForward, PIVOT_SOFTSTOP_FORWARD);
@@ -352,6 +354,9 @@ public class LauncherSubsystem extends SubsystemBase {
 						.withWidget(BuiltInWidgets.kNumberSlider)
 						.withProperties(Map.of("Min", -MAX_SET_ANGLE_OFFSET, "Max", MAX_SET_ANGLE_OFFSET))
 						.getEntry();
+
+		angleSetpointEntry =
+				Shuffleboard.getTab("Launcher").add("Angle Setpoint", 0).withPosition(2, 2).getEntry();
 	}
 
 	public void updateDistanceEntry(double distance) {
@@ -365,6 +370,7 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherAngleSpeedEntry.setDouble(getAngleSpeed());
 		launcherIsAtSpeed.setBoolean(isAtSpeed());
 		launcherAngleManual.setDouble(manualAngleSetpoint);
+		angleSetpointEntry.setDouble(angleSetpoint);
 
 		// sanity check the pivot encoder
 		if (launcherAngleEncoder.getPosition() >= PIVOT_SOFTSTOP_FORWARD + PIVOT_DISABLE_OFFSET
