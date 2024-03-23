@@ -111,7 +111,7 @@ public class AutoLogic {
 					new AutoPath("Autoline N1 N2 N3", "PresetAmpSideAutoline4Score"),
 					new AutoPath("Autoline N2 N3 N1", "PresetMidAutoline4Score"),
 					new AutoPath("Autoline N3 N2 N1", "PresetSourceSideAutoline4Score"),
-					new AutoPath("Centerline N1 Autoline Autoline N1 N2", "PresetAmpSideAutolineFar4Score"),
+					new AutoPath("Autoline N1 Centerline N1 Autoline N2", "PresetAmpSideAutolineFar4Score"),
 					// vision
 					new AutoPath("Autoline N1 Centerline N1 N2", "VisionAmpSide4Score", true),
 					new AutoPath("Autoline N1 N2 N3", "VisionAmpSideAutoline4Score", true),
