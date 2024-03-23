@@ -177,8 +177,7 @@ public class Controls {
 
 		launcherLowerPresetButton.onTrue(
 				s.launcherSubsystem
-						.run(s.launcherSubsystem::stopLauncher)
-						.until(() -> true)
+						.runOnce(s.launcherSubsystem::stopLauncher)
 						.andThen(new SetPivotCommand(s.launcherSubsystem, LauncherSubsystem.RETRACTED_ANGLE)));
 		launcherSubwooferPresetButton.onTrue(
 				new SetAngleLaunchCommand(
