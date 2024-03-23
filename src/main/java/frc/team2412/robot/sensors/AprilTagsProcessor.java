@@ -160,8 +160,9 @@ public class AprilTagsProcessor {
 			rawVisionFieldObject.setPose(lastFieldPose);
 			aprilTagsHelper.addVisionMeasurement(lastFieldPose, lastValidTimestampSeconds, STANDARD_DEVS);
 			var estimatedPose = aprilTagsHelper.getEstimatedPosition();
-			aprilTagsHelper.getField().setRobotPose(estimatedPose);
-			photonPoseEstimator.setLastPose(estimatedPose);
+			var adjustedPose = new Pose2d(estimatedPose.getTranslation(), estimatedPose.getRotation());
+			aprilTagsHelper.getField().setRobotPose(adjustedPose);
+			photonPoseEstimator.setLastPose(adjustedPose);
 		}
 	}
 
