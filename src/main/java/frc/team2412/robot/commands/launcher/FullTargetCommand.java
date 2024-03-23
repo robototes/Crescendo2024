@@ -66,9 +66,9 @@ public class FullTargetCommand extends Command {
 						Math.atan2(relativeSpeaker.getY(), relativeSpeaker.getX()) + Math.PI);
 		double distance = relativeSpeaker.getTranslation().getNorm();
 		LauncherDataPoint dataPoint = LAUNCHER_DATA.get(distance);
-
 		launcherSubsystem.setAngle(dataPoint.angle);
 		launcherSubsystem.launch(dataPoint.rpm);
+		launcherSubsystem.updateDistanceEntry(distance);
 
 		if (MathUtil.isNear(
 						yawTarget.getDegrees(),

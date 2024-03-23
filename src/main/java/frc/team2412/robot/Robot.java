@@ -38,6 +38,7 @@ public class Robot extends TimedRobot {
 		return instance;
 	}
 
+	// increases logging
 	private static final boolean debugMode = true;
 	// Really dangerous to keep this enabled as it disables all other controls, use with caution
 	private static final boolean sysIdMode = false;
@@ -61,7 +62,7 @@ public class Robot extends TimedRobot {
 	}
 
 	public static final MACAddress COMPETITION_ADDRESS = MACAddress.of(0x00, 0x00, 0x00);
-	public static final MACAddress PRACTICE_ADDRESS = MACAddress.of(0x33, 0x9d, 0xD1);
+	public static final MACAddress PRACTICE_ADDRESS = MACAddress.of(0x38, 0xd9, 0x9e);
 	public static final MACAddress BONK_ADDRESS = MACAddress.of(0x33, 0x9D, 0xE7);
 	public static final MACAddress CRANE_ADDRESS = MACAddress.of(0x22, 0xB0, 0x92);
 
@@ -83,7 +84,9 @@ public class Robot extends TimedRobot {
 		subsystems = new Subsystems();
 		controls = new Controls(subsystems);
 
+		// TODO: might be a duplicate, keep until after comp
 		AutoLogic.registerCommands();
+
 		if (Subsystems.SubsystemConstants.DRIVEBASE_ENABLED) {
 			AutoLogic.initShuffleBoard();
 		}
@@ -139,7 +142,7 @@ public class Robot extends TimedRobot {
 		// Checks if FMS is attatched and enables joystick warning if true
 		DriverStation.silenceJoystickConnectionWarning(!DriverStation.isFMSAttached());
 		// System.out.println(AutoLogic.getSelected() != null);
-		if (AutoLogic.getSelectedAuto() != null) {
+		if (AutoLogic.getSelectedAuto() != null && SubsystemConstants.DRIVEBASE_ENABLED) {
 			AutoLogic.getSelectedAuto().schedule();
 		}
 	}

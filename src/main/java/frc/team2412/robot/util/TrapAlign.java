@@ -88,9 +88,8 @@ public class TrapAlign {
 		public void initialize() {
 			trapCommand = trapAlign(drivebaseSubsystem);
 			trapCommand.initialize();
-			launcherSubsystem.setAngle(LauncherSubsystem.TRAP_AIM_ANGLE);
-			launcherSubsystem.launch(LauncherSubsystem.TRAP_SHOOT_SPEED_RPM);
-			launcherSubsystem.manualSetpoint(LauncherSubsystem.TRAP_AIM_ANGLE);
+			// launcherSubsystem.setAngle(LauncherSubsystem.TRAP_AIM_ANGLE);
+			// launcherSubsystem.launch(LauncherSubsystem.TRAP_SHOOT_SPEED_RPM);
 		}
 
 		@Override

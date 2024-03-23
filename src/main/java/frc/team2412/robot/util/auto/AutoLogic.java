@@ -60,8 +60,11 @@ public class AutoLogic {
 		}
 	};
 
+	// TODO: might be a duplicate, keep until after comp
 	static {
-		registerCommands();
+		if (DRIVEBASE_ENABLED) {
+			registerCommands();
+		}
 	}
 
 	// paths lists
@@ -96,11 +99,9 @@ public class AutoLogic {
 			List.of(
 					// presets
 					new AutoPath("Autoline N1 Centerline N1", "PresetAmpSideAutoline3Score"),
-					new AutoPath("Autoline N2", "PresetMidAutoline3Score"),
+					new AutoPath("Autoline N2 N1", "PresetMidAutoline3Score"),
 					// vision
-					new AutoPath("Centerline N5 N4", "VisionSourceSide3Score", true),
-					new AutoPath(
-							"Autoline N1 Centerline STEAL(N1 N2 N3 N4) N5", "VisionAmpSideFarSteal", true));
+					new AutoPath("Centerline N5 N4", "VisionSourceSide3Score", true));
 
 	private static List<AutoPath> threePiecePaths =
 			List.of(
@@ -108,15 +109,14 @@ public class AutoLogic {
 					new AutoPath("Autoline N1 N2 N3", "PresetAmpSideAutoline4Score"),
 					new AutoPath("Autoline N2 N3 N1", "PresetMidAutoline4Score"),
 					new AutoPath("Autoline N3 N2 N1", "PresetSourceSideAutoline4Score"),
-					new AutoPath("Centerline N1 Autoline Autoline N1 N2", "PresetAmpSideAutolineFar4Score"),
+					new AutoPath("Autoline N1 Centerline N1 Autoline N2", "PresetAmpSideAutolineFar4Score"),
 					// vision
 					new AutoPath("Autoline N1 Centerline N1 N2", "VisionAmpSide4Score", true),
 					new AutoPath("Autoline N1 N2 N3", "VisionAmpSideAutoline4Score", true),
 					new AutoPath("Autoline N3 N2 N1", "VisionMid4Score", true),
 					new AutoPath("Autoline N2 Centerline N3 N1", "VisionMidFar4Score2", true),
 					new AutoPath("Autoline N2 Centerline N3 N2", "VisionMidFar4Score3", true),
-					new AutoPath("Autoline N3 N2 N1", "VisionSourceSideAutoline4Score", true),
-					new AutoPath("Autoline N1 Centerline N1 N2", "VisionAmpSide4Score", true));
+					new AutoPath("Autoline N3 N2 N1", "VisionSourceSideAutoline4Score", true));
 
 	private static List<AutoPath> fourPiecePaths =
 			List.of(
@@ -188,7 +188,8 @@ public class AutoLogic {
 				(LAUNCHER_ENABLED && INTAKE_ENABLED && APRILTAGS_ENABLED
 						? Commands.sequence(
 								new FullTargetCommand(s.launcherSubsystem, s.drivebaseSubsystem, controls),
-								new FeederInCommand(s.intakeSubsystem))
+								new FeederInCommand(s.intakeSubsystem)
+										.until(() -> !s.intakeSubsystem.feederSensorHasNote()))
 						: Commands.none()));
 
 		NamedCommands.registerCommand(
@@ -198,9 +199,10 @@ public class AutoLogic {
 										s.launcherSubsystem,
 										LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
 										LauncherSubsystem.SUBWOOFER_AIM_ANGLE)
-								.andThen(new WaitCommand(1))
+								.until(s.launcherSubsystem::isAtAngle)
 								.andThen(new FeederInCommand(s.intakeSubsystem))
-								.andThen(new WaitCommand(0.5))
+								.until(() -> !s.intakeSubsystem.feederSensorHasNote())
+								.andThen(new WaitCommand(0.4))
 						: Commands.none()));
 		NamedCommands.registerCommand(
 				"StopLaunch",
@@ -208,7 +210,7 @@ public class AutoLogic {
 		NamedCommands.registerCommand(
 				"RetractPivot",
 				(LAUNCHER_ENABLED && INTAKE_ENABLED
-						? new SetAngleLaunchCommand(s.launcherSubsystem, 0, 0)
+						? new SetAngleLaunchCommand(s.launcherSubsystem, 0, LauncherSubsystem.RETRACTED_ANGLE)
 						: Commands.none())); // TODO: add retract angle
 
 		// Complex Autos
@@ -259,7 +261,7 @@ public class AutoLogic {
 		tab.add("Launch Type", isVision).withPosition(5, 1);
 		tab.add("Game Objects", gameObjects).withPosition(6, 1);
 		tab.add("Available Auto Variants", availableAutos).withPosition(5, 2).withSize(2, 1);
-		autoDelayEntry = tab.add("Auto Delay", 0).withPosition(5, 3).withSize(1, 1).getEntry();
+		// autoDelayEntry = tab.add("Auto Delay", 0).withPosition(5, 3).withSize(1, 1).getEntry();
 
 		isVision.onChange((dummyVar) -> AutoLogic.filterAutos(gameObjects.getSelected()));
 		startPositionChooser.onChange((dummyVar) -> AutoLogic.filterAutos(gameObjects.getSelected()));
@@ -300,9 +302,7 @@ public class AutoLogic {
 	}
 
 	public static Command getSelectedAuto() {
-		return Commands.sequence(
-				Commands.waitSeconds(autoDelayEntry.getDouble(0)),
-				availableAutos.getSelected().getAutoCommand());
+		return availableAutos.getSelected().getAutoCommand();
 	}
 
 	/**
@@ -327,7 +327,7 @@ public class AutoLogic {
 			autoTime = ((double) ((int) autoTime)) / 100;
 
 			// add autoDelay to estimation as well
-			autoTime += autoDelayEntry.getDouble(0);
+			// autoTime += autoDelayEntry.getDouble(0);
 
 			return autoTime;
 		}
