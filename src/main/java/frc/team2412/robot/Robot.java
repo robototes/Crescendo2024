@@ -84,7 +84,9 @@ public class Robot extends TimedRobot {
 		subsystems = new Subsystems();
 		controls = new Controls(subsystems);
 
+		// TODO: might be a duplicate, keep until after comp
 		AutoLogic.registerCommands();
+		
 		if (Subsystems.SubsystemConstants.DRIVEBASE_ENABLED) {
 			AutoLogic.initShuffleBoard();
 		}

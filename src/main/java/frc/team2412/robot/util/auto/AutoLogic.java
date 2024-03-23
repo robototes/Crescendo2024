@@ -60,6 +60,7 @@ public class AutoLogic {
 		}
 	};
 
+	// TODO: might be a duplicate, keep until after comp
 	static {
 		if (DRIVEBASE_ENABLED) {
 				registerCommands();
