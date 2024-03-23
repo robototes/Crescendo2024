@@ -259,7 +259,7 @@ public class AutoLogic {
 		tab.add("Launch Type", isVision).withPosition(5, 1);
 		tab.add("Game Objects", gameObjects).withPosition(6, 1);
 		tab.add("Available Auto Variants", availableAutos).withPosition(5, 2).withSize(2, 1);
-		autoDelayEntry = tab.add("Auto Delay", 0).withPosition(5, 3).withSize(1, 1).getEntry();
+		// autoDelayEntry = tab.add("Auto Delay", 0).withPosition(5, 3).withSize(1, 1).getEntry();
 
 		isVision.onChange((dummyVar) -> AutoLogic.filterAutos(gameObjects.getSelected()));
 		startPositionChooser.onChange((dummyVar) -> AutoLogic.filterAutos(gameObjects.getSelected()));
@@ -325,7 +325,7 @@ public class AutoLogic {
 			autoTime = ((double) ((int) autoTime)) / 100;
 
 			// add autoDelay to estimation as well
-			autoTime += autoDelayEntry.getDouble(0);
+			// autoTime += autoDelayEntry.getDouble(0);
 
 			return autoTime;
 		}

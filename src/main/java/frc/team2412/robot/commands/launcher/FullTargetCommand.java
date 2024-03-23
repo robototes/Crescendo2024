@@ -33,7 +33,6 @@ public class FullTargetCommand extends Command {
 	private Command yawAlignmentCommand;
 	private Rotation2d yawTarget;
 	private Controls controls;
-	static GenericEntry distanceEntry;
 
 	public FullTargetCommand(
 			LauncherSubsystem launcherSubsystem,
