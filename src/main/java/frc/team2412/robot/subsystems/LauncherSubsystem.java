@@ -55,7 +55,7 @@ public class LauncherSubsystem extends SubsystemBase {
 	// RPM
 	public static final int SPEAKER_SHOOT_SPEED_RPM = 3300;
 	public static final int TRAP_SHOOT_SPEED_RPM = 3300;
-	public static final double ANGLE_MAX_SPEED = 0.75;
+	public static final double ANGLE_MAX_SPEED = 1;
 	// 3392 RPM = 50% Speed
 	// 1356 RPM = 20% Speed
 	// 1017 RPM = 15% Speed
@@ -99,6 +99,8 @@ public class LauncherSubsystem extends SubsystemBase {
 	private GenericEntry launcherAngleManual;
 
 	private GenericEntry speakerDistanceEntry;
+
+	private GenericEntry setAngleOffsetEntry;
 
 	// Constructors
 	public LauncherSubsystem() {
@@ -220,7 +222,7 @@ public class LauncherSubsystem extends SubsystemBase {
 	}
 
 	public void setAngle(double launcherAngle) {
-		angleSetpoint = launcherAngle;
+		angleSetpoint = launcherAngle += setAngleOffsetEntry.getDouble(0);
 		launcherAngleOnePIDController.setReference(
 				Units.degreesToRotations(angleSetpoint),
 				ControlType.kPosition,
@@ -290,7 +292,7 @@ public class LauncherSubsystem extends SubsystemBase {
 		}
 
 		launcherIsAtSpeed =
-				Shuffleboard.getTab("Launcher")
+				Shuffleboard.getTab("Match")
 						.add("flywheels at target speed", false)
 						.withSize(1, 1)
 						.withWidget(BuiltInWidgets.kBooleanBox)
@@ -334,6 +336,13 @@ public class LauncherSubsystem extends SubsystemBase {
 						.getEntry();
 		speakerDistanceEntry =
 				Shuffleboard.getTab("Launcher").add("Speaker dist.", 0).withPosition(1, 2).getEntry();
+
+		setAngleOffsetEntry =
+				Shuffleboard.getTab("Match")
+						.add("Set Angle Offset", 0)
+						.withPosition(2, 1)
+						.withSize(1, 2)
+						.getEntry();
 	}
 
 	public void updateDistanceEntry(double distance) {

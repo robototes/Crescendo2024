@@ -235,6 +235,11 @@ public class Controls {
 	public void vibrateDriveController(double vibration) {
 		if (!DriverStation.isAutonomous()) {
 			driveController.getHID().setRumble(RumbleType.kBothRumble, vibration);
+		}
+	}
+
+	public void vibrateCoDriveController(double vibration) {
+		if (!DriverStation.isAutonomous()) {
 			codriveController.getHID().setRumble(RumbleType.kBothRumble, vibration);
 		}
 	}

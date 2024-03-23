@@ -12,11 +12,11 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.team2412.robot.Controls;
+import frc.team2412.robot.Controls.ControlConstants;
 import frc.team2412.robot.subsystems.DrivebaseSubsystem;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
 import frc.team2412.robot.util.LauncherDataLoader;
 import frc.team2412.robot.util.LauncherDataPoint;
-import frc.team2412.robot.Controls.ControlConstants;
 import java.nio.file.FileSystems;
 
 public class FullTargetCommand extends Command {
@@ -71,17 +71,11 @@ public class FullTargetCommand extends Command {
 		launcherSubsystem.launch(dataPoint.rpm);
 		launcherSubsystem.updateDistanceEntry(distance);
 
-		if (MathUtil.isNear(
-						yawTarget.getDegrees(),
-						drivebaseSubsystem.getPose().getRotation().getDegrees(),
-						YAW_TARGET_VIBRATION_TOLERANCE,
-						0,
-						360)
-				&& launcherSubsystem.isAtAngle()
-				&& launcherSubsystem.isAtSpeed()) {
+		// launcher angle checker
+		if (launcherSubsystem.isAtAngle()&& launcherSubsystem.isAtSpeed()) {
 			controls.vibrateDriveController(ControlConstants.RUMBLE_VIBRATION);
 		} else {
-			controls.vibrateDriveController(0);
+			controls.vibrateDriveController(0.0);
 		}
 	}
 

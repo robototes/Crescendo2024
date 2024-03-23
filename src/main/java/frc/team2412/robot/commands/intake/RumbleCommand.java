@@ -13,12 +13,12 @@ public class RumbleCommand extends Command {
 
 	@Override
 	public void initialize() {
-		controls.vibrateDriveController(ControlConstants.RUMBLE_OFF);
+		controls.vibrateCoDriveController(ControlConstants.RUMBLE_VIBRATION);
 	}
-
+	// exist
 	@Override
 	public void end(boolean interrupted) {
-		controls.vibrateDriveController(0.0);
+		controls.vibrateCoDriveController(0.0);
 	}
 
 	@Override
