@@ -288,7 +288,8 @@ public class LauncherSubsystem extends SubsystemBase {
 			Shuffleboard.getTab("Launcher")
 					.addDouble("Top FlyWheel Temp", () -> launcherTopMotor.getMotorTemperature());
 
-			speakerDistanceEntry = Shuffleboard.getTab("Launcher").add("Speaker dist.", 0).getEntry();
+			speakerDistanceEntry =
+					Shuffleboard.getTab("Launcher").add("Speaker dist.", 0).withPosition(2, 2).getEntry();
 		}
 
 		launcherIsAtSpeed =
