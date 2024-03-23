@@ -96,7 +96,7 @@ public class AutoLogic {
 			List.of(
 					// presets
 					new AutoPath("Autoline N1 Centerline N1", "PresetAmpSideAutoline3Score"),
-					new AutoPath("Autoline N2", "PresetMidAutoline3Score"),
+					new AutoPath("Autoline N2 N1", "PresetMidAutoline3Score"),
 					// vision
 					new AutoPath("Centerline N5 N4", "VisionSourceSide3Score", true),
 					new AutoPath(
