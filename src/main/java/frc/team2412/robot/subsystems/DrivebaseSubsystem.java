@@ -206,7 +206,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 									SwerveMath.applyDeadband(strafe.getAsDouble(), true, JOYSTICK_DEADBAND)
 											* MAX_SPEED
 											* translationSpeedEntry.getDouble(1.0));
-					drive(constrainedTranslation, constrainedRotation, true);
+					drive(constrainedTranslation, constrainedRotation, false);
 				});
 	}
 
@@ -261,6 +261,14 @@ public class DrivebaseSubsystem extends SubsystemBase {
 	 */
 	public void resetGyro() {
 		swerveDrive.zeroGyro();
+	}
+
+	public void resetGyroTeleop() {
+		var angle =
+				DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red
+						? Rotation2d.fromDegrees(180)
+						: new Rotation2d();
+		setPose(new Pose2d(getPose().getTranslation(), angle));
 	}
 
 	/** Reset everything we can on the drivebase. To be used before auto starts */
