@@ -287,9 +287,6 @@ public class LauncherSubsystem extends SubsystemBase {
 					.addDouble("Bottom FlyWheel Temp", () -> launcherBottomMotor.getMotorTemperature());
 			Shuffleboard.getTab("Launcher")
 					.addDouble("Top FlyWheel Temp", () -> launcherTopMotor.getMotorTemperature());
-
-			speakerDistanceEntry =
-					Shuffleboard.getTab("Launcher").add("Speaker dist.", 0).withPosition(2, 2).getEntry();
 		}
 
 		launcherIsAtSpeed =
@@ -335,6 +332,8 @@ public class LauncherSubsystem extends SubsystemBase {
 						.withSize(1, 1)
 						.withWidget(BuiltInWidgets.kTextView)
 						.getEntry();
+		speakerDistanceEntry =
+					Shuffleboard.getTab("Launcher").add("Speaker dist.", 0).withPosition(2, 2).getEntry();
 	}
 
 	public void updateDistanceEntry(double distance) {
