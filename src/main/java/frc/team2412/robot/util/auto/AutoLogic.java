@@ -188,7 +188,8 @@ public class AutoLogic {
 				(LAUNCHER_ENABLED && INTAKE_ENABLED && APRILTAGS_ENABLED
 						? Commands.sequence(
 								new FullTargetCommand(s.launcherSubsystem, s.drivebaseSubsystem, controls),
-								new FeederInCommand(s.intakeSubsystem))
+								new FeederInCommand(s.intakeSubsystem)
+										.until(() -> !s.intakeSubsystem.feederSensorHasNote()))
 						: Commands.none()));
 
 		NamedCommands.registerCommand(
@@ -198,9 +199,10 @@ public class AutoLogic {
 										s.launcherSubsystem,
 										LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
 										LauncherSubsystem.SUBWOOFER_AIM_ANGLE)
-								.andThen(new WaitCommand(1))
+								.until(s.launcherSubsystem::isAtAngle)
 								.andThen(new FeederInCommand(s.intakeSubsystem))
-								.andThen(new WaitCommand(0.5))
+								.until(() -> !s.intakeSubsystem.feederSensorHasNote())
+								.andThen(new WaitCommand(0.4))
 						: Commands.none()));
 		NamedCommands.registerCommand(
 				"StopLaunch",
