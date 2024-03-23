@@ -16,6 +16,7 @@ import frc.team2412.robot.subsystems.DrivebaseSubsystem;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
 import frc.team2412.robot.util.LauncherDataLoader;
 import frc.team2412.robot.util.LauncherDataPoint;
+import frc.team2412.robot.Controls.ControlConstants;
 import java.nio.file.FileSystems;
 
 public class FullTargetCommand extends Command {
@@ -78,9 +79,9 @@ public class FullTargetCommand extends Command {
 						360)
 				&& launcherSubsystem.isAtAngle()
 				&& launcherSubsystem.isAtSpeed()) {
-			controls.vibrateDriveController(1.0);
+			controls.vibrateDriveController(ControlConstants.RUMBLE_VIBRATION);
 		} else {
-			controls.vibrateDriveController(0.0);
+			controls.vibrateDriveController(0);
 		}
 	}
 

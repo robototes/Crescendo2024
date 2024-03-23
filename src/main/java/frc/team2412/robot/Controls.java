@@ -32,6 +32,8 @@ public class Controls {
 	public static class ControlConstants {
 		public static final int CONTROLLER_PORT = 0;
 		public static final int CODRIVER_CONTROLLER_PORT = 1;
+		public static final double RUMBLE_VIBRATION = 0.3;
+		public static final double RUMBLE_OFF = 0;
 	}
 
 	private final CommandXboxController driveController;
