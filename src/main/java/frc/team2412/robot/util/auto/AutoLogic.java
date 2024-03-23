@@ -101,9 +101,7 @@ public class AutoLogic {
 					new AutoPath("Autoline N1 Centerline N1", "PresetAmpSideAutoline3Score"),
 					new AutoPath("Autoline N2 N1", "PresetMidAutoline3Score"),
 					// vision
-					new AutoPath("Centerline N5 N4", "VisionSourceSide3Score", true),
-					new AutoPath(
-							"Autoline N1 Centerline STEAL(N1 N2 N3 N4) N5", "VisionAmpSideFarSteal", true));
+					new AutoPath("Centerline N5 N4", "VisionSourceSide3Score", true));
 
 	private static List<AutoPath> threePiecePaths =
 			List.of(
@@ -118,8 +116,7 @@ public class AutoLogic {
 					new AutoPath("Autoline N3 N2 N1", "VisionMid4Score", true),
 					new AutoPath("Autoline N2 Centerline N3 N1", "VisionMidFar4Score2", true),
 					new AutoPath("Autoline N2 Centerline N3 N2", "VisionMidFar4Score3", true),
-					new AutoPath("Autoline N3 N2 N1", "VisionSourceSideAutoline4Score", true),
-					new AutoPath("Autoline N1 Centerline N1 N2", "VisionAmpSide4Score", true));
+					new AutoPath("Autoline N3 N2 N1", "VisionSourceSideAutoline4Score", true));
 
 	private static List<AutoPath> fourPiecePaths =
 			List.of(
