@@ -26,7 +26,7 @@
         {
           "type": "named",
           "data": {
-            "name": "SubwooferLaunch"
+            "name": "Feed"
           }
         },
         {
@@ -38,19 +38,19 @@
         {
           "type": "named",
           "data": {
-            "name": "SubwooferLaunch"
+            "name": "Feed"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "HighSpeakerMidNoteReturn"
+            "pathName": "HighSpeakerHighNote2Return"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "SubwooferLaunch"
+            "name": "Feed"
           }
         }
       ]

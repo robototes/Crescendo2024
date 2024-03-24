@@ -26,13 +26,7 @@
         {
           "type": "named",
           "data": {
-            "name": "SubwooferLaunch"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "MidSpeakerPassAutoLine"
+            "name": "Feed"
           }
         }
       ]

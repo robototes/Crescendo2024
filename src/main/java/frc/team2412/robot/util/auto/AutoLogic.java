@@ -9,7 +9,6 @@ import com.pathplanner.lib.path.PathPlannerTrajectory;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -35,6 +34,7 @@ import frc.team2412.robot.util.PathPlannerAutos.Auto;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.BooleanSupplier;
 
 public class AutoLogic {
 	public static Robot r = Robot.getInstance();
@@ -106,7 +106,8 @@ public class AutoLogic {
 					new AutoPath("Autoline N2 N1", "PresetMidAutoline3Score"),
 					// vision
 					new AutoPath("Centerline N5 N4", "VisionSourceSide3Score", true),
-					new AutoPath("Centerline N3 N1", "VisionMidFar2Score", true));
+					new AutoPath("Centerline N3 N1", "VisionMidFar2Score", true),
+					new AutoPath("Autoline N1 Centerline N1", "VisionAmpSideFarAutoline3Score", true));
 
 	private static List<AutoPath> threePiecePaths =
 			List.of(
@@ -165,7 +166,7 @@ public class AutoLogic {
 	private static SendableChooser<Integer> gameObjects = new SendableChooser<Integer>();
 	private static SendableChooser<Boolean> isVision = new SendableChooser<Boolean>();
 
-	private static GenericEntry autoDelayEntry;
+	// private static GenericEntry autoDelayEntry;
 
 	// methods
 
@@ -190,21 +191,38 @@ public class AutoLogic {
 								new SetAngleLaunchCommand(
 										s.launcherSubsystem, 0, LauncherSubsystem.RETRACTED_ANGLE))
 						: Commands.none()));
+
+		NamedCommands.registerCommand(
+				"Feed",
+				INTAKE_ENABLED && LAUNCHER_ENABLED
+						? Commands.waitUntil(isReadyToLaunch())
+								.andThen(Commands.waitSeconds(FEEDER_DELAY))
+								.andThen(new FeederInCommand(s.intakeSubsystem))
+								.andThen(Commands.waitSeconds(0.1))
+						: Commands.none());
+
 		NamedCommands.registerCommand(
 				"IntakeSensorOverride",
 				(INTAKE_ENABLED ? new AllInSensorOverrideCommand(s.intakeSubsystem) : Commands.none()));
+
 		// Launcher
 		NamedCommands.registerCommand(
 				"VisionLaunch",
 				(LAUNCHER_ENABLED && INTAKE_ENABLED && APRILTAGS_ENABLED
-						? Commands.sequence(
-								new FullTargetCommand(s.launcherSubsystem, s.drivebaseSubsystem, controls)
-										.until(
-												() -> (s.launcherSubsystem.isAtAngle() && s.launcherSubsystem.isAtSpeed()))
-										.andThen(new WaitCommand(FEEDER_DELAY)),
-								new FeederInCommand(s.intakeSubsystem)
-										.until(() -> !s.intakeSubsystem.feederSensorHasNote()))
+						? new FullTargetCommand(s.launcherSubsystem, s.drivebaseSubsystem, controls)
+								.until(isReadyToLaunch())
+								.andThen(new WaitCommand(FEEDER_DELAY))
+								.andThen(new FeederInCommand(s.intakeSubsystem).until(untilNoNote()))
 						: Commands.none()));
+
+		NamedCommands.registerCommand(
+				"SetAngleSubwoofer",
+				LAUNCHER_ENABLED
+						? new SetAngleLaunchCommand(
+								s.launcherSubsystem,
+								LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
+								LauncherSubsystem.SUBWOOFER_AIM_ANGLE)
+						: Commands.none());
 
 		NamedCommands.registerCommand(
 				"SubwooferLaunch",
@@ -213,10 +231,9 @@ public class AutoLogic {
 										s.launcherSubsystem,
 										LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
 										LauncherSubsystem.SUBWOOFER_AIM_ANGLE)
-								.until(() -> (s.launcherSubsystem.isAtAngle() && s.launcherSubsystem.isAtSpeed()))
+								.until(isReadyToLaunch())
 								.andThen(new WaitCommand(FEEDER_DELAY))
-								.andThen(new FeederInCommand(s.intakeSubsystem))
-								.until(() -> !s.intakeSubsystem.feederSensorHasNote())
+								.andThen(new FeederInCommand(s.intakeSubsystem).until(untilNoNote()))
 								.andThen(new WaitCommand(0.4))
 						: Commands.none()));
 		NamedCommands.registerCommand(
@@ -317,6 +334,14 @@ public class AutoLogic {
 	}
 
 	public static Command getSelectedAuto() {
+
+		// TODO: figure out why code crashes when this sequential command group is returned
+		// code also crashes when i run without wait command, something about composition error? idk
+
+		// double waitTimer = autoDelayEntry.getDouble(0);
+		// return Commands.sequence(Commands.wait(waitTimer),
+		// availableAutos.getSelected().getAutoCommand());
+
 		return availableAutos.getSelected().getAutoCommand();
 	}
 
@@ -347,5 +372,19 @@ public class AutoLogic {
 			return autoTime;
 		}
 		return 0;
+	}
+
+	// commands util
+
+	private static BooleanSupplier isReadyToLaunch() {
+		// TODO: consider adding third condition: s.intakeSubsystem.feederSensorHasNote()
+		return () -> (s.launcherSubsystem.isAtAngle() && s.launcherSubsystem.isAtSpeed());
+	}
+
+	private static BooleanSupplier untilNoNote() {
+		// decided to go from checking for note in feeder to both feeder and index in case note is still
+		// indexing
+		return () ->
+				!(s.intakeSubsystem.feederSensorHasNote() && s.intakeSubsystem.indexSensorHasNote());
 	}
 }
