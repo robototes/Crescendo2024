@@ -69,7 +69,7 @@
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "New Event Marker",
+      "name": "Intake",
       "waypointRelativePos": 0,
       "command": {
         "type": "parallel",
@@ -82,6 +82,16 @@
               }
             }
           ]
+        }
+      }
+    },
+    {
+      "name": "Prepare Subwoofer Launch",
+      "waypointRelativePos": 1.6,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": []
         }
       }
     }

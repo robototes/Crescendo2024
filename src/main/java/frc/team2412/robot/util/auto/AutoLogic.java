@@ -190,6 +190,17 @@ public class AutoLogic {
 								new SetAngleLaunchCommand(
 										s.launcherSubsystem, 0, LauncherSubsystem.RETRACTED_ANGLE))
 						: Commands.none()));
+
+		NamedCommands.registerCommand(
+				"Feed",
+				INTAKE_ENABLED && LAUNCHER_ENABLED
+						? Commands.waitUntil(
+										() -> s.launcherSubsystem.isAtAngle() && s.launcherSubsystem.isAtSpeed())
+								.andThen(Commands.waitSeconds(FEEDER_DELAY))
+								.andThen(new FeederInCommand(s.intakeSubsystem))
+								.andThen(Commands.waitSeconds(0.1))
+						: Commands.none());
+
 		NamedCommands.registerCommand(
 				"IntakeSensorOverride",
 				(INTAKE_ENABLED ? new AllInSensorOverrideCommand(s.intakeSubsystem) : Commands.none()));
@@ -205,6 +216,15 @@ public class AutoLogic {
 								new FeederInCommand(s.intakeSubsystem)
 										.until(() -> !s.intakeSubsystem.feederSensorHasNote()))
 						: Commands.none()));
+
+		NamedCommands.registerCommand(
+				"SetAngleSubwoofer",
+				LAUNCHER_ENABLED
+						? new SetAngleLaunchCommand(
+								s.launcherSubsystem,
+								LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
+								LauncherSubsystem.SUBWOOFER_AIM_ANGLE)
+						: Commands.none());
 
 		NamedCommands.registerCommand(
 				"SubwooferLaunch",
