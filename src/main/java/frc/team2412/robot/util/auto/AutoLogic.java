@@ -41,7 +41,7 @@ public class AutoLogic {
 	public static final Subsystems s = r.subsystems;
 	public static final Controls controls = r.controls;
 
-	public static final double FEEDER_DELAY = 0.1;
+	public static final double FEEDER_DELAY = 0.4;
 
 	public static enum StartPosition {
 		AMP_SIDE_SUBWOOFER(
