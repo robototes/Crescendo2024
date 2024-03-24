@@ -104,8 +104,8 @@ public class AutoLogic {
 					// presets
 					new AutoPath("Autoline N1 Centerline N1", "PresetAmpSideAutoline3Score"),
 					new AutoPath("Autoline N2 N1", "PresetMidAutoline3Score"),
-					new AutoPath("Centerline N1 N2", "PresetSourceSideCenterline3Score2"),
-					new AutoPath("Centerline N1 N3", "PresetSourceSideCenterline3Score2"),
+					new AutoPath("Centerline N5 N4", "PresetSourceSideCenterline3Score2"),
+					new AutoPath("Centerline N5 N3", "PresetSourceSideCenterline3Score2"),
 					// vision
 					new AutoPath("Centerline N5 N4", "VisionSourceSide3Score", true),
 					new AutoPath("Centerline N3 N1", "VisionMidFar2Score", true));
@@ -292,6 +292,8 @@ public class AutoLogic {
 
 		// resets/clears all options
 		availableAutos.clearOptions();
+
+		availableAutos.setDefaultOption(defaultPath.getDisplayName(), defaultPath);
 
 		// filter based off gameobejct count
 		List<AutoPath> autoCommandsList = commandsMap.get(numGameObjects);
