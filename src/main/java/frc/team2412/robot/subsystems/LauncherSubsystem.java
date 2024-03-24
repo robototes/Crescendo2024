@@ -39,7 +39,7 @@ public class LauncherSubsystem extends SubsystemBase {
 	private static final float PIVOT_DISABLE_OFFSET = 0.04f;
 	// ANGLE VALUES
 	public static final int AMP_AIM_ANGLE = 288;
-	public static final int SUBWOOFER_AIM_ANGLE = 254;
+	public static final int SUBWOOFER_AIM_ANGLE = 256;
 	public static final int PODIUM_AIM_ANGLE = 238;
 	public static final int TRAP_AIM_ANGLE = 317;
 	public static final double MANUAL_MODIFIER = 0.02;
