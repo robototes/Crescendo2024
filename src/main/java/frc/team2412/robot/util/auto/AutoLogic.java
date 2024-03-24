@@ -9,7 +9,6 @@ import com.pathplanner.lib.path.PathPlannerTrajectory;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -35,6 +34,7 @@ import frc.team2412.robot.util.PathPlannerAutos.Auto;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.BooleanSupplier;
 
 public class AutoLogic {
 	public static Robot r = Robot.getInstance();
@@ -194,8 +194,7 @@ public class AutoLogic {
 		NamedCommands.registerCommand(
 				"Feed",
 				INTAKE_ENABLED && LAUNCHER_ENABLED
-						? Commands.waitUntil(
-										() -> s.launcherSubsystem.isAtAngle() && s.launcherSubsystem.isAtSpeed())
+						? Commands.waitUntil(isReadyToLaunch())
 								.andThen(Commands.waitSeconds(FEEDER_DELAY))
 								.andThen(new FeederInCommand(s.intakeSubsystem))
 								.andThen(Commands.waitSeconds(0.1))
@@ -204,17 +203,15 @@ public class AutoLogic {
 		NamedCommands.registerCommand(
 				"IntakeSensorOverride",
 				(INTAKE_ENABLED ? new AllInSensorOverrideCommand(s.intakeSubsystem) : Commands.none()));
+
 		// Launcher
 		NamedCommands.registerCommand(
 				"VisionLaunch",
 				(LAUNCHER_ENABLED && INTAKE_ENABLED && APRILTAGS_ENABLED
-						? Commands.sequence(
-								new FullTargetCommand(s.launcherSubsystem, s.drivebaseSubsystem, controls)
-										.until(
-												() -> (s.launcherSubsystem.isAtAngle() && s.launcherSubsystem.isAtSpeed()))
-										.andThen(new WaitCommand(FEEDER_DELAY)),
-								new FeederInCommand(s.intakeSubsystem)
-										.until(() -> !s.intakeSubsystem.feederSensorHasNote()))
+						? new FullTargetCommand(s.launcherSubsystem, s.drivebaseSubsystem, controls)
+								.until(isReadyToLaunch())
+								.andThen(new WaitCommand(FEEDER_DELAY))
+								.andThen(new FeederInCommand(s.intakeSubsystem).until(untilNoNote()))
 						: Commands.none()));
 
 		NamedCommands.registerCommand(
@@ -233,13 +230,12 @@ public class AutoLogic {
 										s.launcherSubsystem,
 										LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
 										LauncherSubsystem.SUBWOOFER_AIM_ANGLE)
-								.until(() -> (s.launcherSubsystem.isAtAngle() && s.launcherSubsystem.isAtSpeed()))
+								.until(isReadyToLaunch())
 								.andThen(new WaitCommand(FEEDER_DELAY))
-								.andThen(new FeederInCommand(s.intakeSubsystem))
-								.until(() -> !s.intakeSubsystem.feederSensorHasNote())
+								.andThen(new FeederInCommand(s.intakeSubsystem).until(untilNoNote()))
 								.andThen(new WaitCommand(0.4))
 						: Commands.none()));
-	NamedCommands.registerCommand(
+		NamedCommands.registerCommand(
 				"StopLaunch",
 				(LAUNCHER_ENABLED ? new StopLauncherCommand(s.launcherSubsystem) : Commands.none()));
 		NamedCommands.registerCommand(
@@ -342,10 +338,10 @@ public class AutoLogic {
 		// code also crashes when i run without wait command, something about composition error? idk
 
 		// double waitTimer = autoDelayEntry.getDouble(0);
-		// return Commands.sequence(Commands.wait(waitTimer), availableAutos.getSelected().getAutoCommand());
+		// return Commands.sequence(Commands.wait(waitTimer),
+		// availableAutos.getSelected().getAutoCommand());
 
 		return availableAutos.getSelected().getAutoCommand();
-		
 	}
 
 	/**
@@ -375,5 +371,19 @@ public class AutoLogic {
 			return autoTime;
 		}
 		return 0;
+	}
+
+	// commands util
+
+	private static BooleanSupplier isReadyToLaunch() {
+		// TODO: consider adding third condition: s.intakeSubsystem.feederSensorHasNote()
+		return () -> (s.launcherSubsystem.isAtAngle() && s.launcherSubsystem.isAtSpeed());
+	}
+
+	private static BooleanSupplier untilNoNote() {
+		// decided to go from checking for note in feeder to both feeder and index in case note is still
+		// indexing
+		return () ->
+				!(s.intakeSubsystem.feederSensorHasNote() && s.intakeSubsystem.indexSensorHasNote());
 	}
 }
