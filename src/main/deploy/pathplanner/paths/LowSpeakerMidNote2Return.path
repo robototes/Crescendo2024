@@ -69,7 +69,7 @@
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "Intake",
+      "name": "intake",
       "waypointRelativePos": 0,
       "command": {
         "type": "parallel",
@@ -86,12 +86,19 @@
       }
     },
     {
-      "name": "Prepare Subwoofer Launch",
-      "waypointRelativePos": 1.6,
+      "name": "New Event Marker",
+      "waypointRelativePos": 1.55,
       "command": {
         "type": "parallel",
         "data": {
-          "commands": []
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "SetAngleSubwoofer"
+              }
+            }
+          ]
         }
       }
     }

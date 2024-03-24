@@ -165,7 +165,7 @@ public class AutoLogic {
 	private static SendableChooser<Integer> gameObjects = new SendableChooser<Integer>();
 	private static SendableChooser<Boolean> isVision = new SendableChooser<Boolean>();
 
-	private static GenericEntry autoDelayEntry;
+	// private static GenericEntry autoDelayEntry;
 
 	// methods
 
@@ -239,7 +239,7 @@ public class AutoLogic {
 								.until(() -> !s.intakeSubsystem.feederSensorHasNote())
 								.andThen(new WaitCommand(0.4))
 						: Commands.none()));
-		NamedCommands.registerCommand(
+	NamedCommands.registerCommand(
 				"StopLaunch",
 				(LAUNCHER_ENABLED ? new StopLauncherCommand(s.launcherSubsystem) : Commands.none()));
 		NamedCommands.registerCommand(
@@ -337,7 +337,15 @@ public class AutoLogic {
 	}
 
 	public static Command getSelectedAuto() {
+
+		// TODO: figure out why code crashes when this sequential command group is returned
+		// code also crashes when i run without wait command, something about composition error? idk
+
+		// double waitTimer = autoDelayEntry.getDouble(0);
+		// return Commands.sequence(Commands.wait(waitTimer), availableAutos.getSelected().getAutoCommand());
+
 		return availableAutos.getSelected().getAutoCommand();
+		
 	}
 
 	/**

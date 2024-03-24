@@ -47,7 +47,12 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.5,
-      "rotationDegrees": -170.94,
+      "rotationDegrees": -164.96451225420628,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 0.8,
+      "rotationDegrees": -161.1834449797382,
       "rotateFast": false
     },
     {
@@ -59,17 +64,12 @@
       "waypointRelativePos": 1.95,
       "rotationDegrees": -120.0,
       "rotateFast": false
-    },
-    {
-      "waypointRelativePos": 1.15,
-      "rotationDegrees": -170.94,
-      "rotateFast": false
     }
   ],
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "New Event Marker",
+      "name": "intake",
       "waypointRelativePos": 0,
       "command": {
         "type": "parallel",
@@ -79,6 +79,23 @@
               "type": "named",
               "data": {
                 "name": "Intake"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "prep launch",
+      "waypointRelativePos": 1.55,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "SetAngleSubwoofer"
               }
             }
           ]
