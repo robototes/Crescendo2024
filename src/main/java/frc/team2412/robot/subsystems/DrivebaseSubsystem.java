@@ -90,6 +90,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 	private GenericEntry translationSpeedEntry;
 	private GenericEntry rotationSpeedEntry;
 	private GenericEntry xWheelsEntry;
+	private GenericEntry flipTranslationEntry;
 
 	public DrivebaseSubsystem() {
 		initShuffleboard();
@@ -206,7 +207,13 @@ public class DrivebaseSubsystem extends SubsystemBase {
 									SwerveMath.applyDeadband(strafe.getAsDouble(), true, JOYSTICK_DEADBAND)
 											* MAX_SPEED
 											* translationSpeedEntry.getDouble(1.0));
-					drive(constrainedTranslation, constrainedRotation, false);
+					if (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red) {
+						constrainedTranslation = constrainedTranslation.unaryMinus();
+					}
+					if (flipTranslationEntry.getBoolean(false)) {
+						constrainedTranslation = constrainedTranslation.unaryMinus();
+					}
+					drive(constrainedTranslation, constrainedRotation, true);
 				});
 	}
 
@@ -324,6 +331,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 						.withSize(1, 1)
 						.getEntry();
 		xWheelsEnabled = xWheelsEntry.getBoolean(true);
+		flipTranslationEntry = drivebaseTab.add("Flip translation", false).withWidget(BuiltInWidgets.kToggleSwitch).withSize(1, 1).getEntry();
 	}
 
 	/** Get the YAGSL {@link SwerveDrive} object. */
