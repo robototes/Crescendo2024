@@ -332,7 +332,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 						.getEntry();
 		xWheelsEnabled = xWheelsEntry.getBoolean(true);
 		flipTranslationEntry =
-				drivebaseTab
+				Shuffleboard.getTab("Match")
 						.add("Flip translation", false)
 						.withWidget(BuiltInWidgets.kToggleSwitch)
 						.withSize(1, 1)
