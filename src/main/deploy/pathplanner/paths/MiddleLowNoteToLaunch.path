@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 9.01,
-        "y": 0.81
+        "x": 8.41058639382236,
+        "y": 0.77
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.502808157044885,
-        "y": 1.2707133785696143
+        "x": 5.903394550867245,
+        "y": 1.2307133785696143
       },
       "isLocked": false,
       "linkedName": "CenterLineN5"
