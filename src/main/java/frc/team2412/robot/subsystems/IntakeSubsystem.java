@@ -36,7 +36,6 @@ public class IntakeSubsystem extends SubsystemBase {
 
 	// Motors
 	private final CANSparkMax intakeMotorFront;
-	private final CANSparkMax intakeMotorBack;
 	private final CANSparkMax intakeMotorLeft;
 	private final CANSparkMax intakeMotorRight;
 
@@ -46,7 +45,7 @@ public class IntakeSubsystem extends SubsystemBase {
 	private final CANSparkFlex feederMotor;
 
 	// Sensors
-	private final DigitalInput indexSensor;
+	private final SparkLimitSwitch indexSensor;
 	private final DigitalInput feederSensor;
 
 	private final SparkLimitSwitch intakeFrontSensor;
@@ -73,7 +72,6 @@ public class IntakeSubsystem extends SubsystemBase {
 	public IntakeSubsystem() {
 
 		intakeMotorFront = new CANSparkMax(INTAKE_MOTOR_FRONT, MotorType.kBrushless);
-		intakeMotorBack = new CANSparkMax(INTAKE_MOTOR_BACK, MotorType.kBrushless);
 		intakeMotorLeft = new CANSparkMax(INTAKE_MOTOR_LEFT, MotorType.kBrushless);
 		intakeMotorRight = new CANSparkMax(INTAKE_MOTOR_RIGHT, MotorType.kBrushless);
 
@@ -82,7 +80,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
 		feederMotor = new CANSparkFlex(FEEDER_MOTOR, MotorType.kBrushless);
 
-		indexSensor = new DigitalInput(INDEX_SENSOR);
+		indexSensor = indexMotorUpper.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
 		feederSensor = new DigitalInput(FEEDER_SENSOR);
 
 		intakeFrontSensor = intakeMotorFront.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
@@ -101,12 +99,20 @@ public class IntakeSubsystem extends SubsystemBase {
 		initShuffleboard();
 	}
 
-	private void configureMotor(CANSparkBase motor, int currentLimit, boolean invert) {
+	private void configureMotor(
+			CANSparkBase motor, int currentLimit, boolean invert, boolean enableLimitSwitch) {
 		motor.restoreFactoryDefaults();
 		motor.setIdleMode(IdleMode.kBrake);
 		motor.setSmartCurrentLimit(currentLimit);
 		motor.setInverted(invert);
+		motor
+				.getForwardLimitSwitch(com.revrobotics.SparkLimitSwitch.Type.kNormallyOpen)
+				.enableLimitSwitch(enableLimitSwitch);
 		motor.burnFlash();
+	}
+
+	private void configureMotor(CANSparkBase motor, int currentLimit, boolean invert) {
+		configureMotor(motor, currentLimit, invert, false);
 	}
 
 	private void configureMotor(CANSparkBase motor, boolean invert) {
@@ -115,17 +121,14 @@ public class IntakeSubsystem extends SubsystemBase {
 
 	private void resetMotors() {
 		configureMotor(intakeMotorFront, true);
-		configureMotor(intakeMotorBack, true);
 		configureMotor(intakeMotorLeft, true);
 		configureMotor(intakeMotorRight, true);
 
-		configureMotor(ingestMotor, false);
+		configureMotor(ingestMotor, true);
 		configureMotor(indexMotorUpper, 40, false);
 
-		configureMotor(feederMotor, 40, false);
-		indexMotorUpper
-				.getForwardLimitSwitch(com.revrobotics.SparkLimitSwitch.Type.kNormallyOpen)
-				.enableLimitSwitch(false);
+		configureMotor(feederMotor, 40, true);
+
 		indexMotorUpper.burnFlash();
 	}
 
@@ -133,8 +136,6 @@ public class IntakeSubsystem extends SubsystemBase {
 		intakeMotorFront.set(speed);
 		intakeMotorLeft.set(speed);
 		intakeMotorRight.set(speed);
-		intakeMotorBack.set(speed);
-
 		ingestMotor.set(speed);
 	}
 
@@ -156,10 +157,6 @@ public class IntakeSubsystem extends SubsystemBase {
 		intakeMotorFront.set(0);
 	}
 
-	public void intakeBackStop() {
-		intakeMotorBack.set(0);
-	}
-
 	public void intakeLeftStop() {
 		intakeMotorLeft.set(0);
 	}
@@ -175,10 +172,6 @@ public class IntakeSubsystem extends SubsystemBase {
 
 	public void intakeFrontReject() {
 		intakeMotorFront.set(INTAKE_REJECT_SPEED);
-	}
-
-	public void intakeBackReject() {
-		intakeMotorBack.set(INTAKE_REJECT_SPEED);
 	}
 
 	public void intakeLeftReject() {
@@ -222,7 +215,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
 	// sensor methods
 	public boolean indexSensorHasNote() {
-		return !indexSensor.get() && !getSensorOverride();
+		return indexSensor.isPressed();
 	}
 
 	public boolean feederSensorHasNote() {
@@ -265,10 +258,6 @@ public class IntakeSubsystem extends SubsystemBase {
 					.withSize(1, 1)
 					.withWidget(BuiltInWidgets.kTextView);
 			shuffleboardTab
-					.addDouble("Back Intake Motor Temp", () -> intakeMotorBack.getMotorTemperature())
-					.withSize(1, 1)
-					.withWidget(BuiltInWidgets.kTextView);
-			shuffleboardTab
 					.addDouble("Left Intake Motor Temp", () -> intakeMotorLeft.getMotorTemperature())
 					.withSize(1, 1)
 					.withWidget(BuiltInWidgets.kTextView);
@@ -290,6 +279,13 @@ public class IntakeSubsystem extends SubsystemBase {
 					.withWidget(BuiltInWidgets.kTextView);
 		}
 
+		sensorOverride =
+				Shuffleboard.getTab("Intake")
+						.add("Override Sensors", false)
+						.withSize(1, 1)
+						.withWidget(BuiltInWidgets.kToggleSwitch)
+						.getEntry();
+
 		shuffleboardTab.addBoolean("Index Sensor - ", this::indexSensorHasNote).withSize(1, 1);
 		shuffleboardTab.addBoolean("Feeder Sensor - ", this::feederSensorHasNote).withSize(1, 1);
 
@@ -310,13 +306,6 @@ public class IntakeSubsystem extends SubsystemBase {
 
 		setFeederInSpeedEntry =
 				shuffleboardTab.add("Feeder in speed - ", FEEDER_IN_SPEED).withSize(1, 1).getEntry();
-
-		sensorOverride =
-				Shuffleboard.getTab("Intake")
-						.add("Override Sensors", false)
-						.withSize(1, 1)
-						.withWidget(BuiltInWidgets.kToggleSwitch)
-						.getEntry();
 
 		rejectOverride =
 				Shuffleboard.getTab("Intake")

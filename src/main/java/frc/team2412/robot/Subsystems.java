@@ -7,13 +7,13 @@ import frc.team2412.robot.subsystems.DrivebaseSubsystem;
 import frc.team2412.robot.subsystems.IntakeSubsystem;
 import frc.team2412.robot.subsystems.LEDSubsystem;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
+import frc.team2412.robot.subsystems.LimelightSubsystem;
 import frc.team2412.robot.util.DrivebaseWrapper;
 
 public class Subsystems {
 	public static class SubsystemConstants {
 
 		private static final boolean IS_COMP = Robot.getInstance().isCompetition();
-
 		public static final boolean APRILTAGS_ENABLED = true;
 		public static final boolean LIMELIGHT_ENABLED = false;
 		public static final boolean CLIMB_ENABLED = false;
@@ -27,6 +27,7 @@ public class Subsystems {
 	public final DrivebaseWrapper drivebaseWrapper;
 	public final DrivebaseSubsystem drivebaseSubsystem;
 	public final LauncherSubsystem launcherSubsystem;
+	public final LimelightSubsystem limelightSubsystem;
 	public final IntakeSubsystem intakeSubsystem;
 	public final LEDSubsystem ledSubsystem;
 	public final AprilTagsProcessor apriltagsProcessor;
@@ -49,6 +50,11 @@ public class Subsystems {
 			launcherSubsystem = new LauncherSubsystem();
 		} else {
 			launcherSubsystem = null;
+		}
+		if (LIMELIGHT_ENABLED) {
+			limelightSubsystem = new LimelightSubsystem();
+		} else {
+			limelightSubsystem = null;
 		}
 		if (INTAKE_ENABLED) {
 			intakeSubsystem = new IntakeSubsystem();

@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 0.73,
-        "y": 4.46
+        "y": 4.47
       },
       "prevControl": null,
       "nextControl": {
         "x": 1.689169744135214,
-        "y": 2.3204424556117518
+        "y": 2.3304424556117516
       },
       "isLocked": false,
       "linkedName": "LowSpeaker"

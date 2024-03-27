@@ -1,6 +1,7 @@
-package frc.team2412.robot.util;
+package frc.team2412.robot.util.auto;
 
-import static frc.team2412.robot.util.AutoLogic.*;
+import static frc.team2412.robot.Subsystems.SubsystemConstants.*;
+import static frc.team2412.robot.util.auto.AutoLogic.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -9,13 +10,9 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team2412.robot.commands.launcher.FullTargetCommand;
 import frc.team2412.robot.commands.launcher.SetAngleLaunchCommand;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
+import java.util.function.BooleanSupplier;
 
-public class AutoPaths {
-	private static Command registerAuto(
-			String autoName, Command command, String... primaryPathNames) {
-		PathPlannerAutos.registerAuto(autoName, primaryPathNames);
-		return command.withName(autoName);
-	}
+public class ComplexAutoPaths {
 
 	// Test Auto
 
@@ -27,15 +24,15 @@ public class AutoPaths {
 							new ConditionalCommand(
 									AutoLogic.getAutoCommand("TestPathTrue"),
 									AutoLogic.getAutoCommand("TestPathFalse"),
-									() -> false)),
+									checkForTargets())),
 					"TestPath",
 					"TestPathTrue");
 
 	// Complex Autos
 
-	public static Command TopSpeakerCenterLineN1N2AutoLine1 =
+	public static Command TopSpeakerCenterLineN1N2AutoLineN1 =
 			registerAuto(
-					"TopSpeakerCenterLineN1N2AutoLine1",
+					"TopSpeakerCenterLineN1N2AutoLineN1",
 					Commands.sequence(
 							SubwooferLaunchCommand(),
 							getAutoCommand("TopSpeakerQCenterLineN1"),
@@ -52,8 +49,8 @@ public class AutoPaths {
 															VisionLaunchCommand(),
 															getAutoCommand("LCenterLineN2LAutoLineN1")),
 													Commands.sequence(getAutoCommand("QCenterLineN2LAutoLineN1")),
-													() -> true)),
-									() -> true),
+													checkForTargets())),
+									checkForTargets()),
 							VisionLaunchCommand()),
 					"TopSpeakerQCenterLineN1",
 					"QCenterLineN1LCenterLineN1",
@@ -78,8 +75,8 @@ public class AutoPaths {
 															VisionLaunchCommand(),
 															getAutoCommand("LCenterLineN2LCenterLineN3")),
 													Commands.sequence(getAutoCommand("QCenterLineN2LCenterLineN3")),
-													() -> true)),
-									() -> true),
+													checkForTargets())),
+									checkForTargets()),
 							VisionLaunchCommand()),
 					"TopSpeakerQCenterLineN1",
 					"QCenterLineN1LCenterLineN1",
@@ -102,11 +99,11 @@ public class AutoPaths {
 															VisionLaunchCommand(),
 															getAutoCommand("N3LCenterLineN2LCenterLineN1")),
 													getAutoCommand("QCenterLineN2LCenterLineN1"),
-													() -> true)),
+													checkForTargets())),
 									Commands.sequence(
 											getAutoCommand("QCenterLineN3QCenterLineN2"),
 											getAutoCommand("QCenterLineN2LCenterLineN2")),
-									() -> true),
+									checkForTargets()),
 							VisionLaunchCommand()),
 					"MidSpeakerQCenterLineN3",
 					"QCenterLineN3LCenterLineN3",
@@ -126,7 +123,7 @@ public class AutoPaths {
 											Commands.waitSeconds(0.5),
 											getAutoCommand("LCenterLineN5LCenterLineN4")),
 									Commands.sequence(getAutoCommand("QCenterLineN5LCenterLineN4")),
-									() -> false)),
+									checkForTargets())),
 					"LowSpeakerQCenterLineN5",
 					"QCenterLineN5LCenterLineN5",
 					"LCenterLineN5LCenterLineN4");
@@ -146,12 +143,12 @@ public class AutoPaths {
 															VisionLaunchCommand(),
 															getAutoCommand("LCenterLineN4LCenterLineN3")),
 													Commands.sequence(getAutoCommand("QCenterLineN4LCenterLineN3")),
-													() -> true)),
+													checkForTargets())),
 									Commands.sequence(
 											getAutoCommand("QCenterLineN5LCenterLineN4"),
 											VisionLaunchCommand(),
 											getAutoCommand("LCenterLineN4LCenterLineN3")),
-									() -> false),
+									checkForTargets()),
 							VisionLaunchCommand()),
 					"LowSpeakerQCenterLineN5",
 					"QCenterLineN5QCenterLineN4",
@@ -160,14 +157,22 @@ public class AutoPaths {
 
 	// new command getters
 
-	public static Command VisionLaunchCommand() {
-		return new FullTargetCommand(s.launcherSubsystem, s.drivebaseSubsystem, controls);
+	public static final Command VisionLaunchCommand() {
+		return (LAUNCHER_ENABLED && INTAKE_ENABLED && APRILTAGS_ENABLED
+				? new FullTargetCommand(s.launcherSubsystem, s.drivebaseSubsystem, controls)
+				: Commands.none());
 	}
 
-	public static Command SubwooferLaunchCommand() {
-		return new SetAngleLaunchCommand(
-				s.launcherSubsystem,
-				LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
-				LauncherSubsystem.SUBWOOFER_AIM_ANGLE);
+	public static final Command SubwooferLaunchCommand() {
+		return (LAUNCHER_ENABLED
+				? new SetAngleLaunchCommand(
+						s.launcherSubsystem,
+						LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
+						LauncherSubsystem.SUBWOOFER_AIM_ANGLE)
+				: Commands.none());
+	}
+
+	public static BooleanSupplier checkForTargets() {
+		return (LIMELIGHT_ENABLED ? s.limelightSubsystem::hasTargets : () -> true);
 	}
 }
