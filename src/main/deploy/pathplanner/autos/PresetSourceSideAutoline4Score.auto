@@ -3,7 +3,7 @@
   "startingPose": {
     "position": {
       "x": 0.73,
-      "y": 4.48
+      "y": 4.47
     },
     "rotation": 120.0
   },
@@ -24,44 +24,44 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "VisionLaunch"
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "LowNoteToLaunch"
+            "pathName": "LowNoteToLowSpeaker"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "VisionLaunch"
+            "name": "SubwooferLaunch"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "LowLaunchToMidNote"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "MidNoteToHighNoteLaunch"
+            "pathName": "LowSpeakerMidNote2Return"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "VisionLaunch"
+            "name": "SubwooferLaunch"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LowSpeakerToHighNoteReturn"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "SubwooferLaunch"
           }
         }
       ]
     }
   },
-  "folder": "Vision Autos",
+  "folder": "Preset Autos",
   "choreoAuto": false
 }

@@ -1,7 +1,6 @@
 package frc.team2412.robot;
 
 import com.ctre.phoenix6.SignalLogger;
-import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -11,7 +10,6 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -20,9 +18,9 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.team2412.robot.Subsystems.SubsystemConstants;
 import frc.team2412.robot.commands.diagnostic.IntakeDiagnosticCommand;
 import frc.team2412.robot.commands.diagnostic.LauncherDiagnosticCommand;
-import frc.team2412.robot.util.AutoLogic;
 import frc.team2412.robot.util.MACAddress;
 import frc.team2412.robot.util.MatchDashboard;
+import frc.team2412.robot.util.auto.AutoLogic;
 
 public class Robot extends TimedRobot {
 	/** Singleton Stuff */
@@ -40,6 +38,7 @@ public class Robot extends TimedRobot {
 		return instance;
 	}
 
+	// increases logging
 	private static final boolean debugMode = true;
 	// Really dangerous to keep this enabled as it disables all other controls, use with caution
 	private static final boolean sysIdMode = false;
@@ -50,8 +49,6 @@ public class Robot extends TimedRobot {
 	public Subsystems subsystems;
 	public MatchDashboard dashboard;
 	public AutoLogic autoLogic;
-
-	public SendableChooser<Command> autoChooser;
 
 	protected Robot(RobotType type) {
 		// non public for singleton. Protected so test class can subclass
@@ -65,7 +62,7 @@ public class Robot extends TimedRobot {
 	}
 
 	public static final MACAddress COMPETITION_ADDRESS = MACAddress.of(0x00, 0x00, 0x00);
-	public static final MACAddress PRACTICE_ADDRESS = MACAddress.of(0x33, 0x9d, 0xD1);
+	public static final MACAddress PRACTICE_ADDRESS = MACAddress.of(0x38, 0xd9, 0x9e);
 	public static final MACAddress BONK_ADDRESS = MACAddress.of(0x33, 0x9D, 0xE7);
 	public static final MACAddress CRANE_ADDRESS = MACAddress.of(0x22, 0xB0, 0x92);
 
@@ -86,16 +83,15 @@ public class Robot extends TimedRobot {
 
 		subsystems = new Subsystems();
 		controls = new Controls(subsystems);
-		autoLogic = new AutoLogic();
 
-		autoChooser = AutoBuilder.buildAutoChooser();
-		SmartDashboard.putData("Auto Chooser", autoChooser);
-		SmartDashboard.putString("current bot", getTypeFromAddress().toString());
+		// TODO: might be a duplicate, keep until after comp
+		AutoLogic.registerCommands();
+
 		if (Subsystems.SubsystemConstants.DRIVEBASE_ENABLED) {
-			autoChooser = AutoBuilder.buildAutoChooser();
-		} else {
-			autoChooser = new SendableChooser<>();
+			AutoLogic.initShuffleBoard();
 		}
+
+		SmartDashboard.putString("current bot", getTypeFromAddress().toString());
 
 		Shuffleboard.startRecording();
 
@@ -145,7 +141,10 @@ public class Robot extends TimedRobot {
 
 		// Checks if FMS is attatched and enables joystick warning if true
 		DriverStation.silenceJoystickConnectionWarning(!DriverStation.isFMSAttached());
-		autoChooser.getSelected().schedule();
+		// System.out.println(AutoLogic.getSelected() != null);
+		if (AutoLogic.getSelectedAuto() != null && SubsystemConstants.DRIVEBASE_ENABLED) {
+			AutoLogic.getSelectedAuto().schedule();
+		}
 	}
 
 	@Override

@@ -71,7 +71,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 			Robot.getInstance().getRobotType() == RobotType.PRACTICE
 					? new PIDConstants(5, 0, 0.5) // practice
 					: Robot.getInstance().getRobotType() == RobotType.BONK
-							? new PIDConstants(5, 0, 0.1) // bonk
+							? new PIDConstants(6, 0, 0.1) // bonk
 							: Robot.getInstance().getRobotType() == RobotType.CRANE
 									? new PIDConstants(3.9, 0, 0.2) // crane
 									: new PIDConstants(0.1, 0, 0.1); // bobot TODO: tune
@@ -173,8 +173,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 		// if we're requesting the robot to stay still, lock wheels in X formation
 		if (translation.getNorm() == 0 && rotation.getRotations() == 0 && xWheelsEnabled) {
 			swerveDrive.lockPose();
-		}
-		if (rotationSetpoint != null) {
+		} else if (rotationSetpoint != null) {
 			swerveDrive.drive(
 					translation.unaryMinus(), rotationSetpoint.getRadians(), fieldOriented, false);
 		} else {
