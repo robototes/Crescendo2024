@@ -80,8 +80,25 @@
   "constraintZones": [],
   "eventMarkers": [
     {
+      "name": "under stage",
+      "waypointRelativePos": 0.15000000000000002,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "UnderStage"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
       "name": "intake",
-      "waypointRelativePos": 0.45,
+      "waypointRelativePos": 2.25,
       "command": {
         "type": "parallel",
         "data": {

@@ -42,6 +42,7 @@ public class AutoLogic {
 	public static final Controls controls = r.controls;
 
 	public static final double FEEDER_DELAY = 0.4;
+	public static final double STAGE_ANGLE = 247;
 
 	public static enum StartPosition {
 		AMP_SIDE_SUBWOOFER(
@@ -229,6 +230,11 @@ public class AutoLogic {
 				(LAUNCHER_ENABLED && INTAKE_ENABLED
 						? new SetAngleLaunchCommand(s.launcherSubsystem, 0, LauncherSubsystem.RETRACTED_ANGLE)
 						: Commands.none())); // TODO: add retract angle
+
+		NamedCommands.registerCommand("UnderStage",  new SetAngleLaunchCommand(
+										s.launcherSubsystem,
+										0,
+										STAGE_ANGLE));
 
 		// Complex Autos
 		NamedCommands.registerCommand("AutoLogicTest", ComplexAutoPaths.testAuto);
