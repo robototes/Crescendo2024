@@ -231,10 +231,8 @@ public class AutoLogic {
 						? new SetAngleLaunchCommand(s.launcherSubsystem, 0, LauncherSubsystem.RETRACTED_ANGLE)
 						: Commands.none())); // TODO: add retract angle
 
-		NamedCommands.registerCommand("UnderStage",  new SetAngleLaunchCommand(
-										s.launcherSubsystem,
-										0,
-										STAGE_ANGLE));
+		NamedCommands.registerCommand(
+				"UnderStage", new SetAngleLaunchCommand(s.launcherSubsystem, 0, STAGE_ANGLE));
 
 		// Complex Autos
 		NamedCommands.registerCommand("AutoLogicTest", ComplexAutoPaths.testAuto);
