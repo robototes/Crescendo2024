@@ -20,19 +20,31 @@
         {
           "type": "path",
           "data": {
-            "pathName": "LowSpeakerToMiddleLowNote"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "MiddleLowNoteToLowSpeaker"
+            "pathName": "LowSpeakerToFarN4Return"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Feed"
+            "name": "SubwooferLaunch"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LowSpeakerToFarN3"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "FarN3ToLowSpeaker"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "SubwooferLaunch"
           }
         }
       ]

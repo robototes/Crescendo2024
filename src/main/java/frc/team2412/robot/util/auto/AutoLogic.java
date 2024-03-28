@@ -42,6 +42,7 @@ public class AutoLogic {
 	public static final Controls controls = r.controls;
 
 	public static final double FEEDER_DELAY = 0.4;
+	public static final double STAGE_ANGLE = 247;
 
 	public static enum StartPosition {
 		AMP_SIDE_SUBWOOFER(
@@ -104,6 +105,8 @@ public class AutoLogic {
 					// presets
 					new AutoPath("Autoline N1 Centerline N1", "PresetAmpSideAutoline3Score"),
 					new AutoPath("Autoline N2 N1", "PresetMidAutoline3Score"),
+					new AutoPath("Centerline N5 N4", "PresetSourceSideCenterline3Score2"),
+					new AutoPath("Centerline N5 N3", "PresetSourceSideCenterline3Score2"),
 					// vision
 					new AutoPath("Centerline N5 N4", "VisionSourceSide3Score", true),
 					new AutoPath("Centerline N3 N1", "VisionMidFar2Score", true),
@@ -250,6 +253,9 @@ public class AutoLogic {
 						? new SetAngleLaunchCommand(s.launcherSubsystem, 0, LauncherSubsystem.RETRACTED_ANGLE)
 						: Commands.none()));
 
+		NamedCommands.registerCommand(
+				"UnderStage", new SetAngleLaunchCommand(s.launcherSubsystem, 0, STAGE_ANGLE));
+
 		// Complex Autos
 		NamedCommands.registerCommand("AutoLogicTest", ComplexAutoPaths.testAuto);
 
@@ -314,6 +320,8 @@ public class AutoLogic {
 		availableAutos.clearOptions();
 
 		// filter based off gameobject count
+		availableAutos.setDefaultOption(defaultPath.getDisplayName(), defaultPath);
+
 		List<AutoPath> autoCommandsList = commandsMap.get(numGameObjects);
 
 		// filter more then add to chooser
