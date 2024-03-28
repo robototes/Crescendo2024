@@ -22,6 +22,12 @@
           "data": {
             "pathName": "HighSpeakerHighNoteReturn"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "SubwooferLaunch"
+          }
         }
       ]
     }

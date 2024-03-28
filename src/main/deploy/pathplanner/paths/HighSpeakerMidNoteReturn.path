@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.4829275372836466,
-        "y": 7.256431655720455
+        "x": 1.5429233708823726,
+        "y": 7.507313826979199
       },
       "isLocked": false,
       "linkedName": "TopSpeaker"
@@ -20,12 +20,12 @@
         "y": 5.556066607628711
       },
       "prevControl": {
-        "x": 3.037754543977556,
-        "y": 5.352683137798709
+        "x": 2.976137828760219,
+        "y": 5.30386846996972
       },
       "nextControl": {
-        "x": 2.6556051426511798,
-        "y": 5.878138564622476
+        "x": 2.7609065011890275,
+        "y": 5.932858749144046
       },
       "isLocked": false,
       "linkedName": null
@@ -36,8 +36,8 @@
         "y": 6.62
       },
       "prevControl": {
-        "x": 1.2057927218565008,
-        "y": 7.331049617052808
+        "x": 1.4259262722800992,
+        "y": 7.409816244810638
       },
       "nextControl": null,
       "isLocked": false,
@@ -47,12 +47,12 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.75,
-      "rotationDegrees": -125.11838774849777,
+      "rotationDegrees": -140.35,
       "rotateFast": false
     },
     {
       "waypointRelativePos": 1.1,
-      "rotationDegrees": -123.28561153274636,
+      "rotationDegrees": -140.35,
       "rotateFast": false
     }
   ],
@@ -60,7 +60,7 @@
   "eventMarkers": [
     {
       "name": "New Event Marker",
-      "waypointRelativePos": 0,
+      "waypointRelativePos": 0.15,
       "command": {
         "type": "sequential",
         "data": {

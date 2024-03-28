@@ -32,6 +32,8 @@ public class Controls {
 	public static class ControlConstants {
 		public static final int CONTROLLER_PORT = 0;
 		public static final int CODRIVER_CONTROLLER_PORT = 1;
+		public static final double RUMBLE_VIBRATION = 0.3;
+		public static final double RUMBLE_OFF = 0;
 	}
 
 	private final CommandXboxController driveController;
@@ -128,7 +130,9 @@ public class Controls {
 								driveController::getLeftX,
 								() -> Rotation2d.fromRotations(driveController.getRightX())));
 		driveController.rightStick().onTrue(new InstantCommand(s.drivebaseSubsystem::toggleXWheels));
-		driveController.start().onTrue(new InstantCommand(s.drivebaseSubsystem::resetGyro));
+		driveController
+				.start()
+				.onTrue(new InstantCommand(s.drivebaseSubsystem::resetGyroTeleop).ignoringDisable(true));
 		// driveController
 		// 		.back()
 		// 		.onTrue(
@@ -233,6 +237,11 @@ public class Controls {
 	public void vibrateDriveController(double vibration) {
 		if (!DriverStation.isAutonomous()) {
 			driveController.getHID().setRumble(RumbleType.kBothRumble, vibration);
+		}
+	}
+
+	public void vibrateCoDriveController(double vibration) {
+		if (!DriverStation.isAutonomous()) {
 			codriveController.getHID().setRumble(RumbleType.kBothRumble, vibration);
 		}
 	}

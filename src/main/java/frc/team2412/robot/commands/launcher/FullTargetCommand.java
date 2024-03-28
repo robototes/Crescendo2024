@@ -2,7 +2,6 @@ package frc.team2412.robot.commands.launcher;
 
 import static frc.team2412.robot.Subsystems.SubsystemConstants.*;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
@@ -12,6 +11,7 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.team2412.robot.Controls;
+import frc.team2412.robot.Controls.ControlConstants;
 import frc.team2412.robot.subsystems.DrivebaseSubsystem;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
 import frc.team2412.robot.util.LauncherDataLoader;
@@ -70,15 +70,9 @@ public class FullTargetCommand extends Command {
 		launcherSubsystem.launch(dataPoint.rpm);
 		launcherSubsystem.updateDistanceEntry(distance);
 
-		if (MathUtil.isNear(
-						yawTarget.getDegrees(),
-						drivebaseSubsystem.getPose().getRotation().getDegrees(),
-						YAW_TARGET_VIBRATION_TOLERANCE,
-						0,
-						360)
-				&& launcherSubsystem.isAtAngle()
-				&& launcherSubsystem.isAtSpeed()) {
-			controls.vibrateDriveController(1.0);
+		// launcher angle checker
+		if (launcherSubsystem.isAtAngle() && launcherSubsystem.isAtSpeed()) {
+			controls.vibrateDriveController(ControlConstants.RUMBLE_VIBRATION);
 		} else {
 			controls.vibrateDriveController(0.0);
 		}
@@ -87,6 +81,7 @@ public class FullTargetCommand extends Command {
 	@Override
 	public void end(boolean interrupted) {
 		yawAlignmentCommand.cancel();
+		// launcherSubsystem.launch(2000);
 		launcherSubsystem.stopLauncher();
 		controls.vibrateDriveController(0.0);
 	}

@@ -39,11 +39,11 @@ public class LauncherSubsystem extends SubsystemBase {
 	private static final float PIVOT_DISABLE_OFFSET = 0.04f;
 	// ANGLE VALUES
 	public static final int AMP_AIM_ANGLE = 288;
-	public static final int SUBWOOFER_AIM_ANGLE = 252;
+	public static final int SUBWOOFER_AIM_ANGLE = 256;
 	public static final int PODIUM_AIM_ANGLE = 238;
 	public static final int TRAP_AIM_ANGLE = 317;
 	public static final double MANUAL_MODIFIER = 0.02;
-	public static final double RETRACTED_ANGLE = 240;
+	public static final double RETRACTED_ANGLE = 242;
 	// offset for FF so parallel to floor is 0
 	public static final double FF_PIVOT_OFFSET = 225;
 
@@ -51,11 +51,12 @@ public class LauncherSubsystem extends SubsystemBase {
 	// max Free Speed: 6784 RPM
 	private static final int MAX_FREE_SPEED_RPM = 6784;
 	public static final double ANGLE_TOLERANCE = 5;
-	public static final double RPM_TOLERANCE = 200;
+	public static final double RPM_TOLERANCE = 500;
 	// RPM
-	public static final int SPEAKER_SHOOT_SPEED_RPM = 3300;
-	public static final int TRAP_SHOOT_SPEED_RPM = 3300;
-	public static final double ANGLE_MAX_SPEED = 0.2;
+	public static final int SPEAKER_SHOOT_SPEED_RPM = 4500;
+	public static final int TRAP_SHOOT_SPEED_RPM = 4500;
+	public static final double ANGLE_MAX_SPEED = 1;
+	public static final double MAX_SET_ANGLE_OFFSET = 20;
 	// 3392 RPM = 50% Speed
 	// 1356 RPM = 20% Speed
 	// 1017 RPM = 15% Speed
@@ -99,6 +100,10 @@ public class LauncherSubsystem extends SubsystemBase {
 	private GenericEntry launcherAngleManual;
 
 	private GenericEntry speakerDistanceEntry;
+
+	private GenericEntry setAngleOffsetEntry;
+
+	private GenericEntry angleSetpointEntry;
 
 	// Constructors
 	public LauncherSubsystem() {
@@ -147,10 +152,10 @@ public class LauncherSubsystem extends SubsystemBase {
 		// launcherAngleTwoMotor.setInverted(true);
 
 		// current limit
-		launcherTopMotor.setSmartCurrentLimit(40);
-		launcherBottomMotor.setSmartCurrentLimit(40);
-		launcherAngleOneMotor.setSmartCurrentLimit(60);
-		launcherAngleTwoMotor.setSmartCurrentLimit(60);
+		launcherTopMotor.setSmartCurrentLimit(60);
+		launcherBottomMotor.setSmartCurrentLimit(60);
+		launcherAngleOneMotor.setSmartCurrentLimit(100);
+		launcherAngleTwoMotor.setSmartCurrentLimit(100);
 
 		launcherAngleOneMotor.setSoftLimit(
 				CANSparkBase.SoftLimitDirection.kForward, PIVOT_SOFTSTOP_FORWARD);
@@ -169,10 +174,12 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherTopPIDController.setP(0.002); // 7.7633E-05);
 		launcherTopPIDController.setI(0);
 		launcherTopPIDController.setD(0.001);
+		launcherTopMotor.setClosedLoopRampRate(0.25);
 
 		launcherBottomPIDController.setP(0.002); // 0.00011722);
 		launcherBottomPIDController.setI(0);
 		launcherBottomPIDController.setD(0.001);
+		launcherBottomMotor.setClosedLoopRampRate(0.25);
 
 		launcherAngleOneMotor.getEncoder().setPosition(launcherAngleEncoder.getPosition());
 		launcherAngleOneMotor.getEncoder().setPositionConversionFactor(PIVOT_GEARING_RATIO);
@@ -220,7 +227,11 @@ public class LauncherSubsystem extends SubsystemBase {
 	}
 
 	public void setAngle(double launcherAngle) {
-		angleSetpoint = launcherAngle;
+		if (launcherAngle != AMP_AIM_ANGLE) {
+			angleSetpoint = launcherAngle + setAngleOffsetEntry.getDouble(0);
+		} else {
+			angleSetpoint = launcherAngle;
+		}
 		launcherAngleOnePIDController.setReference(
 				Units.degreesToRotations(angleSetpoint),
 				ControlType.kPosition,
@@ -287,13 +298,10 @@ public class LauncherSubsystem extends SubsystemBase {
 					.addDouble("Bottom FlyWheel Temp", () -> launcherBottomMotor.getMotorTemperature());
 			Shuffleboard.getTab("Launcher")
 					.addDouble("Top FlyWheel Temp", () -> launcherTopMotor.getMotorTemperature());
-
-			speakerDistanceEntry =
-					Shuffleboard.getTab("Launcher").add("Speaker dist.", 0).withPosition(2, 2).getEntry();
 		}
 
 		launcherIsAtSpeed =
-				Shuffleboard.getTab("Launcher")
+				Shuffleboard.getTab("Match")
 						.add("flywheels at target speed", false)
 						.withSize(1, 1)
 						.withWidget(BuiltInWidgets.kBooleanBox)
@@ -335,6 +343,20 @@ public class LauncherSubsystem extends SubsystemBase {
 						.withSize(1, 1)
 						.withWidget(BuiltInWidgets.kTextView)
 						.getEntry();
+		speakerDistanceEntry =
+				Shuffleboard.getTab("Launcher").add("Speaker dist.", 0).withPosition(1, 2).getEntry();
+
+		setAngleOffsetEntry =
+				Shuffleboard.getTab("Match")
+						.add("Set Angle Offset", 0)
+						.withPosition(4, 3)
+						.withSize(2, 1)
+						.withWidget(BuiltInWidgets.kNumberSlider)
+						.withProperties(Map.of("Min", -MAX_SET_ANGLE_OFFSET, "Max", MAX_SET_ANGLE_OFFSET))
+						.getEntry();
+
+		angleSetpointEntry =
+				Shuffleboard.getTab("Launcher").add("Angle Setpoint", 0).withPosition(2, 2).getEntry();
 	}
 
 	public void updateDistanceEntry(double distance) {
@@ -348,6 +370,7 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherAngleSpeedEntry.setDouble(getAngleSpeed());
 		launcherIsAtSpeed.setBoolean(isAtSpeed());
 		launcherAngleManual.setDouble(manualAngleSetpoint);
+		angleSetpointEntry.setDouble(angleSetpoint);
 
 		// sanity check the pivot encoder
 		if (launcherAngleEncoder.getPosition() >= PIVOT_SOFTSTOP_FORWARD + PIVOT_DISABLE_OFFSET
