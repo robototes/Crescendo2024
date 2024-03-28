@@ -205,6 +205,7 @@ public class LauncherSubsystem extends SubsystemBase {
 	// used for presets
 	public void launch(double speed) {
 		rpmSetpoint = speed;
+
 		launcherTopPIDController.setReference(
 				rpmSetpoint, ControlType.kVelocity, 0); // launcherTopFeedforward.calculate(speed));
 		launcherBottomPIDController.setReference(
@@ -357,6 +358,10 @@ public class LauncherSubsystem extends SubsystemBase {
 
 		angleSetpointEntry =
 				Shuffleboard.getTab("Launcher").add("Angle Setpoint", 0).withPosition(2, 2).getEntry();
+		
+		Shuffleboard.getTab("Launcher").addDouble("setpoint + tol", () -> angleSetpoint - RPM_TOLERANCE);
+
+		Shuffleboard.getTab("Launcher").addBoolean("yay", this::isAtSpeed);
 	}
 
 	public void updateDistanceEntry(double distance) {
@@ -371,6 +376,7 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherIsAtSpeed.setBoolean(isAtSpeed());
 		launcherAngleManual.setDouble(manualAngleSetpoint);
 		angleSetpointEntry.setDouble(angleSetpoint);
+		setLauncherSpeedEntry.setDouble(rpmSetpoint);
 
 		// sanity check the pivot encoder
 		if (launcherAngleEncoder.getPosition() >= PIVOT_SOFTSTOP_FORWARD + PIVOT_DISABLE_OFFSET

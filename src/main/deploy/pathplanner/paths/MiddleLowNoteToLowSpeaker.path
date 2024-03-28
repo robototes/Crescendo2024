@@ -9,7 +9,7 @@
       "prevControl": null,
       "nextControl": {
         "x": 5.01058639382236,
-        "y": 0.7700000000000014
+        "y": 0.7700000000000005
       },
       "isLocked": false,
       "linkedName": "CenterLineN5"
@@ -77,7 +77,7 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 4.0,
+    "maxVelocity": 4.7,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
@@ -93,5 +93,5 @@
     "rotation": 180.0,
     "velocity": 0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

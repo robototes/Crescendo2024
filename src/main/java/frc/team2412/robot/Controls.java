@@ -12,12 +12,14 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.team2412.robot.commands.intake.AllInCommand;
 import frc.team2412.robot.commands.intake.AllReverseCommand;
 import frc.team2412.robot.commands.intake.AllStopCommand;
+import frc.team2412.robot.commands.intake.FeederInCommand;
 import frc.team2412.robot.commands.intake.FeederShootCommand;
 import frc.team2412.robot.commands.intake.IntakeRejectCommand;
 import frc.team2412.robot.commands.launcher.FullTargetCommand;
@@ -27,6 +29,7 @@ import frc.team2412.robot.commands.launcher.SetAngleLaunchCommand;
 import frc.team2412.robot.commands.launcher.SetPivotCommand;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
 import frc.team2412.robot.util.TrapAlign;
+import frc.team2412.robot.util.auto.AutoLogic;
 
 public class Controls {
 	public static class ControlConstants {
@@ -108,6 +111,13 @@ public class Controls {
 			driveController
 					.leftBumper()
 					.whileTrue(new FullTargetCommand(s.launcherSubsystem, s.drivebaseSubsystem, this));
+			driveController
+					.leftBumper()
+					.onTrue(
+							new FullTargetCommand(s.launcherSubsystem, s.drivebaseSubsystem, this)
+									.until(AutoLogic.isReadyToLaunch())
+									.andThen(new WaitCommand(AutoLogic.FEEDER_DELAY))
+									.andThen(new FeederInCommand(s.intakeSubsystem).until(AutoLogic.untilNoNote())));
 			// codriveController
 			// 		.rightBumper()
 			// 		.whileTrue(

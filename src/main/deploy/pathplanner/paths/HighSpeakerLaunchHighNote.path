@@ -8,48 +8,43 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.0464795340474353,
-        "y": 7.238455237085926
+        "x": 1.4199314885116257,
+        "y": 6.813346239305091
       },
       "isLocked": false,
       "linkedName": "TopSpeaker"
     },
     {
       "anchor": {
-        "x": 2.9,
-        "y": 7.0
+        "x": 5.413643259718952,
+        "y": 7.183134366268733
       },
       "prevControl": {
-        "x": 2.107076244758114,
-        "y": 7.082474419474171
-      },
-      "nextControl": {
-        "x": 3.3613191550707424,
-        "y": 6.952016786916457
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 3.7033731725121104,
-        "y": 6.54
-      },
-      "prevControl": {
-        "x": 3.546213218552563,
-        "y": 6.872809314267277
+        "x": 4.378236504220756,
+        "y": 7.136910850398278
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "LaunchHighNote"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.35,
+      "rotationDegrees": -166.19572126875954,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 0.05,
+      "rotationDegrees": -120.0,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "New Event Marker",
-      "waypointRelativePos": 0,
+      "name": "intake",
+      "waypointRelativePos": 0.15,
       "command": {
         "type": "parallel",
         "data": {
@@ -73,11 +68,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -163.4975529461288,
+    "rotation": -161.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Auto Logic Paths",
+  "folder": null,
   "previewStartingState": {
     "rotation": -120.0,
     "velocity": 0

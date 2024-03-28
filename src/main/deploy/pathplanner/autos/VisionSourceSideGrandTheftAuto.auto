@@ -1,0 +1,25 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.73,
+      "y": 4.733288025134609
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LowSpeakerCenterSteal"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Vision Autos",
+  "choreoAuto": false
+}

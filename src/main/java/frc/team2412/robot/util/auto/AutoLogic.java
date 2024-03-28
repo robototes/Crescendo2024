@@ -202,8 +202,13 @@ public class AutoLogic {
 						: Commands.none());
 
 		NamedCommands.registerCommand(
-				"IntakeSensorOverride",
-				(INTAKE_ENABLED ? new AllInSensorOverrideCommand(s.intakeSubsystem) : Commands.none()));
+				"NoteSteal",
+				(INTAKE_ENABLED && LAUNCHER_ENABLED
+						? new AllInSensorOverrideCommand(s.intakeSubsystem)
+								.alongWith(
+										new SetAngleLaunchCommand(
+												s.launcherSubsystem, 3000, LauncherSubsystem.RETRACTED_ANGLE))
+						: Commands.none()));
 
 		// Launcher
 		NamedCommands.registerCommand(
@@ -243,7 +248,7 @@ public class AutoLogic {
 				"RetractPivot",
 				(LAUNCHER_ENABLED && INTAKE_ENABLED
 						? new SetAngleLaunchCommand(s.launcherSubsystem, 0, LauncherSubsystem.RETRACTED_ANGLE)
-						: Commands.none())); // TODO: add retract angle
+						: Commands.none()));
 
 		// Complex Autos
 		NamedCommands.registerCommand("AutoLogicTest", ComplexAutoPaths.testAuto);
@@ -308,7 +313,7 @@ public class AutoLogic {
 		// resets/clears all options
 		availableAutos.clearOptions();
 
-		// filter based off gameobejct count
+		// filter based off gameobject count
 		List<AutoPath> autoCommandsList = commandsMap.get(numGameObjects);
 
 		// filter more then add to chooser
@@ -376,12 +381,12 @@ public class AutoLogic {
 
 	// commands util
 
-	private static BooleanSupplier isReadyToLaunch() {
+	public static BooleanSupplier isReadyToLaunch() {
 		// TODO: consider adding third condition: s.intakeSubsystem.feederSensorHasNote()
 		return () -> (s.launcherSubsystem.isAtAngle() && s.launcherSubsystem.isAtSpeed());
 	}
 
-	private static BooleanSupplier untilNoNote() {
+	public static BooleanSupplier untilNoNote() {
 		// decided to go from checking for note in feeder to both feeder and index in case note is still
 		// indexing
 		return () ->
