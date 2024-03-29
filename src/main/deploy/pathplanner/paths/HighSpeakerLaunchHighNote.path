@@ -58,6 +58,23 @@
           ]
         }
       }
+    },
+    {
+      "name": "rev launcher",
+      "waypointRelativePos": 0.55,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "RevLauncher"
+              }
+            }
+          ]
+        }
+      }
     }
   ],
   "globalConstraints": {

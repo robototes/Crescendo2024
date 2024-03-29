@@ -3,9 +3,9 @@
   "startingPose": {
     "position": {
       "x": 0.73,
-      "y": 4.733288025134609
+      "y": 4.47
     },
-    "rotation": 0
+    "rotation": 120.0
   },
   "command": {
     "type": "sequential",

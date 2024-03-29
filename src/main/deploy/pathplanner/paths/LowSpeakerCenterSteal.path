@@ -32,16 +32,16 @@
     },
     {
       "anchor": {
-        "x": 8.177809508772171,
+        "x": 8.297990650035354,
         "y": 3.6516577537659587
       },
       "prevControl": {
-        "x": 8.191434822954688,
-        "y": 2.0847466227766986
+        "x": 8.196298915120353,
+        "y": 2.0061005887777545
       },
       "nextControl": {
-        "x": 8.168564805598079,
-        "y": 4.7147986187864275
+        "x": 8.363567751373177,
+        "y": 4.712814484505286
       },
       "isLocked": false,
       "linkedName": null
@@ -68,8 +68,8 @@
         "y": 6.4990263313859975
       },
       "prevControl": {
-        "x": 6.264155951735327,
-        "y": 7.201623772616915
+        "x": 6.513762937435784,
+        "y": 7.386517836098735
       },
       "nextControl": null,
       "isLocked": false,
@@ -78,8 +78,8 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1.45,
-      "rotationDegrees": -170.392780536729,
+      "waypointRelativePos": 1.55,
+      "rotationDegrees": -174.6768968019883,
       "rotateFast": false
     },
     {
@@ -93,13 +93,18 @@
       "rotateFast": false
     },
     {
-      "waypointRelativePos": 1.9,
-      "rotationDegrees": 169.02811673176583,
+      "waypointRelativePos": 1.95,
+      "rotationDegrees": 179.29370075173773,
       "rotateFast": false
     },
     {
       "waypointRelativePos": 3.0,
       "rotationDegrees": 180.0,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 2.45,
+      "rotationDegrees": -174.78944224659514,
       "rotateFast": false
     }
   ],
@@ -116,11 +121,11 @@
       }
     },
     {
-      "name": "New Constraints Zone",
+      "name": "steal",
       "minWaypointRelativePos": 0.85,
       "maxWaypointRelativePos": 3.35,
       "constraints": {
-        "maxVelocity": 1.9,
+        "maxVelocity": 1.6,
         "maxAcceleration": 3.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0
@@ -139,6 +144,40 @@
               "type": "named",
               "data": {
                 "name": "NoteSteal"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "intake",
+      "waypointRelativePos": 2.85,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Intake"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "rev flywheel",
+      "waypointRelativePos": 3.35,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "RevLauncher"
               }
             }
           ]

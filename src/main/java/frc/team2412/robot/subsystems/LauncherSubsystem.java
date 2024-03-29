@@ -358,8 +358,9 @@ public class LauncherSubsystem extends SubsystemBase {
 
 		angleSetpointEntry =
 				Shuffleboard.getTab("Launcher").add("Angle Setpoint", 0).withPosition(2, 2).getEntry();
-		
-		Shuffleboard.getTab("Launcher").addDouble("setpoint + tol", () -> angleSetpoint - RPM_TOLERANCE);
+
+		Shuffleboard.getTab("Launcher")
+				.addDouble("setpoint + tol", () -> angleSetpoint - RPM_TOLERANCE);
 
 		Shuffleboard.getTab("Launcher").addBoolean("yay", this::isAtSpeed);
 	}

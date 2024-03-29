@@ -80,12 +80,19 @@
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "UnderStage",
-      "waypointRelativePos": 0.25,
+      "name": "retract",
+      "waypointRelativePos": 0.5,
       "command": {
         "type": "parallel",
         "data": {
-          "commands": []
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "RetractPivot"
+              }
+            }
+          ]
         }
       }
     }
