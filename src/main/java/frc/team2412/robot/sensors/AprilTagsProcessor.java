@@ -81,7 +81,6 @@ public class AprilTagsProcessor {
 	private final PhotonPoseEstimator photonPoseEstimator;
 	private final DrivebaseWrapper aprilTagsHelper;
 	private final FieldObject2d rawVisionFieldObject;
-	private final FieldObject2d adjustedFieldObject;
 
 	// These are always set with every pipeline result
 	private double lastRawTimestampSeconds = 0;
@@ -101,7 +100,6 @@ public class AprilTagsProcessor {
 	public AprilTagsProcessor(DrivebaseWrapper aprilTagsHelper) {
 		this.aprilTagsHelper = aprilTagsHelper;
 		rawVisionFieldObject = aprilTagsHelper.getField().getObject("RawVision");
-		adjustedFieldObject = aprilTagsHelper.getField().getObject("AdjustedVision");
 		var networkTables = NetworkTableInstance.getDefault();
 		// if (Robot.isSimulation()) {
 		// 	networkTables.stopServer();
@@ -159,11 +157,8 @@ public class AprilTagsProcessor {
 		if (latestPose.isPresent()) {
 			lastValidTimestampSeconds = latestPose.get().timestampSeconds;
 			lastFieldPose = latestPose.get().estimatedPose.toPose2d();
-			var oldPose = aprilTagsHelper.getEstimatedPosition();
-			var adjustedPose = new Pose2d(lastFieldPose.getTranslation(), oldPose.getRotation());
 			rawVisionFieldObject.setPose(lastFieldPose);
-			adjustedFieldObject.setPose(adjustedPose);
-			aprilTagsHelper.addVisionMeasurement(adjustedPose, lastValidTimestampSeconds, STANDARD_DEVS);
+			aprilTagsHelper.addVisionMeasurement(lastFieldPose, lastValidTimestampSeconds, STANDARD_DEVS);
 			var estimatedPose = aprilTagsHelper.getEstimatedPosition();
 			aprilTagsHelper.getField().setRobotPose(estimatedPose);
 			photonPoseEstimator.setLastPose(estimatedPose);
