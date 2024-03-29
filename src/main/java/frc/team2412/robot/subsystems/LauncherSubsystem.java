@@ -89,6 +89,8 @@ public class LauncherSubsystem extends SubsystemBase {
 
 	private GenericEntry setLauncherSpeedEntry;
 
+	private GenericEntry setLauncherAngleEntry;
+
 	private GenericEntry launcherAngleEntry;
 
 	private GenericEntry launcherSpeedEntry;
@@ -337,9 +339,13 @@ public class LauncherSubsystem extends SubsystemBase {
 						.withPosition(5, 0)
 						.getEntry();
 
+		setLauncherAngleEntry =
+				Shuffleboard.getTab("Launcher").add("Launcher Angle Setpoint", getAngle()).getEntry();
+
 		launcherAngleManual =
 				Shuffleboard.getTab("Launcher")
-						.add("Launcher manual increase", 0)
+						.add("Launcher manual angle (rot.)", 0)
+						.withPosition(0, 1)
 						.withSize(1, 1)
 						.withWidget(BuiltInWidgets.kTextView)
 						.getEntry();
@@ -365,6 +371,8 @@ public class LauncherSubsystem extends SubsystemBase {
 
 	@Override
 	public void periodic() {
+		manualAngleSetpoint = setLauncherAngleEntry.getDouble(getAngle());
+		setAngle(manualAngleSetpoint);
 		launcherAngleEntry.setDouble(getAngle());
 		launcherSpeedEntry.setDouble(getLauncherSpeed());
 		launcherAngleSpeedEntry.setDouble(getAngleSpeed());

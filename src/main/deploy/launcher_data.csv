@@ -2,11 +2,29 @@
 
 # DISTANCE (meters), ANGLE (degrees), RPM (velocity)
 
-1.397, 254, 4500
-2.05, 249, 4500
-2.6, 245, 4500
-3.2, 243, 4500
-5, 240, 5000
-5.64,239, 5000
-6, 238, 5000
-14, 233, 5000
+# These RPMs are target RPMs, actual was much lower
+
+# Front subwoofer
+1.30, 254, 3500
+# Front bumper at autoline
+2.13, 250, 3500
+# Near podium
+5.66, 246, 3600
+# Auto point 1 (X 2.870, Y 2.196, theta 130.6)
+4.46, 242, 3600
+
+# After this, these are setpoint angles
+# Auto point 2 (X 5.699, Y 7.501, theta -162.8)
+5.55, 240.3, 4400
+# Auto point 3 (X 4.299, Y 5.134, theta 176.222)
+4.32, 242, 4300 # Might be a little low, and could probably lower RPM- Ran out of time to fully test
+
+# Pre 3/28 values:
+# 1.397, 254, 4500
+# 2.05, 249, 4500
+# 2.6, 245, 4500
+# 3.2, 243, 4500
+# 5, 240, 5000
+# 5.64,239, 5000
+# 6, 238, 5000
+# 14, 233, 5000

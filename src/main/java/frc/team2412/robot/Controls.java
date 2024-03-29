@@ -7,10 +7,13 @@ import static frc.team2412.robot.Subsystems.SubsystemConstants.INTAKE_ENABLED;
 import static frc.team2412.robot.Subsystems.SubsystemConstants.LAUNCHER_ENABLED;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -102,6 +105,22 @@ public class Controls {
 		}
 		if (INTAKE_ENABLED) {
 			bindIntakeControls();
+		}
+		Pose2d SPEAKER_POSE =
+				DriverStation.getAlliance().get().equals(Alliance.Blue)
+						? new Pose2d(0.0, 5.55, Rotation2d.fromRotations(0))
+						: new Pose2d(16.5, 5.55, Rotation2d.fromRotations(0));
+		if (DRIVEBASE_ENABLED && LAUNCHER_ENABLED) {
+			Commands.run(
+							() -> {
+								Pose2d robotPose = s.drivebaseSubsystem.getPose();
+								Pose2d relativeSpeaker = robotPose.relativeTo(SPEAKER_POSE);
+								double distance = relativeSpeaker.getTranslation().getNorm();
+								s.launcherSubsystem.updateDistanceEntry(distance);
+							})
+					.withName("Update distance")
+					.ignoringDisable(true)
+					.schedule();
 		}
 		if (DRIVEBASE_ENABLED && LAUNCHER_ENABLED && INTAKE_ENABLED) {
 			// temporary controls, not sure what drive team wants
