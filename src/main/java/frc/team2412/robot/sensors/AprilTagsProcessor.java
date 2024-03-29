@@ -40,6 +40,8 @@ import org.photonvision.targeting.PhotonPipelineResult;
  * <p>2D field poses are just the projection of the 3D pose onto the XY plane.
  */
 public class AprilTagsProcessor {
+	private static class FilterInfo {}
+
 	public static final Transform3d ROBOT_TO_CAM =
 			new Transform3d(
 					Units.inchesToMeters(27.0 / 2.0 - 0.94996),
@@ -48,7 +50,7 @@ public class AprilTagsProcessor {
 					new Rotation3d(Units.degreesToRadians(90), Units.degreesToRadians(-30), 0));
 
 	// TODO Measure these
-	private static final Vector<N3> STANDARD_DEVS = VecBuilder.fill(1, 1, Units.degreesToRadians(30));
+	private static final Vector<N3> STANDARD_DEVS = VecBuilder.fill(1, 1, Double.POSITIVE_INFINITY);
 
 	private static final double MAX_POSE_AMBIGUITY = 0.1;
 
@@ -158,8 +160,9 @@ public class AprilTagsProcessor {
 			rawVisionFieldObject.setPose(lastFieldPose);
 			aprilTagsHelper.addVisionMeasurement(lastFieldPose, lastValidTimestampSeconds, STANDARD_DEVS);
 			var estimatedPose = aprilTagsHelper.getEstimatedPosition();
-			aprilTagsHelper.getField().setRobotPose(estimatedPose);
-			photonPoseEstimator.setLastPose(estimatedPose);
+			var adjustedPose = new Pose2d(estimatedPose.getTranslation(), estimatedPose.getRotation());
+			aprilTagsHelper.getField().setRobotPose(adjustedPose);
+			photonPoseEstimator.setLastPose(adjustedPose);
 		}
 	}
 

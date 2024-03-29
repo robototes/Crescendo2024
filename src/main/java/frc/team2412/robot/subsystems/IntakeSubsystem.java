@@ -116,7 +116,7 @@ public class IntakeSubsystem extends SubsystemBase {
 	}
 
 	private void configureMotor(CANSparkBase motor, boolean invert) {
-		configureMotor(motor, 20, invert);
+		configureMotor(motor, 30, invert);
 	}
 
 	private void resetMotors() {
