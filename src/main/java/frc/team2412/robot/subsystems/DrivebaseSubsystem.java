@@ -1,5 +1,6 @@
 package frc.team2412.robot.subsystems;
 
+import com.ctre.phoenix6.SignalLogger;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
@@ -347,9 +348,13 @@ public class DrivebaseSubsystem extends SubsystemBase {
 	}
 
 	private SysIdRoutine getDriveSysIdRoutine() {
-		SwerveModule[] modules = swerveDrive.getModules();
 		return new SysIdRoutine(
-				new SysIdRoutine.Config(),
+				new SysIdRoutine.Config(
+					null,
+					edu.wpi.first.units.Units.Volts.of(4),
+					null,
+					(state) -> SignalLogger.writeString("state", state.toString())
+				),
 				new SysIdRoutine.Mechanism(
 						(Measure<Voltage> volts) -> {
 							for (SwerveModule module : swerveDrive.getModules()) {
@@ -357,87 +362,25 @@ public class DrivebaseSubsystem extends SubsystemBase {
 								module.setAngle(0);
 							}
 						},
-						(SysIdRoutineLog log) -> {
-							log.motor("Drive1")
-									.voltage(BaseUnits.Voltage.of(modules[0].getDriveMotor().getVoltage()))
-									.angularPosition(
-											edu.wpi.first.units.Units.Rotations.of(
-													modules[0].getDriveMotor().getPosition()))
-									.angularVelocity(
-											edu.wpi.first.units.Units.Rotations.per(edu.wpi.first.units.Units.Second)
-													.of(modules[0].getDriveMotor().getVelocity()));
-							log.motor("Drive2")
-									.voltage(BaseUnits.Voltage.of(modules[1].getDriveMotor().getVoltage()))
-									.angularPosition(
-											edu.wpi.first.units.Units.Rotations.of(
-													modules[1].getDriveMotor().getPosition()))
-									.angularVelocity(
-											edu.wpi.first.units.Units.Rotations.per(edu.wpi.first.units.Units.Second)
-													.of(modules[1].getDriveMotor().getVelocity()));
-							log.motor("Drive3")
-									.voltage(BaseUnits.Voltage.of(modules[2].getDriveMotor().getVoltage()))
-									.angularPosition(
-											edu.wpi.first.units.Units.Rotations.of(
-													modules[2].getDriveMotor().getPosition()))
-									.angularVelocity(
-											edu.wpi.first.units.Units.Rotations.per(edu.wpi.first.units.Units.Second)
-													.of(modules[2].getDriveMotor().getVelocity()));
-							log.motor("Drive4")
-									.voltage(BaseUnits.Voltage.of(modules[3].getDriveMotor().getVoltage()))
-									.angularPosition(
-											edu.wpi.first.units.Units.Rotations.of(
-													modules[3].getDriveMotor().getPosition()))
-									.angularVelocity(
-											edu.wpi.first.units.Units.Rotations.per(edu.wpi.first.units.Units.Second)
-													.of(modules[3].getDriveMotor().getVelocity()));
-						},
+						null,
 						this));
 	}
 
 	private SysIdRoutine getAngleSysIdRoutine() {
-		SwerveModule[] modules = swerveDrive.getModules();
 		return new SysIdRoutine(
-				new SysIdRoutine.Config(),
+				new SysIdRoutine.Config(
+					null,
+					edu.wpi.first.units.Units.Volts.of(4),
+					null,
+					(state) -> SignalLogger.writeString("state", state.toString())
+				),
 				new SysIdRoutine.Mechanism(
 						(Measure<Voltage> volts) -> {
 							for (SwerveModule module : swerveDrive.getModules()) {
 								module.getAngleMotor().setVoltage(volts.magnitude());
 							}
 						},
-						(SysIdRoutineLog log) -> {
-							log.motor("Angle1")
-									.voltage(BaseUnits.Voltage.of(modules[0].getAngleMotor().getVoltage()))
-									.angularPosition(
-											edu.wpi.first.units.Units.Rotations.of(
-													modules[0].getAngleMotor().getPosition()))
-									.angularVelocity(
-											edu.wpi.first.units.Units.Rotations.per(edu.wpi.first.units.Units.Second)
-													.of(modules[0].getAngleMotor().getVelocity()));
-							log.motor("Angle2")
-									.voltage(BaseUnits.Voltage.of(modules[1].getAngleMotor().getVoltage()))
-									.angularPosition(
-											edu.wpi.first.units.Units.Rotations.of(
-													modules[1].getAngleMotor().getPosition()))
-									.angularVelocity(
-											edu.wpi.first.units.Units.Rotations.per(edu.wpi.first.units.Units.Second)
-													.of(modules[1].getAngleMotor().getVelocity()));
-							log.motor("Angle3")
-									.voltage(BaseUnits.Voltage.of(modules[2].getAngleMotor().getVoltage()))
-									.angularPosition(
-											edu.wpi.first.units.Units.Rotations.of(
-													modules[2].getAngleMotor().getPosition()))
-									.angularVelocity(
-											edu.wpi.first.units.Units.Rotations.per(edu.wpi.first.units.Units.Second)
-													.of(modules[2].getAngleMotor().getVelocity()));
-							log.motor("Angle4")
-									.voltage(BaseUnits.Voltage.of(modules[3].getAngleMotor().getVoltage()))
-									.angularPosition(
-											edu.wpi.first.units.Units.Rotations.of(
-													modules[3].getAngleMotor().getPosition()))
-									.angularVelocity(
-											edu.wpi.first.units.Units.Rotations.per(edu.wpi.first.units.Units.Second)
-													.of(modules[3].getAngleMotor().getVelocity()));
-						},
+						null,
 						this));
 	}
 
