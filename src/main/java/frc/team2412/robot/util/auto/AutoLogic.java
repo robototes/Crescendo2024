@@ -341,23 +341,26 @@ public class AutoLogic {
 		// Should be able to launch if:
 		// Launcher is at the correct angle and flywheel rpm
 		// Note is finished indexing (intake all in command is finished)
-		return () ->
-				(s.launcherSubsystem.isAtAngle()
-						&& s.launcherSubsystem.isAtSpeed()
-						&& s.intakeSubsystem.getCurrentCommand() == null);
+		return (INTAKE_ENABLED & LAUNCHER_ENABLED
+				? () ->
+						(s.launcherSubsystem.isAtAngle()
+								&& s.launcherSubsystem.isAtSpeed()
+								&& s.intakeSubsystem.getCurrentCommand() == null)
+				: () -> true);
 	}
 
 	public static BooleanSupplier untilNoNote() {
 		// decided to go from checking for note in feeder to both feeder and index in case note is still
 		// indexing
-		return () ->
-				!(s.intakeSubsystem.feederSensorHasNote() && s.intakeSubsystem.indexSensorHasNote());
+		return (INTAKE_ENABLED
+				? () -> !(s.intakeSubsystem.feederSensorHasNote() && s.intakeSubsystem.indexSensorHasNote())
+				: () -> true);
 	}
 
 	// Should be able to tell if a robot has a note based off if intake is still running when checked,
 	// since if note is being indexed, intake motors should've been disabled.
 	public static BooleanSupplier hasNoNote() {
-		return () -> !(s.intakeSubsystem.isIntakeRunning());
+		return (INTAKE_ENABLED ? () -> !(s.intakeSubsystem.isIntakeRunning()) : () -> true);
 	}
 
 	// registered commands
@@ -379,19 +382,21 @@ public class AutoLogic {
 		// 		: Commands.none());
 
 		// Checks if the robot has a note in the subsystem, if it does, launch
-		return stopFeeder()
-				.andThen(
-						Commands.either(
-								new SetAngleLaunchCommand(
-												s.launcherSubsystem,
-												LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
-												LauncherSubsystem.SUBWOOFER_AIM_ANGLE)
-										.until(isReadyToLaunch())
-										.andThen(new WaitCommand(FEEDER_DELAY))
-										.andThen(new FeederInCommand(s.intakeSubsystem).until(untilNoNote()))
-										.andThen(new WaitCommand(0.4)),
-								Commands.none(),
-								hasNoNote()));
+		return (LAUNCHER_ENABLED && INTAKE_ENABLED && APRILTAGS_ENABLED
+				? stopFeeder()
+						.andThen(
+								Commands.either(
+										new SetAngleLaunchCommand(
+														s.launcherSubsystem,
+														LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
+														LauncherSubsystem.SUBWOOFER_AIM_ANGLE)
+												.until(isReadyToLaunch())
+												.andThen(new WaitCommand(FEEDER_DELAY))
+												.andThen(new FeederInCommand(s.intakeSubsystem).until(untilNoNote()))
+												.andThen(new WaitCommand(0.4)),
+										Commands.none(),
+										hasNoNote()))
+				: Commands.none());
 	}
 
 	public static Command visionLaunch() {
@@ -407,16 +412,18 @@ public class AutoLogic {
 		// 								.andThen(new FeederInCommand(s.intakeSubsystem).until(untilNoNote())))
 		// 		: Commands.none());
 
-		return stopFeeder()
-				.andThen(
-						Commands.either(
-								new FullTargetCommand(s.launcherSubsystem, s.drivebaseSubsystem, controls)
-										.until(isReadyToLaunch())
-										.andThen(new WaitCommand(FEEDER_DELAY))
-										.andThen(new FeederInCommand(s.intakeSubsystem).until(untilNoNote()))
-										.andThen(new WaitCommand(0.4)),
-								Commands.none(),
-								hasNoNote()));
+		return (LAUNCHER_ENABLED && INTAKE_ENABLED && APRILTAGS_ENABLED
+				? stopFeeder()
+						.andThen(
+								Commands.either(
+										new FullTargetCommand(s.launcherSubsystem, s.drivebaseSubsystem, controls)
+												.until(isReadyToLaunch())
+												.andThen(new WaitCommand(FEEDER_DELAY))
+												.andThen(new FeederInCommand(s.intakeSubsystem).until(untilNoNote()))
+												.andThen(new WaitCommand(0.4)),
+										Commands.none(),
+										hasNoNote()))
+				: Commands.none());
 	}
 
 	public static Command revFlyWheels() {
@@ -452,6 +459,7 @@ public class AutoLogic {
 						.andThen(Commands.waitSeconds(FEEDER_DELAY))
 						.andThen(new FeederInCommand(s.intakeSubsystem))
 						.andThen(Commands.waitSeconds(0.1))
+						.withName("Auto - FeedCommand")
 				: Commands.none());
 	}
 
@@ -461,22 +469,29 @@ public class AutoLogic {
 						.alongWith(
 								new SetAngleLaunchCommand(
 										s.launcherSubsystem, 3000, LauncherSubsystem.RETRACTED_ANGLE))
+						.withName("Auto - NoteStealCommand")
 				: Commands.none());
 	}
 
 	public static Command intake() {
-		return (INTAKE_ENABLED ? new AllInCommand(s.intakeSubsystem, null) : Commands.none());
+		return (INTAKE_ENABLED
+				? new AllInCommand(s.intakeSubsystem, null).withName("Auto - IntakeAllInCommand")
+				: Commands.none());
 	}
 
 	public static Command stopIntake() {
-		return (INTAKE_ENABLED ? new IntakeStopCommand(s.intakeSubsystem) : Commands.none());
+		return (INTAKE_ENABLED
+				? new IntakeStopCommand(s.intakeSubsystem).withName("Auto - StopIntakeCommand")
+				: Commands.none());
 	}
 
 	public static Command index() {
-		return new FeederInCommand(s.intakeSubsystem).until(s.intakeSubsystem::feederSensorHasNote);
+		return (INTAKE_ENABLED
+				? new FeederInCommand(s.intakeSubsystem).until(s.intakeSubsystem::feederSensorHasNote)
+				: Commands.none());
 	}
 
 	public static Command stopFeeder() {
-		return new FeederStopCommand(s.intakeSubsystem);
+		return (INTAKE_ENABLED ? new FeederStopCommand(s.intakeSubsystem) : Commands.none());
 	}
 }
