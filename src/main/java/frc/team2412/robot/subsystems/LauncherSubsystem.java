@@ -359,7 +359,8 @@ public class LauncherSubsystem extends SubsystemBase {
 
 		angleSetpointEntry =
 				Shuffleboard.getTab("Launcher").add("Angle Setpoint", 0).withPosition(2, 2).getEntry();
-		launcherFlywheelSetpointEntry = Shuffleboard.getTab("Launcher").add("Flywheel Setpoint", 0).getEntry();
+		launcherFlywheelSetpointEntry =
+				Shuffleboard.getTab("Launcher").add("Flywheel Setpoint", 0).getEntry();
 	}
 
 	public void updateDistanceEntry(double distance) {
@@ -374,7 +375,7 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherIsAtSpeed.setBoolean(isAtSpeed());
 		launcherAngleManual.setDouble(manualAngleSetpoint);
 		angleSetpointEntry.setDouble(angleSetpoint);
-		launcherFlywheelSetpointEntry.setDouble(rpmSetpoint)
+		launcherFlywheelSetpointEntry.setDouble(rpmSetpoint);
 
 		// sanity check the pivot encoder
 		if (launcherAngleEncoder.getPosition() >= PIVOT_SOFTSTOP_FORWARD + PIVOT_DISABLE_OFFSET
