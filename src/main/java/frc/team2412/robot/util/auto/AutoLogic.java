@@ -342,7 +342,7 @@ public class AutoLogic {
 				? () ->
 						(s.launcherSubsystem.isAtAngle()
 								&& s.launcherSubsystem.isAtSpeed()
-								&& s.intakeSubsystem.getCurrentCommand() instanceof AllInCommand)
+								&& !(s.intakeSubsystem.getCurrentCommand() instanceof AllInCommand))
 				: () -> true);
 	}
 
