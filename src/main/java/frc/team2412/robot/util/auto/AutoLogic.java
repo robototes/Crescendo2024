@@ -323,7 +323,7 @@ public class AutoLogic {
 			autoTime = ((double) ((int) autoTime)) / 100;
 
 			// add autoDelay to estimation as well
-			// autoTime += autoDelayEntry.getDouble(0);
+			autoTime += autoDelayEntry.getDouble(0);
 
 			return autoTime;
 		}
