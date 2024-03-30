@@ -338,7 +338,13 @@ public class AutoLogic {
 	public static BooleanSupplier isReadyToLaunch() {
 		// return () -> (s.launcherSubsystem.isAtAngle() && s.launcherSubsystem.isAtSpeed());
 
-		return () -> s.intakeSubsystem.getCurrentCommand() == null;
+		// Should be able to launch if:
+		// Launcher is at the correct angle and flywheel rpm
+		// Note is finished indexing (intake all in command is finished)
+		return () ->
+				(s.launcherSubsystem.isAtAngle()
+						&& s.launcherSubsystem.isAtSpeed()
+						&& s.intakeSubsystem.getCurrentCommand() == null);
 	}
 
 	public static BooleanSupplier untilNoNote() {
@@ -348,6 +354,8 @@ public class AutoLogic {
 				!(s.intakeSubsystem.feederSensorHasNote() && s.intakeSubsystem.indexSensorHasNote());
 	}
 
+	// Should be able to tell if a robot has a note based off if intake is still running when checked,
+	// since if note is being indexed, intake motors should've been disabled.
 	public static BooleanSupplier hasNoNote() {
 		return () -> !(s.intakeSubsystem.isIntakeRunning());
 	}
@@ -355,6 +363,20 @@ public class AutoLogic {
 	// registered commands
 
 	public static Command subwooferLaunch() {
+
+		// return (LAUNCHER_ENABLED && INTAKE_ENABLED && APRILTAGS_ENABLED
+		// 		? stopFeeder()
+		// 				.andThen(
+		// 						Commands.either(Commands.none(), index(), s.intakeSubsystem::feederSensorHasNote))
+		// 				.andThen(
+		// 						new SetAngleLaunchCommand(
+		// 										s.launcherSubsystem,
+		// 										LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
+		// 										LauncherSubsystem.SUBWOOFER_AIM_ANGLE)
+		// 								.until(isReadyToLaunch())
+		// 								.andThen(new WaitCommand(FEEDER_DELAY))
+		// 								.andThen(new FeederInCommand(s.intakeSubsystem).until(untilNoNote())))
+		// 		: Commands.none());
 
 		// Checks if the robot has a note in the subsystem, if it does, launch
 		return stopFeeder()
