@@ -9,7 +9,6 @@ import com.pathplanner.lib.path.PathPlannerTrajectory;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -24,9 +23,10 @@ import frc.team2412.robot.Subsystems;
 import frc.team2412.robot.commands.intake.AllInCommand;
 import frc.team2412.robot.commands.intake.AllInSensorOverrideCommand;
 import frc.team2412.robot.commands.intake.FeederInCommand;
+import frc.team2412.robot.commands.intake.FeederStopCommand;
 import frc.team2412.robot.commands.intake.IntakeStopCommand;
-import frc.team2412.robot.commands.launcher.FullTargetCommand;
 import frc.team2412.robot.commands.launcher.SetAngleLaunchCommand;
+import frc.team2412.robot.commands.launcher.SetLaunchSpeedCommand;
 import frc.team2412.robot.commands.launcher.StopLauncherCommand;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
 import frc.team2412.robot.util.DynamicSendableChooser;
@@ -35,6 +35,7 @@ import frc.team2412.robot.util.PathPlannerAutos.Auto;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.BooleanSupplier;
 
 public class AutoLogic {
 	public static Robot r = Robot.getInstance();
@@ -42,6 +43,9 @@ public class AutoLogic {
 	public static final Controls controls = r.controls;
 
 	public static final double FEEDER_DELAY = 0.4;
+
+	// rpm to rev up launcher before launching
+	public static final double REV_RPM = 2500;
 	public static final double STAGE_ANGLE = 247;
 
 	public static enum StartPosition {
@@ -109,7 +113,8 @@ public class AutoLogic {
 					new AutoPath("Centerline N5 N3", "PresetSourceSideCenterline3Score2"),
 					// vision
 					new AutoPath("Centerline N5 N4", "VisionSourceSide3Score", true),
-					new AutoPath("Centerline N3 N1", "VisionMidFar2Score", true));
+					new AutoPath("Centerline N3 N1", "VisionMidFar2Score", true),
+					new AutoPath("Autoline N1 Centerline N1", "VisionAmpSideFarAutoline3Score", true));
 
 	private static List<AutoPath> threePiecePaths =
 			List.of(
@@ -168,7 +173,7 @@ public class AutoLogic {
 	private static SendableChooser<Integer> gameObjects = new SendableChooser<Integer>();
 	private static SendableChooser<Boolean> isVision = new SendableChooser<Boolean>();
 
-	private static GenericEntry autoDelayEntry;
+	// private static GenericEntry autoDelayEntry;
 
 	// methods
 
@@ -182,58 +187,20 @@ public class AutoLogic {
 		// param: String commandName, Command command
 
 		// Intake
-		NamedCommands.registerCommand(
-				"StopIntake",
-				(INTAKE_ENABLED ? new IntakeStopCommand(s.intakeSubsystem) : Commands.none()));
-		NamedCommands.registerCommand(
-				"Intake",
-				(INTAKE_ENABLED
-						? Commands.parallel(
-								new AllInCommand(s.intakeSubsystem, null),
-								new SetAngleLaunchCommand(
-										s.launcherSubsystem, 0, LauncherSubsystem.RETRACTED_ANGLE))
-						: Commands.none()));
-		NamedCommands.registerCommand(
-				"IntakeSensorOverride",
-				(INTAKE_ENABLED ? new AllInSensorOverrideCommand(s.intakeSubsystem) : Commands.none()));
+		NamedCommands.registerCommand("StopIntake", stopIntake());
+		NamedCommands.registerCommand("Intake", intake());
+		NamedCommands.registerCommand("Feed", subwooferLaunch());
+		NamedCommands.registerCommand("NoteSteal", noteSteal());
+
 		// Launcher
-		NamedCommands.registerCommand(
-				"VisionLaunch",
-				(LAUNCHER_ENABLED && INTAKE_ENABLED && APRILTAGS_ENABLED
-						? Commands.sequence(
-								new FullTargetCommand(s.launcherSubsystem, s.drivebaseSubsystem, controls)
-										.until(
-												() -> (s.launcherSubsystem.isAtAngle() && s.launcherSubsystem.isAtSpeed()))
-										.andThen(new WaitCommand(FEEDER_DELAY)),
-								new FeederInCommand(s.intakeSubsystem)
-										.until(() -> !s.intakeSubsystem.feederSensorHasNote()))
-						: Commands.none()));
 
-		NamedCommands.registerCommand(
-				"SubwooferLaunch",
-				(LAUNCHER_ENABLED && INTAKE_ENABLED
-						? new SetAngleLaunchCommand(
-										s.launcherSubsystem,
-										LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
-										LauncherSubsystem.SUBWOOFER_AIM_ANGLE)
-								.until(() -> (s.launcherSubsystem.isAtAngle() && s.launcherSubsystem.isAtSpeed()))
-								.andThen(new WaitCommand(FEEDER_DELAY))
-								.andThen(new FeederInCommand(s.intakeSubsystem))
-								.until(() -> !s.intakeSubsystem.feederSensorHasNote())
-								.andThen(new WaitCommand(0.4))
-						: Commands.none()));
-		NamedCommands.registerCommand(
-				"StopLaunch",
-				(LAUNCHER_ENABLED ? new StopLauncherCommand(s.launcherSubsystem) : Commands.none()));
-		NamedCommands.registerCommand(
-				"RetractPivot",
-				(LAUNCHER_ENABLED && INTAKE_ENABLED
-						? new SetAngleLaunchCommand(s.launcherSubsystem, 0, LauncherSubsystem.RETRACTED_ANGLE)
-						: Commands.none())); // TODO: add retract angle
+		NamedCommands.registerCommand("VisionLaunch", visionLaunch());
+		NamedCommands.registerCommand("SetAngleSubwoofer", setAngleSubwoofer());
+		NamedCommands.registerCommand("SubwooferLaunch", subwooferLaunch());
+		NamedCommands.registerCommand("StopLaunch", stopLaunching());
+		NamedCommands.registerCommand("RetractPivot", setAngleRetracted());
 
-		NamedCommands.registerCommand(
-				"UnderStage", new SetAngleLaunchCommand(s.launcherSubsystem, 0, STAGE_ANGLE));
-
+		NamedCommands.registerCommand("RevLauncher", revFlyWheels());
 		// Complex Autos
 		NamedCommands.registerCommand("AutoLogicTest", ComplexAutoPaths.testAuto);
 
@@ -297,9 +264,9 @@ public class AutoLogic {
 		// resets/clears all options
 		availableAutos.clearOptions();
 
+		// filter based off gameobject count
 		availableAutos.setDefaultOption(defaultPath.getDisplayName(), defaultPath);
 
-		// filter based off gameobejct count
 		List<AutoPath> autoCommandsList = commandsMap.get(numGameObjects);
 
 		// filter more then add to chooser
@@ -325,6 +292,14 @@ public class AutoLogic {
 	}
 
 	public static Command getSelectedAuto() {
+
+		// TODO: figure out why code crashes when this sequential command group is returned
+		// code also crashes when i run without wait command, something about composition error? idk
+
+		// double waitTimer = autoDelayEntry.getDouble(0);
+		// return Commands.sequence(Commands.wait(waitTimer),
+		// availableAutos.getSelected().getAutoCommand());
+
 		return availableAutos.getSelected().getAutoCommand();
 	}
 
@@ -355,5 +330,122 @@ public class AutoLogic {
 			return autoTime;
 		}
 		return 0;
+	}
+
+	// commands util
+
+	public static BooleanSupplier isReadyToLaunch() {
+		// return () -> (s.launcherSubsystem.isAtAngle() && s.launcherSubsystem.isAtSpeed());
+
+		return () -> s.intakeSubsystem.getCurrentCommand() == null;
+	}
+
+	public static BooleanSupplier untilNoNote() {
+		// decided to go from checking for note in feeder to both feeder and index in case note is still
+		// indexing
+		return () ->
+				!(s.intakeSubsystem.feederSensorHasNote() && s.intakeSubsystem.indexSensorHasNote());
+	}
+
+	public static BooleanSupplier hasNoNote() {
+		return () -> !(s.intakeSubsystem.isIntakeRunning());
+	}
+
+	// registered commands
+
+	public static Command subwooferLaunch() {
+
+		// Checks if the robot has a note in the subsystem, if it does,
+		return stopFeeder()
+				.andThen(
+						Commands.either(
+								new SetAngleLaunchCommand(
+												s.launcherSubsystem,
+												LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
+												LauncherSubsystem.SUBWOOFER_AIM_ANGLE)
+										.until(isReadyToLaunch())
+										.andThen(new WaitCommand(FEEDER_DELAY))
+										.andThen(new FeederInCommand(s.intakeSubsystem).until(untilNoNote()))
+										.andThen(new WaitCommand(0.4)),
+								Commands.none(),
+								hasNoNote()));
+	}
+
+	public static Command visionLaunch() {
+
+		return stopFeeder()
+				.andThen(
+						Commands.either(
+								new SetAngleLaunchCommand(
+												s.launcherSubsystem,
+												LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
+												LauncherSubsystem.SUBWOOFER_AIM_ANGLE)
+										.until(isReadyToLaunch())
+										.andThen(new WaitCommand(FEEDER_DELAY))
+										.andThen(new FeederInCommand(s.intakeSubsystem).until(untilNoNote()))
+										.andThen(new WaitCommand(0.4)),
+								Commands.none(),
+								hasNoNote()));
+	}
+
+	public static Command revFlyWheels() {
+		return (LAUNCHER_ENABLED
+				? new SetLaunchSpeedCommand(s.launcherSubsystem, REV_RPM)
+				: Commands.none());
+	}
+
+	public static Command stopLaunching() {
+		return (LAUNCHER_ENABLED ? new StopLauncherCommand(s.launcherSubsystem) : Commands.none());
+	}
+
+	public static Command setAngleRetracted() {
+		return (LAUNCHER_ENABLED && INTAKE_ENABLED
+				? new SetAngleLaunchCommand(s.launcherSubsystem, 0, LauncherSubsystem.RETRACTED_ANGLE)
+				: Commands.none());
+	}
+
+	public static Command setAngleSubwoofer() {
+		return (LAUNCHER_ENABLED
+				? Commands.waitUntil(s.intakeSubsystem::feederSensorHasNote)
+						.andThen(
+								new SetAngleLaunchCommand(
+										s.launcherSubsystem,
+										LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
+										LauncherSubsystem.SUBWOOFER_AIM_ANGLE))
+				: Commands.none());
+	}
+
+	public static Command feederIn() {
+		return (INTAKE_ENABLED && LAUNCHER_ENABLED
+				? Commands.waitUntil(isReadyToLaunch())
+						.andThen(Commands.waitSeconds(FEEDER_DELAY))
+						.andThen(new FeederInCommand(s.intakeSubsystem))
+						.andThen(Commands.waitSeconds(0.1))
+				: Commands.none());
+	}
+
+	public static Command noteSteal() {
+		return (INTAKE_ENABLED && LAUNCHER_ENABLED
+				? new AllInSensorOverrideCommand(s.intakeSubsystem)
+						.alongWith(
+								new SetAngleLaunchCommand(
+										s.launcherSubsystem, 3000, LauncherSubsystem.RETRACTED_ANGLE))
+				: Commands.none());
+	}
+
+	public static Command intake() {
+		return (INTAKE_ENABLED ? new AllInCommand(s.intakeSubsystem, null) : Commands.none());
+	}
+
+	public static Command stopIntake() {
+		return (INTAKE_ENABLED ? new IntakeStopCommand(s.intakeSubsystem) : Commands.none());
+	}
+
+	public static Command index() {
+		return new FeederInCommand(s.intakeSubsystem).until(s.intakeSubsystem::feederSensorHasNote);
+	}
+
+	public static Command stopFeeder() {
+		return new FeederStopCommand(s.intakeSubsystem);
 	}
 }
