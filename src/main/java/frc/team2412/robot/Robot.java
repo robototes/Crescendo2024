@@ -20,6 +20,7 @@ import frc.team2412.robot.commands.diagnostic.IntakeDiagnosticCommand;
 import frc.team2412.robot.commands.diagnostic.LauncherDiagnosticCommand;
 import frc.team2412.robot.util.MACAddress;
 import frc.team2412.robot.util.MatchDashboard;
+import frc.team2412.robot.util.auto.AutoAlignment;
 import frc.team2412.robot.util.auto.AutoLogic;
 
 public class Robot extends TimedRobot {
@@ -88,7 +89,8 @@ public class Robot extends TimedRobot {
 		AutoLogic.registerCommands();
 
 		if (Subsystems.SubsystemConstants.DRIVEBASE_ENABLED) {
-			AutoLogic.initShuffleBoard();
+			AutoLogic.initShuffleboard();
+			AutoAlignment.initShuffleboard();
 		}
 
 		SmartDashboard.putString("current bot", getTypeFromAddress().toString());

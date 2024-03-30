@@ -265,7 +265,7 @@ public class AutoLogic {
 		return AutoBuilder.followPath(path);
 	}
 
-	public static void initShuffleBoard() {
+	public static void initShuffleboard() {
 
 		startPositionChooser.setDefaultOption(StartPosition.MISC.title, StartPosition.MISC);
 		for (StartPosition startPosition : StartPosition.values()) {
@@ -355,5 +355,9 @@ public class AutoLogic {
 			return autoTime;
 		}
 		return 0;
+	}
+
+	public static AutoPath getSelectedAutoPath() {
+		return availableAutos.getSelected();
 	}
 }
