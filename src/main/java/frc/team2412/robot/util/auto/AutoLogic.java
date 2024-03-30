@@ -9,6 +9,7 @@ import com.pathplanner.lib.path.PathPlannerTrajectory;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -174,7 +175,7 @@ public class AutoLogic {
 	private static SendableChooser<Integer> gameObjects = new SendableChooser<Integer>();
 	private static SendableChooser<Boolean> isVision = new SendableChooser<Boolean>();
 
-	// private static GenericEntry autoDelayEntry;
+	private static GenericEntry autoDelayEntry;
 
 	// methods
 
@@ -250,7 +251,7 @@ public class AutoLogic {
 		tab.add("Launch Type", isVision).withPosition(5, 1);
 		tab.add("Game Objects", gameObjects).withPosition(6, 1);
 		tab.add("Available Auto Variants", availableAutos).withPosition(5, 2).withSize(2, 1);
-		// autoDelayEntry = tab.add("Auto Delay", 0).withPosition(5, 3).withSize(1, 1).getEntry();
+		autoDelayEntry = tab.add("Auto Delay", 0).withPosition(5, 3).withSize(1, 1).getEntry();
 
 		isVision.onChange((dummyVar) -> AutoLogic.filterAutos(gameObjects.getSelected()));
 		startPositionChooser.onChange((dummyVar) -> AutoLogic.filterAutos(gameObjects.getSelected()));
@@ -294,14 +295,10 @@ public class AutoLogic {
 
 	public static Command getSelectedAuto() {
 
-		// TODO: figure out why code crashes when this sequential command group is returned
-		// code also crashes when i run without wait command, something about composition error? idk
+		double waitTimer = autoDelayEntry.getDouble(0);
 
-		// double waitTimer = autoDelayEntry.getDouble(0);
-		// return Commands.sequence(Commands.wait(waitTimer),
-		// availableAutos.getSelected().getAutoCommand());
-
-		return availableAutos.getSelected().getAutoCommand();
+		return Commands.waitSeconds(waitTimer)
+				.andThen(AutoBuilder.buildAuto(availableAutos.getSelected().getAutoName()));
 	}
 
 	/**
@@ -345,22 +342,20 @@ public class AutoLogic {
 				? () ->
 						(s.launcherSubsystem.isAtAngle()
 								&& s.launcherSubsystem.isAtSpeed()
-								&& s.intakeSubsystem.getCurrentCommand() == null)
+								&& s.intakeSubsystem.getCurrentCommand() instanceof AllInCommand)
 				: () -> true);
 	}
 
-	public static BooleanSupplier untilNoNote() {
+	public static BooleanSupplier untilFeederHasNoNote() {
 		// decided to go from checking for note in feeder to both feeder and index in case note is still
 		// indexing
-		return (INTAKE_ENABLED
-				? () -> !(s.intakeSubsystem.feederSensorHasNote() && s.intakeSubsystem.indexSensorHasNote())
-				: () -> true);
+		return (INTAKE_ENABLED ? () -> !s.intakeSubsystem.feederSensorHasNote() : () -> true);
 	}
 
 	// Should be able to tell if a robot has a note based off if intake is still running when checked,
 	// since if note is being indexed, intake motors should've been disabled.
 	public static BooleanSupplier hasNoNote() {
-		return (INTAKE_ENABLED ? () -> !(s.intakeSubsystem.isIntakeRunning()) : () -> true);
+		return (INTAKE_ENABLED ? () -> !s.intakeSubsystem.isIntakeRunning() : () -> true);
 	}
 
 	// registered commands
@@ -383,21 +378,23 @@ public class AutoLogic {
 
 		// Checks if the robot has a note in the subsystem, if it does, launch
 		return (LAUNCHER_ENABLED && INTAKE_ENABLED && APRILTAGS_ENABLED
-				? stopFeeder()
-						.andThen(
-								Commands.either(
-										new SetAngleLaunchCommand(
-														s.launcherSubsystem,
-														LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
-														LauncherSubsystem.SUBWOOFER_AIM_ANGLE)
-												.until(isReadyToLaunch())
-												.andThen(new WaitCommand(FEEDER_DELAY))
-												.andThen(new FeederInCommand(s.intakeSubsystem).until(untilNoNote()))
-												.andThen(new WaitCommand(0.4))
-												.withName("Auto - SubwooferLaunchCommand"),
-										Commands.none(),
-										hasNoNote()))
-				: Commands.none());
+						? stopFeeder()
+								.andThen(
+										Commands.either(
+												new SetAngleLaunchCommand(
+																s.launcherSubsystem,
+																LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
+																LauncherSubsystem.SUBWOOFER_AIM_ANGLE)
+														.until(isReadyToLaunch())
+														.andThen(new WaitCommand(FEEDER_DELAY))
+														.andThen(
+																new FeederInCommand(s.intakeSubsystem)
+																		.until(untilFeederHasNoNote()))
+														.andThen(new WaitCommand(0.4)),
+												Commands.none(),
+												hasNoNote()))
+						: Commands.none())
+				.withName("Auto - SubwooferLaunchCommand");
 	}
 
 	public static Command visionLaunch() {
@@ -414,94 +411,92 @@ public class AutoLogic {
 		// 		: Commands.none());
 
 		return (LAUNCHER_ENABLED && INTAKE_ENABLED && APRILTAGS_ENABLED
-				? stopFeeder()
-						.andThen(
-								Commands.either(
-										new FullTargetCommand(s.launcherSubsystem, s.drivebaseSubsystem, controls)
-												.until(isReadyToLaunch())
-												.andThen(new WaitCommand(FEEDER_DELAY))
-												.andThen(new FeederInCommand(s.intakeSubsystem).until(untilNoNote()))
-												.andThen(new WaitCommand(0.4)),
-										Commands.none().withName("Auto - VisionLaunchCommand"),
-										hasNoNote()))
-				: Commands.none());
+						? stopFeeder()
+								.andThen(
+										Commands.either(
+												new FullTargetCommand(s.launcherSubsystem, s.drivebaseSubsystem, controls)
+														.until(isReadyToLaunch())
+														.andThen(new WaitCommand(FEEDER_DELAY))
+														.andThen(
+																new FeederInCommand(s.intakeSubsystem)
+																		.until(untilFeederHasNoNote()))
+														.andThen(new WaitCommand(0.4)),
+												Commands.none(),
+												hasNoNote()))
+						: Commands.none())
+				.withName("Auto - VisionLaunchCommand");
 	}
 
 	public static Command revFlyWheels() {
 		return (LAUNCHER_ENABLED
-				? new SetLaunchSpeedCommand(s.launcherSubsystem, REV_RPM)
-						.withName("Auto - RevFlyWheelsCommand")
-				: Commands.none());
+						? new SetLaunchSpeedCommand(s.launcherSubsystem, REV_RPM)
+						: Commands.none())
+				.withName("Auto - RevFlyWheelsCommand");
 	}
 
 	public static Command stopLaunching() {
-		return (LAUNCHER_ENABLED
-				? new StopLauncherCommand(s.launcherSubsystem).withName("Auto - StopLauncherCommand")
-				: Commands.none());
+		return (LAUNCHER_ENABLED ? new StopLauncherCommand(s.launcherSubsystem) : Commands.none())
+				.withName("Auto - StopLauncherCommand");
 	}
 
 	public static Command setAngleRetracted() {
 		return (LAUNCHER_ENABLED && INTAKE_ENABLED
-				? new SetAngleLaunchCommand(s.launcherSubsystem, 0, LauncherSubsystem.RETRACTED_ANGLE)
-						.withName("Auto - SetPivotRetractedCommand")
-				: Commands.none());
+						? new SetAngleLaunchCommand(s.launcherSubsystem, 0, LauncherSubsystem.RETRACTED_ANGLE)
+						: Commands.none())
+				.withName("Auto - SetPivotRetractedCommand");
 	}
 
 	public static Command setAngleSubwoofer() {
 		return (LAUNCHER_ENABLED
-				? Commands.waitUntil(s.intakeSubsystem::feederSensorHasNote)
-						.andThen(
-								new SetAngleLaunchCommand(
-										s.launcherSubsystem,
-										LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
-										LauncherSubsystem.SUBWOOFER_AIM_ANGLE))
-						.withName("Auto - SetPivotSubwooferCommand")
-				: Commands.none());
+						? Commands.waitUntil(s.intakeSubsystem::feederSensorHasNote)
+								.andThen(
+										new SetAngleLaunchCommand(
+												s.launcherSubsystem,
+												LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
+												LauncherSubsystem.SUBWOOFER_AIM_ANGLE))
+						: Commands.none())
+				.withName("Auto - SetPivotSubwooferCommand");
 	}
 
 	public static Command feederIn() {
 		return (INTAKE_ENABLED && LAUNCHER_ENABLED
-				? Commands.waitUntil(isReadyToLaunch())
-						.andThen(Commands.waitSeconds(FEEDER_DELAY))
-						.andThen(new FeederInCommand(s.intakeSubsystem))
-						.andThen(Commands.waitSeconds(0.1))
-						.withName("Auto - FeedCommand")
-				: Commands.none());
+						? Commands.waitUntil(isReadyToLaunch())
+								.andThen(Commands.waitSeconds(FEEDER_DELAY))
+								.andThen(new FeederInCommand(s.intakeSubsystem))
+								.andThen(Commands.waitSeconds(0.1))
+						: Commands.none())
+				.withName("Auto - FeedCommand");
 	}
 
 	public static Command noteSteal() {
 		return (INTAKE_ENABLED && LAUNCHER_ENABLED
-				? new AllInSensorOverrideCommand(s.intakeSubsystem)
-						.alongWith(
-								new SetAngleLaunchCommand(
-										s.launcherSubsystem, 3000, LauncherSubsystem.RETRACTED_ANGLE))
-						.withName("Auto - NoteStealCommand")
-				: Commands.none());
+						? new AllInSensorOverrideCommand(s.intakeSubsystem)
+								.alongWith(
+										new SetAngleLaunchCommand(
+												s.launcherSubsystem, 3000, LauncherSubsystem.RETRACTED_ANGLE))
+						: Commands.none())
+				.withName("Auto - NoteStealCommand");
 	}
 
 	public static Command intake() {
-		return (INTAKE_ENABLED
-				? new AllInCommand(s.intakeSubsystem, null).withName("Auto - IntakeAllInCommand")
-				: Commands.none());
+		return (INTAKE_ENABLED ? new AllInCommand(s.intakeSubsystem, null) : Commands.none())
+				.withName("Auto - IntakeAllInCommand");
 	}
 
 	public static Command stopIntake() {
-		return (INTAKE_ENABLED
-				? new IntakeStopCommand(s.intakeSubsystem).withName("Auto - StopIntakeCommand")
-				: Commands.none());
+		return (INTAKE_ENABLED ? new IntakeStopCommand(s.intakeSubsystem) : Commands.none())
+				.withName("Auto - StopIntakeCommand");
 	}
 
 	public static Command index() {
 		return (INTAKE_ENABLED
-				? new FeederInCommand(s.intakeSubsystem)
-						.until(s.intakeSubsystem::feederSensorHasNote)
-						.withName("Auto - IndexToFeederCommand")
-				: Commands.none());
+						? new FeederInCommand(s.intakeSubsystem).until(s.intakeSubsystem::feederSensorHasNote)
+						: Commands.none())
+				.withName("Auto - IndexToFeederCommand");
 	}
 
 	public static Command stopFeeder() {
-		return (INTAKE_ENABLED
-				? new FeederStopCommand(s.intakeSubsystem)
-				: Commands.none().withName("Auto - StopFeeder"));
+		return (INTAKE_ENABLED ? new FeederStopCommand(s.intakeSubsystem) : Commands.none())
+				.withName("Auto - StopFeeder");
 	}
 }

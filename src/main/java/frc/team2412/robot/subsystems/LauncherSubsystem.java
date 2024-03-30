@@ -358,7 +358,6 @@ public class LauncherSubsystem extends SubsystemBase {
 
 		angleSetpointEntry =
 				Shuffleboard.getTab("Launcher").add("Angle Setpoint", 0).withPosition(2, 2).getEntry();
-
 	}
 
 	public void updateDistanceEntry(double distance) {
