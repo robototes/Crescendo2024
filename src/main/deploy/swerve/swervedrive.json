@@ -1,10 +1,10 @@
 {
   "imu": {
-    "type": "navx",
-    "id": 0,
-    "canbus": null
+    "type": "pigeon2",
+    "id": 13,
+    "canbus": "Drivebase"
   },
-  "invertedIMU": true,
+  "invertedIMU": false,
   "modules": [
     "frontleft.json",
     "frontright.json",
