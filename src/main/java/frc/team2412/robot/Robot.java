@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.team2412.robot.Subsystems.SubsystemConstants;
-import frc.team2412.robot.commands.LED.LightsCommand;
 import frc.team2412.robot.commands.diagnostic.IntakeDiagnosticCommand;
 import frc.team2412.robot.commands.diagnostic.LauncherDiagnosticCommand;
 import frc.team2412.robot.util.MACAddress;
@@ -43,6 +42,9 @@ public class Robot extends TimedRobot {
 	private static final boolean debugMode = true;
 	// Really dangerous to keep this enabled as it disables all other controls, use with caution
 	private static final boolean sysIdMode = false;
+
+	// Turns on an off auto logic
+	private static final boolean autoEnabled = false;
 
 	private final RobotType robotType;
 	private final PowerDistribution PDP;
@@ -86,10 +88,14 @@ public class Robot extends TimedRobot {
 		controls = new Controls(subsystems);
 
 		// TODO: might be a duplicate, keep until after comp
-		AutoLogic.registerCommands();
+		if (autoEnabled) {
+			AutoLogic.registerCommands();
+		}
 
 		if (Subsystems.SubsystemConstants.DRIVEBASE_ENABLED) {
-			AutoLogic.initShuffleBoard();
+			if (autoEnabled) {
+				AutoLogic.initShuffleBoard();
+			}
 		}
 
 		SmartDashboard.putString("current bot", getTypeFromAddress().toString());
@@ -143,8 +149,10 @@ public class Robot extends TimedRobot {
 		// Checks if FMS is attatched and enables joystick warning if true
 		DriverStation.silenceJoystickConnectionWarning(!DriverStation.isFMSAttached());
 		// System.out.println(AutoLogic.getSelected() != null);
-		if (AutoLogic.getSelectedAuto() != null && SubsystemConstants.DRIVEBASE_ENABLED) {
-			AutoLogic.getSelectedAuto().schedule();
+		if (autoEnabled) {
+			if (AutoLogic.getSelectedAuto() != null && SubsystemConstants.DRIVEBASE_ENABLED) {
+				AutoLogic.getSelectedAuto().schedule();
+			}
 		}
 	}
 
@@ -152,6 +160,7 @@ public class Robot extends TimedRobot {
 	public void teleopInit() {
 		Shuffleboard.startRecording();
 		SignalLogger.start();
+		CommandScheduler.getInstance().cancelAll();
 	}
 
 	@Override
@@ -168,13 +177,6 @@ public class Robot extends TimedRobot {
 	@Override
 	public void disabledInit() {
 		Shuffleboard.stopRecording();
-		if (SubsystemConstants.LED_ENABLED) {
-			Command ledCommand =
-					new LightsCommand(
-									subsystems.ledSubsystem, subsystems.intakeSubsystem, subsystems.launcherSubsystem)
-							.ignoringDisable(true);
-			ledCommand.schedule();
-		}
 		Command coastCommand =
 				new WaitCommand(5)
 						.andThen(
@@ -183,7 +185,8 @@ public class Robot extends TimedRobot {
 											if (DriverStation.isDisabled())
 												subsystems.drivebaseSubsystem.setMotorBrake(false);
 										}))
-						.ignoringDisable(true);
+						.ignoringDisable(true)
+						.withName("drivebaseCoast");
 		coastCommand.schedule();
 	}
 
