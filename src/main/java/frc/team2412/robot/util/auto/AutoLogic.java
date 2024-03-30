@@ -393,7 +393,7 @@ public class AutoLogic {
 												.until(isReadyToLaunch())
 												.andThen(new WaitCommand(FEEDER_DELAY))
 												.andThen(new FeederInCommand(s.intakeSubsystem).until(untilNoNote()))
-												.andThen(new WaitCommand(0.4)),
+												.andThen(new WaitCommand(0.4)).withName("Auto - SubwooferLaunchCommand"),
 										Commands.none(),
 										hasNoNote()))
 				: Commands.none());
@@ -421,24 +421,24 @@ public class AutoLogic {
 												.andThen(new WaitCommand(FEEDER_DELAY))
 												.andThen(new FeederInCommand(s.intakeSubsystem).until(untilNoNote()))
 												.andThen(new WaitCommand(0.4)),
-										Commands.none(),
+										Commands.none().withName("Auto - VisionLaunchCommand"),
 										hasNoNote()))
 				: Commands.none());
 	}
 
 	public static Command revFlyWheels() {
 		return (LAUNCHER_ENABLED
-				? new SetLaunchSpeedCommand(s.launcherSubsystem, REV_RPM)
+				? new SetLaunchSpeedCommand(s.launcherSubsystem, REV_RPM).withName("Auto - RevFlyWheelsCommand")
 				: Commands.none());
 	}
 
 	public static Command stopLaunching() {
-		return (LAUNCHER_ENABLED ? new StopLauncherCommand(s.launcherSubsystem) : Commands.none());
+		return (LAUNCHER_ENABLED ? new StopLauncherCommand(s.launcherSubsystem).withName("Auto - StopLauncherCommand") : Commands.none());
 	}
 
 	public static Command setAngleRetracted() {
 		return (LAUNCHER_ENABLED && INTAKE_ENABLED
-				? new SetAngleLaunchCommand(s.launcherSubsystem, 0, LauncherSubsystem.RETRACTED_ANGLE)
+				? new SetAngleLaunchCommand(s.launcherSubsystem, 0, LauncherSubsystem.RETRACTED_ANGLE).withName("Auto - SetPivotRetractedCommand")
 				: Commands.none());
 	}
 
@@ -449,7 +449,7 @@ public class AutoLogic {
 								new SetAngleLaunchCommand(
 										s.launcherSubsystem,
 										LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
-										LauncherSubsystem.SUBWOOFER_AIM_ANGLE))
+										LauncherSubsystem.SUBWOOFER_AIM_ANGLE)).withName("Auto - SetPivotSubwooferCommand")
 				: Commands.none());
 	}
 
@@ -487,11 +487,11 @@ public class AutoLogic {
 
 	public static Command index() {
 		return (INTAKE_ENABLED
-				? new FeederInCommand(s.intakeSubsystem).until(s.intakeSubsystem::feederSensorHasNote)
+				? new FeederInCommand(s.intakeSubsystem).until(s.intakeSubsystem::feederSensorHasNote).withName("Auto - IndexToFeederCommand")
 				: Commands.none());
 	}
 
 	public static Command stopFeeder() {
-		return (INTAKE_ENABLED ? new FeederStopCommand(s.intakeSubsystem) : Commands.none());
+		return (INTAKE_ENABLED ? new FeederStopCommand(s.intakeSubsystem) : Commands.none().withName("Auto - StopFeeder"));
 	}
 }
