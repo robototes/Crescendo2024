@@ -336,8 +336,9 @@ public class AutoLogic {
 	// commands util
 
 	public static BooleanSupplier isReadyToLaunch() {
-		// TODO: consider adding third condition: s.intakeSubsystem.feederSensorHasNote()
-		return () -> (s.launcherSubsystem.isAtAngle() && s.launcherSubsystem.isAtSpeed());
+		// return () -> (s.launcherSubsystem.isAtAngle() && s.launcherSubsystem.isAtSpeed());
+
+		return () -> s.intakeSubsystem.getCurrentCommand() == null;
 	}
 
 	public static BooleanSupplier untilNoNote() {
@@ -347,32 +348,53 @@ public class AutoLogic {
 				!(s.intakeSubsystem.feederSensorHasNote() && s.intakeSubsystem.indexSensorHasNote());
 	}
 
+	public static BooleanSupplier hasNoNote() {
+		return () -> !(s.intakeSubsystem.isIntakeRunning());
+	}
+
+	// registered commands
+
 	public static Command subwooferLaunch() {
-		return (LAUNCHER_ENABLED && INTAKE_ENABLED
-				? stopFeeder()
-						.andThen(
+
+		// Checks if the robot has a note in the subsystem, if it does, launch
+		return stopFeeder()
+				.andThen(
+						Commands.either(
 								new SetAngleLaunchCommand(
-										s.launcherSubsystem,
-										LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
-										LauncherSubsystem.SUBWOOFER_AIM_ANGLE))
-						.until(isReadyToLaunch())
-						.andThen(new WaitCommand(FEEDER_DELAY))
-						.andThen(new FeederInCommand(s.intakeSubsystem).until(untilNoNote()))
-						.andThen(new WaitCommand(0.4))
-				: Commands.none());
+												s.launcherSubsystem,
+												LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
+												LauncherSubsystem.SUBWOOFER_AIM_ANGLE)
+										.until(isReadyToLaunch())
+										.andThen(new WaitCommand(FEEDER_DELAY))
+										.andThen(new FeederInCommand(s.intakeSubsystem).until(untilNoNote()))
+										.andThen(new WaitCommand(0.4)),
+								Commands.none(),
+								hasNoNote()));
 	}
 
 	public static Command visionLaunch() {
-		return (LAUNCHER_ENABLED && INTAKE_ENABLED && APRILTAGS_ENABLED
-				? stopFeeder()
-						.andThen(
-								Commands.either(Commands.none(), index(), s.intakeSubsystem::feederSensorHasNote))
-						.andThen(
+
+		// return (LAUNCHER_ENABLED && INTAKE_ENABLED && APRILTAGS_ENABLED
+		// 		? stopFeeder()
+		// 				.andThen(
+		// 						Commands.either(Commands.none(), index(), s.intakeSubsystem::feederSensorHasNote))
+		// 				.andThen(
+		// 						new FullTargetCommand(s.launcherSubsystem, s.drivebaseSubsystem, controls)
+		// 								.until(isReadyToLaunch())
+		// 								.andThen(new WaitCommand(FEEDER_DELAY))
+		// 								.andThen(new FeederInCommand(s.intakeSubsystem).until(untilNoNote())))
+		// 		: Commands.none());
+
+		return stopFeeder()
+				.andThen(
+						Commands.either(
 								new FullTargetCommand(s.launcherSubsystem, s.drivebaseSubsystem, controls)
 										.until(isReadyToLaunch())
 										.andThen(new WaitCommand(FEEDER_DELAY))
-										.andThen(new FeederInCommand(s.intakeSubsystem).until(untilNoNote())))
-				: Commands.none());
+										.andThen(new FeederInCommand(s.intakeSubsystem).until(untilNoNote()))
+										.andThen(new WaitCommand(0.4)),
+								Commands.none(),
+								hasNoNote()));
 	}
 
 	public static Command revFlyWheels() {

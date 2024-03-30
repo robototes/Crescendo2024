@@ -307,4 +307,15 @@ public class IntakeSubsystem extends SubsystemBase {
 						.withWidget(BuiltInWidgets.kToggleSwitch)
 						.getEntry();
 	}
+
+	// auto thing
+
+	/*
+	 * returns true if all the motors are set to be not moving
+	 */
+	public boolean isIntakeRunning() {
+		return (intakeMotorFront.get() != 0
+				&& intakeMotorLeft.get() != 0
+				&& intakeMotorRight.get() != 0);
+	}
 }
