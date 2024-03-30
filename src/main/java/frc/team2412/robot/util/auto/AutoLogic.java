@@ -358,6 +358,6 @@ public class AutoLogic {
 	}
 
 	public static AutoPath getSelectedAutoPath() {
-		return availableAutos.getSelected();
+		return (chooserHasAutoSelected() ? availableAutos.getSelected() : defaultPath);
 	}
 }

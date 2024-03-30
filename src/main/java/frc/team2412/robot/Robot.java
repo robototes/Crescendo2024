@@ -1,5 +1,7 @@
 package frc.team2412.robot;
 
+import static frc.team2412.robot.Subsystems.SubsystemConstants.DRIVEBASE_ENABLED;
+
 import com.ctre.phoenix6.SignalLogger;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -180,6 +182,13 @@ public class Robot extends TimedRobot {
 										}))
 						.ignoringDisable(true);
 		coastCommand.schedule();
+	}
+
+	@Override
+	public void disabledPeriodic() {
+		if (DRIVEBASE_ENABLED) {
+			AutoAlignment.updateField();
+		}
 	}
 
 	@Override

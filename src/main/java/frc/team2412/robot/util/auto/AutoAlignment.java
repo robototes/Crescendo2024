@@ -94,13 +94,15 @@ public class AutoAlignment {
 		field = new Field2d();
 
 		SmartDashboard.putData("AlignmentField", field);
-		tab.add(field).withPosition(7, 0).withSize(4, 3);
+		tab.add("Alignment Field", field).withPosition(7, 0).withSize(4, 3);
 
 		robotPos = field.getObject("Robot");
 		robotGoalPos = field.getObject("AutoStartPosition");
+
+		updateField();
 	}
 
-	private static void updateField() {
+	public static void updateField() {
 		robotPos.setPose(s.drivebaseWrapper.getEstimatedPosition());
 
 		robotGoalPos.setPose(AutoLogic.getSelectedAutoPath().getStartPose2d());
