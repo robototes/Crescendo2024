@@ -333,12 +333,6 @@ public class DrivebaseSubsystem extends SubsystemBase {
 						.withSize(1, 1)
 						.getEntry();
 		xWheelsEnabled = xWheelsEntry.getBoolean(true);
-		flipTranslationEntry =
-				Shuffleboard.getTab("Match")
-						.add("Flip translation", false)
-						.withWidget(BuiltInWidgets.kToggleSwitch)
-						.withSize(1, 1)
-						.getEntry();
 	}
 
 	/** Get the YAGSL {@link SwerveDrive} object. */
