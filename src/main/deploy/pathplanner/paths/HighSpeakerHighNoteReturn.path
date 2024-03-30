@@ -98,7 +98,7 @@
       }
     },
     {
-      "name": "prep launch",
+      "name": "rev launcher",
       "waypointRelativePos": 1.8,
       "command": {
         "type": "parallel",
@@ -107,7 +107,7 @@
             {
               "type": "named",
               "data": {
-                "name": "SetAngleSubwoofer"
+                "name": "RevLauncher"
               }
             }
           ]

@@ -59,7 +59,7 @@
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "New Event Marker",
+      "name": "intake",
       "waypointRelativePos": 0,
       "command": {
         "type": "sequential",
@@ -76,7 +76,7 @@
       }
     },
     {
-      "name": "New Event Marker",
+      "name": "rev launcher",
       "waypointRelativePos": 1.4,
       "command": {
         "type": "parallel",
@@ -85,7 +85,7 @@
             {
               "type": "named",
               "data": {
-                "name": "SetAngleSubwoofer"
+                "name": "RevLauncher"
               }
             }
           ]

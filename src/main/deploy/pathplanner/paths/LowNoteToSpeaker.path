@@ -32,8 +32,8 @@
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "prep launch",
-      "waypointRelativePos": 0.45,
+      "name": "rev launcher",
+      "waypointRelativePos": 0.5,
       "command": {
         "type": "parallel",
         "data": {
@@ -41,7 +41,7 @@
             {
               "type": "named",
               "data": {
-                "name": "SetAngleSubwoofer"
+                "name": "RevLauncher"
               }
             }
           ]

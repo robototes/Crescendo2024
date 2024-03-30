@@ -86,7 +86,7 @@
       }
     },
     {
-      "name": "New Event Marker",
+      "name": "rev launcher",
       "waypointRelativePos": 1.55,
       "command": {
         "type": "parallel",
@@ -95,7 +95,7 @@
             {
               "type": "named",
               "data": {
-                "name": "SetAngleSubwoofer"
+                "name": "RevLauncher"
               }
             }
           ]
