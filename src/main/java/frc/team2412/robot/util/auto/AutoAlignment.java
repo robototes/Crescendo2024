@@ -16,7 +16,8 @@ public class AutoAlignment {
 	private static final Subsystems s = r.subsystems;
 
 	private static Supplier<Pose2d> currentPosition = s.drivebaseWrapper::getEstimatedPosition;
-	private static Supplier<Pose2d> goalPosition = () -> AutoLogic.getSelectedAutoPath().getStartPose2d();
+	private static Supplier<Pose2d> goalPosition =
+			() -> AutoLogic.getSelectedAutoPath().getStartPose2d();
 
 	private static final double POSITION_TOLERANCE = 0.5;
 	private static final double ROTATION_TOLERANCE = 5;
@@ -36,8 +37,7 @@ public class AutoAlignment {
 				.withPosition(0, 1)
 				.withSize(3, 1);
 
-		tab.addBoolean(
-						"Correct Horizontal Position", AutoAlignment::isRobotInCorrectHorizontalPosition)
+		tab.addBoolean("Correct Horizontal Position", AutoAlignment::isRobotInCorrectHorizontalPosition)
 				.withPosition(3, 0)
 				.withSize(2, 1);
 		tab.addBoolean("Correct Vertical Position", AutoAlignment::isRobotInCorrectVerticalPosition)
@@ -88,7 +88,6 @@ public class AutoAlignment {
 				+ pose.getRotation().getDegrees()
 				+ " deg.)";
 	}
-
 
 	private static void initField() {
 		field = new Field2d();
