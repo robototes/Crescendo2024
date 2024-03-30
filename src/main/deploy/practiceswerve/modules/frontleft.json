@@ -22,5 +22,21 @@
   "inverted": {
     "drive": false,
     "angle": false
+  },
+  "driveTuning": {
+    "p": 3,
+    "i": 0,
+    "d": 0,
+    "kS": 5,
+    "kV": 0,
+    "kA": 0
+  },
+  "angleTuning": {
+    "p": 0,
+    "i": 0,
+    "d": 0,
+    "kS": 0,
+    "kV": 0,
+    "kA": 0
   }
 }

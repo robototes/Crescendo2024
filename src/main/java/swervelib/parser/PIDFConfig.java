@@ -12,8 +12,9 @@ public class PIDFConfig {
 	public double i;
 	/** Derivative Gain for PID. */
 	public double d;
-	/** Feedforward value for PID. */
-	public double f;
+	public double kS;
+	public double kV;
+	public double kA;
 	/** Integral zone of the PID. */
 	public double iz;
 
@@ -23,21 +24,18 @@ public class PIDFConfig {
 	/** Used when parsing PIDF values from JSON. */
 	public PIDFConfig() {}
 
-	/**
-	 * PIDF Config constructor to contain the values.
-	 *
-	 * @param p P gain.
-	 * @param i I gain.
-	 * @param d D gain.
-	 * @param f F gain.
-	 * @param iz Intergral zone.
-	 */
-	public PIDFConfig(double p, double i, double d, double f, double iz) {
+	public PIDFConfig(double p, double i, double d, double kS, double kV, double kA, double iz) {
 		this.p = p;
 		this.i = i;
 		this.d = d;
-		this.f = f;
+		this.kS = kS;
+		this.kV = kV;
+		this.kA = kA;
 		this.iz = iz;
+	}
+
+	public PIDFConfig(double p, double i, double d, double kS, double kV, double kA) {
+		this(p, i, d, kS, kV, kA, 0);
 	}
 
 	/**
@@ -46,10 +44,23 @@ public class PIDFConfig {
 	 * @param p P gain.
 	 * @param i I gain.
 	 * @param d D gain.
-	 * @param f F gain.
+	 * @param kV kV gain
+	 * @param iz Intergral zone.
 	 */
-	public PIDFConfig(double p, double i, double d, double f) {
-		this(p, i, d, f, 0);
+	public PIDFConfig(double p, double i, double d, double kV, double iz) {
+		this(p, i, d, 0, kV, 0, iz);
+	}
+
+	/**
+	 * PIDF Config constructor to contain the values.
+	 *
+	 * @param p P gain.
+	 * @param i I gain.
+	 * @param d D gain.
+	 * @param f kV gain.
+	 */
+	public PIDFConfig(double p, double i, double d, double kV) {
+		this(p, i, d, kV, 0);
 	}
 
 	/**
