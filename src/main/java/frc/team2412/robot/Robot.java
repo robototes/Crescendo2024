@@ -44,7 +44,7 @@ public class Robot extends TimedRobot {
 	private static final boolean sysIdMode = false;
 
 	// Turns on an off auto logic
-	private static final boolean autoEnabled = false;
+	private static final boolean autoEnabled = true;
 
 	private final RobotType robotType;
 	private final PowerDistribution PDP;
