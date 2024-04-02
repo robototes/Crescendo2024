@@ -1,5 +1,6 @@
 package frc.team2412.robot;
 
+import static frc.team2412.robot.Subsystems.SubsystemConstants.APRILTAGS_ENABLED;
 import static frc.team2412.robot.Subsystems.SubsystemConstants.DRIVEBASE_ENABLED;
 
 import com.ctre.phoenix6.SignalLogger;
@@ -95,7 +96,9 @@ public class Robot extends TimedRobot {
 		if (Subsystems.SubsystemConstants.DRIVEBASE_ENABLED) {
 			if (autoEnabled) {
 				AutoLogic.initShuffleboard();
-				AutoAlignment.initShuffleboard();
+				if (APRILTAGS_ENABLED) {
+					AutoAlignment.initShuffleboard();
+				}
 			}
 		}
 
@@ -193,7 +196,7 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void disabledPeriodic() {
-		if (DRIVEBASE_ENABLED) {
+		if (DRIVEBASE_ENABLED && APRILTAGS_ENABLED && autoEnabled) {
 			AutoAlignment.updateField();
 		}
 	}
