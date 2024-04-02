@@ -19,8 +19,8 @@ public class AutoAlignment {
 	private static Supplier<Pose2d> goalPosition =
 			() -> AutoLogic.getSelectedAutoPath().getStartPose2d();
 
-	private static final double POSITION_TOLERANCE = 0.5;
-	private static final double ROTATION_TOLERANCE = 5;
+	private static final double POSITION_TOLERANCE = 0.0254; // meters
+	private static final double ROTATION_TOLERANCE = 3; // degrees
 
 	private static Field2d field = new Field2d();
 	private static FieldObject2d robotPos;
