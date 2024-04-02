@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.team2412.robot.Hardware;
 import frc.team2412.robot.Robot;
@@ -363,6 +364,19 @@ public class LauncherSubsystem extends SubsystemBase {
 
 		angleSetpointEntry =
 				Shuffleboard.getTab("Launcher").add("Angle Setpoint", 0).withPosition(2, 2).getEntry();
+
+		var manualModeEntry =
+				Shuffleboard.getTab("Launcher")
+						.add("Full manual mode", false)
+						.withPosition(3, 0)
+						.getEntry();
+		new Trigger(() -> manualModeEntry.getBoolean(false))
+				.whileTrue(
+						run(
+								() -> {
+									setAngle(setLauncherAngleEntry.getDouble(getAngle()));
+									launch(setLauncherSpeedEntry.getDouble(SPEAKER_SHOOT_SPEED_RPM));
+								}));
 	}
 
 	public void updateDistanceEntry(double distance) {
@@ -371,8 +385,6 @@ public class LauncherSubsystem extends SubsystemBase {
 
 	@Override
 	public void periodic() {
-		manualAngleSetpoint = setLauncherAngleEntry.getDouble(getAngle());
-		setAngle(manualAngleSetpoint);
 		launcherAngleEntry.setDouble(getAngle());
 		launcherSpeedEntry.setDouble(getLauncherSpeed());
 		launcherAngleSpeedEntry.setDouble(getAngleSpeed());
