@@ -86,7 +86,7 @@ public class Controls {
 		codriveIntakeReverseButton = codriveController.povLeft();
 		codriveIntakeRejectButton = codriveController.povDown();
 
-		if (Robot.isSysIdMode() && LAUNCHER_ENABLED) {
+		if (Robot.isSysIdMode()) {
 			bindSysIdControls();
 			return;
 		}
@@ -233,18 +233,18 @@ public class Controls {
 	private void bindSysIdControls() {
 		// only one routine can be run in one robot log
 		// switch these between arm and flywheel in code when tuning
-		driveController
-				.leftBumper()
-				.whileTrue(s.launcherSubsystem.flywheelSysIdQuasistatic(Direction.kForward));
-		driveController
-				.rightBumper()
-				.whileTrue(s.launcherSubsystem.flywheelSysIdQuasistatic(Direction.kReverse));
-		driveController
-				.leftTrigger()
-				.whileTrue(s.launcherSubsystem.flywheelSysIdDynamic(Direction.kForward));
-		driveController
-				.rightTrigger()
-				.whileTrue(s.launcherSubsystem.flywheelSysIdDynamic(Direction.kReverse));
+		// driveController
+		// 		.leftBumper()
+		// 		.whileTrue(s.launcherSubsystem.flywheelSysIdQuasistatic(Direction.kForward));
+		// driveController
+		// 		.rightBumper()
+		// 		.whileTrue(s.launcherSubsystem.flywheelSysIdQuasistatic(Direction.kReverse));
+		// driveController
+		// 		.leftTrigger()
+		// 		.whileTrue(s.launcherSubsystem.flywheelSysIdDynamic(Direction.kForward));
+		// driveController
+		// 		.rightTrigger()
+		// 		.whileTrue(s.launcherSubsystem.flywheelSysIdDynamic(Direction.kReverse));
 		// switch these between angle and drive tests in code when tuning
 		driveController.x().whileTrue(s.drivebaseSubsystem.angleSysIdQuasistatic(Direction.kForward));
 		driveController.y().whileTrue(s.drivebaseSubsystem.angleSysIdQuasistatic(Direction.kReverse));
