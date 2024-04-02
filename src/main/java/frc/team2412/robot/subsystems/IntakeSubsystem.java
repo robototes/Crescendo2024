@@ -8,8 +8,8 @@ import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkLimitSwitch;
+import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -46,9 +46,14 @@ public class IntakeSubsystem extends SubsystemBase {
 
 	// Sensors
 	private final SparkLimitSwitch indexSensor;
-	private final DigitalInput feederSensor;
-
+	private final SparkLimitSwitch feederSensor;
 	private final SparkLimitSwitch intakeFrontSensor;
+
+	// debounce ! !
+	private final Debouncer intakeFrontSensorDebouncer;
+	private final Debouncer intakeRightSensorDebouncer;
+	private final Debouncer intakeLeftSensorDebouncer;
+
 	// private final SparkLimitSwitch intakeBackSensor;
 	private final SparkLimitSwitch intakeLeftSensor;
 	private final SparkLimitSwitch intakeRightSensor;
@@ -81,7 +86,7 @@ public class IntakeSubsystem extends SubsystemBase {
 		feederMotor = new CANSparkFlex(FEEDER_MOTOR, MotorType.kBrushless);
 
 		indexSensor = indexMotorUpper.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
-		feederSensor = new DigitalInput(FEEDER_SENSOR);
+		feederSensor = feederMotor.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
 
 		intakeFrontSensor = intakeMotorFront.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
 		// intakeBackSensor =
@@ -89,10 +94,16 @@ public class IntakeSubsystem extends SubsystemBase {
 		intakeLeftSensor = intakeMotorLeft.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
 		intakeRightSensor = intakeMotorRight.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
 
+		// sensor must be true for 0.1 seconds before being actually true
+		intakeFrontSensorDebouncer = new Debouncer(0.1);
+		intakeRightSensorDebouncer = new Debouncer(0.1);
+		intakeLeftSensorDebouncer = new Debouncer(0.1);
+
 		// todo: MOVE THIS TO CONFIGURE MOTOR
 		intakeFrontSensor.enableLimitSwitch(false);
 		intakeLeftSensor.enableLimitSwitch(false);
 		intakeRightSensor.enableLimitSwitch(false);
+		feederSensor.enableLimitSwitch(false);
 
 		resetMotors();
 
@@ -219,7 +230,7 @@ public class IntakeSubsystem extends SubsystemBase {
 	}
 
 	public boolean feederSensorHasNote() {
-		return !feederSensor.get() && !getSensorOverride();
+		return feederSensor.isPressed() && !getSensorOverride();
 	}
 
 	public boolean intakeFrontSeesNote() {
@@ -232,6 +243,28 @@ public class IntakeSubsystem extends SubsystemBase {
 
 	public boolean intakeRightSeesNote() {
 		return intakeRightSensor.isPressed();
+	}
+
+	// //debounce sensors
+	public boolean debouncedIntakeFrontSensor() {
+		// if (intakeFrontSensorDebouncer.calculate(intakeFrontSensor.isPressed())) {
+		// 	return true;
+		// }
+		return intakeFrontSensorDebouncer.calculate(intakeFrontSensor.isPressed());
+	}
+
+	public boolean debouncedIntakeLeftSensor() {
+		// if (intakeLeftSensorDebouncer.calculate(intakeLeftSensor.isPressed())) {
+		// 	return true;
+		// }
+		return intakeLeftSensorDebouncer.calculate(intakeFrontSensor.isPressed());
+	}
+
+	public boolean debouncedIntakeRightSensor() {
+		// if (intakeRightSensorDebouncer.calculate(intakeRightSensor.isPressed())) {
+		// 	return true;
+		// }
+		return intakeRightSensorDebouncer.calculate(intakeFrontSensor.isPressed());
 	}
 
 	// override methods on shuffleboard

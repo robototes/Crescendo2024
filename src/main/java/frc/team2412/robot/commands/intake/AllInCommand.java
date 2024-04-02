@@ -30,52 +30,55 @@ public class AllInCommand extends Command {
 	@Override
 	public void execute() {
 		// intake rejecting
-		// if (intakeSubsystem.intakeFrontSeesNote()) {
-		// 	if (!intakeSubsystem.getRejectOverride()) {
-		// 		intakeSubsystem.intakeLeftReject();
-		// 		intakeSubsystem.intakeRightReject();
-		// 	} else {
-		// 		intakeSubsystem.intakeLeftStop();
-		// 		intakeSubsystem.intakeRightStop();
-		// 	}
+		if (intakeSubsystem.intakeFrontSeesNote()) {
+			if (intakeSubsystem.debouncedIntakeFrontSensor()) {
+				if (!intakeSubsystem.getRejectOverride()) {
+					intakeSubsystem.intakeLeftReject();
+					intakeSubsystem.intakeRightReject();
+				}
+			} else {
+				intakeSubsystem.intakeLeftStop();
+				intakeSubsystem.intakeRightStop();
+			}
 
-		// 	if (controls != null && !rumbledIntakeFront) {
-		// 		Commands.race(new RumbleCommand(controls), new WaitCommand(2)).schedule();
-		// 		rumbledIntakeFront = true;
-		// 	}
-		// }
+			if (controls != null && !rumbledIntakeFront) {
+				Commands.race(new RumbleCommand(controls), new WaitCommand(2)).schedule();
+				rumbledIntakeFront = true;
+			}
+		}
+		if (intakeSubsystem.intakeLeftSeesNote()) {
+			if (intakeSubsystem.debouncedIntakeLeftSensor()) {
+				if (!intakeSubsystem.getRejectOverride()) {
+					intakeSubsystem.intakeFrontReject();
+					intakeSubsystem.intakeRightReject();
+				}
+			} else {
+				intakeSubsystem.intakeFrontStop();
+				intakeSubsystem.intakeRightStop();
+			}
 
-		// // back intake sensor does not exist (but it might?)
+			if (controls != null && !rumbledIntakeLeft) {
+				Commands.race(new RumbleCommand(controls), new WaitCommand(2)).schedule();
+				rumbledIntakeLeft = true;
+			}
+		}
 
-		// if (intakeSubsystem.intakeLeftSeesNote()) {
-		// 	if (!intakeSubsystem.getRejectOverride()) {
-		// 		intakeSubsystem.intakeFrontReject();
-		// 		intakeSubsystem.intakeRightReject();
-		// 	} else {
-		// 		intakeSubsystem.intakeFrontStop();
-		// 		intakeSubsystem.intakeRightStop();
-		// 	}
+		if (intakeSubsystem.intakeRightSeesNote()) {
+			if (intakeSubsystem.debouncedIntakeRightSensor()) {
+				if (!intakeSubsystem.getRejectOverride()) {
+					intakeSubsystem.intakeFrontReject();
+					intakeSubsystem.intakeLeftReject();
+				}
+			} else {
+				intakeSubsystem.intakeFrontStop();
+				intakeSubsystem.intakeLeftStop();
+			}
 
-		// 	if (controls != null && !rumbledIntakeLeft) {
-		// 		Commands.race(new RumbleCommand(controls), new WaitCommand(2)).schedule();
-		// 		rumbledIntakeLeft = true;
-		// 	}
-		// }
-
-		// if (intakeSubsystem.intakeRightSeesNote()) {
-		// 	if (!intakeSubsystem.getRejectOverride()) {
-		// 		intakeSubsystem.intakeFrontReject();
-		// 		intakeSubsystem.intakeLeftReject();
-		// 	} else {
-		// 		intakeSubsystem.intakeFrontStop();
-		// 		intakeSubsystem.intakeLeftStop();
-		// 	}
-
-		// 	if (controls != null && !rumbledIntakeRight) {
-		// 		Commands.race(new RumbleCommand(controls), new WaitCommand(2)).schedule();
-		// 		rumbledIntakeRight = true;
-		// 	}
-		// }
+			if (controls != null && !rumbledIntakeRight) {
+				Commands.race(new RumbleCommand(controls), new WaitCommand(2)).schedule();
+				rumbledIntakeRight = true;
+			}
+		}
 
 		// all intake motors rejecting after index
 		if (intakeSubsystem.indexSensorHasNote()) {
