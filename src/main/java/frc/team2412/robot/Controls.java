@@ -11,6 +11,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -26,6 +27,7 @@ import frc.team2412.robot.commands.launcher.SetAngleAmpLaunchCommand;
 import frc.team2412.robot.commands.launcher.SetAngleLaunchCommand;
 import frc.team2412.robot.commands.launcher.SetPivotCommand;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
+import frc.team2412.robot.util.AmpAlign;
 import frc.team2412.robot.util.TrapAlign;
 
 public class Controls {
@@ -54,6 +56,7 @@ public class Controls {
 	private final Trigger launcherLowerPresetButton;
 	// private final Trigger launcherPodiumPresetButton;
 	private final Trigger launcherTrapPresetButton;
+	private final Trigger launcherAmpAlignPresetButton;
 	private final Trigger launcherLaunchButton;
 
 	private final Subsystems s;
@@ -71,6 +74,7 @@ public class Controls {
 		launcherLowerPresetButton = codriveController.y();
 		// launcherPodiumPresetButton = codriveController.povLeft();
 		launcherTrapPresetButton = codriveController.start();
+		launcherAmpAlignPresetButton = driveController.y();
 		launcherLaunchButton = codriveController.rightBumper();
 		// intake controls (confirmed with driveteam)
 		driveIntakeInButton = driveController.a();
@@ -196,6 +200,11 @@ public class Controls {
 						LauncherSubsystem.AMP_AIM_ANGLE));
 		launcherTrapPresetButton.onTrue(
 				TrapAlign.trapPreset(s.drivebaseSubsystem, s.launcherSubsystem));
+		launcherAmpAlignPresetButton.onTrue(
+				Commands.either(
+						AmpAlign.ampPreset(s.drivebaseSubsystem, s.launcherSubsystem),
+						Commands.none(),
+						() -> s.drivebaseSubsystem.getPose().getY() > 5.0));
 
 		codriveController.b().whileTrue(s.launcherSubsystem.run(s.launcherSubsystem::stopLauncher));
 
