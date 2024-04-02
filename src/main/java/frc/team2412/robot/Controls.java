@@ -5,6 +5,7 @@ import static frc.team2412.robot.Controls.ControlConstants.CONTROLLER_PORT;
 import static frc.team2412.robot.Subsystems.SubsystemConstants.DRIVEBASE_ENABLED;
 import static frc.team2412.robot.Subsystems.SubsystemConstants.INTAKE_ENABLED;
 import static frc.team2412.robot.Subsystems.SubsystemConstants.LAUNCHER_ENABLED;
+import static frc.team2412.robot.Subsystems.SubsystemConstants.LED_ENABLED;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -15,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.team2412.robot.commands.LED.LightsCommand;
 import frc.team2412.robot.commands.intake.AllInCommand;
 import frc.team2412.robot.commands.intake.AllReverseCommand;
 import frc.team2412.robot.commands.intake.AllStopCommand;
@@ -103,6 +105,9 @@ public class Controls {
 		if (INTAKE_ENABLED) {
 			bindIntakeControls();
 		}
+		if (LED_ENABLED) {
+			bindLEDControls();
+		}
 		if (DRIVEBASE_ENABLED && LAUNCHER_ENABLED && INTAKE_ENABLED) {
 			// temporary controls, not sure what drive team wants
 			driveController
@@ -118,6 +123,14 @@ public class Controls {
 			// 						this,
 			// 						codriveController.leftBumper()));
 		}
+	}
+	// LED
+	private void bindLEDControls() {
+		CommandScheduler.getInstance()
+				.setDefaultCommand(
+						s.ledSubsystem,
+						new LightsCommand(s.ledSubsystem, s.intakeSubsystem, s.launcherSubsystem)
+								.withName("Lights123"));
 	}
 
 	// drivebase
