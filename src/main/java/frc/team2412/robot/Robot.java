@@ -94,10 +94,9 @@ public class Robot extends TimedRobot {
 
 		if (Subsystems.SubsystemConstants.DRIVEBASE_ENABLED) {
 			if (autoEnabled) {
-				AutoLogic.initShuffleBoard();
-        AutoAlignment.initShuffleboard();
+				AutoLogic.initShuffleboard();
+				AutoAlignment.initShuffleboard();
 			}
-
 		}
 
 		SmartDashboard.putString("current bot", getTypeFromAddress().toString());
