@@ -34,18 +34,19 @@ public class LauncherSubsystem extends SubsystemBase {
 
 	// HARDWARE
 	private static final double PIVOT_GEARING_RATIO = 1.0 / 180.0;
-	private static final float PIVOT_SOFTSTOP_FORWARD = 0.84f;
+	private static final float PIVOT_SOFTSTOP_FORWARD = 0.93f;
 	private static final float PIVOT_SOFTSTOP_BACKWARD = 0.635f;
 	private static final float PIVOT_DISABLE_OFFSET = 0.04f;
+	private static final int PIVOT_OFFSET = 36;
 	// ANGLE VALUES
-	public static final int AMP_AIM_ANGLE = 288;
-	public static final int SUBWOOFER_AIM_ANGLE = 256;
-	public static final int PODIUM_AIM_ANGLE = 238;
-	public static final int TRAP_AIM_ANGLE = 317;
+	public static final int AMP_AIM_ANGLE = 288 + PIVOT_OFFSET;
+	public static final int SUBWOOFER_AIM_ANGLE = 256 + PIVOT_OFFSET;
+	public static final int PODIUM_AIM_ANGLE = 238 + PIVOT_OFFSET;
+	public static final int TRAP_AIM_ANGLE = 317 + PIVOT_OFFSET;
 	public static final double MANUAL_MODIFIER = 0.02;
-	public static final double RETRACTED_ANGLE = 242;
+	public static final double RETRACTED_ANGLE = 242 + PIVOT_OFFSET;
 	// offset for FF so parallel to floor is 0
-	public static final double FF_PIVOT_OFFSET = 225;
+	public static final double FF_PIVOT_OFFSET = 225 + PIVOT_OFFSET;
 
 	// MOTOR VALUES
 	// max Free Speed: 6784 RPM
