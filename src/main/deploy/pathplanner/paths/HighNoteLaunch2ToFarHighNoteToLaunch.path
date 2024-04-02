@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.3,
-        "y": 6.998077532170032
+        "x": 5.413643259718952,
+        "y": 7.183134366268733
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.3455854402822,
-        "y": 7.083178394607492
+        "x": 6.459228700001152,
+        "y": 7.268235228706192
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "LaunchHighNote"
     },
     {
       "anchor": {
@@ -32,16 +32,16 @@
     },
     {
       "anchor": {
-        "x": 5.41,
-        "y": 6.91
+        "x": 4.0824060026540545,
+        "y": 7.552922493229885
       },
       "prevControl": {
-        "x": 5.889663050445332,
-        "y": 7.010556365969301
+        "x": 4.562069053099387,
+        "y": 7.653478859199186
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "LaunchCenterlineN1"
     }
   ],
   "rotationTargets": [
@@ -96,13 +96,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -165.92,
+    "rotation": -165.0,
     "rotateFast": false
   },
   "reversed": false,
   "folder": null,
   "previewStartingState": {
-    "rotation": -150.0,
+    "rotation": -161.0,
     "velocity": 0
   },
   "useDefaultConstraints": true

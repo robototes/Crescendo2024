@@ -22,10 +22,11 @@ import frc.team2412.robot.Controls;
 import frc.team2412.robot.Robot;
 import frc.team2412.robot.Subsystems;
 import frc.team2412.robot.commands.intake.AllInCommand;
-import frc.team2412.robot.commands.intake.AllInSensorOverrideCommand;
 import frc.team2412.robot.commands.intake.FeederInCommand;
 import frc.team2412.robot.commands.intake.FeederStopCommand;
+import frc.team2412.robot.commands.intake.IntakeRejectCommand;
 import frc.team2412.robot.commands.intake.IntakeStopCommand;
+import frc.team2412.robot.commands.intake.NoteStealCommand;
 import frc.team2412.robot.commands.launcher.FullTargetCommand;
 import frc.team2412.robot.commands.launcher.SetAngleLaunchCommand;
 import frc.team2412.robot.commands.launcher.SetLaunchSpeedCommand;
@@ -94,7 +95,8 @@ public class AutoLogic {
 					// new AutoPath("Pass Auto Line", "PresetSourceSide1ScorePassAutoLine"),
 					new AutoPath("Pass Autoline", "PresetAmpSide1ScorePassAutoline"),
 					new AutoPath("Pass Autoline", "PresetSourceSide1ScorePassAutoline"),
-					new AutoPath("Vision Launch Test", "VisionLaunchTest", true));
+					new AutoPath("Vision Launch Test", "VisionLaunchTest", true),
+					new AutoPath("Steal Test", "StealTest"));
 
 	private static List<AutoPath> onePiecePaths =
 			List.of(
@@ -140,8 +142,13 @@ public class AutoLogic {
 					new AutoPath("Centerline N1 Autoline N1 N2 N3", "VisionAmpSideAutoline5Score", true),
 					new AutoPath("Autoline N1 Centerline N1 N2 Autoline N2", "VisionAmpSide5Score", true));
 
-	private static List<AutoPath> fivePiecePaths;
+	private static List<AutoPath> fivePiecePaths =
+			List.of(new AutoPath("GTA(Centerline N5N4N3N2N1)", "VisionSourceSideGrandTheftAuto", true));
 
+	private static List<AutoPath> sixPiecePaths =
+			List.of(
+					new AutoPath(
+							"Autoline N1 GTA(Centerline N1N2N3N4N5)", "VisionAmpSideGrandTheftAuto", true));
 	// map (gulp)
 	private static Map<Integer, List<AutoPath>> commandsMap =
 			Map.of(
@@ -154,7 +161,11 @@ public class AutoLogic {
 					3,
 					threePiecePaths,
 					4,
-					fourPiecePaths);
+					fourPiecePaths,
+					5,
+					fivePiecePaths,
+					6,
+					sixPiecePaths);
 
 	// vars
 
@@ -193,6 +204,7 @@ public class AutoLogic {
 		NamedCommands.registerCommand("Intake", intake());
 		NamedCommands.registerCommand("Feed", subwooferLaunch());
 		NamedCommands.registerCommand("NoteSteal", noteSteal());
+		NamedCommands.registerCommand("Reject", reject());
 
 		// Launcher
 
@@ -469,12 +481,7 @@ public class AutoLogic {
 	}
 
 	public static Command noteSteal() {
-		return (INTAKE_ENABLED && LAUNCHER_ENABLED
-						? new AllInSensorOverrideCommand(s.intakeSubsystem)
-								.alongWith(
-										new SetAngleLaunchCommand(
-												s.launcherSubsystem, 3000, LauncherSubsystem.RETRACTED_ANGLE))
-						: Commands.none())
+		return (INTAKE_ENABLED ? new NoteStealCommand(s.intakeSubsystem) : Commands.none())
 				.withName("Auto - NoteStealCommand");
 	}
 
@@ -486,6 +493,11 @@ public class AutoLogic {
 	public static Command stopIntake() {
 		return (INTAKE_ENABLED ? new IntakeStopCommand(s.intakeSubsystem) : Commands.none())
 				.withName("Auto - StopIntakeCommand");
+	}
+
+	public static Command reject() {
+		return (INTAKE_ENABLED ? new IntakeRejectCommand(s.intakeSubsystem) : Commands.none())
+				.withName("Auto - IntakeRejectCommand");
 	}
 
 	public static Command index() {

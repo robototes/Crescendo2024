@@ -148,6 +148,15 @@ public class IntakeSubsystem extends SubsystemBase {
 		intakeSet(INTAKE_REVERSE_SPEED);
 	}
 
+	public void intakeSteal() {
+
+		intakeMotorLeft.set(INTAKE_IN_SPEED);
+		intakeMotorRight.set(INTAKE_IN_SPEED);
+		ingestMotor.set(INTAKE_REJECT_SPEED);
+		intakeMotorFront.set(INTAKE_REJECT_SPEED);
+		indexMotorUpper.set(INTAKE_IN_SPEED);
+	}
+
 	// intake stop methods
 	public void intakeStop() {
 		intakeSet(0);
