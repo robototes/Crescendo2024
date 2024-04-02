@@ -15,7 +15,7 @@
     "canbus": "Drivebase"
   },
   "encoder": {
-    "type": "cancoder",
+    "type": "none",
     "id": 12,
     "canbus": "Drivebase"
   },

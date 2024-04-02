@@ -12,6 +12,7 @@ public class PIDFConfig {
 	public double i;
 	/** Derivative Gain for PID. */
 	public double d;
+
 	public double kS;
 	public double kV;
 	public double kA;

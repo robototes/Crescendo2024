@@ -12,7 +12,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTableEvent;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.units.BaseUnits;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -22,7 +21,6 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -346,11 +344,10 @@ public class DrivebaseSubsystem extends SubsystemBase {
 	private SysIdRoutine getDriveSysIdRoutine() {
 		return new SysIdRoutine(
 				new SysIdRoutine.Config(
-					null,
-					edu.wpi.first.units.Units.Volts.of(4),
-					null,
-					(state) -> SignalLogger.writeString("state", state.toString())
-				),
+						null,
+						edu.wpi.first.units.Units.Volts.of(4),
+						null,
+						(state) -> SignalLogger.writeString("state", state.toString())),
 				new SysIdRoutine.Mechanism(
 						(Measure<Voltage> volts) -> {
 							for (SwerveModule module : swerveDrive.getModules()) {
@@ -365,11 +362,10 @@ public class DrivebaseSubsystem extends SubsystemBase {
 	private SysIdRoutine getAngleSysIdRoutine() {
 		return new SysIdRoutine(
 				new SysIdRoutine.Config(
-					null,
-					edu.wpi.first.units.Units.Volts.of(4),
-					null,
-					(state) -> SignalLogger.writeString("state", state.toString())
-				),
+						null,
+						edu.wpi.first.units.Units.Volts.of(4),
+						null,
+						(state) -> SignalLogger.writeString("state", state.toString())),
 				new SysIdRoutine.Mechanism(
 						(Measure<Voltage> volts) -> {
 							for (SwerveModule module : swerveDrive.getModules()) {

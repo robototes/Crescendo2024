@@ -40,7 +40,7 @@ public class Robot extends TimedRobot {
 	// increases logging
 	private static final boolean debugMode = true;
 	// Really dangerous to keep this enabled as it disables all other controls, use with caution
-	private static final boolean sysIdMode = false;
+	private static final boolean sysIdMode = true;
 
 	private final RobotType robotType;
 	private final PowerDistribution PDP;
@@ -82,10 +82,10 @@ public class Robot extends TimedRobot {
 		controls = new Controls(subsystems);
 
 		// TODO: might be a duplicate, keep until after comp
-		AutoLogic.registerCommands();
+		// AutoLogic.registerCommands();
 
 		if (Subsystems.SubsystemConstants.DRIVEBASE_ENABLED) {
-			AutoLogic.initShuffleBoard();
+			// AutoLogic.initShuffleBoard();
 		}
 
 		SmartDashboard.putString("current bot", getTypeFromAddress().toString());
