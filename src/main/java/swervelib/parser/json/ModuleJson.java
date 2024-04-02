@@ -18,6 +18,10 @@ public class ModuleJson {
 	public DeviceJson drive;
 	/** Angle motor device configuration. */
 	public DeviceJson angle;
+
+	public PIDFConfig driveTuning;
+	public PIDFConfig angleTuning;
+
 	/**
 	 * Conversion factor for the module, if different from the one in swervedrive.json
 	 *

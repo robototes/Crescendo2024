@@ -31,7 +31,6 @@ public class Robot extends TimedRobot {
 
 	public enum RobotType {
 		COMPETITION,
-		PRACTICE,
 		CRANE,
 		BONK;
 	}
@@ -45,6 +44,9 @@ public class Robot extends TimedRobot {
 	private static final boolean debugMode = true;
 	// Really dangerous to keep this enabled as it disables all other controls, use with caution
 	private static final boolean sysIdMode = false;
+
+	// Turns on an off auto logic
+	private static final boolean autoEnabled = true;
 
 	private final RobotType robotType;
 	private final PowerDistribution PDP;
@@ -64,13 +66,11 @@ public class Robot extends TimedRobot {
 		this(getTypeFromAddress());
 	}
 
-	public static final MACAddress COMPETITION_ADDRESS = MACAddress.of(0x00, 0x00, 0x00);
-	public static final MACAddress PRACTICE_ADDRESS = MACAddress.of(0x38, 0xd9, 0x9e);
+	public static final MACAddress COMPETITION_ADDRESS = MACAddress.of(0x38, 0xd9, 0x9e);
 	public static final MACAddress BONK_ADDRESS = MACAddress.of(0x33, 0x9D, 0xE7);
 	public static final MACAddress CRANE_ADDRESS = MACAddress.of(0x22, 0xB0, 0x92);
 
 	private static RobotType getTypeFromAddress() {
-		if (PRACTICE_ADDRESS.exists()) return RobotType.PRACTICE;
 		if (CRANE_ADDRESS.exists()) return RobotType.CRANE;
 		if (BONK_ADDRESS.exists()) return RobotType.BONK;
 		if (!COMPETITION_ADDRESS.exists())
@@ -88,11 +88,16 @@ public class Robot extends TimedRobot {
 		controls = new Controls(subsystems);
 
 		// TODO: might be a duplicate, keep until after comp
-		AutoLogic.registerCommands();
+		if (autoEnabled) {
+			AutoLogic.registerCommands();
+		}
 
 		if (Subsystems.SubsystemConstants.DRIVEBASE_ENABLED) {
-			AutoLogic.initShuffleboard();
-			AutoAlignment.initShuffleboard();
+			if (autoEnabled) {
+				AutoLogic.initShuffleBoard();
+        AutoAlignment.initShuffleboard();
+			}
+
 		}
 
 		SmartDashboard.putString("current bot", getTypeFromAddress().toString());
@@ -146,8 +151,10 @@ public class Robot extends TimedRobot {
 		// Checks if FMS is attatched and enables joystick warning if true
 		DriverStation.silenceJoystickConnectionWarning(!DriverStation.isFMSAttached());
 		// System.out.println(AutoLogic.getSelected() != null);
-		if (AutoLogic.getSelectedAuto() != null && SubsystemConstants.DRIVEBASE_ENABLED) {
-			AutoLogic.getSelectedAuto().schedule();
+		if (autoEnabled) {
+			if (AutoLogic.getSelectedAuto() != null && SubsystemConstants.DRIVEBASE_ENABLED) {
+				AutoLogic.getSelectedAuto().schedule();
+			}
 		}
 	}
 
@@ -155,6 +162,7 @@ public class Robot extends TimedRobot {
 	public void teleopInit() {
 		Shuffleboard.startRecording();
 		SignalLogger.start();
+		CommandScheduler.getInstance().cancelAll();
 	}
 
 	@Override
@@ -171,7 +179,6 @@ public class Robot extends TimedRobot {
 	@Override
 	public void disabledInit() {
 		Shuffleboard.stopRecording();
-
 		Command coastCommand =
 				new WaitCommand(5)
 						.andThen(
@@ -180,7 +187,8 @@ public class Robot extends TimedRobot {
 											if (DriverStation.isDisabled())
 												subsystems.drivebaseSubsystem.setMotorBrake(false);
 										}))
-						.ignoringDisable(true);
+						.ignoringDisable(true)
+						.withName("drivebaseCoast");
 		coastCommand.schedule();
 	}
 

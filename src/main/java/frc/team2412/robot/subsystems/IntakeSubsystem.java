@@ -243,6 +243,13 @@ public class IntakeSubsystem extends SubsystemBase {
 		return rejectOverride.getBoolean(false);
 	}
 
+	public boolean isIntakeOn() {
+		return (intakeMotorFront.get() > 0
+				|| indexMotorUpper.get() > 0
+				|| ingestMotor.get() > 0
+				|| feederMotor.get() > 0);
+	}
+
 	// logging
 	public void initShuffleboard() {
 		if (Robot.isDebugMode()) {
