@@ -41,6 +41,9 @@ public class AutoLogic {
 	public static final Subsystems s = r.subsystems;
 	public static final Controls controls = r.controls;
 
+	public static final double FEEDER_DELAY = 0.4;
+	public static final double STAGE_ANGLE = 247;
+
 	public static enum StartPosition {
 		AMP_SIDE_SUBWOOFER(
 				"Amp Side Subwoofer", new Pose2d(0.73, 6.62, new Rotation2d(Units.degreesToRadians(-120)))),
@@ -81,9 +84,11 @@ public class AutoLogic {
 					new AutoPath("Stand Still", "PresetSourceSide1Score"),
 					new AutoPath("Stand Still", "PresetMid1Score"),
 					new AutoPath("Stand Still", "PresetAmpSide1Score"),
+					new AutoPath("Subwoofer Launch Test", "SubwooferLaunchTest"),
 					// new AutoPath("Pass Auto Line", "PresetSourceSide1ScorePassAutoLine"),
 					new AutoPath("Pass Autoline", "PresetAmpSide1ScorePassAutoline"),
-					new AutoPath("Pass Autoline", "PresetSourceSide1ScorePassAutoline"));
+					new AutoPath("Pass Autoline", "PresetSourceSide1ScorePassAutoline"),
+					new AutoPath("Vision Launch Test", "VisionLaunchTest", true));
 
 	private static List<AutoPath> onePiecePaths =
 			List.of(
@@ -91,17 +96,20 @@ public class AutoLogic {
 					new AutoPath("Autoline N1", "PresetAmpSide2Score"),
 					new AutoPath("Autoline N2", "PresetMidAutoline2Score"),
 					new AutoPath("Autoline N3", "PresetSourceSideAutoline2Score"),
-					new AutoPath("Centerline N5", "PresetSourceSideFar2Score"),
+					new AutoPath("Centerline N5", "PresetSourceSideFar2Score")
 					// vision
-					new AutoPath("Centerline N3 N1", "VisionMidFar2Score", true));
+					);
 
 	private static List<AutoPath> twoPiecePaths =
 			List.of(
 					// presets
 					new AutoPath("Autoline N1 Centerline N1", "PresetAmpSideAutoline3Score"),
 					new AutoPath("Autoline N2 N1", "PresetMidAutoline3Score"),
+					new AutoPath("Centerline N5 N4", "PresetSourceSideCenterline3Score2"),
+					new AutoPath("Centerline N5 N3", "PresetSourceSideCenterline3Score2"),
 					// vision
-					new AutoPath("Centerline N5 N4", "VisionSourceSide3Score", true));
+					new AutoPath("Centerline N5 N4", "VisionSourceSide3Score", true),
+					new AutoPath("Centerline N3 N1", "VisionMidFar2Score", true));
 
 	private static List<AutoPath> threePiecePaths =
 			List.of(
@@ -178,7 +186,13 @@ public class AutoLogic {
 				"StopIntake",
 				(INTAKE_ENABLED ? new IntakeStopCommand(s.intakeSubsystem) : Commands.none()));
 		NamedCommands.registerCommand(
-				"Intake", (INTAKE_ENABLED ? new AllInCommand(s.intakeSubsystem, null) : Commands.none()));
+				"Intake",
+				(INTAKE_ENABLED
+						? Commands.parallel(
+								new AllInCommand(s.intakeSubsystem, null),
+								new SetAngleLaunchCommand(
+										s.launcherSubsystem, 0, LauncherSubsystem.RETRACTED_ANGLE))
+						: Commands.none()));
 		NamedCommands.registerCommand(
 				"IntakeSensorOverride",
 				(INTAKE_ENABLED ? new AllInSensorOverrideCommand(s.intakeSubsystem) : Commands.none()));
@@ -187,7 +201,10 @@ public class AutoLogic {
 				"VisionLaunch",
 				(LAUNCHER_ENABLED && INTAKE_ENABLED && APRILTAGS_ENABLED
 						? Commands.sequence(
-								new FullTargetCommand(s.launcherSubsystem, s.drivebaseSubsystem, controls),
+								new FullTargetCommand(s.launcherSubsystem, s.drivebaseSubsystem, controls)
+										.until(
+												() -> (s.launcherSubsystem.isAtAngle() && s.launcherSubsystem.isAtSpeed()))
+										.andThen(new WaitCommand(FEEDER_DELAY)),
 								new FeederInCommand(s.intakeSubsystem)
 										.until(() -> !s.intakeSubsystem.feederSensorHasNote()))
 						: Commands.none()));
@@ -199,7 +216,8 @@ public class AutoLogic {
 										s.launcherSubsystem,
 										LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
 										LauncherSubsystem.SUBWOOFER_AIM_ANGLE)
-								.until(s.launcherSubsystem::isAtAngle)
+								.until(() -> (s.launcherSubsystem.isAtAngle() && s.launcherSubsystem.isAtSpeed()))
+								.andThen(new WaitCommand(FEEDER_DELAY))
 								.andThen(new FeederInCommand(s.intakeSubsystem))
 								.until(() -> !s.intakeSubsystem.feederSensorHasNote())
 								.andThen(new WaitCommand(0.4))
@@ -212,6 +230,9 @@ public class AutoLogic {
 				(LAUNCHER_ENABLED && INTAKE_ENABLED
 						? new SetAngleLaunchCommand(s.launcherSubsystem, 0, LauncherSubsystem.RETRACTED_ANGLE)
 						: Commands.none())); // TODO: add retract angle
+
+		NamedCommands.registerCommand(
+				"UnderStage", new SetAngleLaunchCommand(s.launcherSubsystem, 0, STAGE_ANGLE));
 
 		// Complex Autos
 		NamedCommands.registerCommand("AutoLogicTest", ComplexAutoPaths.testAuto);
@@ -275,6 +296,8 @@ public class AutoLogic {
 
 		// resets/clears all options
 		availableAutos.clearOptions();
+
+		availableAutos.setDefaultOption(defaultPath.getDisplayName(), defaultPath);
 
 		// filter based off gameobejct count
 		List<AutoPath> autoCommandsList = commandsMap.get(numGameObjects);

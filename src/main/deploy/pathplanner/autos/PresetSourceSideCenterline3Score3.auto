@@ -3,9 +3,9 @@
   "startingPose": {
     "position": {
       "x": 0.73,
-      "y": 6.62
+      "y": 4.47
     },
-    "rotation": -120.0
+    "rotation": 120.0
   },
   "command": {
     "type": "sequential",
@@ -20,7 +20,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "HighSpeakerHighNoteReturn"
+            "pathName": "LowSpeakerToFarN4Return"
           }
         },
         {
@@ -32,19 +32,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "HighSpeakerMidNoteReturn"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "SubwooferLaunch"
+            "pathName": "LowSpeakerToFarN3"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "HighSpeakerLowNoteReturn"
+            "pathName": "FarN3ToLowSpeaker"
           }
         },
         {
