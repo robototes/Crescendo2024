@@ -233,7 +233,7 @@ public class SparkFlexSwerve extends SwerveMotor {
 		configureSparkFlex(() -> pid.setP(config.p, pidSlot));
 		configureSparkFlex(() -> pid.setI(config.i, pidSlot));
 		configureSparkFlex(() -> pid.setD(config.d, pidSlot));
-		configureSparkFlex(() -> pid.setFF(config.f, pidSlot));
+		configureSparkFlex(() -> pid.setFF(config.kV, pidSlot));
 		configureSparkFlex(() -> pid.setIZone(config.iz, pidSlot));
 		configureSparkFlex(() -> pid.setOutputRange(config.output.min, config.output.max, pidSlot));
 	}

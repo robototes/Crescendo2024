@@ -5,6 +5,7 @@ import static frc.team2412.robot.Controls.ControlConstants.CONTROLLER_PORT;
 import static frc.team2412.robot.Subsystems.SubsystemConstants.DRIVEBASE_ENABLED;
 import static frc.team2412.robot.Subsystems.SubsystemConstants.INTAKE_ENABLED;
 import static frc.team2412.robot.Subsystems.SubsystemConstants.LAUNCHER_ENABLED;
+import static frc.team2412.robot.Subsystems.SubsystemConstants.LED_ENABLED;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -15,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.team2412.robot.commands.LED.LightsCommand;
 import frc.team2412.robot.commands.intake.AllInCommand;
 import frc.team2412.robot.commands.intake.AllReverseCommand;
 import frc.team2412.robot.commands.intake.AllStopCommand;
@@ -84,7 +86,7 @@ public class Controls {
 		codriveIntakeReverseButton = codriveController.povLeft();
 		codriveIntakeRejectButton = codriveController.povDown();
 
-		if (Robot.isSysIdMode() && LAUNCHER_ENABLED) {
+		if (Robot.isSysIdMode()) {
 			bindSysIdControls();
 			return;
 		}
@@ -102,6 +104,9 @@ public class Controls {
 		}
 		if (INTAKE_ENABLED) {
 			bindIntakeControls();
+		}
+		if (LED_ENABLED) {
+			bindLEDControls();
 		}
 		if (DRIVEBASE_ENABLED && LAUNCHER_ENABLED && INTAKE_ENABLED) {
 			// temporary controls, not sure what drive team wants
@@ -128,6 +133,14 @@ public class Controls {
 			// 						this,
 			// 						codriveController.leftBumper()));
 		}
+	}
+	// LED
+	private void bindLEDControls() {
+		CommandScheduler.getInstance()
+				.setDefaultCommand(
+						s.ledSubsystem,
+						new LightsCommand(s.ledSubsystem, s.intakeSubsystem, s.launcherSubsystem)
+								.withName("Lights123"));
 	}
 
 	// drivebase
@@ -225,18 +238,18 @@ public class Controls {
 	private void bindSysIdControls() {
 		// only one routine can be run in one robot log
 		// switch these between arm and flywheel in code when tuning
-		driveController
-				.leftBumper()
-				.whileTrue(s.launcherSubsystem.flywheelSysIdQuasistatic(Direction.kForward));
-		driveController
-				.rightBumper()
-				.whileTrue(s.launcherSubsystem.flywheelSysIdQuasistatic(Direction.kReverse));
-		driveController
-				.leftTrigger()
-				.whileTrue(s.launcherSubsystem.flywheelSysIdDynamic(Direction.kForward));
-		driveController
-				.rightTrigger()
-				.whileTrue(s.launcherSubsystem.flywheelSysIdDynamic(Direction.kReverse));
+		// driveController
+		// 		.leftBumper()
+		// 		.whileTrue(s.launcherSubsystem.flywheelSysIdQuasistatic(Direction.kForward));
+		// driveController
+		// 		.rightBumper()
+		// 		.whileTrue(s.launcherSubsystem.flywheelSysIdQuasistatic(Direction.kReverse));
+		// driveController
+		// 		.leftTrigger()
+		// 		.whileTrue(s.launcherSubsystem.flywheelSysIdDynamic(Direction.kForward));
+		// driveController
+		// 		.rightTrigger()
+		// 		.whileTrue(s.launcherSubsystem.flywheelSysIdDynamic(Direction.kReverse));
 		// switch these between angle and drive tests in code when tuning
 		driveController.x().whileTrue(s.drivebaseSubsystem.angleSysIdQuasistatic(Direction.kForward));
 		driveController.y().whileTrue(s.drivebaseSubsystem.angleSysIdQuasistatic(Direction.kReverse));
