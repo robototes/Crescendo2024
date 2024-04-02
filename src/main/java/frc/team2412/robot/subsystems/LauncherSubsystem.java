@@ -108,6 +108,8 @@ public class LauncherSubsystem extends SubsystemBase {
 
 	private GenericEntry angleSetpointEntry;
 
+	private GenericEntry launcherFlywheelSetpointEntry;
+
 	// Constructors
 	public LauncherSubsystem() {
 
@@ -364,6 +366,8 @@ public class LauncherSubsystem extends SubsystemBase {
 
 		angleSetpointEntry =
 				Shuffleboard.getTab("Launcher").add("Angle Setpoint", 0).withPosition(2, 2).getEntry();
+		launcherFlywheelSetpointEntry =
+				Shuffleboard.getTab("Launcher").add("Flywheel Setpoint", 0).withPosition(4, 5).getEntry();
 
 		var manualModeEntry =
 				Shuffleboard.getTab("Launcher")
@@ -391,6 +395,7 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherIsAtSpeed.setBoolean(isAtSpeed());
 		launcherAngleManual.setDouble(manualAngleSetpoint);
 		angleSetpointEntry.setDouble(angleSetpoint);
+		launcherFlywheelSetpointEntry.setDouble(rpmSetpoint);
 
 		// sanity check the pivot encoder
 		if (launcherAngleEncoder.getPosition() >= PIVOT_SOFTSTOP_FORWARD + PIVOT_DISABLE_OFFSET
