@@ -360,7 +360,7 @@ public class LauncherSubsystem extends SubsystemBase {
 		angleSetpointEntry =
 				Shuffleboard.getTab("Launcher").add("Angle Setpoint", 0).withPosition(2, 2).getEntry();
 		launcherFlywheelSetpointEntry =
-				Shuffleboard.getTab("Launcher").add("Flywheel Setpoint", 0).withPosition(4,5).getEntry();
+				Shuffleboard.getTab("Launcher").add("Flywheel Setpoint", 0).withPosition(4, 5).getEntry();
 	}
 
 	public void updateDistanceEntry(double distance) {
