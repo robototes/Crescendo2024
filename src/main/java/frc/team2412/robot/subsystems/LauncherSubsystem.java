@@ -372,7 +372,6 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherIsAtSpeed.setBoolean(isAtSpeed());
 		launcherAngleManual.setDouble(manualAngleSetpoint);
 		angleSetpointEntry.setDouble(angleSetpoint);
-		setLauncherSpeedEntry.setDouble(rpmSetpoint);
 
 		// sanity check the pivot encoder
 		if (launcherAngleEncoder.getPosition() >= PIVOT_SOFTSTOP_FORWARD + PIVOT_DISABLE_OFFSET
