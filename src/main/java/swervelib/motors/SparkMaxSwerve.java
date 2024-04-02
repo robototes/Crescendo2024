@@ -217,7 +217,7 @@ public class SparkMaxSwerve extends SwerveMotor {
 		configureSparkMax(() -> pid.setP(config.p));
 		configureSparkMax(() -> pid.setI(config.i));
 		configureSparkMax(() -> pid.setD(config.d));
-		configureSparkMax(() -> pid.setFF(config.f));
+		configureSparkMax(() -> pid.setFF(config.kV));
 		configureSparkMax(() -> pid.setIZone(config.iz));
 		configureSparkMax(() -> pid.setOutputRange(config.output.min, config.output.max));
 	}

@@ -187,8 +187,8 @@ public class SwerveParser {
 			ModuleJson module = moduleJsons[i];
 			moduleConfigurations[i] =
 					module.createModuleConfiguration(
-							pidfPropertiesJson.angle,
-							pidfPropertiesJson.drive,
+							pidfPropertiesJson.angle.p == 0 ? module.angleTuning : pidfPropertiesJson.angle,
+							pidfPropertiesJson.drive.p == 0 ? module.driveTuning : pidfPropertiesJson.drive,
 							physicalPropertiesJson.createPhysicalProperties(),
 							swerveDriveJson.modules[i]);
 		}

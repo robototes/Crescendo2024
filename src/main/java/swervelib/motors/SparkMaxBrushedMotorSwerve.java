@@ -267,7 +267,7 @@ public class SparkMaxBrushedMotorSwerve extends SwerveMotor {
 		configureSparkMax(() -> pid.setP(config.p, pidSlot));
 		configureSparkMax(() -> pid.setI(config.i, pidSlot));
 		configureSparkMax(() -> pid.setD(config.d, pidSlot));
-		configureSparkMax(() -> pid.setFF(config.f, pidSlot));
+		configureSparkMax(() -> pid.setFF(config.kV, pidSlot));
 		configureSparkMax(() -> pid.setIZone(config.iz, pidSlot));
 		configureSparkMax(() -> pid.setOutputRange(config.output.min, config.output.max, pidSlot));
 	}
