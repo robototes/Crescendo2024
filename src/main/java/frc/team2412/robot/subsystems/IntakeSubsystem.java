@@ -53,6 +53,7 @@ public class IntakeSubsystem extends SubsystemBase {
 	private final Debouncer intakeFrontSensorDebouncer;
 	private final Debouncer intakeRightSensorDebouncer;
 	private final Debouncer intakeLeftSensorDebouncer;
+	private final Debouncer feederSensorDebouncer;
 
 	// private final SparkLimitSwitch intakeBackSensor;
 	private final SparkLimitSwitch intakeLeftSensor;
@@ -98,6 +99,8 @@ public class IntakeSubsystem extends SubsystemBase {
 		intakeFrontSensorDebouncer = new Debouncer(0.1);
 		intakeRightSensorDebouncer = new Debouncer(0.1);
 		intakeLeftSensorDebouncer = new Debouncer(0.1);
+
+		feederSensorDebouncer = new Debouncer(0.1);
 
 		// todo: MOVE THIS TO CONFIGURE MOTOR
 		intakeFrontSensor.enableLimitSwitch(false);
@@ -265,6 +268,10 @@ public class IntakeSubsystem extends SubsystemBase {
 		// 	return true;
 		// }
 		return intakeRightSensorDebouncer.calculate(intakeFrontSensor.isPressed());
+	}
+
+	public boolean debouncedFeederSensor() {
+		return feederSensorDebouncer.calculate(feederSensor.isPressed());
 	}
 
 	// override methods on shuffleboard
