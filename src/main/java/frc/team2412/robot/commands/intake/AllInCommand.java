@@ -29,53 +29,6 @@ public class AllInCommand extends Command {
 
 	@Override
 	public void execute() {
-		// intake rejecting
-		// if (intakeSubsystem.intakeFrontSeesNote()) {
-		// 	if (!intakeSubsystem.getRejectOverride()) {
-		// 		intakeSubsystem.intakeLeftReject();
-		// 		intakeSubsystem.intakeRightReject();
-		// 	} else {
-		// 		intakeSubsystem.intakeLeftStop();
-		// 		intakeSubsystem.intakeRightStop();
-		// 	}
-
-		// 	if (controls != null && !rumbledIntakeFront) {
-		// 		Commands.race(new RumbleCommand(controls), new WaitCommand(2)).schedule();
-		// 		rumbledIntakeFront = true;
-		// 	}
-		// }
-
-		// // back intake sensor does not exist (but it might?)
-
-		// if (intakeSubsystem.intakeLeftSeesNote()) {
-		// 	if (!intakeSubsystem.getRejectOverride()) {
-		// 		intakeSubsystem.intakeFrontReject();
-		// 		intakeSubsystem.intakeRightReject();
-		// 	} else {
-		// 		intakeSubsystem.intakeFrontStop();
-		// 		intakeSubsystem.intakeRightStop();
-		// 	}
-
-		// 	if (controls != null && !rumbledIntakeLeft) {
-		// 		Commands.race(new RumbleCommand(controls), new WaitCommand(2)).schedule();
-		// 		rumbledIntakeLeft = true;
-		// 	}
-		// }
-
-		// if (intakeSubsystem.intakeRightSeesNote()) {
-		// 	if (!intakeSubsystem.getRejectOverride()) {
-		// 		intakeSubsystem.intakeFrontReject();
-		// 		intakeSubsystem.intakeLeftReject();
-		// 	} else {
-		// 		intakeSubsystem.intakeFrontStop();
-		// 		intakeSubsystem.intakeLeftStop();
-		// 	}
-
-		// 	if (controls != null && !rumbledIntakeRight) {
-		// 		Commands.race(new RumbleCommand(controls), new WaitCommand(2)).schedule();
-		// 		rumbledIntakeRight = true;
-		// 	}
-		// }
 
 		// all intake motors rejecting after index
 		if (intakeSubsystem.indexSensorHasNote()) {
@@ -107,9 +60,9 @@ public class AllInCommand extends Command {
 			Commands.race(new RumbleCommand(controls), new WaitCommand(3)).schedule();
 		}
 
-		rumbledIntakeFront = false;
-		rumbledIntakeLeft = false;
-		rumbledIntakeRight = false;
+		// rumbledIntakeFront = false;
+		// rumbledIntakeLeft = false;
+		// rumbledIntakeRight = false;
 		rumbledIndex = false;
 	}
 
