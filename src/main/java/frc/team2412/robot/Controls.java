@@ -5,16 +5,20 @@ import static frc.team2412.robot.Controls.ControlConstants.CONTROLLER_PORT;
 import static frc.team2412.robot.Subsystems.SubsystemConstants.DRIVEBASE_ENABLED;
 import static frc.team2412.robot.Subsystems.SubsystemConstants.INTAKE_ENABLED;
 import static frc.team2412.robot.Subsystems.SubsystemConstants.LAUNCHER_ENABLED;
+import static frc.team2412.robot.Subsystems.SubsystemConstants.LED_ENABLED;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.team2412.robot.commands.LED.LightsCommand;
 import frc.team2412.robot.commands.intake.AllInCommand;
 import frc.team2412.robot.commands.intake.AllReverseCommand;
 import frc.team2412.robot.commands.intake.AllStopCommand;
@@ -103,11 +107,40 @@ public class Controls {
 		if (INTAKE_ENABLED) {
 			bindIntakeControls();
 		}
+		if (LED_ENABLED) {
+			bindLEDControls();
+		}
+		Pose2d SPEAKER_POSE =
+				Robot.isBlue()
+						? new Pose2d(0.0, 5.55, Rotation2d.fromRotations(0))
+						: new Pose2d(16.5, 5.55, Rotation2d.fromRotations(0));
+		if (DRIVEBASE_ENABLED && LAUNCHER_ENABLED) {
+			Commands.run(
+							() -> {
+								Pose2d robotPose = s.drivebaseSubsystem.getPose();
+								Pose2d relativeSpeaker = robotPose.relativeTo(SPEAKER_POSE);
+								double distance = relativeSpeaker.getTranslation().getNorm();
+								s.launcherSubsystem.updateDistanceEntry(distance);
+							})
+					.withName("Update distance")
+					.ignoringDisable(true)
+					.schedule();
+		}
 		if (DRIVEBASE_ENABLED && LAUNCHER_ENABLED && INTAKE_ENABLED) {
 			// temporary controls, not sure what drive team wants
 			driveController
 					.leftBumper()
 					.whileTrue(new FullTargetCommand(s.launcherSubsystem, s.drivebaseSubsystem, this));
+
+			// other left bumper control is for vision launch auto testing
+
+			// driveController
+			// 		.leftBumper()
+			// 		.onTrue(
+			// 				new FullTargetCommand(s.launcherSubsystem, s.drivebaseSubsystem, this)
+			// 						.until(AutoLogic.isReadyToLaunch())
+			// 						.andThen(new WaitCommand(AutoLogic.FEEDER_DELAY))
+			// 						.andThen(new FeederInCommand(s.intakeSubsystem).until(AutoLogic.untilNoNote())));
 			// codriveController
 			// 		.rightBumper()
 			// 		.whileTrue(
@@ -118,6 +151,14 @@ public class Controls {
 			// 						this,
 			// 						codriveController.leftBumper()));
 		}
+	}
+	// LED
+	private void bindLEDControls() {
+		CommandScheduler.getInstance()
+				.setDefaultCommand(
+						s.ledSubsystem,
+						new LightsCommand(s.ledSubsystem, s.intakeSubsystem, s.launcherSubsystem)
+								.withName("Lights123"));
 	}
 
 	// drivebase

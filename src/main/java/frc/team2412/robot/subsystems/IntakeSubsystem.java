@@ -148,6 +148,15 @@ public class IntakeSubsystem extends SubsystemBase {
 		intakeSet(INTAKE_REVERSE_SPEED);
 	}
 
+	public void intakeSteal() {
+
+		intakeMotorLeft.set(INTAKE_IN_SPEED);
+		intakeMotorRight.set(INTAKE_IN_SPEED);
+		ingestMotor.set(INTAKE_REJECT_SPEED);
+		intakeMotorFront.set(INTAKE_REJECT_SPEED);
+		indexMotorUpper.set(INTAKE_IN_SPEED);
+	}
+
 	// intake stop methods
 	public void intakeStop() {
 		intakeSet(0);
@@ -243,6 +252,13 @@ public class IntakeSubsystem extends SubsystemBase {
 		return rejectOverride.getBoolean(false);
 	}
 
+	public boolean isIntakeOn() {
+		return (intakeMotorFront.get() > 0
+				|| indexMotorUpper.get() > 0
+				|| ingestMotor.get() > 0
+				|| feederMotor.get() > 0);
+	}
+
 	// logging
 	public void initShuffleboard() {
 		if (Robot.isDebugMode()) {
@@ -306,5 +322,16 @@ public class IntakeSubsystem extends SubsystemBase {
 						.withSize(1, 1)
 						.withWidget(BuiltInWidgets.kToggleSwitch)
 						.getEntry();
+	}
+
+	// auto thing
+
+	/*
+	 * returns true if all the motors are set to be not moving
+	 */
+	public boolean isIntakeRunning() {
+		return (intakeMotorFront.get() != 0
+				&& intakeMotorLeft.get() != 0
+				&& intakeMotorRight.get() != 0);
 	}
 }
