@@ -93,12 +93,11 @@ public class Robot extends TimedRobot {
 			AutoLogic.registerCommands();
 		}
 
-		if (Subsystems.SubsystemConstants.DRIVEBASE_ENABLED) {
-			if (autoEnabled) {
-				AutoLogic.initShuffleboard();
-				if (APRILTAGS_ENABLED) {
-					AutoAlignment.initShuffleboard();
-				}
+		if (Subsystems.SubsystemConstants.DRIVEBASE_ENABLED && autoEnabled) {
+			AutoLogic.initShuffleboard();
+			
+			if (APRILTAGS_ENABLED) {
+				AutoAlignment.initShuffleboard();
 			}
 		}
 
@@ -153,8 +152,8 @@ public class Robot extends TimedRobot {
 		// Checks if FMS is attatched and enables joystick warning if true
 		DriverStation.silenceJoystickConnectionWarning(!DriverStation.isFMSAttached());
 		// System.out.println(AutoLogic.getSelected() != null);
-		if (autoEnabled) {
-			if (AutoLogic.getSelectedAuto() != null && SubsystemConstants.DRIVEBASE_ENABLED) {
+		if (autoEnabled && SubsystemConstants.DRIVEBASE_ENABLED) {
+			if (AutoLogic.getSelectedAuto() != null) {
 				AutoLogic.getSelectedAuto().schedule();
 			}
 		}
