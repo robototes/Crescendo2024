@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.team2412.robot.Hardware;
 import frc.team2412.robot.Robot;
@@ -88,6 +89,8 @@ public class LauncherSubsystem extends SubsystemBase {
 	private double manualAngleSetpoint;
 
 	private GenericEntry setLauncherSpeedEntry;
+
+	private GenericEntry setLauncherAngleEntry;
 
 	private GenericEntry launcherAngleEntry;
 
@@ -340,9 +343,13 @@ public class LauncherSubsystem extends SubsystemBase {
 						.withPosition(5, 0)
 						.getEntry();
 
+		setLauncherAngleEntry =
+				Shuffleboard.getTab("Launcher").add("Launcher Angle Setpoint", getAngle()).getEntry();
+
 		launcherAngleManual =
 				Shuffleboard.getTab("Launcher")
-						.add("Launcher manual increase", 0)
+						.add("Launcher manual angle (rot.)", 0)
+						.withPosition(0, 1)
 						.withSize(1, 1)
 						.withWidget(BuiltInWidgets.kTextView)
 						.getEntry();
@@ -362,6 +369,19 @@ public class LauncherSubsystem extends SubsystemBase {
 				Shuffleboard.getTab("Launcher").add("Angle Setpoint", 0).withPosition(2, 2).getEntry();
 		launcherFlywheelSetpointEntry =
 				Shuffleboard.getTab("Launcher").add("Flywheel Setpoint", 0).withPosition(4, 5).getEntry();
+
+		var manualModeEntry =
+				Shuffleboard.getTab("Launcher")
+						.add("Full manual mode", false)
+						.withPosition(3, 0)
+						.getEntry();
+		new Trigger(() -> manualModeEntry.getBoolean(false))
+				.whileTrue(
+						run(() -> {
+									setAngle(setLauncherAngleEntry.getDouble(getAngle()));
+									launch(setLauncherSpeedEntry.getDouble(SPEAKER_SHOOT_SPEED_RPM));
+								})
+								.withName("Full Manual"));
 	}
 
 	public void updateDistanceEntry(double distance) {
