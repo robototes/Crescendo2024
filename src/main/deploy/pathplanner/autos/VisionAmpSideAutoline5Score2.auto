@@ -20,36 +20,54 @@
         {
           "type": "path",
           "data": {
-            "pathName": "HighSpeakerHighNoteReturn"
+            "pathName": "HighSpeakerToHighNoteLaunch2"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "SubwooferLaunch"
+            "name": "VisionLaunch"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "HighSpeakerCenterLineNoteReturn"
+            "pathName": "HighNoteLaunch2ToFarHighNoteToLaunch"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Feed"
+            "name": "VisionLaunch"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "HighSpeakerCenterLine"
+            "pathName": "launchSecondNoteCenterLineLaunch"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "VisionLaunch"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "launchSecondNoteLaunch2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "VisionLaunch"
           }
         }
       ]
     }
   },
-  "folder": "Preset Autos",
+  "folder": "Vision Autos",
   "choreoAuto": false
 }

@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.71,
-        "y": 1.29
+        "x": 7.6693508341971635,
+        "y": 1.1463431935872892
       },
       "isLocked": false,
       "linkedName": null
@@ -70,8 +70,8 @@
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "New Event Marker",
-      "waypointRelativePos": 0,
+      "name": "rev launcher",
+      "waypointRelativePos": 2.0,
       "command": {
         "type": "parallel",
         "data": {
@@ -79,7 +79,7 @@
             {
               "type": "named",
               "data": {
-                "name": "Intake"
+                "name": "RevLauncher"
               }
             }
           ]

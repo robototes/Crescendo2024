@@ -6,6 +6,7 @@ import static frc.team2412.robot.Subsystems.SubsystemConstants.DRIVEBASE_ENABLED
 import com.ctre.phoenix6.SignalLogger;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -219,5 +220,13 @@ public class Robot extends TimedRobot {
 
 	public static boolean isSysIdMode() {
 		return sysIdMode;
+	}
+
+	public static boolean isBlue() {
+		return DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Blue;
+	}
+
+	public static boolean isRed() {
+		return DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red;
 	}
 }

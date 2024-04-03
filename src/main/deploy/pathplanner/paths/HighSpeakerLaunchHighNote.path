@@ -8,51 +8,35 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.5429233708823729,
-        "y": 7.507313826979199
+        "x": 1.4199314885116257,
+        "y": 6.813346239305091
       },
       "isLocked": false,
       "linkedName": "TopSpeaker"
     },
     {
       "anchor": {
-        "x": 2.8898392931920998,
-        "y": 5.556066607628711
+        "x": 5.413643259718952,
+        "y": 7.183134366268733
       },
       "prevControl": {
-        "x": 2.976137828760219,
-        "y": 5.30386846996972
-      },
-      "nextControl": {
-        "x": 2.7609065011890275,
-        "y": 5.932858749144046
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 0.73,
-        "y": 6.62
-      },
-      "prevControl": {
-        "x": 1.4259262722800994,
-        "y": 7.409816244810638
+        "x": 4.378236504220756,
+        "y": 7.136910850398278
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "TopSpeaker"
+      "linkedName": "LaunchHighNote"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.75,
-      "rotationDegrees": -140.35,
+      "waypointRelativePos": 0.35,
+      "rotationDegrees": -166.19572126875954,
       "rotateFast": false
     },
     {
-      "waypointRelativePos": 1.1,
-      "rotationDegrees": -140.35,
+      "waypointRelativePos": 0.05,
+      "rotationDegrees": -120.0,
       "rotateFast": false
     }
   ],
@@ -62,7 +46,7 @@
       "name": "intake",
       "waypointRelativePos": 0.15,
       "command": {
-        "type": "sequential",
+        "type": "parallel",
         "data": {
           "commands": [
             {
@@ -77,7 +61,7 @@
     },
     {
       "name": "rev launcher",
-      "waypointRelativePos": 1.35,
+      "waypointRelativePos": 0.55,
       "command": {
         "type": "parallel",
         "data": {
@@ -101,7 +85,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -120.0,
+    "rotation": -161.0,
     "rotateFast": false
   },
   "reversed": false,
