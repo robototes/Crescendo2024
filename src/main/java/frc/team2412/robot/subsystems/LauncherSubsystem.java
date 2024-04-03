@@ -41,7 +41,7 @@ public class LauncherSubsystem extends SubsystemBase {
 	private static final int PIVOT_OFFSET = 36;
 	// ANGLE VALUES
 	public static final int AMP_AIM_ANGLE = 288 + PIVOT_OFFSET;
-	public static final int SUBWOOFER_AIM_ANGLE = 256 + PIVOT_OFFSET;
+	public static final int SUBWOOFER_AIM_ANGLE = 252 + PIVOT_OFFSET;
 	public static final int PODIUM_AIM_ANGLE = 238 + PIVOT_OFFSET;
 	public static final int TRAP_AIM_ANGLE = 317 + PIVOT_OFFSET;
 	public static final double MANUAL_MODIFIER = 0.02;
@@ -231,6 +231,15 @@ public class LauncherSubsystem extends SubsystemBase {
 	public double getAngle() {
 		// get position returns a double in the form of rotations
 		return Units.rotationsToDegrees(launcherAngleEncoder.getPosition());
+	}
+
+	/**
+	 * Sets the launcher angle, taking the offset into account.
+	 * 
+	 * @param launcherAngle Launcher angle. PIVOT_OFFSET will be added to this.
+	 */
+	public void setAngleWithOffset(double launcherAngle) {
+		setAngle(launcherAngle + PIVOT_OFFSET);
 	}
 
 	public void setAngle(double launcherAngle) {
