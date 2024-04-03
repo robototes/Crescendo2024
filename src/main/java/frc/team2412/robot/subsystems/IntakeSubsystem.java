@@ -78,6 +78,8 @@ public class IntakeSubsystem extends SubsystemBase {
 	// reject override
 	private GenericEntry rejectOverride;
 
+	private boolean feederSensorSignal;
+
 	public IntakeSubsystem() {
 
 		intakeMotorFront = new CANSparkMax(INTAKE_MOTOR_FRONT, MotorType.kBrushless);
@@ -234,8 +236,8 @@ public class IntakeSubsystem extends SubsystemBase {
 	public boolean debouncedFeederSensor() {
 		// return feederSensorDebouncer.calculate(feederSensor.isPressed());
 
-		boolean feederSensorSignal = feederSensorDebouncer.calculate(feederSensor.isPressed());
-		boolean feederSensorIRSignal = feederSensorIRDebouncer.calculate(feederSensorIR.get());
+		feederSensorSignal = feederSensorDebouncer.calculate(feederSensor.isPressed());
+		feederSensorIRSignal = feederSensorIRDebouncer.calculate(feederSensorIR.get());
 
 		return feederSensorSignal || feederSensorIRSignal;
 	}
@@ -332,6 +334,9 @@ public class IntakeSubsystem extends SubsystemBase {
 
 		shuffleboardTab.addBoolean("Index Sensor - ", this::indexSensorHasNote).withSize(1, 1);
 		shuffleboardTab.addBoolean("Feeder Sensor - ", this::feederSensorHasNote).withSize(1, 1);
+
+		shuffleboardTab.addBoolean("Feeder switch", () -> feederSensorDebouncer.calculate(feederSensor.isPressed()));
+		shuffleboardTab.addBoolean("Feeder Sensor", () -> feederSensorIRDebouncer.calculate(feederSensorIR.get()));
 
 		// no intake back sensor
 		shuffleboardTab.addBoolean("Intake Front Sensor - ", this::intakeFrontSeesNote).withSize(1, 1);
