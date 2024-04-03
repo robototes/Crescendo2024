@@ -95,7 +95,7 @@ public class Robot extends TimedRobot {
 
 		if (Subsystems.SubsystemConstants.DRIVEBASE_ENABLED && autoEnabled) {
 			AutoLogic.initShuffleboard();
-			
+
 			if (APRILTAGS_ENABLED) {
 				AutoAlignment.initShuffleboard();
 			}
