@@ -51,8 +51,6 @@ public class AutoAlignment {
 				.withPosition(5, 0)
 				.withSize(2, 3);
 
-		tab.add(field).withPosition(7, 0);
-
 		initField();
 	}
 
