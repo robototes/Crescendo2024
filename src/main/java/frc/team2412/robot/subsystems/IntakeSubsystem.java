@@ -47,7 +47,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
 	// Sensors
 	private final SparkLimitSwitch indexSensor;
-	private static SparkLimitSwitch feederSensor;
+	private final SparkLimitSwitch feederSensor;
 	private final DigitalInput feederSensorIR;
 	private final SparkLimitSwitch intakeFrontSensor;
 
