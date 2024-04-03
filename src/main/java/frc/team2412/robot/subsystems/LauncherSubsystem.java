@@ -388,7 +388,7 @@ public class LauncherSubsystem extends SubsystemBase {
 		new Trigger(() -> manualModeEntry.getBoolean(false))
 				.whileTrue(
 						run(() -> {
-									setAngle(setLauncherAngleEntry.getDouble(getAngle()));
+									setAngleWithOffset(setLauncherAngleEntry.getDouble(getAngle()));
 									launch(setLauncherSpeedEntry.getDouble(SPEAKER_SHOOT_SPEED_RPM));
 								})
 								.withName("Full Manual"));
