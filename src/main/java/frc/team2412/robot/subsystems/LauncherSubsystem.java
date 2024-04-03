@@ -376,11 +376,11 @@ public class LauncherSubsystem extends SubsystemBase {
 						.getEntry();
 		new Trigger(() -> manualModeEntry.getBoolean(false))
 				.whileTrue(
-						run(
-								() -> {
+						run(() -> {
 									setAngle(setLauncherAngleEntry.getDouble(getAngle()));
 									launch(setLauncherSpeedEntry.getDouble(SPEAKER_SHOOT_SPEED_RPM));
-								}));
+								})
+								.withName("Full Manual"));
 	}
 
 	public void updateDistanceEntry(double distance) {
