@@ -47,7 +47,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
 	// Sensors
 	private final SparkLimitSwitch indexSensor;
-	private final static SparkLimitSwitch feederSensor;
+	private static SparkLimitSwitch feederSensor;
 	private final DigitalInput feederSensorIR;
 	private final SparkLimitSwitch intakeFrontSensor;
 
@@ -55,7 +55,7 @@ public class IntakeSubsystem extends SubsystemBase {
 	private final Debouncer intakeFrontSensorDebouncer;
 	private final Debouncer intakeRightSensorDebouncer;
 	private final Debouncer intakeLeftSensorDebouncer;
-	private final static Debouncer feederSensorDebouncer;
+	private final Debouncer feederSensorDebouncer;
 
 	// private final SparkLimitSwitch intakeBackSensor;
 	private final SparkLimitSwitch intakeLeftSensor;
@@ -229,16 +229,17 @@ public class IntakeSubsystem extends SubsystemBase {
 		return indexSensor.isPressed();
 	}
 
-
-	public static boolean debouncedFeederSensor() {
+	public boolean debouncedFeederSensor() {
 		return feederSensorDebouncer.calculate(feederSensor.isPressed());
 	}
+
 	public boolean feederSensorHasNote() {
-		return IntakeSubsystem.debouncedFeederSensor() && !getSensorOverride() || !feederSensorIR.get() && !getSensorOverride();
+		return debouncedFeederSensor() && !getSensorOverride()
+				|| !feederSensorIR.get() && !getSensorOverride();
 	}
 
 	public boolean intakeFrontSeesNote() {
-		return intakeFrontSensor.isPressed(); 
+		return intakeFrontSensor.isPressed();
 	}
 
 	public boolean intakeLeftSeesNote() {
@@ -249,7 +250,7 @@ public class IntakeSubsystem extends SubsystemBase {
 		return intakeRightSensor.isPressed();
 	}
 
-	//debounce sensors
+	// debounce sensors
 	public boolean debouncedIntakeFrontSensor() {
 		// if (intakeFrontSensorDebouncer.calculate(intakeFrontSensor.isPressed())) {
 		// 	return true;
@@ -271,7 +272,6 @@ public class IntakeSubsystem extends SubsystemBase {
 		return intakeRightSensorDebouncer.calculate(intakeFrontSensor.isPressed());
 	}
 
-	
 	// override methods on shuffleboard
 	public boolean getSensorOverride() {
 		return sensorOverride.getBoolean(false);
