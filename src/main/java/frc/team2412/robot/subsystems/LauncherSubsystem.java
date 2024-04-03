@@ -384,6 +384,8 @@ public class LauncherSubsystem extends SubsystemBase {
 				Shuffleboard.getTab("Launcher")
 						.add("Full manual mode", false)
 						.withPosition(3, 0)
+						.withSize(1, 1)
+						.withWidget(BuiltInWidgets.kToggleSwitch)
 						.getEntry();
 		new Trigger(() -> manualModeEntry.getBoolean(false))
 				.whileTrue(
