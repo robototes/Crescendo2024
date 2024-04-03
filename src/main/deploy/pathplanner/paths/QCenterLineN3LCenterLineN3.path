@@ -54,7 +54,7 @@
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "New Event Marker",
+      "name": "rev launcher",
       "waypointRelativePos": 0,
       "command": {
         "type": "parallel",
@@ -63,7 +63,7 @@
             {
               "type": "named",
               "data": {
-                "name": "Intake"
+                "name": "RevLauncher"
               }
             }
           ]

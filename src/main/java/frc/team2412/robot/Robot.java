@@ -3,6 +3,7 @@ package frc.team2412.robot;
 import com.ctre.phoenix6.SignalLogger;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -28,7 +29,6 @@ public class Robot extends TimedRobot {
 
 	public enum RobotType {
 		COMPETITION,
-		PRACTICE,
 		CRANE,
 		BONK;
 	}
@@ -64,13 +64,11 @@ public class Robot extends TimedRobot {
 		this(getTypeFromAddress());
 	}
 
-	public static final MACAddress COMPETITION_ADDRESS = MACAddress.of(0x00, 0x00, 0x00);
-	public static final MACAddress PRACTICE_ADDRESS = MACAddress.of(0x38, 0xd9, 0x9e);
+	public static final MACAddress COMPETITION_ADDRESS = MACAddress.of(0x38, 0xd9, 0x9e);
 	public static final MACAddress BONK_ADDRESS = MACAddress.of(0x33, 0x9D, 0xE7);
 	public static final MACAddress CRANE_ADDRESS = MACAddress.of(0x22, 0xB0, 0x92);
 
 	private static RobotType getTypeFromAddress() {
-		if (PRACTICE_ADDRESS.exists()) return RobotType.PRACTICE;
 		if (CRANE_ADDRESS.exists()) return RobotType.CRANE;
 		if (BONK_ADDRESS.exists()) return RobotType.BONK;
 		if (!COMPETITION_ADDRESS.exists())
@@ -209,5 +207,13 @@ public class Robot extends TimedRobot {
 
 	public static boolean isSysIdMode() {
 		return sysIdMode;
+	}
+
+	public static boolean isBlue() {
+		return DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Blue;
+	}
+
+	public static boolean isRed() {
+		return DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red;
 	}
 }

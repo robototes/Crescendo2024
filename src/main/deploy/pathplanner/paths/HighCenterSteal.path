@@ -140,6 +140,16 @@
           ]
         }
       }
+    },
+    {
+      "name": "RevLauncher",
+      "waypointRelativePos": 2.6,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": []
+        }
+      }
     }
   ],
   "globalConstraints": {

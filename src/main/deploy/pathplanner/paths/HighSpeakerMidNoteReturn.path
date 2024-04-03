@@ -8,7 +8,7 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.5429233708823726,
+        "x": 1.5429233708823729,
         "y": 7.507313826979199
       },
       "isLocked": false,
@@ -36,7 +36,7 @@
         "y": 6.62
       },
       "prevControl": {
-        "x": 1.4259262722800992,
+        "x": 1.4259262722800994,
         "y": 7.409816244810638
       },
       "nextControl": null,
@@ -59,7 +59,7 @@
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "New Event Marker",
+      "name": "intake",
       "waypointRelativePos": 0.15,
       "command": {
         "type": "sequential",
@@ -69,6 +69,23 @@
               "type": "named",
               "data": {
                 "name": "Intake"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "rev launcher",
+      "waypointRelativePos": 1.35,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "RevLauncher"
               }
             }
           ]

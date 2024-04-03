@@ -48,7 +48,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 	public static final double MAX_SPEED =
 			Robot.getInstance().getRobotType() == RobotType.BONK
 					? 3.0
-					: Robot.getInstance().getRobotType() == RobotType.PRACTICE
+					: Robot.getInstance().getRobotType() == RobotType.COMPETITION
 							? 6.0
 							: Robot.getInstance().getRobotType() == RobotType.CRANE ? 3.0 : 1.0;
 
@@ -63,21 +63,21 @@ public class DrivebaseSubsystem extends SubsystemBase {
 					? 0.305328701
 					: Robot.getInstance().getRobotType() == RobotType.CRANE
 							? 0.3937
-							: Robot.getInstance().getRobotType() == RobotType.PRACTICE ? 0.3 : 0.3;
+							: Robot.getInstance().getRobotType() == RobotType.COMPETITION ? 0.3 : 0.3;
 	private static final double JOYSTICK_DEADBAND = 0.05;
 	private static final double HEADING_CORRECTION_DEADBAND = 0.005;
 
 	// AUTO CONSTANTS
 
 	private static final PIDConstants AUTO_TRANSLATION_PID =
-			Robot.getInstance().getRobotType() == RobotType.PRACTICE
+			Robot.getInstance().getRobotType() == RobotType.COMPETITION
 					? new PIDConstants(5, 0, 0.5) // practice
 					: Robot.getInstance().getRobotType() == RobotType.BONK
 							? new PIDConstants(6, 0, 0.1) // bonk
 							: Robot.getInstance().getRobotType() == RobotType.CRANE
 									? new PIDConstants(3.9, 0, 0.2) // crane
 									: new PIDConstants(0.1, 0, 0.1); // bobot TODO: tune
-	private static final PIDConstants AUTO_ROTATION_PID = new PIDConstants(5.0, 0, 0.2);
+	private static final PIDConstants AUTO_ROTATION_PID = new PIDConstants(4.0, 0, 0.2);
 	private static final double MAX_AUTO_SPEED =
 			500.0; // this seems to only affect rotation for some reason
 
@@ -100,10 +100,6 @@ public class DrivebaseSubsystem extends SubsystemBase {
 		File swerveJsonDirectory;
 
 		switch (Robot.getInstance().getRobotType()) {
-			case PRACTICE:
-				swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "practiceswerve");
-				System.out.println("Running practice swerve");
-				break;
 			case CRANE:
 				swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "craneswerve");
 				System.out.println("Running crane swerve");

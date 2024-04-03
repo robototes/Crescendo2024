@@ -50,7 +50,7 @@ public class AprilTagsProcessor {
 					new Rotation3d(Units.degreesToRadians(90), Units.degreesToRadians(-30), 0));
 
 	// TODO Measure these
-	private static final Vector<N3> STANDARD_DEVS = VecBuilder.fill(1, 1, Double.POSITIVE_INFINITY);
+	private static final Vector<N3> STANDARD_DEVS = VecBuilder.fill(1, 1, Units.degreesToRadians(30));
 
 	private static final double MAX_POSE_AMBIGUITY = 0.1;
 
@@ -81,6 +81,7 @@ public class AprilTagsProcessor {
 	private final PhotonPoseEstimator photonPoseEstimator;
 	private final DrivebaseWrapper aprilTagsHelper;
 	private final FieldObject2d rawVisionFieldObject;
+	private final FieldObject2d adjustedFieldObject;
 
 	// These are always set with every pipeline result
 	private double lastRawTimestampSeconds = 0;
@@ -100,6 +101,7 @@ public class AprilTagsProcessor {
 	public AprilTagsProcessor(DrivebaseWrapper aprilTagsHelper) {
 		this.aprilTagsHelper = aprilTagsHelper;
 		rawVisionFieldObject = aprilTagsHelper.getField().getObject("RawVision");
+		adjustedFieldObject = aprilTagsHelper.getField().getObject("AdjustedVision");
 		var networkTables = NetworkTableInstance.getDefault();
 		// if (Robot.isSimulation()) {
 		// 	networkTables.stopServer();
@@ -157,12 +159,14 @@ public class AprilTagsProcessor {
 		if (latestPose.isPresent()) {
 			lastValidTimestampSeconds = latestPose.get().timestampSeconds;
 			lastFieldPose = latestPose.get().estimatedPose.toPose2d();
+			var oldPose = aprilTagsHelper.getEstimatedPosition();
+			var adjustedPose = new Pose2d(lastFieldPose.getTranslation(), oldPose.getRotation());
 			rawVisionFieldObject.setPose(lastFieldPose);
-			aprilTagsHelper.addVisionMeasurement(lastFieldPose, lastValidTimestampSeconds, STANDARD_DEVS);
+			adjustedFieldObject.setPose(adjustedPose);
+			aprilTagsHelper.addVisionMeasurement(adjustedPose, lastValidTimestampSeconds, STANDARD_DEVS);
 			var estimatedPose = aprilTagsHelper.getEstimatedPosition();
-			var adjustedPose = new Pose2d(estimatedPose.getTranslation(), estimatedPose.getRotation());
-			aprilTagsHelper.getField().setRobotPose(adjustedPose);
-			photonPoseEstimator.setLastPose(adjustedPose);
+			aprilTagsHelper.getField().setRobotPose(estimatedPose);
+			photonPoseEstimator.setLastPose(estimatedPose);
 		}
 	}
 

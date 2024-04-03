@@ -8,27 +8,11 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.5423785202525357,
-        "y": 4.862713869571883
+        "x": 1.6148626582967456,
+        "y": 4.529772488116405
       },
       "isLocked": false,
       "linkedName": "MidSpeaker"
-    },
-    {
-      "anchor": {
-        "x": 2.113284226568453,
-        "y": 4.1
-      },
-      "prevControl": {
-        "x": 1.445845289438728,
-        "y": 4.120740788877045
-      },
-      "nextControl": {
-        "x": 2.2611994773539092,
-        "y": 4.095403506122328
-      },
-      "isLocked": false,
-      "linkedName": null
     },
     {
       "anchor": {
@@ -36,8 +20,8 @@
         "y": 4.07539893464585
       },
       "prevControl": {
-        "x": 2.452773524823334,
-        "y": 4.070802440768179
+        "x": 1.9520301897746657,
+        "y": 4.089988751406074
       },
       "nextControl": null,
       "isLocked": false,
@@ -48,8 +32,8 @@
   "constraintZones": [
     {
       "name": "New Constraints Zone",
-      "minWaypointRelativePos": 1.6,
-      "maxWaypointRelativePos": 2.0,
+      "minWaypointRelativePos": 0.8,
+      "maxWaypointRelativePos": 1.0,
       "constraints": {
         "maxVelocity": 3.0,
         "maxAcceleration": 1.5,

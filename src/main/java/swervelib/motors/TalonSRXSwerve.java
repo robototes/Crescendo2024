@@ -173,7 +173,7 @@ public class TalonSRXSwerve extends SwerveMotor {
 		configuration.slot0.kP = config.p;
 		configuration.slot0.kI = config.i;
 		configuration.slot0.kD = config.d;
-		configuration.slot0.kF = config.f;
+		configuration.slot0.kF = config.kS;
 		configuration.slot0.integralZone = config.iz;
 		configuration.slot0.closedLoopPeakOutput = config.output.max;
 		configChanged = true;

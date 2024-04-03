@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 2.8990839963661905,
-        "y": 4.94
+        "x": 2.79,
+        "y": 4.87
       },
       "prevControl": {
-        "x": 2.1396103900385564,
-        "y": 4.94
+        "x": 2.030526393672366,
+        "y": 4.87
       },
       "nextControl": {
-        "x": 3.1764250915889214,
-        "y": 4.94
+        "x": 3.067341095222731,
+        "y": 4.87
       },
       "isLocked": false,
       "linkedName": null
@@ -36,12 +36,12 @@
         "y": 4.853469166397792
       },
       "prevControl": {
-        "x": 3.9333744791439282,
-        "y": 5.026238198712771
+        "x": 3.9344907518643866,
+        "y": 4.945916198138703
       },
       "nextControl": {
-        "x": 4.738779928010306,
-        "y": 4.55763866482688
+        "x": 4.791800466580095,
+        "y": 4.678006912290042
       },
       "isLocked": false,
       "linkedName": null
@@ -68,7 +68,59 @@
     }
   ],
   "constraintZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "retract",
+      "waypointRelativePos": 0.1,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "RetractPivot"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "intake",
+      "waypointRelativePos": 2.35,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Intake"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "rev launcher",
+      "waypointRelativePos": 0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "RevLauncher"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 4.0,
     "maxAcceleration": 3.0,

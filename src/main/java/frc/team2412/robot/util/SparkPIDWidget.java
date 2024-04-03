@@ -17,7 +17,7 @@ public class SparkPIDWidget implements NTSendable {
 
 	@Override
 	public void initSendable(NTSendableBuilder builder) {
-		if (Robot.getInstance().getRobotType() != Robot.RobotType.PRACTICE) {
+		if (Robot.getInstance().getRobotType() != Robot.RobotType.COMPETITION) {
 			// builder.setSmartDashboardType("PIDController");
 
 			// builder.addDoubleProperty("p", controller::getP, controller::setP);
