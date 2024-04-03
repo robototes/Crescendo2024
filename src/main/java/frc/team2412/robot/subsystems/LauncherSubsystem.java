@@ -173,7 +173,7 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherAngleTwoMotor.follow(launcherAngleOneMotor, true);
 
 		// PID
-		launcherAngleOnePIDController.setP(5.421);
+		launcherAngleOnePIDController.setP(5.2);
 		launcherAngleOnePIDController.setI(0);
 		launcherAngleOnePIDController.setD(0.066248);
 		launcherAngleOnePIDController.setOutputRange(-ANGLE_MAX_SPEED, ANGLE_MAX_SPEED);
@@ -235,7 +235,7 @@ public class LauncherSubsystem extends SubsystemBase {
 
 	/**
 	 * Sets the launcher angle, taking the offset into account.
-	 * 
+	 *
 	 * @param launcherAngle Launcher angle. PIVOT_OFFSET will be added to this.
 	 */
 	public void setAngleWithOffset(double launcherAngle) {
