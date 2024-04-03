@@ -342,10 +342,9 @@ public class AutoLogic {
 		return 0;
 	}
 
-
 	public static AutoPath getSelectedAutoPath() {
 		return (chooserHasAutoSelected() ? availableAutos.getSelected() : defaultPath);
-  
+	}
 	// commands util
 
 	public static BooleanSupplier isReadyToLaunch() {
@@ -514,6 +513,5 @@ public class AutoLogic {
 	public static Command stopFeeder() {
 		return (INTAKE_ENABLED ? new FeederStopCommand(s.intakeSubsystem) : Commands.none())
 				.withName("Auto - StopFeeder");
-
 	}
 }
