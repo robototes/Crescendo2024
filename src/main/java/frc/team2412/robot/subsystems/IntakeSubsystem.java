@@ -56,6 +56,7 @@ public class IntakeSubsystem extends SubsystemBase {
 	private final Debouncer intakeRightSensorDebouncer;
 	private final Debouncer intakeLeftSensorDebouncer;
 	private final Debouncer feederSensorDebouncer;
+	private final Debouncer feederSensorIRDebouncer;
 
 	// private final SparkLimitSwitch intakeBackSensor;
 	private final SparkLimitSwitch intakeLeftSensor;
@@ -104,6 +105,7 @@ public class IntakeSubsystem extends SubsystemBase {
 		intakeLeftSensorDebouncer = new Debouncer(0.1, Debouncer.DebounceType.kBoth);
 
 		feederSensorDebouncer = new Debouncer(0.1, Debouncer.DebounceType.kBoth);
+		feederSensorIRDebouncer = new Debouncer(0.1, Debouncer.DebounceType.kBoth);
 
 		resetMotors();
 
@@ -230,12 +232,16 @@ public class IntakeSubsystem extends SubsystemBase {
 	}
 
 	public boolean debouncedFeederSensor() {
-		return feederSensorDebouncer.calculate(feederSensor.isPressed());
+		// return feederSensorDebouncer.calculate(feederSensor.isPressed());
+
+		boolean feederSensorSignal = feederSensorDebouncer.calculate(feederSensor.isPressed());
+		boolean feederSensorIRSignal = feederSensorIRDebouncer.calculate(feederSensorIR.get());
+
+		return feederSensorSignal || feederSensorIRSignal;
 	}
 
 	public boolean feederSensorHasNote() {
-		return debouncedFeederSensor() && !getSensorOverride()
-				|| !feederSensorIR.get() && !getSensorOverride();
+		return debouncedFeederSensor() && !getSensorOverride();
 	}
 
 	public boolean intakeFrontSeesNote() {
