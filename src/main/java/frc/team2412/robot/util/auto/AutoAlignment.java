@@ -43,7 +43,7 @@ public class AutoAlignment {
 		tab.addBoolean("Correct Vertical Position", AutoAlignment::isRobotInCorrectVerticalPosition)
 				.withPosition(3, 1)
 				.withSize(2, 1);
-		tab.addBoolean("Correct Rotation", AutoAlignment::isRobotInCorrectHorizontalPosition)
+		tab.addBoolean("Correct Rotation", AutoAlignment::isRobotInCorrectRotation)
 				.withPosition(3, 2)
 				.withSize(2, 1);
 
