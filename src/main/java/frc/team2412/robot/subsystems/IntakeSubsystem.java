@@ -35,6 +35,8 @@ public class IntakeSubsystem extends SubsystemBase {
 	public static final double FEEDER_IN_SPEED = 0.65;
 	public static final double FEEDER_REVERSE_SPEED = -0.3;
 
+	private static final boolean enableFrontAndSideIntakes = false;
+
 	// Motors
 	private final CANSparkMax intakeMotorFront;
 	private final CANSparkMax intakeMotorLeft;
@@ -148,9 +150,11 @@ public class IntakeSubsystem extends SubsystemBase {
 	}
 
 	public void intakeSet(double speed) {
-		intakeMotorFront.set(speed);
-		intakeMotorLeft.set(speed);
-		intakeMotorRight.set(speed);
+		if (enableFrontAndSideIntakes) {
+			intakeMotorFront.set(speed);
+			intakeMotorLeft.set(speed);
+			intakeMotorRight.set(speed);
+		}
 		ingestMotor.set(speed);
 	}
 
@@ -165,10 +169,12 @@ public class IntakeSubsystem extends SubsystemBase {
 
 	public void intakeSteal() {
 
-		intakeMotorLeft.set(INTAKE_IN_SPEED);
-		intakeMotorRight.set(INTAKE_IN_SPEED);
+		if (enableFrontAndSideIntakes) {
+			intakeMotorLeft.set(INTAKE_IN_SPEED);
+			intakeMotorRight.set(INTAKE_IN_SPEED);
+			intakeMotorFront.set(INTAKE_REJECT_SPEED);
+		}
 		ingestMotor.set(INTAKE_REJECT_SPEED);
-		intakeMotorFront.set(INTAKE_REJECT_SPEED);
 		indexMotorUpper.set(INTAKE_IN_SPEED);
 	}
 
@@ -178,15 +184,21 @@ public class IntakeSubsystem extends SubsystemBase {
 	}
 
 	public void intakeFrontStop() {
-		intakeMotorFront.set(0);
+		if (enableFrontAndSideIntakes) {
+			intakeMotorFront.set(0);
+		}
 	}
 
 	public void intakeLeftStop() {
-		intakeMotorLeft.set(0);
+		if (enableFrontAndSideIntakes) {
+			intakeMotorLeft.set(0);
+		}
 	}
 
 	public void intakeRightStop() {
-		intakeMotorRight.set(0);
+		if (enableFrontAndSideIntakes) {
+			intakeMotorRight.set(0);
+		}
 	}
 
 	// intake reject methods
@@ -195,15 +207,21 @@ public class IntakeSubsystem extends SubsystemBase {
 	}
 
 	public void intakeFrontReject() {
-		intakeMotorFront.set(INTAKE_REJECT_SPEED);
+		if (enableFrontAndSideIntakes) {
+			intakeMotorFront.set(INTAKE_REJECT_SPEED);
+		}
 	}
 
 	public void intakeLeftReject() {
-		intakeMotorLeft.set(INTAKE_REJECT_SPEED);
+		if (enableFrontAndSideIntakes) {
+			intakeMotorLeft.set(INTAKE_REJECT_SPEED);
+		}
 	}
 
 	public void intakeRightReject() {
-		intakeMotorRight.set(INTAKE_REJECT_SPEED);
+		if (enableFrontAndSideIntakes) {
+			intakeMotorRight.set(INTAKE_REJECT_SPEED);
+		}
 	}
 
 	// index methods
