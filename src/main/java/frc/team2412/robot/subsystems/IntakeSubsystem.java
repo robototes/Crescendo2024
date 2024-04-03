@@ -236,8 +236,8 @@ public class IntakeSubsystem extends SubsystemBase {
 	public boolean debouncedFeederSensor() {
 		// return feederSensorDebouncer.calculate(feederSensor.isPressed());
 
-		feederSensorSignal = feederSensorDebouncer.calculate(feederSensor.isPressed());
-		feederSensorIRSignal = feederSensorIRDebouncer.calculate(feederSensorIR.get());
+		boolean feederSensorSignal = feederSensorDebouncer.calculate(feederSensor.isPressed());
+		boolean feederSensorIRSignal = feederSensorIRDebouncer.calculate(feederSensorIR.get());
 
 		return feederSensorSignal || feederSensorIRSignal;
 	}
