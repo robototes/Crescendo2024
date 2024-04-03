@@ -113,6 +113,16 @@ public class Controls {
 			driveController
 					.leftBumper()
 					.whileTrue(new FullTargetCommand(s.launcherSubsystem, s.drivebaseSubsystem, this));
+
+			// other left bumper control is for vision launch auto testing
+
+			// driveController
+			// 		.leftBumper()
+			// 		.onTrue(
+			// 				new FullTargetCommand(s.launcherSubsystem, s.drivebaseSubsystem, this)
+			// 						.until(AutoLogic.isReadyToLaunch())
+			// 						.andThen(new WaitCommand(AutoLogic.FEEDER_DELAY))
+			// 						.andThen(new FeederInCommand(s.intakeSubsystem).until(AutoLogic.untilNoNote())));
 			// codriveController
 			// 		.rightBumper()
 			// 		.whileTrue(

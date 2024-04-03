@@ -62,20 +62,15 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1.6,
-      "rotationDegrees": 149.98,
-      "rotateFast": false
-    },
-    {
-      "waypointRelativePos": 2.0999999999999996,
-      "rotationDegrees": 151.4886678965681,
+      "waypointRelativePos": 1.7,
+      "rotationDegrees": -132.10466146576135,
       "rotateFast": false
     }
   ],
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "New Event Marker",
+      "name": "intake",
       "waypointRelativePos": 1.2000000000000002,
       "command": {
         "type": "parallel",
@@ -85,6 +80,23 @@
               "type": "named",
               "data": {
                 "name": "Intake"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "rev launcher",
+      "waypointRelativePos": 2.55,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "RevLauncher"
               }
             }
           ]

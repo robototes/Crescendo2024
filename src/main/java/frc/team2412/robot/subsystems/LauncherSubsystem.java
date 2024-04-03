@@ -207,6 +207,7 @@ public class LauncherSubsystem extends SubsystemBase {
 	// used for presets
 	public void launch(double speed) {
 		rpmSetpoint = speed;
+
 		launcherTopPIDController.setReference(
 				rpmSetpoint, ControlType.kVelocity, 0); // launcherTopFeedforward.calculate(speed));
 		launcherBottomPIDController.setReference(

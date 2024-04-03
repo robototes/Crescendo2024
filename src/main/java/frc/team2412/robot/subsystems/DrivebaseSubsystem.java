@@ -77,7 +77,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 							: Robot.getInstance().getRobotType() == RobotType.CRANE
 									? new PIDConstants(3.9, 0, 0.2) // crane
 									: new PIDConstants(0.1, 0, 0.1); // bobot TODO: tune
-	private static final PIDConstants AUTO_ROTATION_PID = new PIDConstants(5.0, 0, 0.2);
+	private static final PIDConstants AUTO_ROTATION_PID = new PIDConstants(4.0, 0, 0.2);
 	private static final double MAX_AUTO_SPEED =
 			500.0; // this seems to only affect rotation for some reason
 

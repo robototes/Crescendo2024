@@ -48,16 +48,32 @@
     },
     {
       "anchor": {
+        "x": 6.082682330663475,
+        "y": 4.051216914624327
+      },
+      "prevControl": {
+        "x": 5.550095629699932,
+        "y": 4.210521816177925
+      },
+      "nextControl": {
+        "x": 6.800348735832606,
+        "y": 3.836551817247779
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
         "x": 8.29957545629377,
         "y": 4.089988751406074
       },
       "prevControl": {
-        "x": 6.862948583040024,
-        "y": 3.2543996516564464
+        "x": 7.299562707233521,
+        "y": 3.8180624108995973
       },
       "nextControl": {
-        "x": 9.077551692461096,
-        "y": 4.542485133666662
+        "x": 9.071543927881818,
+        "y": 4.299904636641122
       },
       "isLocked": false,
       "linkedName": null
@@ -83,13 +99,65 @@
       "rotateFast": false
     },
     {
-      "waypointRelativePos": 2.9,
-      "rotationDegrees": -156.94,
+      "waypointRelativePos": 3.8,
+      "rotationDegrees": -163.96065793974793,
       "rotateFast": false
     }
   ],
   "constraintZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "retract",
+      "waypointRelativePos": 0.2,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "RetractPivot"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "intake",
+      "waypointRelativePos": 2.9499999999999997,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Intake"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "rev launcher",
+      "waypointRelativePos": 4.4,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "RevLauncher"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 4.0,
     "maxAcceleration": 3.0,

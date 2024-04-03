@@ -20,36 +20,30 @@
         {
           "type": "path",
           "data": {
-            "pathName": "HighSpeakerHighNoteReturn"
+            "pathName": "HighSpeakerLaunchHighNote"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "SubwooferLaunch"
+            "name": "VisionLaunch"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "HighSpeakerCenterLineNoteReturn"
+            "pathName": "LaunchHighNoteCenterSteal"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Feed"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "HighSpeakerCenterLine"
+            "name": "VisionLaunch"
           }
         }
       ]
     }
   },
-  "folder": "Preset Autos",
+  "folder": "Vision Autos",
   "choreoAuto": false
 }
