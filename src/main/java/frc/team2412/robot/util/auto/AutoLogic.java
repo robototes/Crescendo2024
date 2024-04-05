@@ -113,6 +113,7 @@ public class AutoLogic {
 					// presets
 					new AutoPath("Autoline N1 Centerline N1", "PresetAmpSideAutoline3Score"),
 					new AutoPath("Autoline N2 N1", "PresetMidAutoline3Score"),
+					new AutoPath("Autoline N2 N3", "PresetMidAutoline3Score2"),
 					new AutoPath("Centerline N5 N4", "PresetSourceSideCenterline3Score2"),
 					new AutoPath("Centerline N5 N3", "PresetSourceSideCenterline3Score2"),
 					// vision

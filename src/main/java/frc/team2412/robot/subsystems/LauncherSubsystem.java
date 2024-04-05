@@ -411,6 +411,8 @@ public class LauncherSubsystem extends SubsystemBase {
 									launch(setLauncherSpeedEntry.getDouble(SPEAKER_SHOOT_SPEED_RPM));
 								})
 								.withName("Full Manual"));
+
+		Shuffleboard.getTab("Launcher").addBoolean("Ignoring Limits", () -> ignoreLimits);
 	}
 
 	public void updateDistanceEntry(double distance) {

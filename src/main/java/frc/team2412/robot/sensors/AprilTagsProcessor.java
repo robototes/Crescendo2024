@@ -51,7 +51,7 @@ public class AprilTagsProcessor {
 
 	// TODO Measure these
 	private static final Vector<N3> STANDARD_DEVS =
-			VecBuilder.fill(0.7, 0.7, Units.degreesToRadians(30));
+			VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(30));
 
 	private static final double MAX_POSE_AMBIGUITY = 0.1;
 

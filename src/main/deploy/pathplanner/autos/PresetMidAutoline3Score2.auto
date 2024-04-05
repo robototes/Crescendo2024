@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.73,
-      "y": 6.62
+      "x": 1.33,
+      "y": 5.55
     },
-    "rotation": -120.0
+    "rotation": 180.0
   },
   "command": {
     "type": "sequential",
@@ -20,48 +20,42 @@
         {
           "type": "path",
           "data": {
-            "pathName": "HighSpeakerToHighNoteLaunch2"
+            "pathName": "SpeakerToMidNoteReturn"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "VisionLaunch"
+            "name": "Feed"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "HighNoteLaunch2ToFarHighNoteToLaunch"
+            "pathName": "SpeakerToLowNote"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LowNoteToSpeaker"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "VisionLaunch"
+            "name": "Feed"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "launchSecondNoteCenterLineLaunch"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "VisionLaunch"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "launchSecondNoteLaunch2"
+            "pathName": "MidSpeakerPassAutoLine"
           }
         }
       ]
     }
   },
-  "folder": "Vision Autos",
+  "folder": "Preset Autos",
   "choreoAuto": false
 }

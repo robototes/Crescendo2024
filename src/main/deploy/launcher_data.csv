@@ -5,19 +5,20 @@
 # These RPMs are target RPMs, actual was much lower
 
 # Front subwoofer
-1.30, 254, 3500
+1.30, 257, 3500
 # Front bumper at autoline
-2.13, 234, 3500
+2.13, 236, 3500
 
 # dcmps
 
 # On Autoline N2
-2.81, 223, 3600
+2.81, 225, 3600
 
 #chain
-3.84, 211, 3600
+3.84, 213, 3600
 
-
+# wing line amp side
+5.93, 207, 4000
 
 # bad values?
 

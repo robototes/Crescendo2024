@@ -44,6 +44,12 @@
         {
           "type": "path",
           "data": {
+            "pathName": "launchSecondNoteCenterLineLaunch"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
             "pathName": "launchSecondNoteLaunch"
           }
         },
