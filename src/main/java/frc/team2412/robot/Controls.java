@@ -218,7 +218,9 @@ public class Controls {
 								s.launcherSubsystem,
 								() ->
 										MathUtil.applyDeadband(codriveController.getLeftY(), 0.1)
-												* LauncherSubsystem.ANGLE_MAX_SPEED));
+												* LauncherSubsystem.ANGLE_MAX_SPEED,
+								codriveController.leftBumper(),
+								codriveController.back()));
 
 		launcherLowerPresetButton.onTrue(
 				s.launcherSubsystem

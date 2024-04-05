@@ -11,6 +11,7 @@ import com.revrobotics.SparkAbsoluteEncoder.Type;
 import com.revrobotics.SparkPIDController;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.units.BaseUnits;
@@ -40,7 +41,7 @@ public class LauncherSubsystem extends SubsystemBase {
 	private static final float PIVOT_DISABLE_OFFSET = 0.04f;
 	private static final int PIVOT_OFFSET = 36;
 	// ANGLE VALUES
-	public static final int AMP_AIM_ANGLE = 288 + PIVOT_OFFSET;
+	public static final int AMP_AIM_ANGLE = 285 + PIVOT_OFFSET;
 	public static final int SUBWOOFER_AIM_ANGLE = 252 + PIVOT_OFFSET;
 	public static final int PODIUM_AIM_ANGLE = 238 + PIVOT_OFFSET;
 	public static final int TRAP_AIM_ANGLE = 317 + PIVOT_OFFSET;
@@ -57,6 +58,7 @@ public class LauncherSubsystem extends SubsystemBase {
 	// RPM
 	public static final int SPEAKER_SHOOT_SPEED_RPM = 4500;
 	public static final int TRAP_SHOOT_SPEED_RPM = 4500;
+	public static final int LOBBING_RPM = 4700;
 	public static final double ANGLE_MAX_SPEED = 1;
 	public static final double MAX_SET_ANGLE_OFFSET = 20;
 	// 3392 RPM = 50% Speed
@@ -88,6 +90,7 @@ public class LauncherSubsystem extends SubsystemBase {
 	private double rpmSetpoint;
 	private double angleSetpoint;
 	private double manualAngleSetpoint;
+	private boolean ignoreLimits;
 
 	private GenericEntry setLauncherSpeedEntry;
 
@@ -278,7 +281,22 @@ public class LauncherSubsystem extends SubsystemBase {
 		return launcherAngleEncoder.getVelocity();
 	}
 
-	public void setAngleManual(double joystickInput) {
+	public void restoreLimits() {
+		this.ignoreLimits = false;
+	}
+
+	public void setAngleManual(double joystickInput, boolean powerControl, boolean ignoreLimits) {
+		this.ignoreLimits = ignoreLimits;
+		if (powerControl || ignoreLimits) {
+			launcherAngleOneMotor.set(ignoreLimits ? joystickInput * 0.1 : joystickInput);
+			manualAngleSetpoint =
+					MathUtil.clamp(
+							Units.degreesToRotations(getAngle()),
+							PIVOT_SOFTSTOP_BACKWARD,
+							PIVOT_SOFTSTOP_FORWARD);
+			return;
+		}
+
 		manualAngleSetpoint =
 				MathUtil.clamp(
 						manualAngleSetpoint + joystickInput * MANUAL_MODIFIER,
@@ -413,10 +431,12 @@ public class LauncherSubsystem extends SubsystemBase {
 		// sanity check the pivot encoder
 		if (launcherAngleEncoder.getPosition() >= PIVOT_SOFTSTOP_FORWARD + PIVOT_DISABLE_OFFSET
 				|| launcherAngleEncoder.getPosition() <= PIVOT_SOFTSTOP_BACKWARD - PIVOT_DISABLE_OFFSET) {
-			launcherAngleOneMotor.disable();
+			if (!ignoreLimits) {
+				launcherAngleOneMotor.disable();
+			}
 			DriverStation.reportError(
-					"Launcher encoder angle is insane!!!! Reports angle of " + getAngle() + " degrees.",
-					true);
+					"Launcher encoder angle is insane!!!! Reports angle of " + getAngle() + " degrees. Is overridden: " + ignoreLimits,
+					false);
 		}
 	}
 

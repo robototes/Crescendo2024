@@ -370,6 +370,10 @@ public class AutoLogic {
 		return (INTAKE_ENABLED ? () -> !s.intakeSubsystem.isIntakeRunning() : () -> true);
 	}
 
+	public static BooleanSupplier hasNote() {
+		return (INTAKE_ENABLED ? () -> s.intakeSubsystem.feederSensorHasNote() : () -> true);
+	}
+
 	// registered commands
 
 	public static Command subwooferLaunch() {
@@ -404,7 +408,7 @@ public class AutoLogic {
 																		.until(untilFeederHasNoNote()))
 														.andThen(new WaitCommand(0.4)),
 												Commands.none(),
-												hasNoNote()))
+												hasNote()))
 						: Commands.none())
 				.withName("Auto - SubwooferLaunchCommand");
 	}
@@ -434,7 +438,7 @@ public class AutoLogic {
 																		.until(untilFeederHasNoNote()))
 														.andThen(new WaitCommand(0.4)),
 												Commands.none(),
-												hasNoNote()))
+												hasNote()))
 						: Commands.none())
 				.withName("Auto - VisionLaunchCommand");
 	}

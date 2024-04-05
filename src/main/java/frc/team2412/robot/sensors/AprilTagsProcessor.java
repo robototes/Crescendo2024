@@ -50,7 +50,8 @@ public class AprilTagsProcessor {
 					new Rotation3d(Units.degreesToRadians(90), Units.degreesToRadians(-30), 0));
 
 	// TODO Measure these
-	private static final Vector<N3> STANDARD_DEVS = VecBuilder.fill(1, 1, Units.degreesToRadians(30));
+	private static final Vector<N3> STANDARD_DEVS =
+			VecBuilder.fill(0.7, 0.7, Units.degreesToRadians(30));
 
 	private static final double MAX_POSE_AMBIGUITY = 0.1;
 

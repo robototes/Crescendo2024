@@ -7,17 +7,30 @@
 # Front subwoofer
 1.30, 254, 3500
 # Front bumper at autoline
-2.13, 250, 3500
+2.13, 234, 3500
+
+# dcmps
+
+# On Autoline N2
+2.81, 223, 3600
+
+
+
+
+
+# bad values?
+
 # Near podium
-5.66, 246, 3600
+# 5.66, 225, 3600
 # Auto point 1 (X 2.870, Y 2.196, theta 130.6)
-4.46, 242, 3600
+# 4.46, 230, 3600
 
 # After this, these are setpoint angles
 # Auto point 2 (X 5.699, Y 7.501, theta -162.8)
-5.55, 240.3, 4400
+# 5.55, 226, 4400
 # Auto point 3 (X 4.299, Y 5.134, theta 176.222)
-4.32, 242, 4300 # Might be a little low, and could probably lower RPM- Ran out of time to fully test
+# 4.32, 232, 4300 # Might be a little low, and could probably lower RPM- Ran out of time to fully test
+
 
 # Pre 3/28 values:
 # 1.397, 254, 4500

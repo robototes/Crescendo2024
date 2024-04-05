@@ -35,7 +35,7 @@ public class IntakeSubsystem extends SubsystemBase {
 	public static final double FEEDER_IN_SPEED = 0.65;
 	public static final double FEEDER_REVERSE_SPEED = -0.3;
 
-	private static final boolean enableFrontAndSideIntakes = false;
+	private static final boolean enableFrontAndSideIntakes = true;
 
 	// Motors
 	private final CANSparkMax intakeMotorFront;
@@ -51,7 +51,7 @@ public class IntakeSubsystem extends SubsystemBase {
 	private final SparkLimitSwitch indexSensor;
 	private final SparkLimitSwitch feederSensor;
 	private final DigitalInput feederSensorIR;
-	private final SparkLimitSwitch intakeFrontSensor;
+	// private final SparkLimitSwitch intakeFrontSensor;
 
 	// debounce ! !
 	private final Debouncer intakeFrontSensorDebouncer;
@@ -97,7 +97,8 @@ public class IntakeSubsystem extends SubsystemBase {
 		feederSensor = feederMotor.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
 		feederSensorIR = new DigitalInput(FEEDER_SENSOR);
 
-		intakeFrontSensor = intakeMotorFront.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
+		// intakeFrontSensor =
+		// intakeMotorFront.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
 		// intakeBackSensor =
 		// intakeMotorBack.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
 		intakeLeftSensor = intakeMotorLeft.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
@@ -137,11 +138,11 @@ public class IntakeSubsystem extends SubsystemBase {
 	}
 
 	private void resetMotors() {
-		configureMotor(intakeMotorFront, true);
-		configureMotor(intakeMotorLeft, true);
-		configureMotor(intakeMotorRight, true);
+		configureMotor(intakeMotorFront, 25, true);
+		configureMotor(intakeMotorLeft, 25, true);
+		configureMotor(intakeMotorRight, 25, true);
 
-		configureMotor(ingestMotor, true);
+		configureMotor(ingestMotor, false);
 		configureMotor(indexMotorUpper, 40, false);
 
 		configureMotor(feederMotor, 40, true);
@@ -274,7 +275,8 @@ public class IntakeSubsystem extends SubsystemBase {
 	}
 
 	public boolean intakeFrontSeesNote() {
-		return intakeFrontSensor.isPressed();
+		return false;
+		// return intakeFrontSensor.isPressed();
 	}
 
 	public boolean intakeLeftSeesNote() {
@@ -290,21 +292,24 @@ public class IntakeSubsystem extends SubsystemBase {
 		// if (intakeFrontSensorDebouncer.calculate(intakeFrontSensor.isPressed())) {
 		// 	return true;
 		// }
-		return intakeFrontSensorDebouncer.calculate(intakeFrontSensor.isPressed());
+		return false;
+		// wreturn intakeFrontSensorDebouncer.calculate(intakeFrontSensor.isPressed());
 	}
 
 	public boolean debouncedIntakeLeftSensor() {
 		// if (intakeLeftSensorDebouncer.calculate(intakeLeftSensor.isPressed())) {
 		// 	return true;
 		// }
-		return intakeLeftSensorDebouncer.calculate(intakeFrontSensor.isPressed());
+		return false;
+		// return intakeLeftSensorDebouncer.calculate(intakeFrontSensor.isPressed());
 	}
 
 	public boolean debouncedIntakeRightSensor() {
 		// if (intakeRightSensorDebouncer.calculate(intakeRightSensor.isPressed())) {
 		// 	return true;
 		// }
-		return intakeRightSensorDebouncer.calculate(intakeFrontSensor.isPressed());
+		return false;
+		// return intakeRightSensorDebouncer.calculate(intakeFrontSensor.isPressed());
 	}
 
 	// override methods on shuffleboard
@@ -317,7 +322,7 @@ public class IntakeSubsystem extends SubsystemBase {
 	}
 
 	public boolean isIntakeOn() {
-		return (intakeMotorFront.get() > 0
+		return (intakeMotorLeft.get() > 0
 				|| indexMotorUpper.get() > 0
 				|| ingestMotor.get() > 0
 				|| feederMotor.get() > 0);
@@ -399,8 +404,6 @@ public class IntakeSubsystem extends SubsystemBase {
 	 * returns true if all the motors are set to be not moving
 	 */
 	public boolean isIntakeRunning() {
-		return (intakeMotorFront.get() != 0
-				&& intakeMotorLeft.get() != 0
-				&& intakeMotorRight.get() != 0);
+		return (intakeMotorLeft.get() != 0 && intakeMotorRight.get() != 0);
 	}
 }

@@ -22,8 +22,8 @@ public class Hardware {
 
 	// intake [40 - 49]
 	public static final int INTAKE_MOTOR_FRONT = 40;
-	public static final int INTAKE_MOTOR_BACK = 41;
-	public static final int INTAKE_MOTOR_LEFT = 42;
+	public static final int INTAKE_MOTOR_BACK = 42;
+	public static final int INTAKE_MOTOR_LEFT = 41;
 	public static final int INTAKE_MOTOR_RIGHT = 43;
 
 	public static final int INGEST_MOTOR = 44;
@@ -31,8 +31,8 @@ public class Hardware {
 	public static final int INDEX_MOTOR_UPPER = 45;
 
 	public static final int FEEDER_MOTOR = 46;
-	// LED strip is PWM port 8
-	public static final int BLINKIN_LED = 8;
+	// LED strip is PWM port 2
+	public static final int BLINKIN_LED = 2;
 
 	// intake sensors  (Digital IO)
 	public static final int INDEX_SENSOR = 1;
