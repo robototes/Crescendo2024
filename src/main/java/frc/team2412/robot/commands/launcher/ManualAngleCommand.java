@@ -26,7 +26,8 @@ public class ManualAngleCommand extends Command {
 
 	@Override
 	public void execute() {
-		launcherSubsystem.setAngleManual(launcherAngle.getAsDouble(), powerControl.getAsBoolean(), ignoreLimits.getAsBoolean());
+		launcherSubsystem.setAngleManual(
+				launcherAngle.getAsDouble(), powerControl.getAsBoolean(), ignoreLimits.getAsBoolean());
 	}
 
 	@Override

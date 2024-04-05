@@ -11,7 +11,6 @@ import com.revrobotics.SparkAbsoluteEncoder.Type;
 import com.revrobotics.SparkPIDController;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.units.BaseUnits;
@@ -435,7 +434,10 @@ public class LauncherSubsystem extends SubsystemBase {
 				launcherAngleOneMotor.disable();
 			}
 			DriverStation.reportError(
-					"Launcher encoder angle is insane!!!! Reports angle of " + getAngle() + " degrees. Is overridden: " + ignoreLimits,
+					"Launcher encoder angle is insane!!!! Reports angle of "
+							+ getAngle()
+							+ " degrees. Is overridden: "
+							+ ignoreLimits,
 					false);
 		}
 	}
