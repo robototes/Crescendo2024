@@ -29,6 +29,7 @@ import frc.team2412.robot.Hardware;
 import frc.team2412.robot.Robot;
 import frc.team2412.robot.util.SparkPIDWidget;
 import java.util.Map;
+import java.util.Optional;
 
 public class LauncherSubsystem extends SubsystemBase {
 	// CONSTANTS
@@ -39,6 +40,12 @@ public class LauncherSubsystem extends SubsystemBase {
 	private static final float PIVOT_SOFTSTOP_BACKWARD = 0.635f;
 	private static final float PIVOT_DISABLE_OFFSET = 0.04f;
 	private static final int PIVOT_OFFSET = 36;
+
+	// offset stuff
+	private static double COMPARE_PIVOT_MOTOR_OFFSET = 0;
+	private static final double ENCODER_DIFFERENCE_TOLERANCE = 0.01;
+	private static final double OFFSET_SYNCING_TOLERANCE = 0.06;
+
 	// ANGLE VALUES
 	public static final int AMP_AIM_ANGLE = 285 + PIVOT_OFFSET;
 	public static final int SUBWOOFER_AIM_ANGLE = 252 + PIVOT_OFFSET;
@@ -90,6 +97,8 @@ public class LauncherSubsystem extends SubsystemBase {
 	private double angleSetpoint;
 	private double manualAngleSetpoint;
 	private boolean ignoreLimits;
+
+	private Optional<Double> relativeEncoderStartPosition;
 
 	private GenericEntry setLauncherSpeedEntry;
 
@@ -419,6 +428,31 @@ public class LauncherSubsystem extends SubsystemBase {
 		speakerDistanceEntry.setDouble(distance);
 	}
 
+	public double getAngleOneMotorPosition() {
+		return (launcherAngleOneMotor.getEncoder().getPosition() + COMPARE_PIVOT_MOTOR_OFFSET)
+						* PIVOT_GEARING_RATIO
+				- relativeEncoderStartPosition.orElse(0.0);
+	}
+
+	public void zeroRelativeEncoder(double pivotAngle) {
+
+		double currentRelativePosition =
+				(launcherAngleOneMotor.getEncoder().getPosition() + COMPARE_PIVOT_MOTOR_OFFSET)
+						* PIVOT_GEARING_RATIO;
+		double offset = pivotAngle - currentRelativePosition;
+
+		// 
+		if (relativeEncoderStartPosition.isPresent()
+				|| Math.abs(relativeEncoderStartPosition.get() - offset) > OFFSET_SYNCING_TOLERANCE) {
+			relativeEncoderStartPosition = Optional.of(offset);
+		}
+	}
+	// public void getAngleOneMotorData() {
+	// 	double offset = (getAngleOneMotorPosition() % 1) - getAngle();
+	// 	relativeEncoderStartPosition = MedianFilter.calculate(getAngle());
+
+	// }
+
 	@Override
 	public void periodic() {
 		launcherAngleEntry.setDouble(getAngle());
@@ -428,6 +462,21 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherAngleManual.setDouble(manualAngleSetpoint);
 		angleSetpointEntry.setDouble(angleSetpoint);
 		launcherFlywheelSetpointEntry.setDouble(rpmSetpoint);
+
+		// other sanity check
+
+		if (relativeEncoderStartPosition.isPresent() && Math.abs(launcherAngleEncoder.getPosition() - getAngleOneMotorPosition())
+				<= ENCODER_DIFFERENCE_TOLERANCE) {
+			if (!ignoreLimits) {
+				launcherAngleOneMotor.disable();
+			}
+			DriverStation.reportError(
+					"Launcher encoder angle is insane!!!! Reports angle of "
+							+ getAngle()
+							+ " degrees. Is overridden: "
+							+ ignoreLimits,
+					false);
+		}
 
 		// sanity check the pivot encoder
 		if (launcherAngleEncoder.getPosition() >= PIVOT_SOFTSTOP_FORWARD + PIVOT_DISABLE_OFFSET
