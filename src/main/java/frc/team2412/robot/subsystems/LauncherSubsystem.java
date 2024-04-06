@@ -150,6 +150,8 @@ public class LauncherSubsystem extends SubsystemBase {
 		// launcherAngleTwoPIDController = launcherAngleTwoMotor.getPIDController();
 		// launcherAngleTwoPIDController.setFeedbackDevice(launcherAngleEncoder);
 
+		relativeEncoderStartPosition = Optional.empty();
+
 		configMotors();
 		initShuffleboard();
 	}
@@ -342,6 +344,17 @@ public class LauncherSubsystem extends SubsystemBase {
 					.addDouble("Top FlyWheel Temp", () -> launcherTopMotor.getMotorTemperature());
 		}
 
+		Shuffleboard.getTab("Launcher")
+				.addDouble("relative encoder offset", () -> relativeEncoderStartPosition.orElse(0.0));
+
+		Shuffleboard.getTab("Launcher.add")
+				.addDouble(
+						"relative encoder",
+						() ->
+								(launcherAngleOneMotor.getEncoder().getPosition() + COMPARE_PIVOT_MOTOR_OFFSET)
+										* PIVOT_GEARING_RATIO);
+		Shuffleboard.getTab("Launcher")
+				.addDouble("relative encoder (w/ offset)", this::getAngleOneMotorPosition);
 		launcherIsAtSpeed =
 				Shuffleboard.getTab("Match")
 						.add("flywheels at target speed", false)
@@ -441,7 +454,7 @@ public class LauncherSubsystem extends SubsystemBase {
 						* PIVOT_GEARING_RATIO;
 		double offset = pivotAngle - currentRelativePosition;
 
-		// 
+		//
 		if (relativeEncoderStartPosition.isPresent()
 				|| Math.abs(relativeEncoderStartPosition.get() - offset) > OFFSET_SYNCING_TOLERANCE) {
 			relativeEncoderStartPosition = Optional.of(offset);
@@ -465,8 +478,9 @@ public class LauncherSubsystem extends SubsystemBase {
 
 		// other sanity check
 
-		if (relativeEncoderStartPosition.isPresent() && Math.abs(launcherAngleEncoder.getPosition() - getAngleOneMotorPosition())
-				<= ENCODER_DIFFERENCE_TOLERANCE) {
+		if (relativeEncoderStartPosition.isPresent()
+				&& Math.abs(launcherAngleEncoder.getPosition() - getAngleOneMotorPosition())
+						<= ENCODER_DIFFERENCE_TOLERANCE) {
 			if (!ignoreLimits) {
 				launcherAngleOneMotor.disable();
 			}

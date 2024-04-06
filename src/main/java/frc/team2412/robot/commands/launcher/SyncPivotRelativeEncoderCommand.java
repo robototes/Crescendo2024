@@ -9,7 +9,8 @@ public class SyncPivotRelativeEncoderCommand extends Command {
 	private int MAX_SAMPLES = 300; // 6 seconds, 50 per second
 	private final MedianFilter filter;
 
-	private final LauncherSubsystem launcherSubsystem;;
+	private final LauncherSubsystem launcherSubsystem;
+	;
 
 	private int samples;
 
