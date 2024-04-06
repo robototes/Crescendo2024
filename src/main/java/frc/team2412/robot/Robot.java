@@ -123,7 +123,8 @@ public class Robot extends TimedRobot {
 
 		RobotController.setBrownoutVoltage(5.75);
 
-		(new SyncPivotRelativeEncoderCommand(subsystems.launcherSubsystem)).schedule();
+		CommandScheduler.getInstance()
+					.schedule(new SyncPivotRelativeEncoderCommand(subsystems.launcherSubsystem).ignoringDisable(true));
 	}
 
 	@Override
