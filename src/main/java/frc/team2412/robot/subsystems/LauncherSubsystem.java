@@ -64,8 +64,8 @@ public class LauncherSubsystem extends SubsystemBase {
 	public static final int SPEAKER_SHOOT_SPEED_RPM = 4500;
 	public static final int TRAP_SHOOT_SPEED_RPM = 4500;
 	public static final int LOBBING_RPM = 4700;
-	public static final double ANGLE_MAX_SPEED = 0.5; // percent output
-	public static final double MAX_SET_ANGLE_OFFSET = 20;
+	public static final double ANGLE_MAX_SPEED = 0.3; // percent output
+	public static final double MAX_SET_ANGLE_OFFSET = 15;
 	// 3392 RPM = 50% Speed
 	// 1356 RPM = 20% Speed
 	// 1017 RPM = 15% Speed
@@ -203,6 +203,9 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherAngleOneMotor.getEncoder().setPositionConversionFactor(PIVOT_GEARING_RATIO);
 		launcherAngleTwoMotor.getEncoder().setPosition(launcherAngleEncoder.getPosition());
 		launcherAngleTwoMotor.getEncoder().setPositionConversionFactor(PIVOT_GEARING_RATIO);
+
+		// launcherAngleOneMotor.setIdleMode(IdleMode.kCoast);
+		// launcherAngleTwoMotor.setIdleMode(IdleMode.kCoast);
 
 		launcherTopMotor.burnFlash();
 		launcherBottomMotor.burnFlash();
@@ -344,16 +347,21 @@ public class LauncherSubsystem extends SubsystemBase {
 		}
 
 		Shuffleboard.getTab("Launcher")
+				.addDouble(
+						"relative encoder", () -> launcherAngleOneMotor.getEncoder().getPosition() * 360);
+		Shuffleboard.getTab("Launcher")
 				.addDouble("relative encoder offset", () -> relativeEncoderStartPosition.orElse(0.0));
 
 		Shuffleboard.getTab("Launcher.add")
 				.addDouble(
 						"relative encoder",
-						() ->
-								Units.rotationsToDegrees(
-										launcherAngleOneMotor.getEncoder().getPosition() * PIVOT_GEARING_RATIO));
+						() -> Units.rotationsToDegrees(launcherAngleOneMotor.getEncoder().getPosition()));
 		Shuffleboard.getTab("Launcher")
-				.addDouble("relative encoder (with offset)", () -> getAngleOneMotorAngle());
+				.addDouble(
+						"relative encoder (with offset)",
+						() ->
+								(launcherAngleOneMotor.getEncoder().getPosition() * 360
+										+ relativeEncoderStartPosition.orElse(0.0)));
 		launcherIsAtSpeed =
 				Shuffleboard.getTab("Match")
 						.add("flywheels at target speed", false)
@@ -441,16 +449,14 @@ public class LauncherSubsystem extends SubsystemBase {
 	}
 
 	public double getAngleOneMotorAngle() {
-		return Units.rotationsToDegrees(
-						launcherAngleOneMotor.getEncoder().getPosition() * PIVOT_GEARING_RATIO)
+		return Units.rotationsToDegrees(launcherAngleOneMotor.getEncoder().getPosition())
 				+ relativeEncoderStartPosition.orElse(0.0);
 	}
 
 	public void zeroRelativeEncoder(double pivotAngle) {
 
 		double currentRelativePosition =
-				Units.rotationsToDegrees(
-						launcherAngleOneMotor.getEncoder().getPosition() * PIVOT_GEARING_RATIO);
+				Units.rotationsToDegrees(launcherAngleOneMotor.getEncoder().getPosition());
 		double offset = pivotAngle - currentRelativePosition;
 
 		if (relativeEncoderStartPosition.isEmpty()
@@ -471,7 +477,7 @@ public class LauncherSubsystem extends SubsystemBase {
 
 		// PIVOT ENCODER SANITY CHECKS
 		// compares the relative encoder angle vs the absolute encoder angle
-		if (relativeEncoderStartPosition.isEmpty()
+		if (relativeEncoderStartPosition.isPresent()
 				&& Math.abs(getAngle() - getAngleOneMotorAngle()) <= ENCODER_DIFFERENCE_TOLERANCE) {
 			if (!ignoreLimits) {
 				launcherAngleOneMotor.disable();
