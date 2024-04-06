@@ -3,41 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.44,
-        "y": 5.78
+        "x": 3.9896948365325304,
+        "y": 5.321383214195
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.885430896139777,
-        "y": 6.6979161979080075
+        "x": 5.260103863424924,
+        "y": 4.362135811002534
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.399000341366138,
-        "y": 5.67
+        "x": 8.349955083898307,
+        "y": 4.1046482092964185
       },
       "prevControl": {
-        "x": 8.121465209600638,
-        "y": 6.028469660415459
+        "x": 7.631641521812732,
+        "y": 4.1046482092964185
       },
       "nextControl": {
-        "x": 8.595181371237466,
-        "y": 5.41660884656091
+        "x": 8.44804559883397,
+        "y": 4.1046482092964185
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.478356181937588,
-        "y": 6.434313409167359
+        "x": 3.9896948365325304,
+        "y": 5.321383214195
       },
       "prevControl": {
-        "x": 6.837327548528969,
-        "y": 6.332621674252358
+        "x": 5.266234520608404,
+        "y": 4.165954781131208
       },
       "nextControl": null,
       "isLocked": false,
@@ -46,8 +46,8 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.85,
-      "rotationDegrees": 163.154898401479,
+      "waypointRelativePos": 0.0,
+      "rotationDegrees": 180.0,
       "rotateFast": false
     }
   ],
@@ -55,7 +55,7 @@
   "eventMarkers": [
     {
       "name": "intake",
-      "waypointRelativePos": 0.6,
+      "waypointRelativePos": 0.5,
       "command": {
         "type": "parallel",
         "data": {
@@ -72,7 +72,7 @@
     },
     {
       "name": "rev launcher",
-      "waypointRelativePos": 1.5499999999999998,
+      "waypointRelativePos": 1.55,
       "command": {
         "type": "parallel",
         "data": {
@@ -81,6 +81,23 @@
               "type": "named",
               "data": {
                 "name": "RevLauncher"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "retract",
+      "waypointRelativePos": 0.0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "RetractPivot"
               }
             }
           ]
@@ -96,13 +113,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -170.32327316993567,
+    "rotation": 176.97,
     "rotateFast": false
   },
   "reversed": false,
   "folder": null,
   "previewStartingState": {
-    "rotation": 180.0,
+    "rotation": 176.97,
     "velocity": 0
   },
   "useDefaultConstraints": true
