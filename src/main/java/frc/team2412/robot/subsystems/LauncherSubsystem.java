@@ -42,7 +42,6 @@ public class LauncherSubsystem extends SubsystemBase {
 	private static final int PIVOT_OFFSET = 36;
 
 	// offset stuff
-	private static double COMPARE_PIVOT_MOTOR_OFFSET = 0;
 	private static final double ENCODER_DIFFERENCE_TOLERANCE = 0.01;
 	private static final double OFFSET_SYNCING_TOLERANCE = 0.06;
 
@@ -350,9 +349,7 @@ public class LauncherSubsystem extends SubsystemBase {
 		Shuffleboard.getTab("Launcher.add")
 				.addDouble(
 						"relative encoder",
-						() ->
-								(launcherAngleOneMotor.getEncoder().getPosition() + COMPARE_PIVOT_MOTOR_OFFSET)
-										* PIVOT_GEARING_RATIO);
+						() -> launcherAngleOneMotor.getEncoder().getPosition() * PIVOT_GEARING_RATIO);
 		Shuffleboard.getTab("Launcher")
 				.addDouble("relative encoder (w/ offset)", this::getAngleOneMotorPosition);
 		launcherIsAtSpeed =
@@ -442,29 +439,22 @@ public class LauncherSubsystem extends SubsystemBase {
 	}
 
 	public double getAngleOneMotorPosition() {
-		return (launcherAngleOneMotor.getEncoder().getPosition() + COMPARE_PIVOT_MOTOR_OFFSET)
-						* PIVOT_GEARING_RATIO
-				- relativeEncoderStartPosition.orElse(0.0);
+		return Units.rotationsToDegrees(
+				launcherAngleOneMotor.getEncoder().getPosition() * PIVOT_GEARING_RATIO
+						- relativeEncoderStartPosition.orElse(0.0));
 	}
 
 	public void zeroRelativeEncoder(double pivotAngle) {
 
 		double currentRelativePosition =
-				(launcherAngleOneMotor.getEncoder().getPosition() + COMPARE_PIVOT_MOTOR_OFFSET)
-						* PIVOT_GEARING_RATIO;
+				launcherAngleOneMotor.getEncoder().getPosition() * PIVOT_GEARING_RATIO;
 		double offset = pivotAngle - currentRelativePosition;
 
-		//
 		if (relativeEncoderStartPosition.isPresent()
-				|| Math.abs(relativeEncoderStartPosition.get() - offset) > OFFSET_SYNCING_TOLERANCE) {
+				|| Math.abs(relativeEncoderStartPosition.get() + offset) > OFFSET_SYNCING_TOLERANCE) {
 			relativeEncoderStartPosition = Optional.of(offset);
 		}
 	}
-	// public void getAngleOneMotorData() {
-	// 	double offset = (getAngleOneMotorPosition() % 1) - getAngle();
-	// 	relativeEncoderStartPosition = MedianFilter.calculate(getAngle());
-
-	// }
 
 	@Override
 	public void periodic() {
@@ -478,16 +468,18 @@ public class LauncherSubsystem extends SubsystemBase {
 
 		// other sanity check
 
-		if (relativeEncoderStartPosition.isPresent()
+		if (relativeEncoderStartPosition.isEmpty()
 				&& Math.abs(launcherAngleEncoder.getPosition() - getAngleOneMotorPosition())
 						<= ENCODER_DIFFERENCE_TOLERANCE) {
 			if (!ignoreLimits) {
 				launcherAngleOneMotor.disable();
 			}
 			DriverStation.reportError(
-					"Launcher encoder angle is insane!!!! Reports angle of "
-							+ getAngle()
-							+ " degrees. Is overridden: "
+					"Pivot encoder deviated too far from encoder values ..... Reported pivot angle of "
+							+ launcherAngleEncoder
+							+ " and motor angle of "
+							+ getAngleOneMotorPosition()
+							+ ". Is overidden: "
 							+ ignoreLimits,
 					false);
 		}

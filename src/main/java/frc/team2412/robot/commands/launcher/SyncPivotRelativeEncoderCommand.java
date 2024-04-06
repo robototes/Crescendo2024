@@ -6,7 +6,8 @@ import frc.team2412.robot.subsystems.LauncherSubsystem;
 
 public class SyncPivotRelativeEncoderCommand extends Command {
 
-	private int MAX_SAMPLES = 300; // 6 seconds, 50 per second
+	private int MAX_SAMPLES = 50; // 6 seconds, 50 per second
+	private final double ANGLE_SPEED_TOLERANCE = 0.1;
 	private final MedianFilter filter;
 
 	private final LauncherSubsystem launcherSubsystem;
@@ -17,7 +18,7 @@ public class SyncPivotRelativeEncoderCommand extends Command {
 	public SyncPivotRelativeEncoderCommand(
 			LauncherSubsystem launcherSubsystem, boolean ignorePrevOffset) {
 		this.launcherSubsystem = launcherSubsystem;
-		filter = new MedianFilter(300);
+		filter = new MedianFilter(MAX_SAMPLES);
 	}
 
 	public SyncPivotRelativeEncoderCommand(LauncherSubsystem launcherSubsystem) {
@@ -27,24 +28,29 @@ public class SyncPivotRelativeEncoderCommand extends Command {
 	@Override
 	public void execute() {
 
-		// if the arm is moving, reset the syncing because now inaccurate.
-		if (Math.abs(launcherSubsystem.getAngleSpeed()) <= 0.1) {
+		// if the pivot is moving, reset the syncing because now inaccurate.
+		if (Math.abs(launcherSubsystem.getAngleSpeed()) >= ANGLE_SPEED_TOLERANCE) {
 			filter.reset();
 			samples = 0;
 			return;
 		}
 
+		// add current value to median filter
 		filter.calculate(launcherSubsystem.getAngle());
 		samples++;
 	}
 
 	@Override
 	public void end(boolean interrupted) {
-		launcherSubsystem.zeroRelativeEncoder(filter.lastValue());
+
+		if (samples > MAX_SAMPLES) {
+			launcherSubsystem.zeroRelativeEncoder(filter.lastValue());
+		}
 	}
 
 	@Override
 	public boolean isFinished() {
+		// stop when finished sampling for avg
 		return samples > MAX_SAMPLES;
 	}
 }
