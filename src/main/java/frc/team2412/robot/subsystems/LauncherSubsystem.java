@@ -64,7 +64,7 @@ public class LauncherSubsystem extends SubsystemBase {
 	public static final int SPEAKER_SHOOT_SPEED_RPM = 4500;
 	public static final int TRAP_SHOOT_SPEED_RPM = 4500;
 	public static final int LOBBING_RPM = 4700;
-	public static final double ANGLE_MAX_SPEED = 1;
+	public static final double ANGLE_MAX_SPEED = 0.5; // percent output
 	public static final double MAX_SET_ANGLE_OFFSET = 20;
 	// 3392 RPM = 50% Speed
 	// 1356 RPM = 20% Speed
@@ -297,7 +297,7 @@ public class LauncherSubsystem extends SubsystemBase {
 	public void setAngleManual(double joystickInput, boolean powerControl, boolean ignoreLimits) {
 		this.ignoreLimits = ignoreLimits;
 		if (powerControl || ignoreLimits) {
-			launcherAngleOneMotor.set(ignoreLimits ? joystickInput * 0.1 : joystickInput);
+			launcherAngleOneMotor.set(ignoreLimits ? joystickInput * 0.3 : joystickInput);
 			manualAngleSetpoint =
 					MathUtil.clamp(
 							Units.degreesToRotations(getAngle()),
@@ -353,7 +353,7 @@ public class LauncherSubsystem extends SubsystemBase {
 								Units.rotationsToDegrees(
 										launcherAngleOneMotor.getEncoder().getPosition() * PIVOT_GEARING_RATIO));
 		Shuffleboard.getTab("Launcher")
-				.addDouble("relative encoder (w/ offset)", () -> getAngleOneMotorAngle());
+				.addDouble("relative encoder (with offset)", () -> getAngleOneMotorAngle());
 		launcherIsAtSpeed =
 				Shuffleboard.getTab("Match")
 						.add("flywheels at target speed", false)
@@ -442,8 +442,8 @@ public class LauncherSubsystem extends SubsystemBase {
 
 	public double getAngleOneMotorAngle() {
 		return Units.rotationsToDegrees(
-				launcherAngleOneMotor.getEncoder().getPosition() * PIVOT_GEARING_RATIO
-						- relativeEncoderStartPosition.orElse(0.0));
+						launcherAngleOneMotor.getEncoder().getPosition() * PIVOT_GEARING_RATIO)
+				+ relativeEncoderStartPosition.orElse(0.0);
 	}
 
 	public void zeroRelativeEncoder(double pivotAngle) {
@@ -453,8 +453,8 @@ public class LauncherSubsystem extends SubsystemBase {
 						launcherAngleOneMotor.getEncoder().getPosition() * PIVOT_GEARING_RATIO);
 		double offset = pivotAngle - currentRelativePosition;
 
-		if (relativeEncoderStartPosition.isPresent()
-				|| Math.abs(relativeEncoderStartPosition.get() + offset) > OFFSET_SYNCING_TOLERANCE) {
+		if (relativeEncoderStartPosition.isEmpty()
+				|| Math.abs(relativeEncoderStartPosition.orElse(0.0) + offset) > OFFSET_SYNCING_TOLERANCE) {
 			relativeEncoderStartPosition = Optional.of(offset);
 		}
 	}
