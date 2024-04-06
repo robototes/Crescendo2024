@@ -349,9 +349,11 @@ public class LauncherSubsystem extends SubsystemBase {
 		Shuffleboard.getTab("Launcher.add")
 				.addDouble(
 						"relative encoder",
-						() -> launcherAngleOneMotor.getEncoder().getPosition() * PIVOT_GEARING_RATIO);
+						() ->
+								Units.rotationsToDegrees(
+										launcherAngleOneMotor.getEncoder().getPosition() * PIVOT_GEARING_RATIO));
 		Shuffleboard.getTab("Launcher")
-				.addDouble("relative encoder (w/ offset)", this::getAngleOneMotorPosition);
+				.addDouble("relative encoder (w/ offset)", () -> getAngleOneMotorAngle());
 		launcherIsAtSpeed =
 				Shuffleboard.getTab("Match")
 						.add("flywheels at target speed", false)
@@ -438,7 +440,7 @@ public class LauncherSubsystem extends SubsystemBase {
 		speakerDistanceEntry.setDouble(distance);
 	}
 
-	public double getAngleOneMotorPosition() {
+	public double getAngleOneMotorAngle() {
 		return Units.rotationsToDegrees(
 				launcherAngleOneMotor.getEncoder().getPosition() * PIVOT_GEARING_RATIO
 						- relativeEncoderStartPosition.orElse(0.0));
@@ -447,7 +449,8 @@ public class LauncherSubsystem extends SubsystemBase {
 	public void zeroRelativeEncoder(double pivotAngle) {
 
 		double currentRelativePosition =
-				launcherAngleOneMotor.getEncoder().getPosition() * PIVOT_GEARING_RATIO;
+				Units.rotationsToDegrees(
+						launcherAngleOneMotor.getEncoder().getPosition() * PIVOT_GEARING_RATIO);
 		double offset = pivotAngle - currentRelativePosition;
 
 		if (relativeEncoderStartPosition.isPresent()
@@ -466,25 +469,24 @@ public class LauncherSubsystem extends SubsystemBase {
 		angleSetpointEntry.setDouble(angleSetpoint);
 		launcherFlywheelSetpointEntry.setDouble(rpmSetpoint);
 
-		// other sanity check
-
+		// PIVOT ENCODER SANITY CHECKS
+		// compares the relative encoder angle vs the absolute encoder angle
 		if (relativeEncoderStartPosition.isEmpty()
-				&& Math.abs(launcherAngleEncoder.getPosition() - getAngleOneMotorPosition())
-						<= ENCODER_DIFFERENCE_TOLERANCE) {
+				&& Math.abs(getAngle() - getAngleOneMotorAngle()) <= ENCODER_DIFFERENCE_TOLERANCE) {
 			if (!ignoreLimits) {
 				launcherAngleOneMotor.disable();
 			}
 			DriverStation.reportError(
-					"Pivot encoder deviated too far from encoder values ..... Reported pivot angle of "
+					"Pivot encoder deviated too far from motor encoder angle ... .. Reported pivot angle of "
 							+ launcherAngleEncoder
 							+ " and motor angle of "
-							+ getAngleOneMotorPosition()
+							+ getAngleOneMotorAngle()
 							+ ". Is overidden: "
 							+ ignoreLimits,
 					false);
 		}
 
-		// sanity check the pivot encoder
+		//
 		if (launcherAngleEncoder.getPosition() >= PIVOT_SOFTSTOP_FORWARD + PIVOT_DISABLE_OFFSET
 				|| launcherAngleEncoder.getPosition() <= PIVOT_SOFTSTOP_BACKWARD - PIVOT_DISABLE_OFFSET) {
 			if (!ignoreLimits) {
