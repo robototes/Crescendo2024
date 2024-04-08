@@ -328,6 +328,22 @@ public class IntakeSubsystem extends SubsystemBase {
 				|| feederMotor.get() > 0);
 	}
 
+	public boolean isLeftIntakeRunning() {
+		return intakeMotorLeft.getEncoder().getVelocity() > 1.0;
+	}
+
+	public boolean isFrontIntakeRunning() {
+		return intakeMotorFront.getEncoder().getVelocity() > 1.0;
+	}
+
+	public boolean isRightIntakeRunning() {
+		return intakeMotorRight.getEncoder().getVelocity() > 1.0;
+	}
+
+	public boolean isIndexRunning() {
+		return indexMotorUpper.getEncoder().getVelocity() > 1.0;
+	}
+
 	// logging
 	public void initShuffleboard() {
 		if (Robot.isDebugMode()) {
