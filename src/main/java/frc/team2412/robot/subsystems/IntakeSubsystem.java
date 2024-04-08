@@ -116,7 +116,7 @@ public class IntakeSubsystem extends SubsystemBase {
 	}
 
 	private void configureMotor(CANSparkBase motor, boolean invert) {
-		configureMotor(motor, 20, invert);
+		configureMotor(motor, 30, invert);
 	}
 
 	private void resetMotors() {
@@ -241,6 +241,13 @@ public class IntakeSubsystem extends SubsystemBase {
 
 	public boolean getRejectOverride() {
 		return rejectOverride.getBoolean(false);
+	}
+
+	public boolean isIntakeOn() {
+		return (intakeMotorFront.get() > 0
+				|| indexMotorUpper.get() > 0
+				|| ingestMotor.get() > 0
+				|| feederMotor.get() > 0);
 	}
 
 	// logging

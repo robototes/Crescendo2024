@@ -1,0 +1,135 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 0.73,
+        "y": 4.47
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.7933352100034745,
+        "y": 2.218463140171392
+      },
+      "isLocked": false,
+      "linkedName": "LowSpeaker"
+    },
+    {
+      "anchor": {
+        "x": 4.2,
+        "y": 3.23
+      },
+      "prevControl": {
+        "x": 3.322926979211445,
+        "y": 2.540059427473147
+      },
+      "nextControl": {
+        "x": 4.674838818833291,
+        "y": 3.603527128025519
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.767707489830933,
+        "y": 3.98
+      },
+      "prevControl": {
+        "x": 5.276547905762334,
+        "y": 3.8630798670885946
+      },
+      "nextControl": {
+        "x": 6.21520299290587,
+        "y": 4.086525934531027
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.39889223937992,
+        "y": 4.1046482092964185
+      },
+      "prevControl": {
+        "x": 6.891789712745998,
+        "y": 4.1981467344914645
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "CenterLineN3"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1.7,
+      "rotationDegrees": -167.28398359567856,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 0.6000000000000001,
+      "rotationDegrees": -146.92325429708612,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 0.05,
+      "rotationDegrees": 120.0,
+      "rotateFast": false
+    }
+  ],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "under stage",
+      "waypointRelativePos": 0.15000000000000002,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "UnderStage"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "intake",
+      "waypointRelativePos": 2.25,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Intake"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 180.0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": null,
+  "previewStartingState": {
+    "rotation": 120.0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": false
+}
