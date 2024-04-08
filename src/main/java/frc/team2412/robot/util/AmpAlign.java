@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.team2412.robot.subsystems.DrivebaseSubsystem;
-import frc.team2412.robot.subsystems.LauncherSubsystem;
 import java.util.List;
 
 public class AmpAlign {
@@ -55,20 +54,18 @@ public class AmpAlign {
 	}
 
 	public static Command ampPreset(
-			DrivebaseSubsystem drivebaseSubsystem, LauncherSubsystem launcherSubsystem) {
-		return new AlignCommand(drivebaseSubsystem, launcherSubsystem);
+			DrivebaseSubsystem drivebaseSubsystem) {
+		return new AlignCommand(drivebaseSubsystem);
 	}
 
 	private static class AlignCommand extends Command {
 		private final DrivebaseSubsystem drivebaseSubsystem;
-		private final LauncherSubsystem launcherSubsystem;
 		private Command ampCommand = null;
 
 		public AlignCommand(
-				DrivebaseSubsystem drivebaseSubsystem, LauncherSubsystem launcherSubsystem) {
+				DrivebaseSubsystem drivebaseSubsystem) {
 			this.drivebaseSubsystem = drivebaseSubsystem;
-			this.launcherSubsystem = launcherSubsystem;
-			addRequirements(launcherSubsystem, drivebaseSubsystem);
+			addRequirements(drivebaseSubsystem);
 		}
 
 		@Override

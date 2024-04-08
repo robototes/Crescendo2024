@@ -202,7 +202,7 @@ public class Controls {
 				TrapAlign.trapPreset(s.drivebaseSubsystem, s.launcherSubsystem));
 		launcherAmpAlignPresetButton.onTrue(
 				Commands.either(
-						AmpAlign.ampPreset(s.drivebaseSubsystem, s.launcherSubsystem),
+						AmpAlign.ampPreset(s.drivebaseSubsystem),
 						Commands.none(),
 						() -> s.drivebaseSubsystem.getPose().getY() > 5.0));
 
