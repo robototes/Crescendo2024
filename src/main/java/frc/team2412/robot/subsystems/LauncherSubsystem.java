@@ -352,10 +352,6 @@ public class LauncherSubsystem extends SubsystemBase {
 		Shuffleboard.getTab("Launcher")
 				.addDouble("relative encoder offset", () -> relativeEncoderStartPosition.orElse(0.0));
 
-		Shuffleboard.getTab("Launcher.add")
-				.addDouble(
-						"relative encoder",
-						() -> Units.rotationsToDegrees(launcherAngleOneMotor.getEncoder().getPosition()));
 		Shuffleboard.getTab("Launcher")
 				.addDouble(
 						"relative encoder (with offset)",

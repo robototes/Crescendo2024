@@ -14,15 +14,10 @@ public class SyncPivotRelativeEncoderCommand extends Command {
 
 	private int samples;
 
-	public SyncPivotRelativeEncoderCommand(
-			LauncherSubsystem launcherSubsystem, boolean ignorePrevOffset) {
+	public SyncPivotRelativeEncoderCommand(LauncherSubsystem launcherSubsystem) {
 		this.launcherSubsystem = launcherSubsystem;
 		filter = new MedianFilter(MAX_SAMPLES);
 		samples = 0;
-	}
-
-	public SyncPivotRelativeEncoderCommand(LauncherSubsystem launcherSubsystem) {
-		this(launcherSubsystem, false);
 	}
 
 	@Override
