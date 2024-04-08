@@ -479,7 +479,7 @@ public class AutoLogic {
 		return (INTAKE_ENABLED && LAUNCHER_ENABLED
 						? Commands.waitUntil(isReadyToLaunch())
 								.andThen(Commands.waitSeconds(FEEDER_DELAY))
-								.andThen(new FeederInCommand(s.intakeSubsystem))
+								.andThen(new FeederInCommand(s.intakeSubsystem).until(untilNoNote())
 								.andThen(Commands.waitSeconds(0.1))
 						: Commands.none())
 				.withName("Auto - FeedCommand");
