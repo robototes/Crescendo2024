@@ -437,6 +437,23 @@ public class DrivebaseSubsystem extends SubsystemBase {
 						this));
 	}
 
+	public Command debugDriveFullPower() {
+		return this.runEnd(
+						() -> {
+							for (SwerveModule module : swerveDrive.getModules()) {
+								module.getDriveMotor().set(1.0);
+								module.setAngle(0);
+							}
+						},
+						() -> {
+							for (SwerveModule module : swerveDrive.getModules()) {
+								module.getDriveMotor().set(0.0);
+								module.setAngle(0);
+							}
+						})
+				.withName("DriveFullPower");
+	}
+
 	public Command driveSysIdQuasistatic(SysIdRoutine.Direction direction) {
 		return getDriveSysIdRoutine().quasistatic(direction);
 	}

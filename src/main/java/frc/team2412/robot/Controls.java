@@ -270,10 +270,11 @@ public class Controls {
 		// 		.rightTrigger()
 		// 		.whileTrue(s.launcherSubsystem.flywheelSysIdDynamic(Direction.kReverse));
 		// switch these between angle and drive tests in code when tuning
-		driveController.x().whileTrue(s.drivebaseSubsystem.angleSysIdQuasistatic(Direction.kForward));
-		driveController.y().whileTrue(s.drivebaseSubsystem.angleSysIdQuasistatic(Direction.kReverse));
-		driveController.a().whileTrue(s.drivebaseSubsystem.angleSysIdDynamic(Direction.kForward));
-		driveController.b().whileTrue(s.drivebaseSubsystem.angleSysIdDynamic(Direction.kReverse));
+		driveController.x().whileTrue(s.drivebaseSubsystem.driveSysIdQuasistatic(Direction.kForward));
+		driveController.y().whileTrue(s.drivebaseSubsystem.driveSysIdQuasistatic(Direction.kReverse));
+		driveController.a().whileTrue(s.drivebaseSubsystem.driveSysIdDynamic(Direction.kForward));
+		driveController.b().whileTrue(s.drivebaseSubsystem.driveSysIdDynamic(Direction.kReverse));
+		driveController.back().whileTrue(s.drivebaseSubsystem.debugDriveFullPower());
 	}
 
 	public void vibrateDriveController(double vibration) {
