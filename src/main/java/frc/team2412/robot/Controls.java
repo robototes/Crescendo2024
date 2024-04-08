@@ -251,7 +251,7 @@ public class Controls {
 		// 				s.launcherSubsystem.runEnd(
 		// 						s.launcherSubsystem::launch, s.launcherSubsystem::stopLauncher));
 
-		driveController.b().onTrue(new InstantCommand(() -> s.launcherSubsystem.launch(4000)));
+		driveController.b().onTrue(new InstantCommand(() -> s.launcherSubsystem.launch(6500)));
 	}
 
 	private void bindSysIdControls() {
