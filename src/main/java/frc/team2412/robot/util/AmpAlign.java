@@ -53,8 +53,7 @@ public class AmpAlign {
 		return AutoBuilder.followPath(path);
 	}
 
-	public static Command ampPreset(
-			DrivebaseSubsystem drivebaseSubsystem) {
+	public static Command ampPreset(DrivebaseSubsystem drivebaseSubsystem) {
 		return new AlignCommand(drivebaseSubsystem);
 	}
 
@@ -62,8 +61,7 @@ public class AmpAlign {
 		private final DrivebaseSubsystem drivebaseSubsystem;
 		private Command ampCommand = null;
 
-		public AlignCommand(
-				DrivebaseSubsystem drivebaseSubsystem) {
+		public AlignCommand(DrivebaseSubsystem drivebaseSubsystem) {
 			this.drivebaseSubsystem = drivebaseSubsystem;
 			addRequirements(drivebaseSubsystem);
 		}
