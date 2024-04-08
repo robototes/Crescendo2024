@@ -62,6 +62,7 @@ public class AllInCommand extends Command {
 
 		if (controls != null) {
 			Commands.race(new RumbleCoDriveControllerCommand(controls), new WaitCommand(1)).schedule();
+			Commands.race(new RumbleDriveControllerCommand(controls), new WaitCommand(1)).schedule();
 		}
 
 		// rumbledIntakeFront = false;
