@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.team2412.robot.Controls;
 import frc.team2412.robot.Robot;
-import frc.team2412.robot.commands.intake.RumbleCommand;
+import frc.team2412.robot.commands.intake.RumbleCoDriveControllerCommand;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
 // this command can be used as a preset in controls, allowing the user to input a speed and angle
 // value when they keybind it multiple times.
@@ -39,6 +39,6 @@ public class SetAngleLaunchCommand extends Command {
 	public void end(boolean interrupted) {
 		Robot robot = Robot.getInstance();
 		Controls controls = robot.controls;
-		Commands.race(new RumbleCommand(controls), new WaitCommand(1)).schedule();
+		Commands.race(new RumbleCoDriveControllerCommand(controls), new WaitCommand(1)).schedule();
 	}
 }
