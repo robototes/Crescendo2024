@@ -408,7 +408,9 @@ public class TalonFXSwerve extends SwerveMotor {
 		cfg.refresh(configuration.CurrentLimits);
 		cfg.apply(
 				configuration.CurrentLimits.withStatorCurrentLimit(currentLimit)
-						.withStatorCurrentLimitEnable(true));
+						.withStatorCurrentLimitEnable(true)
+						.withSupplyCurrentLimit(80)
+						.withSupplyCurrentLimitEnable(true));
 	}
 
 	/**
