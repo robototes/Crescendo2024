@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.6,
-        "y": 4.79
+        "x": 2.551735285288752,
+        "y": 4.207264414528829
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.770693659609494,
-        "y": 5.1295050435105765
+        "x": 2.722428944898246,
+        "y": 4.546769458039406
       },
       "isLocked": false,
       "linkedName": "PodiumLaunch"
