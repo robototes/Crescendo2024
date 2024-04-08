@@ -430,8 +430,13 @@ public class LauncherSubsystem extends SubsystemBase {
 
 		Shuffleboard.getTab("Launcher").addBoolean("Ignoring Limits", () -> ignoreLimits);
 
-		Shuffleboard.getTab("Launcher").addBoolean("Angle Insane", () -> (relativeEncoderStartPosition.isPresent()
-				&& Math.abs(getAngle() - getAngleOneMotorAngle()) <= ENCODER_DIFFERENCE_TOLERANCE));
+		Shuffleboard.getTab("Launcher")
+				.addBoolean(
+						"Angle Insane",
+						() ->
+								(relativeEncoderStartPosition.isPresent()
+										&& Math.abs(getAngle() - getAngleOneMotorAngle())
+												<= ENCODER_DIFFERENCE_TOLERANCE));
 	}
 
 	public void updateDistanceEntry(double distance) {

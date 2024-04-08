@@ -368,10 +368,6 @@ public class IntakeSubsystem extends SubsystemBase {
 		return intakeMotorLeft.getEncoder().getVelocity() > 1.0;
 	}
 
-	public boolean isFrontIntakeRunning() {
-		return intakeMotorFront.getEncoder().getVelocity() > 1.0;
-	}
-
 	public boolean isRightIntakeRunning() {
 		return intakeMotorRight.getEncoder().getVelocity() > 1.0;
 	}
