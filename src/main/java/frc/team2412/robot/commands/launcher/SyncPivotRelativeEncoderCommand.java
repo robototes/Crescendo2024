@@ -6,7 +6,7 @@ import frc.team2412.robot.subsystems.LauncherSubsystem;
 
 public class SyncPivotRelativeEncoderCommand extends Command {
 
-	private int MAX_SAMPLES = 50; // 6 seconds, 50 per second
+	private int MAX_SAMPLES = 50; // 50 samples/second
 	private final double ANGLE_SPEED_TOLERANCE = 0.1;
 	private final MedianFilter filter;
 
@@ -14,15 +14,10 @@ public class SyncPivotRelativeEncoderCommand extends Command {
 
 	private int samples;
 
-	public SyncPivotRelativeEncoderCommand(
-			LauncherSubsystem launcherSubsystem, boolean ignorePrevOffset) {
+	public SyncPivotRelativeEncoderCommand(LauncherSubsystem launcherSubsystem) {
 		this.launcherSubsystem = launcherSubsystem;
 		filter = new MedianFilter(MAX_SAMPLES);
 		samples = 0;
-	}
-
-	public SyncPivotRelativeEncoderCommand(LauncherSubsystem launcherSubsystem) {
-		this(launcherSubsystem, false);
 	}
 
 	@Override

@@ -22,7 +22,7 @@ public class Hardware {
 
 	// intake [40 - 49]
 	public static final int INTAKE_MOTOR_FRONT = 40;
-	public static final int INTAKE_MOTOR_BACK = 42;
+	// public static final int INTAKE_MOTOR_BACK = 42;
 	public static final int INTAKE_MOTOR_LEFT = 41;
 	public static final int INTAKE_MOTOR_RIGHT = 43;
 
