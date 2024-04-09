@@ -51,7 +51,7 @@ public class LauncherSubsystem extends SubsystemBase {
 	private static final double OFFSET_SYNCING_TOLERANCE = 0.06;
 
 	// ANGLE VALUES
-	public static final int AMP_AIM_ANGLE = 285 + PIVOT_OFFSET;
+	public static final int AMP_AIM_ANGLE = 290 + PIVOT_OFFSET;
 	public static final int SUBWOOFER_AIM_ANGLE = 252 + PIVOT_OFFSET;
 	public static final int PODIUM_AIM_ANGLE = 238 + PIVOT_OFFSET;
 	public static final int TRAP_AIM_ANGLE = 317 + PIVOT_OFFSET;

@@ -19,7 +19,7 @@ import java.util.List;
 public class AmpAlign {
 	private static final Pose2d BLUE_AMP_POSES =
 			// amp on the blue side
-			new Pose2d(new Translation2d(1.82, 7.65), Rotation2d.fromDegrees(270));
+			new Pose2d(new Translation2d(1.71, 7.65), Rotation2d.fromDegrees(270));
 
 	private static final Pose2d RED_AMP_POSES =
 			// amp on the red side
