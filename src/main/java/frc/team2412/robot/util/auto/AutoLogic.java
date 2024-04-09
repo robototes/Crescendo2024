@@ -86,6 +86,7 @@ public class AutoLogic {
 					// presets
 					new AutoPath("Test Path Rotate", "5mForwardRotate180"),
 					new AutoPath("Test Path", "DiameterTest"),
+					new AutoPath("Master PID Test", "MasterPIDTest"),
 					new AutoPath("Tune Translational PID", "TuneTranslationalPID"),
 					new AutoPath("Tune Rotational PID", "TuneRotationalPID"),
 					new AutoPath("Stand Still", "PresetSourceSide1Score"),
