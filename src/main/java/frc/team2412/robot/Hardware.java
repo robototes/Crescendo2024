@@ -21,9 +21,9 @@ public class Hardware {
 	public static final int LAUNCHER_PIVOT_TWO_MOTOR_ID = 32;
 
 	// intake [40 - 49]
-	public static final int INTAKE_MOTOR_FRONT = 40;
-	public static final int INTAKE_MOTOR_BACK = 42;
-	public static final int INTAKE_MOTOR_LEFT = 41;
+	public static final int INTAKE_MOTOR_FRONT = 41;
+	// public static final int INTAKE_MOTOR_BACK = 42;
+	public static final int INTAKE_MOTOR_LEFT = 40;
 	public static final int INTAKE_MOTOR_RIGHT = 43;
 
 	public static final int INGEST_MOTOR = 44;

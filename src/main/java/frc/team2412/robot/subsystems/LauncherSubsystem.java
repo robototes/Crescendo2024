@@ -109,8 +109,6 @@ public class LauncherSubsystem extends SubsystemBase {
 
 	private GenericEntry launcherAngleSpeedEntry;
 
-	private GenericEntry launcherIsAtSpeed;
-
 	private GenericEntry launcherAngleManual;
 
 	private GenericEntry speakerDistanceEntry;
@@ -358,13 +356,6 @@ public class LauncherSubsystem extends SubsystemBase {
 						() ->
 								(launcherAngleOneMotor.getEncoder().getPosition() * 360
 										+ relativeEncoderStartPosition.orElse(0.0)));
-		launcherIsAtSpeed =
-				Shuffleboard.getTab("Match")
-						.add("flywheels at target speed", false)
-						.withSize(1, 1)
-						.withWidget(BuiltInWidgets.kBooleanBox)
-						.withPosition(0, 2)
-						.getEntry();
 		launcherAngleSpeedEntry =
 				Shuffleboard.getTab("Launcher")
 						.add("Launcher angle Speed", 0)
@@ -439,8 +430,13 @@ public class LauncherSubsystem extends SubsystemBase {
 
 		Shuffleboard.getTab("Launcher").addBoolean("Ignoring Limits", () -> ignoreLimits);
 
-		Shuffleboard.getTab("Launcher").addBoolean("Angle Insane", () -> (relativeEncoderStartPosition.isPresent()
-				&& Math.abs(getAngle() - getAngleOneMotorAngle()) <= ENCODER_DIFFERENCE_TOLERANCE));
+		Shuffleboard.getTab("Launcher")
+				.addBoolean(
+						"Angle Insane",
+						() ->
+								(relativeEncoderStartPosition.isPresent()
+										&& Math.abs(getAngle() - getAngleOneMotorAngle())
+												<= ENCODER_DIFFERENCE_TOLERANCE));
 	}
 
 	public void updateDistanceEntry(double distance) {
@@ -469,7 +465,6 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherAngleEntry.setDouble(getAngle());
 		launcherSpeedEntry.setDouble(getLauncherSpeed());
 		launcherAngleSpeedEntry.setDouble(getAngleSpeed());
-		launcherIsAtSpeed.setBoolean(isAtSpeed());
 		launcherAngleManual.setDouble(manualAngleSetpoint);
 		angleSetpointEntry.setDouble(angleSetpoint);
 		launcherFlywheelSetpointEntry.setDouble(rpmSetpoint);

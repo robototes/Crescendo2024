@@ -39,7 +39,7 @@ public class AllInCommand extends Command {
 			}
 
 			if (controls != null && !rumbledIndex) {
-				Commands.race(new RumbleCommand(controls), new WaitCommand(3)).schedule();
+				Commands.race(new RumbleCoDriveControllerCommand(controls), new WaitCommand(3)).schedule();
 				rumbledIndex = true;
 			}
 		}
@@ -56,8 +56,13 @@ public class AllInCommand extends Command {
 		intakeSubsystem.indexStop();
 		intakeSubsystem.feederStop();
 
+		if (interrupted) {
+			return;
+		}
+
 		if (controls != null) {
-			Commands.race(new RumbleCommand(controls), new WaitCommand(3)).schedule();
+			Commands.race(new RumbleCoDriveControllerCommand(controls), new WaitCommand(1)).schedule();
+			Commands.race(new RumbleDriveControllerCommand(controls), new WaitCommand(1)).schedule();
 		}
 
 		// rumbledIntakeFront = false;

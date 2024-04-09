@@ -260,11 +260,11 @@ public class AutoLogic {
 			gameObjects.addOption(String.valueOf(i), i);
 		}
 
-		tab.add("Starting Position", startPositionChooser).withPosition(5, 0).withSize(2, 1);
-		tab.add("Launch Type", isVision).withPosition(5, 1);
-		tab.add("Game Objects", gameObjects).withPosition(6, 1);
-		tab.add("Available Auto Variants", availableAutos).withPosition(5, 2).withSize(2, 1);
-		autoDelayEntry = tab.add("Auto Delay", 0).withPosition(5, 3).withSize(1, 1).getEntry();
+		tab.add("Starting Position", startPositionChooser).withPosition(4, 0).withSize(2, 1);
+		tab.add("Launch Type", isVision).withPosition(4, 1);
+		tab.add("Game Objects", gameObjects).withPosition(5, 1);
+		tab.add("Available Auto Variants", availableAutos).withPosition(4, 2).withSize(2, 1);
+		autoDelayEntry = tab.add("Auto Delay", 0).withPosition(4, 3).withSize(1, 1).getEntry();
 
 		isVision.onChange((dummyVar) -> AutoLogic.filterAutos(gameObjects.getSelected()));
 		startPositionChooser.onChange((dummyVar) -> AutoLogic.filterAutos(gameObjects.getSelected()));
@@ -479,10 +479,8 @@ public class AutoLogic {
 		return (INTAKE_ENABLED && LAUNCHER_ENABLED
 						? Commands.waitUntil(isReadyToLaunch())
 								.andThen(Commands.waitSeconds(FEEDER_DELAY))
-								.andThen(
-										new FeederInCommand(s.intakeSubsystem)
-												.until(untilFeederHasNoNote())
-												.andThen(Commands.waitSeconds(0.1)))
+								.andThen(new FeederInCommand(s.intakeSubsystem))
+								.andThen(Commands.waitSeconds(0.1))
 						: Commands.none())
 				.withName("Auto - FeedCommand");
 	}

@@ -4,10 +4,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.team2412.robot.Controls;
 import frc.team2412.robot.Controls.ControlConstants;
 
-public class RumbleCommand extends Command {
+public class RumbleCoDriveControllerCommand extends Command {
 	private final Controls controls;
 
-	public RumbleCommand(Controls controls) {
+	public RumbleCoDriveControllerCommand(Controls controls) {
 		this.controls = controls;
 	}
 
