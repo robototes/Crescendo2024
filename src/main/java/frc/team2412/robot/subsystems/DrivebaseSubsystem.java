@@ -32,6 +32,7 @@ import frc.team2412.robot.Subsystems.SubsystemConstants;
 import java.io.File;
 import java.util.EnumSet;
 import java.util.Map;
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 import swervelib.SwerveDrive;
@@ -91,6 +92,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 	private GenericEntry headingCorrectionEntry;
 	private GenericEntry translationSpeedEntry;
 	private GenericEntry rotationSpeedEntry;
+	private GenericEntry turboRotationMultiplierEntry;
 	private GenericEntry xWheelsEntry;
 	private GenericEntry flipTranslationEntry;
 
@@ -188,13 +190,14 @@ public class DrivebaseSubsystem extends SubsystemBase {
 	 * @param rotation Rotation2d value of robot rotation. CW is positive TODO: is this true?
 	 */
 	public Command driveJoystick(
-			DoubleSupplier forward, DoubleSupplier strafe, Supplier<Rotation2d> rotation) {
+			DoubleSupplier forward, DoubleSupplier strafe, Supplier<Rotation2d> rotation, BooleanSupplier turboRotation) {
 		return this.run(
 				() -> {
 					Rotation2d constrainedRotation =
 							Rotation2d.fromRotations(
 									SwerveMath.applyDeadband(rotation.get().getRotations(), true, JOYSTICK_DEADBAND)
 											* MAX_SPEED
+											* (turboRotation.getAsBoolean() ? turboRotationMultiplierEntry.getDouble(1.0) : 1)
 											* rotationSpeedEntry.getDouble(1.0)
 											* -1);
 					Translation2d constrainedTranslation =
@@ -321,6 +324,13 @@ public class DrivebaseSubsystem extends SubsystemBase {
 						.withWidget(BuiltInWidgets.kNumberSlider)
 						.withSize(2, 1)
 						.withProperties(Map.of("Min", 0.0))
+						.getEntry();
+		turboRotationMultiplierEntry =
+				drivebaseTab
+						.addPersistent("Turbo rotation multiplier", 1.0)
+						.withWidget(BuiltInWidgets.kNumberSlider)
+						.withSize(2, 1)
+						.withProperties(Map.of("Min", 0.5, "Max", 5.0))
 						.getEntry();
 		xWheelsEntry =
 				drivebaseTab

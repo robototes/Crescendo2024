@@ -154,7 +154,8 @@ public class Controls {
 						s.drivebaseSubsystem.driveJoystick(
 								driveController::getLeftY,
 								driveController::getLeftX,
-								() -> Rotation2d.fromRotations(driveController.getRightX())));
+								() -> Rotation2d.fromRotations(driveController.getRightX()),
+								driveController.rightTrigger()));
 		driveController.rightStick().onTrue(new InstantCommand(s.drivebaseSubsystem::toggleXWheels));
 		driveController
 				.start()
