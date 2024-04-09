@@ -17,6 +17,7 @@ public class PhysicalPropertiesJson {
 	public MotorConfigDouble conversionFactor = new MotorConfigDouble(0, 0);
 	/** The current limit in AMPs to apply to the motors. */
 	public MotorConfigInt statorLimit = new MotorConfigInt(40, 20);
+
 	public MotorConfigInt supplyLimit = new MotorConfigInt(40, 20);
 	/** The minimum number of seconds to take for the motor to go from 0 to full throttle. */
 	public MotorConfigDouble rampRate = new MotorConfigDouble(0.25, 0.25);

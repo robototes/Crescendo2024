@@ -65,7 +65,7 @@ public class AmpAlign {
 																.getTranslation()
 																.minus(ampPose.getTranslation())
 																.getNorm()
-														< 2)
+														< LAUNCHER_AMP_PRESET_DISTANCE)
 								.andThen(
 										new SetAngleAmpLaunchCommand(
 												launcherSubsystem,

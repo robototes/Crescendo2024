@@ -412,7 +412,14 @@ public class TalonFXSwerve extends SwerveMotor {
 						.withStatorCurrentLimitEnable(true)
 						.withSupplyCurrentLimit(supplyLimit)
 						.withSupplyCurrentLimitEnable(true));
-		System.out.println("Configured drivebase motor " + motor.getDeviceID() + " with stator limit of " + statorLimit + " amps and supply limit of " + supplyLimit + " amps.");
+		System.out.println(
+				"Configured drivebase motor "
+						+ motor.getDeviceID()
+						+ " with stator limit of "
+						+ statorLimit
+						+ " amps and supply limit of "
+						+ supplyLimit
+						+ " amps.");
 	}
 
 	/**
