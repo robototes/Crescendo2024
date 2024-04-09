@@ -25,15 +25,15 @@ public class IntakeSubsystem extends SubsystemBase {
 	public static final double INTAKE_REJECT_SPEED = -0.4;
 
 	public static final double INDEX_UPPER_IN_SPEED = 1.0;
-	public static final double INDEX_UPPER_REVERSE_SPEED = -0.3;
+	public static final double INDEX_UPPER_REVERSE_SPEED = -1.0;
 
 	public static final double INGEST_LOWER_IN_SPEED = 0.8;
-	public static final double INGEST_LOWER_REVERSE_SPEED = -0.3;
+	public static final double INGEST_LOWER_REVERSE_SPEED = -1.0;
 
 	public static final double FEEDER_SHOOT_SPEED = 1.0;
 
-	public static final double FEEDER_IN_SPEED = 0.65;
-	public static final double FEEDER_REVERSE_SPEED = -0.3;
+	public static final double FEEDER_IN_SPEED = 1.0;
+	public static final double FEEDER_REVERSE_SPEED = -1.0;
 
 	private static final boolean enableFrontAndSideIntakes = true;
 
@@ -127,8 +127,8 @@ public class IntakeSubsystem extends SubsystemBase {
 		intakeRightSensorDebouncer = new Debouncer(0.1, Debouncer.DebounceType.kBoth);
 		intakeLeftSensorDebouncer = new Debouncer(0.1, Debouncer.DebounceType.kBoth);
 
-		feederSensorDebouncer = new Debouncer(0.1, Debouncer.DebounceType.kBoth);
-		feederSensorIRDebouncer = new Debouncer(0.1, Debouncer.DebounceType.kBoth);
+		feederSensorDebouncer = new Debouncer(0.01, Debouncer.DebounceType.kBoth);
+		feederSensorIRDebouncer = new Debouncer(0.01, Debouncer.DebounceType.kBoth);
 
 		resetMotors();
 
@@ -166,7 +166,7 @@ public class IntakeSubsystem extends SubsystemBase {
 			configureMotor(intakeMotorRight, 25, true);
 		}
 
-		configureMotor(ingestMotor, false);
+		configureMotor(ingestMotor, true);
 		configureMotor(indexMotorUpper, 40, false);
 
 		configureMotor(feederMotor, 40, true);
@@ -365,15 +365,15 @@ public class IntakeSubsystem extends SubsystemBase {
 	}
 
 	public boolean isLeftIntakeRunning() {
-		return intakeMotorLeft.getEncoder().getVelocity() > 1.0;
+		return Math.abs(intakeMotorLeft.getEncoder().getVelocity()) > 1.0;
 	}
 
 	public boolean isRightIntakeRunning() {
-		return intakeMotorRight.getEncoder().getVelocity() > 1.0;
+		return Math.abs(intakeMotorRight.getEncoder().getVelocity()) > 1.0;
 	}
 
 	public boolean isIndexRunning() {
-		return indexMotorUpper.getEncoder().getVelocity() > 1.0;
+		return Math.abs(indexMotorUpper.getEncoder().getVelocity()) > 1.0;
 	}
 
 	// logging

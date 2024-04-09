@@ -360,12 +360,13 @@ public class TalonSRXSwerve extends SwerveMotor {
 	 * Set the current limit for the swerve drive motor, remember this may cause jumping if used in
 	 * conjunction with voltage compensation. This is useful to protect the motor from current spikes.
 	 *
-	 * @param currentLimit Current limit in AMPS at free speed.
+	 * @param statorLimit Current limit in AMPS at free speed.
+	 * @param supplyLimit
 	 */
 	@Override
-	public void setCurrentLimit(int currentLimit) {
-		configuration.continuousCurrentLimit = currentLimit;
-		configuration.peakCurrentLimit = currentLimit;
+	public void setCurrentLimit(int statorLimit, int supplyLimit) {
+		configuration.continuousCurrentLimit = statorLimit;
+		configuration.peakCurrentLimit = statorLimit;
 		configChanged = true;
 	}
 

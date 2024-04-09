@@ -40,8 +40,6 @@ import org.photonvision.targeting.PhotonPipelineResult;
  * <p>2D field poses are just the projection of the 3D pose onto the XY plane.
  */
 public class AprilTagsProcessor {
-	private static class FilterInfo {}
-
 	public static final Transform3d ROBOT_TO_CAM =
 			new Transform3d(
 					Units.inchesToMeters(27.0 / 2.0 - 0.94996),
@@ -51,7 +49,7 @@ public class AprilTagsProcessor {
 
 	// TODO Measure these
 	private static final Vector<N3> STANDARD_DEVS =
-			VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(30));
+			VecBuilder.fill(0.2, 0.2, Units.degreesToRadians(30));
 
 	private static final double MAX_POSE_AMBIGUITY = 0.1;
 
@@ -82,7 +80,6 @@ public class AprilTagsProcessor {
 	private final PhotonPoseEstimator photonPoseEstimator;
 	private final DrivebaseWrapper aprilTagsHelper;
 	private final FieldObject2d rawVisionFieldObject;
-	private final FieldObject2d adjustedFieldObject;
 
 	// These are always set with every pipeline result
 	private double lastRawTimestampSeconds = 0;
@@ -102,7 +99,6 @@ public class AprilTagsProcessor {
 	public AprilTagsProcessor(DrivebaseWrapper aprilTagsHelper) {
 		this.aprilTagsHelper = aprilTagsHelper;
 		rawVisionFieldObject = aprilTagsHelper.getField().getObject("RawVision");
-		adjustedFieldObject = aprilTagsHelper.getField().getObject("AdjustedVision");
 		var networkTables = NetworkTableInstance.getDefault();
 		// if (Robot.isSimulation()) {
 		// 	networkTables.stopServer();
@@ -160,11 +156,8 @@ public class AprilTagsProcessor {
 		if (latestPose.isPresent()) {
 			lastValidTimestampSeconds = latestPose.get().timestampSeconds;
 			lastFieldPose = latestPose.get().estimatedPose.toPose2d();
-			var oldPose = aprilTagsHelper.getEstimatedPosition();
-			var adjustedPose = new Pose2d(lastFieldPose.getTranslation(), oldPose.getRotation());
 			rawVisionFieldObject.setPose(lastFieldPose);
-			adjustedFieldObject.setPose(adjustedPose);
-			aprilTagsHelper.addVisionMeasurement(adjustedPose, lastValidTimestampSeconds, STANDARD_DEVS);
+			aprilTagsHelper.addVisionMeasurement(lastFieldPose, lastValidTimestampSeconds, STANDARD_DEVS);
 			var estimatedPose = aprilTagsHelper.getEstimatedPosition();
 			aprilTagsHelper.getField().setRobotPose(estimatedPose);
 			photonPoseEstimator.setLastPose(estimatedPose);

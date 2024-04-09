@@ -78,8 +78,12 @@ public class SwerveModule {
 		// Configure voltage comp, current limit, and ramp rate.
 		angleMotor.setVoltageCompensation(configuration.physicalCharacteristics.optimalVoltage);
 		driveMotor.setVoltageCompensation(configuration.physicalCharacteristics.optimalVoltage);
-		angleMotor.setCurrentLimit(configuration.physicalCharacteristics.angleMotorCurrentLimit);
-		driveMotor.setCurrentLimit(configuration.physicalCharacteristics.driveMotorCurrentLimit);
+		angleMotor.setCurrentLimit(
+				configuration.physicalCharacteristics.angleMotorStatorLimit,
+				configuration.physicalCharacteristics.angleMotorSupplyLimit);
+		driveMotor.setCurrentLimit(
+				configuration.physicalCharacteristics.driveMotorStatorLimit,
+				configuration.physicalCharacteristics.driveMotorSupplyLimit);
 		angleMotor.setLoopRampRate(configuration.physicalCharacteristics.angleMotorRampRate);
 		driveMotor.setLoopRampRate(configuration.physicalCharacteristics.driveMotorRampRate);
 
