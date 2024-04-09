@@ -34,15 +34,20 @@ import java.util.Optional;
 public class LauncherSubsystem extends SubsystemBase {
 	// CONSTANTS
 
+	private static final boolean USE_THROUGHBORE = true;
+
 	// HARDWARE
 	private static final double PIVOT_GEARING_RATIO = 1.0 / 180.0;
+	private static final double PIVOT_TO_ENCODER_GEARING_RATIO = 1.0 / 2.0;
 	private static final float PIVOT_SOFTSTOP_FORWARD = 0.93f;
 	private static final float PIVOT_SOFTSTOP_BACKWARD = 0.635f;
+	private static final float PIVOT_SOFTSTOP_FORWARD_THROUGHBORE = 0.93f;
+	private static final float PIVOT_SOFTSTOP_BACKWARD_THROUGHBORE = 0.38f;
 	private static final float PIVOT_DISABLE_OFFSET = 0.04f;
 	private static final int PIVOT_OFFSET = 36;
 
 	// offset stuff
-	private static final double ENCODER_DIFFERENCE_TOLERANCE = 0.01;
+	private static final double ENCODER_DIFFERENCE_TOLERANCE = 15;
 	private static final double OFFSET_SYNCING_TOLERANCE = 0.06;
 
 	// ANGLE VALUES
@@ -78,7 +83,9 @@ public class LauncherSubsystem extends SubsystemBase {
 	private final RelativeEncoder launcherTopEncoder;
 	private final RelativeEncoder launcherBottomEncoder;
 	private final SparkAbsoluteEncoder launcherAngleEncoder;
+	private final SparkAbsoluteEncoder launcherAngleThroughboreEncoder;
 	private final SparkPIDController launcherAngleOnePIDController;
+	private final SparkPIDController launcherAngleTwoPIDController;
 	// private final SparkPIDController launcherAngleTwoPIDController;
 	private final ArmFeedforward launcherPivotFF = new ArmFeedforward(0.40434, 0.096771, 0.0056403);
 	// arm FF values:
@@ -119,6 +126,8 @@ public class LauncherSubsystem extends SubsystemBase {
 
 	private GenericEntry launcherFlywheelSetpointEntry;
 
+	private GenericEntry launcherDisabledEntry;
+
 	// Constructors
 	public LauncherSubsystem() {
 
@@ -134,6 +143,7 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherTopEncoder = launcherTopMotor.getEncoder();
 		launcherBottomEncoder = launcherBottomMotor.getEncoder();
 		launcherAngleEncoder = launcherAngleOneMotor.getAbsoluteEncoder(Type.kDutyCycle);
+		launcherAngleThroughboreEncoder = launcherAngleTwoMotor.getAbsoluteEncoder(Type.kDutyCycle);
 		manualAngleSetpoint = launcherAngleEncoder.getPosition();
 
 		// PID controllers
@@ -144,8 +154,8 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherBottomPIDController.setFeedbackDevice(launcherBottomEncoder);
 		launcherAngleOnePIDController = launcherAngleOneMotor.getPIDController();
 		launcherAngleOnePIDController.setFeedbackDevice(launcherAngleEncoder);
-		// launcherAngleTwoPIDController = launcherAngleTwoMotor.getPIDController();
-		// launcherAngleTwoPIDController.setFeedbackDevice(launcherAngleEncoder);
+		launcherAngleTwoPIDController = launcherAngleTwoMotor.getPIDController();
+		launcherAngleTwoPIDController.setFeedbackDevice(launcherAngleThroughboreEncoder);
 
 		relativeEncoderStartPosition = Optional.empty();
 
@@ -173,20 +183,38 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherAngleOneMotor.setSmartCurrentLimit(100);
 		launcherAngleTwoMotor.setSmartCurrentLimit(100);
 
-		launcherAngleOneMotor.setSoftLimit(
-				CANSparkBase.SoftLimitDirection.kForward, PIVOT_SOFTSTOP_FORWARD);
-		launcherAngleOneMotor.setSoftLimit(
-				CANSparkBase.SoftLimitDirection.kReverse, PIVOT_SOFTSTOP_BACKWARD);
-		launcherAngleOneMotor.enableSoftLimit(CANSparkBase.SoftLimitDirection.kForward, true);
-		launcherAngleOneMotor.enableSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, true);
+		if (!USE_THROUGHBORE) {
+			launcherAngleOneMotor.setSoftLimit(
+					CANSparkBase.SoftLimitDirection.kForward, PIVOT_SOFTSTOP_FORWARD);
+			launcherAngleOneMotor.setSoftLimit(
+					CANSparkBase.SoftLimitDirection.kReverse, PIVOT_SOFTSTOP_BACKWARD);
+			launcherAngleOneMotor.enableSoftLimit(CANSparkBase.SoftLimitDirection.kForward, true);
+			launcherAngleOneMotor.enableSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, true);
 
-		launcherAngleTwoMotor.follow(launcherAngleOneMotor, true);
+			launcherAngleTwoMotor.follow(launcherAngleOneMotor, true);
+
+			launcherAngleOnePIDController.setP(5.2);
+			launcherAngleOnePIDController.setI(0);
+			launcherAngleOnePIDController.setD(0.066248);
+			launcherAngleOnePIDController.setOutputRange(-ANGLE_MAX_SPEED, ANGLE_MAX_SPEED);
+		} else {
+			launcherAngleTwoMotor.setSoftLimit(
+					CANSparkBase.SoftLimitDirection.kForward, PIVOT_SOFTSTOP_FORWARD_THROUGHBORE);
+			launcherAngleTwoMotor.setSoftLimit(
+					CANSparkBase.SoftLimitDirection.kReverse, PIVOT_SOFTSTOP_BACKWARD_THROUGHBORE);
+			launcherAngleTwoMotor.enableSoftLimit(CANSparkBase.SoftLimitDirection.kForward, true);
+			launcherAngleTwoMotor.enableSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, true);
+
+			launcherAngleTwoMotor.setInverted(true);
+			launcherAngleOneMotor.follow(launcherAngleTwoMotor, true);
+
+			launcherAngleTwoPIDController.setP(5.2);
+			launcherAngleTwoPIDController.setI(0);
+			launcherAngleTwoPIDController.setD(0.066248);
+			launcherAngleTwoPIDController.setOutputRange(-ANGLE_MAX_SPEED, ANGLE_MAX_SPEED);
+		}
 
 		// PID
-		launcherAngleOnePIDController.setP(5.2);
-		launcherAngleOnePIDController.setI(0);
-		launcherAngleOnePIDController.setD(0.066248);
-		launcherAngleOnePIDController.setOutputRange(-ANGLE_MAX_SPEED, ANGLE_MAX_SPEED);
 		launcherTopPIDController.setP(0.002); // 7.7633E-05);
 		launcherTopPIDController.setI(0);
 		launcherTopPIDController.setD(0.001);
@@ -240,14 +268,27 @@ public class LauncherSubsystem extends SubsystemBase {
 	public double getLauncherSpeed() {
 		return launcherTopEncoder.getVelocity();
 	}
+
+	public double convertEncoderRotationsToPivotRotations(double encoderRotations) {
+		return 1 - PIVOT_TO_ENCODER_GEARING_RATIO * (1 - encoderRotations);
+	}
+
+	public double convertPivotRotationsToEncoderRotations(double pivotRotations) {
+		return 1 - (1 - pivotRotations) / PIVOT_TO_ENCODER_GEARING_RATIO;
+	}
+
 	// returns the degrees of the angle of the launcher
 	public double getAngle() {
 		// get position returns a double in the form of rotations
-		return Units.rotationsToDegrees(launcherAngleEncoder.getPosition());
+		if (!USE_THROUGHBORE) {
+			return Units.rotationsToDegrees(launcherAngleEncoder.getPosition());
+		}
+		return Units.rotationsToDegrees(
+				convertEncoderRotationsToPivotRotations(launcherAngleThroughboreEncoder.getPosition()));
 	}
 
 	/**
-	 * Sets the launcher angle, taking the offset into account.
+	 * s Sets the launcher angle, taking the offset into account.
 	 *
 	 * @param launcherAngle Launcher angle. PIVOT_OFFSET will be added to this.
 	 */
@@ -261,18 +302,26 @@ public class LauncherSubsystem extends SubsystemBase {
 		} else {
 			angleSetpoint = launcherAngle;
 		}
-		launcherAngleOnePIDController.setReference(
-				Units.degreesToRotations(angleSetpoint),
-				ControlType.kPosition,
-				0,
-				launcherPivotFF.calculate(Units.degreesToRadians(launcherAngle - FF_PIVOT_OFFSET), 0));
+		if (!USE_THROUGHBORE) {
+			launcherAngleOnePIDController.setReference(
+					Units.degreesToRotations(angleSetpoint),
+					ControlType.kPosition,
+					0,
+					launcherPivotFF.calculate(Units.degreesToRadians(launcherAngle - FF_PIVOT_OFFSET), 0));
+		} else {
+			launcherAngleTwoPIDController.setReference(
+					convertPivotRotationsToEncoderRotations(Units.degreesToRotations(angleSetpoint)),
+					ControlType.kPosition,
+					0,
+					launcherPivotFF.calculate(Units.degreesToRadians(launcherAngle - FF_PIVOT_OFFSET), 0));
+		}
 		manualAngleSetpoint = Units.degreesToRotations(launcherAngle);
 		// launcherAngleTwoPIDController.setReference(
 		//		Units.degreesToRotations(angleSetpoint), ControlType.kPosition);
 	}
 
 	public boolean isAtAngle(double tolerance) {
-		return MathUtil.isNear(angleSetpoint, launcherAngleEncoder.getPosition(), tolerance);
+		return MathUtil.isNear(angleSetpoint, getAngle(), tolerance);
 	}
 
 	public boolean isAtAngle() {
@@ -298,7 +347,11 @@ public class LauncherSubsystem extends SubsystemBase {
 	public void setAngleManual(double joystickInput, boolean powerControl, boolean ignoreLimits) {
 		this.ignoreLimits = ignoreLimits;
 		if (powerControl || ignoreLimits) {
-			launcherAngleOneMotor.set(ignoreLimits ? joystickInput * 0.3 : joystickInput);
+			if (!USE_THROUGHBORE) {
+				launcherAngleOneMotor.set(ignoreLimits ? joystickInput * 0.3 : joystickInput);
+			} else {
+				launcherAngleTwoMotor.set(ignoreLimits ? joystickInput * 0.3 : joystickInput);
+			}
 			manualAngleSetpoint =
 					MathUtil.clamp(
 							Units.degreesToRotations(getAngle()),
@@ -315,22 +368,39 @@ public class LauncherSubsystem extends SubsystemBase {
 
 		if (Units.degreesToRotations(getAngle()) > PIVOT_SOFTSTOP_BACKWARD
 				&& Units.degreesToRotations(getAngle()) < PIVOT_SOFTSTOP_FORWARD) {
-			launcherAngleOnePIDController.setReference(
-					manualAngleSetpoint,
-					ControlType.kPosition,
-					0,
-					launcherPivotFF.calculate(
-							Units.degreesToRadians(
-									Units.rotationsToDegrees(manualAngleSetpoint) - FF_PIVOT_OFFSET),
-							0));
+			if (!USE_THROUGHBORE) {
+				launcherAngleOnePIDController.setReference(
+						manualAngleSetpoint,
+						ControlType.kPosition,
+						0,
+						launcherPivotFF.calculate(
+								Units.degreesToRadians(
+										Units.rotationsToDegrees(manualAngleSetpoint) - FF_PIVOT_OFFSET),
+								0));
+			} else {
+				launcherAngleTwoPIDController.setReference(
+						convertPivotRotationsToEncoderRotations(manualAngleSetpoint),
+						ControlType.kPosition,
+						0,
+						launcherPivotFF.calculate(
+								Units.degreesToRadians(
+										Units.rotationsToDegrees(manualAngleSetpoint) - FF_PIVOT_OFFSET),
+								0));
+			}
 		}
 	}
 
 	private void initShuffleboard() {
 		if (Robot.isDebugMode()) {
-			Shuffleboard.getTab("Launcher")
-					.add(new SparkPIDWidget(launcherAngleOnePIDController, "launcherAnglePID"))
-					.withPosition(2, 0);
+			if (!USE_THROUGHBORE) {
+				Shuffleboard.getTab("Launcher")
+						.add(new SparkPIDWidget(launcherAngleOnePIDController, "launcherAnglePID"))
+						.withPosition(2, 0);
+			} else {
+				Shuffleboard.getTab("Launcher")
+						.add(new SparkPIDWidget(launcherAngleTwoPIDController, "launcherAngleThroughborePID"))
+						.withPosition(2, 0);
+			}
 			Shuffleboard.getTab("Launcher")
 					.add(new SparkPIDWidget(launcherTopPIDController, "launcherTopPID"))
 					.withPosition(0, 0);
@@ -386,8 +456,7 @@ public class LauncherSubsystem extends SubsystemBase {
 						.withPosition(5, 0)
 						.getEntry();
 
-		setLauncherAngleEntry =
-				Shuffleboard.getTab("Launcher").add("Launcher Angle Setpoint", getAngle()).getEntry();
+		Shuffleboard.getTab("Launcher").addDouble("Launcher Angle Setpoint", () -> manualAngleSetpoint);
 
 		launcherAngleManual =
 				Shuffleboard.getTab("Launcher")
@@ -430,13 +499,7 @@ public class LauncherSubsystem extends SubsystemBase {
 
 		Shuffleboard.getTab("Launcher").addBoolean("Ignoring Limits", () -> ignoreLimits);
 
-		Shuffleboard.getTab("Launcher")
-				.addBoolean(
-						"Angle Insane",
-						() ->
-								(relativeEncoderStartPosition.isPresent()
-										&& Math.abs(getAngle() - getAngleOneMotorAngle())
-												<= ENCODER_DIFFERENCE_TOLERANCE));
+		launcherDisabledEntry = Shuffleboard.getTab("Launcher").add("Angle Insane", false).getEntry();
 	}
 
 	public void updateDistanceEntry(double distance) {
@@ -468,17 +531,20 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherAngleManual.setDouble(manualAngleSetpoint);
 		angleSetpointEntry.setDouble(angleSetpoint);
 		launcherFlywheelSetpointEntry.setDouble(rpmSetpoint);
+		launcherDisabledEntry.setBoolean(false);
 
 		// PIVOT ENCODER SANITY CHECKS
 		// compares the relative encoder angle vs the absolute encoder angle
 		if (relativeEncoderStartPosition.isPresent()
-				&& Math.abs(getAngle() - getAngleOneMotorAngle()) <= ENCODER_DIFFERENCE_TOLERANCE) {
+				&& Math.abs(getAngle() - getAngleOneMotorAngle()) >= ENCODER_DIFFERENCE_TOLERANCE) {
 			if (!ignoreLimits) {
 				launcherAngleOneMotor.disable();
+				launcherAngleTwoMotor.disable();
+				launcherDisabledEntry.setBoolean(true);
 			}
 			DriverStation.reportError(
 					"Pivot encoder deviated too far from motor encoder angle ... .. Reported pivot angle of "
-							+ launcherAngleEncoder
+							+ getAngle()
 							+ " and motor angle of "
 							+ getAngleOneMotorAngle()
 							+ ". Is overidden: "
@@ -486,11 +552,16 @@ public class LauncherSubsystem extends SubsystemBase {
 					false);
 		}
 
-		//
-		if (launcherAngleEncoder.getPosition() >= PIVOT_SOFTSTOP_FORWARD + PIVOT_DISABLE_OFFSET
-				|| launcherAngleEncoder.getPosition() <= PIVOT_SOFTSTOP_BACKWARD - PIVOT_DISABLE_OFFSET) {
+		if (launcherAngleEncoder.getPosition()
+						>= (USE_THROUGHBORE ? PIVOT_SOFTSTOP_FORWARD_THROUGHBORE : PIVOT_SOFTSTOP_FORWARD)
+								+ PIVOT_DISABLE_OFFSET
+				|| launcherAngleEncoder.getPosition()
+						<= (USE_THROUGHBORE ? PIVOT_SOFTSTOP_BACKWARD_THROUGHBORE : PIVOT_SOFTSTOP_BACKWARD)
+								- PIVOT_DISABLE_OFFSET) {
 			if (!ignoreLimits) {
 				launcherAngleOneMotor.disable();
+				launcherAngleTwoMotor.disable();
+				launcherDisabledEntry.setBoolean(true);
 			}
 			DriverStation.reportError(
 					"Launcher encoder angle is insane!!!! Reports angle of "
