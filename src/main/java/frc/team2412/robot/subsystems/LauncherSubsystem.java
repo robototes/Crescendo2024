@@ -34,7 +34,7 @@ import java.util.Optional;
 public class LauncherSubsystem extends SubsystemBase {
 	// CONSTANTS
 
-	private static final boolean USE_THROUGHBORE = true;
+	public static final boolean USE_THROUGHBORE = true;
 
 	// HARDWARE
 	private static final double PIVOT_GEARING_RATIO = 1.0 / 180.0;
@@ -44,7 +44,7 @@ public class LauncherSubsystem extends SubsystemBase {
 	private static final float PIVOT_SOFTSTOP_FORWARD_THROUGHBORE = 0.93f;
 	private static final float PIVOT_SOFTSTOP_BACKWARD_THROUGHBORE = 0.38f;
 	private static final float PIVOT_DISABLE_OFFSET = 0.04f;
-	private static final int PIVOT_OFFSET = 36;
+	private static final int PIVOT_OFFSET = USE_THROUGHBORE ? 40 : 36;
 
 	// offset stuff
 	private static final double ENCODER_DIFFERENCE_TOLERANCE = 15;
@@ -521,6 +521,10 @@ public class LauncherSubsystem extends SubsystemBase {
 				|| Math.abs(relativeEncoderStartPosition.orElse(0.0) + offset) > OFFSET_SYNCING_TOLERANCE) {
 			relativeEncoderStartPosition = Optional.of(offset);
 		}
+	}
+
+	public void resetManualAngleSetpoint() {
+		manualAngleSetpoint = Units.degreesToRotations(getAngle());
 	}
 
 	@Override

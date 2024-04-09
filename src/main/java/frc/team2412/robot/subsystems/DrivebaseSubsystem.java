@@ -190,14 +190,19 @@ public class DrivebaseSubsystem extends SubsystemBase {
 	 * @param rotation Rotation2d value of robot rotation. CW is positive TODO: is this true?
 	 */
 	public Command driveJoystick(
-			DoubleSupplier forward, DoubleSupplier strafe, Supplier<Rotation2d> rotation, BooleanSupplier turboRotation) {
+			DoubleSupplier forward,
+			DoubleSupplier strafe,
+			Supplier<Rotation2d> rotation,
+			BooleanSupplier turboRotation) {
 		return this.run(
 				() -> {
 					Rotation2d constrainedRotation =
 							Rotation2d.fromRotations(
 									SwerveMath.applyDeadband(rotation.get().getRotations(), true, JOYSTICK_DEADBAND)
 											* MAX_SPEED
-											* (turboRotation.getAsBoolean() ? turboRotationMultiplierEntry.getDouble(1.0) : 1)
+											* (turboRotation.getAsBoolean()
+													? turboRotationMultiplierEntry.getDouble(1.0)
+													: 1)
 											* rotationSpeedEntry.getDouble(1.0)
 											* -1);
 					Translation2d constrainedTranslation =
@@ -249,6 +254,10 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
 	public ChassisSpeeds getRobotSpeeds() {
 		return swerveDrive.getRobotVelocity();
+	}
+
+	public ChassisSpeeds getFieldSpeeds() {
+		return swerveDrive.getFieldVelocity();
 	}
 
 	/** Set the robot's pose. TODO: does this change yaw too? does this affect field oriented? */

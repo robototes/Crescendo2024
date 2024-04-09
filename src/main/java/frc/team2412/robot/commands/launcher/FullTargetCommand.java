@@ -23,7 +23,11 @@ public class FullTargetCommand extends Command {
 	private static final InterpolatingTreeMap<Double, LauncherDataPoint> LAUNCHER_DATA =
 			LauncherDataLoader.fromCSV(
 					FileSystems.getDefault()
-							.getPath(Filesystem.getDeployDirectory().getPath(), "launcher_data.csv"));
+							.getPath(
+									Filesystem.getDeployDirectory().getPath(),
+									LauncherSubsystem.USE_THROUGHBORE
+											? "launcher_data_throughbore.csv"
+											: "launcher_data_lamprey.csv"));
 	private static final double YAW_TARGET_VIBRATION_TOLERANCE = 10; // degrees
 	private Translation2d SPEAKER_POSITION;
 
@@ -59,7 +63,13 @@ public class FullTargetCommand extends Command {
 
 	@Override
 	public void execute() {
-		Translation2d robotPosition = drivebaseSubsystem.getPose().getTranslation();
+		// look ahead half a second into the future
+		var fieldSpeed = drivebaseSubsystem.getFieldSpeeds().times(0.5);
+		Translation2d robotPosition =
+				drivebaseSubsystem
+						.getPose()
+						.getTranslation()
+						.plus(new Translation2d(fieldSpeed.vxMetersPerSecond, fieldSpeed.vyMetersPerSecond));
 		Translation2d robotToSpeaker = SPEAKER_POSITION.minus(robotPosition);
 		yawTarget = robotToSpeaker.getAngle();
 		double distance = robotToSpeaker.getNorm();

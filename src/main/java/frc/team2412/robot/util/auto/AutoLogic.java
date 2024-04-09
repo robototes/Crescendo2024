@@ -434,6 +434,7 @@ public class AutoLogic {
 										Commands.either(
 												new FullTargetCommand(s.launcherSubsystem, s.drivebaseSubsystem, controls)
 														.until(isReadyToLaunch())
+														.andThen(Commands.waitUntil(hasNote()))
 														.andThen(new WaitCommand(FEEDER_DELAY))
 														.andThen(
 																new FeederInCommand(s.intakeSubsystem)
