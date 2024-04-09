@@ -6,7 +6,8 @@ import swervelib.parser.json.MotorConfigDouble;
 public class SwerveModulePhysicalCharacteristics {
 
 	/** Current limits for the Swerve Module. */
-	public final int driveMotorCurrentLimit, angleMotorCurrentLimit;
+	public final int driveMotorStatorLimit, angleMotorStatorLimit;
+	public final int driveMotorSupplyLimit, angleMotorSupplyLimit;
 	/** The time it takes for the motor to go from 0 to full throttle in seconds. */
 	public final double driveMotorRampRate, angleMotorRampRate;
 	/** Wheel grip tape coefficient of friction on carpet, as described by the vendor. */
@@ -40,8 +41,10 @@ public class SwerveModulePhysicalCharacteristics {
 			MotorConfigDouble conversionFactors,
 			double wheelGripCoefficientOfFriction,
 			double optimalVoltage,
-			int driveMotorCurrentLimit,
-			int angleMotorCurrentLimit,
+			int driveMotorStatorLimit,
+			int angleMotorStatorLimit,
+			int driveMotorSupplyLimit,
+			int angleMotorSupplyLimit,
 			double driveMotorRampRate,
 			double angleMotorRampRate) {
 		this.wheelGripCoefficientOfFriction = wheelGripCoefficientOfFriction;
@@ -55,8 +58,10 @@ public class SwerveModulePhysicalCharacteristics {
 			}
 		}
 
-		this.driveMotorCurrentLimit = driveMotorCurrentLimit;
-		this.angleMotorCurrentLimit = angleMotorCurrentLimit;
+		this.driveMotorStatorLimit = driveMotorStatorLimit;
+		this.angleMotorStatorLimit = angleMotorStatorLimit;
+		this.driveMotorSupplyLimit = driveMotorSupplyLimit;
+		this.angleMotorSupplyLimit = angleMotorSupplyLimit;
 		this.driveMotorRampRate = driveMotorRampRate;
 		this.angleMotorRampRate = angleMotorRampRate;
 	}
@@ -76,6 +81,6 @@ public class SwerveModulePhysicalCharacteristics {
 	 */
 	public SwerveModulePhysicalCharacteristics(
 			MotorConfigDouble conversionFactors, double driveMotorRampRate, double angleMotorRampRate) {
-		this(conversionFactors, 1.19, 12, 40, 20, driveMotorRampRate, angleMotorRampRate);
+		this(conversionFactors, 1.19, 12, 40, 20, 40, 20, driveMotorRampRate, angleMotorRampRate);
 	}
 }
