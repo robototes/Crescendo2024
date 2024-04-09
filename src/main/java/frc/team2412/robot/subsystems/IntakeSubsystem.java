@@ -166,7 +166,7 @@ public class IntakeSubsystem extends SubsystemBase {
 			configureMotor(intakeMotorRight, 25, true);
 		}
 
-		configureMotor(ingestMotor, false);
+		configureMotor(ingestMotor, true);
 		configureMotor(indexMotorUpper, 40, false);
 
 		configureMotor(feederMotor, 40, true);
@@ -365,15 +365,15 @@ public class IntakeSubsystem extends SubsystemBase {
 	}
 
 	public boolean isLeftIntakeRunning() {
-		return intakeMotorLeft.getEncoder().getVelocity() > 1.0;
+		return Math.abs(intakeMotorLeft.getEncoder().getVelocity()) > 1.0;
 	}
 
 	public boolean isRightIntakeRunning() {
-		return intakeMotorRight.getEncoder().getVelocity() > 1.0;
+		return Math.abs(intakeMotorRight.getEncoder().getVelocity()) > 1.0;
 	}
 
 	public boolean isIndexRunning() {
-		return indexMotorUpper.getEncoder().getVelocity() > 1.0;
+		return Math.abs(indexMotorUpper.getEncoder().getVelocity()) > 1.0;
 	}
 
 	// logging
