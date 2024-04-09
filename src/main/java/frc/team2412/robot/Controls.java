@@ -30,7 +30,6 @@ import frc.team2412.robot.commands.launcher.SetAngleLaunchCommand;
 import frc.team2412.robot.commands.launcher.SetPivotCommand;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
 import frc.team2412.robot.util.AmpAlign;
-import frc.team2412.robot.util.TrapAlign;
 
 public class Controls {
 	public static class ControlConstants {
@@ -231,7 +230,7 @@ public class Controls {
 		// 		TrapAlign.trapPreset(s.drivebaseSubsystem, s.launcherSubsystem));
 		launcherAmpAlignPresetButton.onTrue(
 				Commands.either(
-						AmpAlign.ampPreset(s.drivebaseSubsystem),
+						AmpAlign.ampPreset(s.drivebaseSubsystem, s.launcherSubsystem),
 						Commands.none(),
 						() -> s.drivebaseSubsystem.getPose().getY() > 5.0));
 
