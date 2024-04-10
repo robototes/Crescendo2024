@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.3644632694670795,
-        "y": 6.924282677394184
+        "x": 1.4057878828008366,
+        "y": 6.876162812154685
       },
       "isLocked": false,
       "linkedName": "TopSpeaker"
@@ -31,12 +31,17 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.4,
-      "rotationDegrees": -178.6167416994117,
-      "rotateFast": false
+      "rotationDegrees": -172.45241554385072,
+      "rotateFast": true
     },
     {
       "waypointRelativePos": 0.1,
       "rotationDegrees": -126.93135629519831,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 0.25,
+      "rotationDegrees": -148.60777368547065,
       "rotateFast": false
     }
   ],
@@ -46,8 +51,8 @@
       "minWaypointRelativePos": 0.0,
       "maxWaypointRelativePos": 0.3,
       "constraints": {
-        "maxVelocity": 2.0,
-        "maxAcceleration": 3.0,
+        "maxVelocity": 3.0,
+        "maxAcceleration": 2.4,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0
       }

@@ -416,18 +416,6 @@ public class AutoLogic {
 	}
 
 	public static Command visionLaunch() {
-
-		// return (LAUNCHER_ENABLED && INTAKE_ENABLED && APRILTAGS_ENABLED
-		// 		? stopFeeder()
-		// 				.andThen(
-		// 						Commands.either(Commands.none(), index(), s.intakeSubsystem::feederSensorHasNote))
-		// 				.andThen(
-		// 						new FullTargetCommand(s.launcherSubsystem, s.drivebaseSubsystem, controls)
-		// 								.until(isReadyToLaunch())
-		// 								.andThen(new WaitCommand(FEEDER_DELAY))
-		// 								.andThen(new FeederInCommand(s.intakeSubsystem).until(untilNoNote())))
-		// 		: Commands.none());
-
 		return (LAUNCHER_ENABLED && INTAKE_ENABLED && APRILTAGS_ENABLED
 						? stopFeeder()
 								.andThen(
@@ -460,7 +448,7 @@ public class AutoLogic {
 
 	public static Command setAngleRetracted() {
 		return (LAUNCHER_ENABLED && INTAKE_ENABLED
-						? new SetAngleLaunchCommand(s.launcherSubsystem, 0, LauncherSubsystem.RETRACTED_ANGLE)
+						? new SetAngleLaunchCommand(s.launcherSubsystem, 0, 262)
 						: Commands.none())
 				.withName("Auto - SetPivotRetractedCommand");
 	}
@@ -480,9 +468,10 @@ public class AutoLogic {
 	public static Command feederIn() {
 		return (INTAKE_ENABLED && LAUNCHER_ENABLED
 						? Commands.waitUntil(isReadyToLaunch())
-								.andThen(Commands.waitSeconds(FEEDER_DELAY))
-								.andThen(new FeederInCommand(s.intakeSubsystem))
-								.andThen(Commands.waitSeconds(0.1))
+								.andThen(Commands.waitUntil(hasNote()))
+								.andThen(new WaitCommand(FEEDER_DELAY))
+								.andThen(new FeederInCommand(s.intakeSubsystem).until(untilFeederHasNoNote()))
+								.andThen(new WaitCommand(0.4))
 						: Commands.none())
 				.withName("Auto - FeedCommand");
 	}

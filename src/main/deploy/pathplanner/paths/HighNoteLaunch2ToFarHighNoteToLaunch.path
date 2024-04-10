@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.459228700001152,
-        "y": 7.268235228706192
+        "x": 6.48105091081977,
+        "y": 7.320540680967402
       },
       "isLocked": false,
       "linkedName": "LaunchHighNote"
@@ -20,12 +20,12 @@
         "y": 7.395762539272827
       },
       "prevControl": {
-        "x": 8.901740880404835,
-        "y": 7.4608705342766815
+        "x": 9.311036285890234,
+        "y": 7.390705607622041
       },
       "nextControl": {
-        "x": 7.628402463912032,
-        "y": 7.350576110310523
+        "x": 7.58026817713618,
+        "y": 7.398244514513777
       },
       "isLocked": false,
       "linkedName": null
@@ -46,7 +46,7 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.75,
+      "waypointRelativePos": 0.55,
       "rotationDegrees": -172.5750748946377,
       "rotateFast": false
     }
