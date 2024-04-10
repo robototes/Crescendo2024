@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.182999767708936,
-        "y": 1.5436283864020728
+        "x": 5.156891888026078,
+        "y": 1.4098255030081461
       },
       "isLocked": false,
       "linkedName": "CenterLineN5"
@@ -20,8 +20,8 @@
         "y": 4.4671669970120575
       },
       "prevControl": {
-        "x": 1.3799264990552769,
-        "y": 2.1371972599785667
+        "x": 1.7057565421060124,
+        "y": 2.2909664423919924
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,7 +31,7 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.25,
-      "rotationDegrees": 175.66006175864302,
+      "rotationDegrees": -173.50545807332855,
       "rotateFast": false
     },
     {
@@ -43,6 +43,11 @@
       "waypointRelativePos": 0.95,
       "rotationDegrees": 120.0,
       "rotateFast": true
+    },
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": -161.29004592647703,
+      "rotateFast": false
     }
   ],
   "constraintZones": [],

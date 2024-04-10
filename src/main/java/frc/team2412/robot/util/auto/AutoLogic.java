@@ -49,7 +49,7 @@ public class AutoLogic {
 
 	// rpm to rev up launcher before launching
 	public static final double REV_RPM = 2500;
-	public static final double STAGE_ANGLE = 247;
+	public static final double STAGE_ANGLE = 262;
 
 	public static enum StartPosition {
 		AMP_SIDE_SUBWOOFER(
@@ -448,7 +448,7 @@ public class AutoLogic {
 
 	public static Command setAngleRetracted() {
 		return (LAUNCHER_ENABLED && INTAKE_ENABLED
-						? new SetAngleLaunchCommand(s.launcherSubsystem, 0, 262)
+						? new SetAngleLaunchCommand(s.launcherSubsystem, 0, STAGE_ANGLE)
 						: Commands.none())
 				.withName("Auto - SetPivotRetractedCommand");
 	}
