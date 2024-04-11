@@ -58,7 +58,7 @@ public class Controls {
 	private final Trigger launcherSubwooferPresetButton;
 	private final Trigger launcherLowerPresetButton;
 	// private final Trigger launcherPodiumPresetButton;
-	private final Trigger launcherTrapPresetButton;
+	// private final Trigger launcherTrapPresetButton;
 	private final Trigger launcherAmpAlignPresetButton;
 	private final Trigger launcherLaunchButton;
 
@@ -76,7 +76,7 @@ public class Controls {
 		launcherSubwooferPresetButton = codriveController.a();
 		launcherLowerPresetButton = codriveController.y();
 		// launcherPodiumPresetButton = codriveController.povLeft();
-		launcherTrapPresetButton = codriveController.start();
+		// launcherTrapPresetButton = codriveController.start();
 		launcherAmpAlignPresetButton = driveController.y();
 		launcherLaunchButton = codriveController.rightBumper();
 		// intake controls (confirmed with driveteam)

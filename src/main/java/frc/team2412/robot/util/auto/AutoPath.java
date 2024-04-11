@@ -71,7 +71,7 @@ public class AutoPath {
 	 * Checks the x, y, and rotation of the auto's starting position and compares it with the expected
 	 * starting position, returning true if it is considered close enough to be the same.
 	 *
-	 * @param expectedStartPosition
+	 * @param expectedStartPosition The expected start position
 	 * @return if it is matching
 	 */
 	public boolean matchesStartPosition(StartPosition expectedStartPosition) {

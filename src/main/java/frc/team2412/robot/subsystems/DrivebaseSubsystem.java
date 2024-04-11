@@ -96,6 +96,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 	private GenericEntry xWheelsEntry;
 	private GenericEntry flipTranslationEntry;
 
+	@SuppressWarnings("StaticAssignmentInConstructor")
 	public DrivebaseSubsystem() {
 		initShuffleboard();
 

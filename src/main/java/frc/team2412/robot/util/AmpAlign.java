@@ -37,7 +37,7 @@ public class AmpAlign {
 			isBlue = false;
 		}
 		// figures out which amp to go to
-		Pose2d ampPose = (isBlue) ? BLUE_AMP_POSES : RED_AMP_POSES;
+		Pose2d ampPose = isBlue ? BLUE_AMP_POSES : RED_AMP_POSES;
 		// sets the point for the path to go to
 		List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(robotPose, ampPose);
 		// this is flipped
