@@ -29,9 +29,6 @@ public class FullTargetCommand extends Command {
 											? "launcher_data_throughbore.csv"
 											: "launcher_data_lamprey.csv"));
 
-	@SuppressWarnings("UnusedVariable")
-	private static final double YAW_TARGET_VIBRATION_TOLERANCE = 10; // degrees
-
 	private Translation2d SPEAKER_POSITION;
 
 	private DrivebaseSubsystem drivebaseSubsystem;
