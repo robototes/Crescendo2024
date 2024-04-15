@@ -519,7 +519,7 @@ public class LauncherSubsystem extends SubsystemBase {
 		double offset = pivotAngle - currentRelativePosition;
 
 		if (relativeEncoderStartPosition.isEmpty()
-				|| Math.abs(relativeEncoderStartPosition.orElse(0.0) + offset) > OFFSET_SYNCING_TOLERANCE) {
+				|| Math.abs(relativeEncoderStartPosition.orElse(0.0) - offset) > OFFSET_SYNCING_TOLERANCE) {
 			relativeEncoderStartPosition = Optional.of(offset);
 		}
 	}
