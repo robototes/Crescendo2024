@@ -14,11 +14,13 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.team2412.robot.commands.launcher.SetAngleAmpLaunchCommand;
 import frc.team2412.robot.subsystems.DrivebaseSubsystem;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
+
 import java.util.List;
 
 public class AmpAlign {
 	private static final Pose2d BLUE_AMP_POSES =
 			// amp on the blue side
+
 			new Pose2d(new Translation2d(1.71, 7.65), Rotation2d.fromDegrees(270));
 
 	private static final Pose2d RED_AMP_POSES =
@@ -29,6 +31,7 @@ public class AmpAlign {
 
 	private static Command ampAlign(
 			DrivebaseSubsystem drivebaseSubsystem, LauncherSubsystem launcherSubsystem) {
+
 		Pose2d robotPose = drivebaseSubsystem.getPose();
 		boolean isBlue;
 		if (!DriverStation.getAlliance().isEmpty()) {
@@ -56,6 +59,7 @@ public class AmpAlign {
 			path = path.flipPath();
 		}
 
+
 		return AutoBuilder.followPath(path)
 				.deadlineWith(
 						Commands.waitUntil(
@@ -76,6 +80,7 @@ public class AmpAlign {
 	public static Command ampPreset(
 			DrivebaseSubsystem drivebaseSubsystem, LauncherSubsystem launcherSubsystem) {
 		return new AlignCommand(drivebaseSubsystem, launcherSubsystem);
+
 	}
 
 	private static class AlignCommand extends Command {
@@ -88,11 +93,13 @@ public class AmpAlign {
 			this.drivebaseSubsystem = drivebaseSubsystem;
 			this.launcherSubsystem = launcherSubsystem;
 			addRequirements(drivebaseSubsystem, launcherSubsystem);
+
 		}
 
 		@Override
 		public void initialize() {
 			ampCommand = ampAlign(drivebaseSubsystem, launcherSubsystem);
+
 			ampCommand.initialize();
 			// launcherSubsystem.setAngle(LauncherSubsystem.TRAP_AIM_ANGLE);
 			// launcherSubsystem.launch(LauncherSubsystem.TRAP_SHOOT_SPEED_RPM);
