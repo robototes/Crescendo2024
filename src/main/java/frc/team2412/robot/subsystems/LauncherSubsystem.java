@@ -348,9 +348,9 @@ public class LauncherSubsystem extends SubsystemBase {
 		this.ignoreLimits = ignoreLimits;
 		if (powerControl || ignoreLimits) {
 			if (!USE_THROUGHBORE) {
-				launcherAngleOneMotor.set(ignoreLimits ? joystickInput * 0.3 : joystickInput);
+				launcherAngleOneMotor.set(ignoreLimits ? joystickInput * 0.5 : joystickInput);
 			} else {
-				launcherAngleTwoMotor.set(ignoreLimits ? joystickInput * 0.3 : joystickInput);
+				launcherAngleTwoMotor.set(ignoreLimits ? joystickInput * 0.5 : joystickInput);
 			}
 			manualAngleSetpoint =
 					MathUtil.clamp(

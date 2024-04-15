@@ -276,7 +276,7 @@ public class IntakeSubsystem extends SubsystemBase {
 	}
 
 	// feeder methods
-	public void feederIn() {
+	public void feedUntilNoteLaunched() {
 		feederMotor.set(setFeederInSpeedEntry.getDouble(FEEDER_IN_SPEED));
 	}
 

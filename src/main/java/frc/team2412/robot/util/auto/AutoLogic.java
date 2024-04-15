@@ -465,7 +465,7 @@ public class AutoLogic {
 				.withName("Auto - SetPivotSubwooferCommand");
 	}
 
-	public static Command feederIn() {
+	public static Command feedUntilNoteLaunched() {
 		return (INTAKE_ENABLED && LAUNCHER_ENABLED
 						? Commands.waitUntil(isReadyToLaunch())
 								.andThen(Commands.waitUntil(hasNote()))

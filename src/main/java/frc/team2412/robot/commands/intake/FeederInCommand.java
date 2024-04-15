@@ -13,7 +13,7 @@ public class FeederInCommand extends Command {
 
 	@Override
 	public void initialize() {
-		intakeSubsystem.feederIn();
+		intakeSubsystem.feedUntilNoteLaunched();
 	}
 
 	@Override
