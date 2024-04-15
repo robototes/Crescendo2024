@@ -63,9 +63,15 @@ public class IntakeSubsystem extends SubsystemBase {
 	// private final SparkLimitSwitch intakeFrontSensor;
 
 	// debounce ! !
+	@SuppressWarnings("UnusedVariable")
 	private final Debouncer intakeFrontSensorDebouncer;
+
+	@SuppressWarnings("UnusedVariable")
 	private final Debouncer intakeRightSensorDebouncer;
+
+	@SuppressWarnings("UnusedVariable")
 	private final Debouncer intakeLeftSensorDebouncer;
+
 	private final Debouncer feederSensorDebouncer;
 	private final Debouncer feederSensorIRDebouncer;
 
@@ -88,8 +94,6 @@ public class IntakeSubsystem extends SubsystemBase {
 
 	// reject override
 	private GenericEntry rejectOverride;
-
-	private boolean feederSensorSignal;
 
 	public IntakeSubsystem() {
 
@@ -329,7 +333,7 @@ public class IntakeSubsystem extends SubsystemBase {
 		// 	return true;
 		// }
 		return false;
-		// wreturn intakeFrontSensorDebouncer.calculate(intakeFrontSensor.isPressed());
+		// return intakeFrontSensorDebouncer.calculate(intakeFrontSensor.isPressed());
 	}
 
 	public boolean debouncedIntakeLeftSensor() {

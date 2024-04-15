@@ -14,10 +14,8 @@ import frc.team2412.robot.commands.intake.IntakeStopCommand;
 import frc.team2412.robot.subsystems.IntakeSubsystem;
 
 public class IntakeDiagnosticCommand extends SequentialCommandGroup {
-	private final IntakeSubsystem intakeSubsystem;
 
 	public IntakeDiagnosticCommand(IntakeSubsystem intakeSubsystem) {
-		this.intakeSubsystem = intakeSubsystem;
 		addCommands(
 				new FeederInCommand(intakeSubsystem).withTimeout(0.5),
 				new WaitCommand(0.5),
