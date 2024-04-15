@@ -115,7 +115,7 @@ public class SparkFlexSwerve extends SwerveMotor {
 	 */
 	@Override
 	public void setCurrentLimit(int statorLimit, int supplyLimit) {
-		configureSparkFlex(() -> motor.setSmartCurrentLimit(statorLimit));
+		configureSparkFlex(() -> motor.setSmartCurrentLimit(supplyLimit));
 	}
 
 	/**
