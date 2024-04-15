@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.team2412.robot.commands.launcher.SetAngleAmpLaunchCommand;
 import frc.team2412.robot.subsystems.DrivebaseSubsystem;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
-
 import java.util.List;
 
 public class AmpAlign {
@@ -59,7 +58,6 @@ public class AmpAlign {
 			path = path.flipPath();
 		}
 
-
 		return AutoBuilder.followPath(path)
 				.deadlineWith(
 						Commands.waitUntil(
@@ -80,7 +78,6 @@ public class AmpAlign {
 	public static Command ampPreset(
 			DrivebaseSubsystem drivebaseSubsystem, LauncherSubsystem launcherSubsystem) {
 		return new AlignCommand(drivebaseSubsystem, launcherSubsystem);
-
 	}
 
 	private static class AlignCommand extends Command {
@@ -93,7 +90,6 @@ public class AmpAlign {
 			this.drivebaseSubsystem = drivebaseSubsystem;
 			this.launcherSubsystem = launcherSubsystem;
 			addRequirements(drivebaseSubsystem, launcherSubsystem);
-
 		}
 
 		@Override
