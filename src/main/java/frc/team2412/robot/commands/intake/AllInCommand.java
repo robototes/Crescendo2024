@@ -9,9 +9,6 @@ import frc.team2412.robot.subsystems.IntakeSubsystem;
 public class AllInCommand extends Command {
 	private final IntakeSubsystem intakeSubsystem;
 	private final Controls controls;
-	private boolean rumbledIntakeFront = false;
-	private boolean rumbledIntakeLeft = false;
-	private boolean rumbledIntakeRight = false;
 	private boolean rumbledIndex = false;
 
 	public AllInCommand(IntakeSubsystem intakeSubsystem, Controls controls) {

@@ -7,7 +7,6 @@ import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkAbsoluteEncoder;
-import com.revrobotics.SparkAbsoluteEncoder.Type;
 import com.revrobotics.SparkPIDController;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
@@ -142,8 +141,10 @@ public class LauncherSubsystem extends SubsystemBase {
 		// encoders
 		launcherTopEncoder = launcherTopMotor.getEncoder();
 		launcherBottomEncoder = launcherBottomMotor.getEncoder();
-		launcherAngleEncoder = launcherAngleOneMotor.getAbsoluteEncoder(Type.kDutyCycle);
-		launcherAngleThroughboreEncoder = launcherAngleTwoMotor.getAbsoluteEncoder(Type.kDutyCycle);
+		launcherAngleEncoder =
+				launcherAngleOneMotor.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
+		launcherAngleThroughboreEncoder =
+				launcherAngleTwoMotor.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
 		manualAngleSetpoint = launcherAngleEncoder.getPosition();
 
 		// PID controllers

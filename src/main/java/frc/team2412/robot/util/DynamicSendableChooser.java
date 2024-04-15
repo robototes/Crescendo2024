@@ -64,7 +64,7 @@ public class DynamicSendableChooser<T> implements Sendable, AutoCloseable {
 	/**
 	 * Removes the given object from the list of options.
 	 *
-	 * @param object the option
+	 * @param name the name of the option
 	 */
 	public void removeOption(String name) {
 		m_map.remove(name);
@@ -115,6 +115,7 @@ public class DynamicSendableChooser<T> implements Sendable, AutoCloseable {
 	 *
 	 * @param listener The function to call that accepts the new value
 	 */
+	@SuppressWarnings("LockNotBeforeTry") // Assigning to m_listener shouldn't error
 	public void onChange(Consumer<T> listener) {
 		requireNonNullParam(listener, "listener", "onChange");
 		m_mutex.lock();

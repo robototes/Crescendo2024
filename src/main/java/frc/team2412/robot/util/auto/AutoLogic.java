@@ -51,6 +51,8 @@ public class AutoLogic {
 	public static final double REV_RPM = 2500;
 	public static final double STAGE_ANGLE = 262;
 
+	// ErrorProne doesn't know Pose2d's are immutable
+	@SuppressWarnings("ImmutableEnumChecker")
 	public static enum StartPosition {
 		AMP_SIDE_SUBWOOFER(
 				"Amp Side Subwoofer", new Pose2d(0.73, 6.62, new Rotation2d(Units.degreesToRadians(-120)))),
@@ -237,7 +239,7 @@ public class AutoLogic {
 	/**
 	 * Takes a PathPlanner path and returns it as a command.
 	 *
-	 * @param pathName
+	 * @param pathName the PathPlanner name for the path
 	 * @return follow path command
 	 */
 	public static Command getAutoCommand(String pathName) {
@@ -352,7 +354,7 @@ public class AutoLogic {
 		// Should be able to launch if:
 		// Launcher is at the correct angle and flywheel rpm
 		// Note is finished indexing (intake all in command is finished)
-		return (INTAKE_ENABLED & LAUNCHER_ENABLED
+		return (INTAKE_ENABLED && LAUNCHER_ENABLED
 				? () ->
 						(s.launcherSubsystem.isAtAngle()
 								&& s.launcherSubsystem.isAtSpeed()

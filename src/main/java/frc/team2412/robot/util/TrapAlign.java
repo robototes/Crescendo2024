@@ -46,7 +46,7 @@ public class TrapAlign {
 			isBlue = false;
 		}
 		// figures out which trap to go to
-		Pose2d trapPose = robotPose.nearest(List.of((isBlue) ? BLUE_TRAP_POSES : RED_TRAP_POSES));
+		Pose2d trapPose = robotPose.nearest(List.of(isBlue ? BLUE_TRAP_POSES : RED_TRAP_POSES));
 		// sets the point for the path to go to
 		List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(robotPose, trapPose);
 		// this is flipped
@@ -74,7 +74,10 @@ public class TrapAlign {
 
 	private static class AlignCommand extends Command {
 		private final DrivebaseSubsystem drivebaseSubsystem;
+
+		@SuppressWarnings("UnusedVariable")
 		private final LauncherSubsystem launcherSubsystem;
+
 		private Command trapCommand = null;
 
 		public AlignCommand(

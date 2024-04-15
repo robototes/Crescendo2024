@@ -31,8 +31,8 @@ public class DriveToNoteCommand extends Command {
 									* Units.inchesToMeters(limelightSubsystem.getDistanceFromTargetInches()),
 							0.0);
 			Rotation2d turn =
-					new Rotation2d()
-							.fromDegrees(2 * INVERT_DRIVE_DIRECTION * limelightSubsystem.getHorizontalOffset());
+					Rotation2d.fromDegrees(
+							2 * INVERT_DRIVE_DIRECTION * limelightSubsystem.getHorizontalOffset());
 			drivebaseSubsystem.drive(move, turn, false);
 		}
 	}
