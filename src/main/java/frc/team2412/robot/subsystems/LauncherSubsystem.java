@@ -65,7 +65,7 @@ public class LauncherSubsystem extends SubsystemBase {
 	public static final double ANGLE_TOLERANCE = 5;
 	public static final double RPM_TOLERANCE = 500;
 	// RPM
-	public static final int SPEAKER_SHOOT_SPEED_RPM = 4500;
+	public static final int SPEAKER_SHOOT_SPEED_RPM = 3800;
 	public static final int TRAP_SHOOT_SPEED_RPM = 4500;
 	public static final int LOBBING_RPM = 4700;
 	public static final double ANGLE_MAX_SPEED = 0.3; // percent output
