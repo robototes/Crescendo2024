@@ -27,9 +27,11 @@ import frc.team2412.robot.commands.intake.FeederStopCommand;
 import frc.team2412.robot.commands.intake.IntakeRejectCommand;
 import frc.team2412.robot.commands.intake.IntakeStopCommand;
 import frc.team2412.robot.commands.intake.NoteStealCommand;
+import frc.team2412.robot.commands.launcher.AimTowardsSpeakerCommand;
 import frc.team2412.robot.commands.launcher.FullTargetCommand;
 import frc.team2412.robot.commands.launcher.SetAngleLaunchCommand;
 import frc.team2412.robot.commands.launcher.SetLaunchSpeedCommand;
+import frc.team2412.robot.commands.launcher.SetSpeedSpeakerCommand;
 import frc.team2412.robot.commands.launcher.StopLauncherCommand;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
 import frc.team2412.robot.util.DynamicSendableChooser;
@@ -406,7 +408,7 @@ public class AutoLogic {
 	}
 
 	public static Command visionLaunch() {
-		return (LAUNCHER_ENABLED && INTAKE_ENABLED && APRILTAGS_ENABLED
+		return (LAUNCHER_ENABLED && INTAKE_ENABLED && APRILTAGS_ENABLED && DRIVEBASE_ENABLED
 						? stopFeeder()
 								.andThen(
 										Commands.either(
@@ -456,6 +458,21 @@ public class AutoLogic {
 												LauncherSubsystem.SUBWOOFER_AIM_ANGLE))
 						: Commands.none())
 				.withName("Auto - SetPivotSubwooferCommand");
+	}
+
+	public static Command visionLaunch2() {
+		return (LAUNCHER_ENABLED && INTAKE_ENABLED && DRIVEBASE_ENABLED && APRILTAGS_ENABLED
+						? new AimTowardsSpeakerCommand(s.launcherSubsystem, s.drivebaseSubsystem)
+								.andThen(feedUntilNoteLaunched())
+						: Commands.none())
+				.withName("Auto - Aim Fire");
+	}
+
+	public static Command setFlyWheelSpeaker() {
+		return (LAUNCHER_ENABLED && APRILTAGS_ENABLED && DRIVEBASE_ENABLED
+						? new SetSpeedSpeakerCommand(s.launcherSubsystem, s.drivebaseSubsystem)
+						: Commands.none())
+				.withName("Auto - SetFlywheelSpeedTowardsSpeaker");
 	}
 
 	public static Command feedUntilNoteLaunched() {
