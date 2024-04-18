@@ -64,9 +64,23 @@ public class ComplexAutoPaths {
 							AutoLogic.setFlyWheelSpeaker(),
 							new SequentialCommandGroup(
 									AutoLogic.getAutoCommand("MID L_Preload L_AN2"),
+									visionLaunch2(),
 									AutoLogic.getAutoCommand("MID L_AN2 Q_CN3"),
 									conditionalPath(
-											getAutoCommand("MID Q_CN3 L_CN3"), getAutoCommand("MID Q_CN3 L_CN2")))));
+											new SequentialCommandGroup(
+													AutoLogic.getAutoCommand("MID Q_CN3 L_CN3"),
+													visionLaunch2(),
+													AutoLogic.getAutoCommand("MID L_CN3 Q_CN1"),
+													conditionalPath(
+															new SequentialCommandGroup(
+																	AutoLogic.getAutoCommand("MID Q_CN1 L_CN1"),
+																	visionLaunch2(),
+																	AutoLogic.getAutoCommand("MID L_CN1 L_CN2")),
+															AutoLogic.getAutoCommand("MID Q_CN1 L_CN2"))),
+											new SequentialCommandGroup(
+													AutoLogic.getAutoCommand("MID Q_CN3 L_CN2"),
+													AutoLogic.getAutoCommand("MID L_CN2 L_CN1"))),
+									visionLaunch2())));
 
 	public static Command sourceAuto =
 			registerAuto(
