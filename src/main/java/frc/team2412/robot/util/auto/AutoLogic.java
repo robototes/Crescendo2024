@@ -220,8 +220,6 @@ public class AutoLogic {
 		NamedCommands.registerCommand("RevLauncher", revFlyWheels());
 		// Complex Autos
 		NamedCommands.registerCommand("AutoLogicTest", ComplexAutoPaths.testAuto);
-
-
 	}
 
 	// public Command getConditionalCommand(){}

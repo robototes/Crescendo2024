@@ -30,8 +30,39 @@ public class ComplexAutoPaths {
 
 	// Complex Autos
 
-	
+	public static Command ampSideConditionalCommand =
+			registerAuto(
+					"Amp Auto",
+					AutoLogic.getAutoCommand("AMP L_Preload L_AN1")
+							.andThen(
+									AutoLogic.getAutoCommand("AMP L_AN1 Q_CN1")
+											.andThen(
+													conditionalPath(
+															AutoLogic.getAutoCommand("AMP Q_CN1 L_CN1")
+																	.andThen(AutoLogic.getAutoCommand("AMP L_CN1 Q_CN2")),
+															AutoLogic.getAutoCommand("AMP Q_CN1 L_CN2")
+																	.andThen(AutoLogic.getAutoCommand("AMP L_CN2 L_CN3"))))));
 
+	// public static Command AMPAUTO =
+	// 		registerAuto(
+	// 				"merry christmas",
+	// 				new SequentialCommandGroup(
+	// 						AutoLogic.subwooferLaunch(),
+	// 						AutoLogic.getAutoCommand("AMP L_Preload L_AN1"),
+	// 						AutoLogic.feedUntilNoteLaunched(),
+	// 						AutoLogic.getAutoCommand("AMP L_AN1 Q_CN1"),
+	// 						conditionalPath(
+	// 								new SequentialCommandGroup(
+	// 										AutoLogic.getAutoCommand("AMP Q_CN1 L_CN1"),
+	// 										AutoLogic.feedUntilNoteLaunched(),
+	// 										AutoLogic.getAutoCommand("AMP L_CN1 Q_CN2"),
+	// 										conditionalPath(
+	// 												AutoLogic.getAutoCommand("AMP Q_CN2 L_CN2"),
+	// 												AutoLogic.getAutoCommand("AMP Q_CN2 L_CN3"))),
+	// 								new SequentialCommandGroup(
+	// 										AutoLogic.getAutoCommand("AMP Q_CN1 L_CN2"),
+	// 										AutoLogic.feedUntilNoteLaunched(),
+	// 										AutoLogic.getAutoCommand("AMP L_CN2 L_CN3")))));
 	// new command getters
 
 	private static Command conditionalPath(Command onTrue, Command onFalse) {
