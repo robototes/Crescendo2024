@@ -15,7 +15,7 @@ public class AllInNoSensorCommand extends Command {
 	public void initialize() {
 		intakeSubsystem.intakeIn();
 		intakeSubsystem.indexIn();
-		intakeSubsystem.feederIn();
+		intakeSubsystem.feedUntilNoteLaunched();
 	}
 
 	@Override

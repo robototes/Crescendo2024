@@ -19,6 +19,7 @@ import java.util.List;
 public class AmpAlign {
 	private static final Pose2d BLUE_AMP_POSES =
 			// amp on the blue side
+
 			new Pose2d(new Translation2d(1.71, 7.65), Rotation2d.fromDegrees(270));
 
 	private static final Pose2d RED_AMP_POSES =
@@ -29,6 +30,7 @@ public class AmpAlign {
 
 	private static Command ampAlign(
 			DrivebaseSubsystem drivebaseSubsystem, LauncherSubsystem launcherSubsystem) {
+
 		Pose2d robotPose = drivebaseSubsystem.getPose();
 		boolean isBlue;
 		if (!DriverStation.getAlliance().isEmpty()) {
@@ -37,7 +39,7 @@ public class AmpAlign {
 			isBlue = false;
 		}
 		// figures out which amp to go to
-		Pose2d ampPose = (isBlue) ? BLUE_AMP_POSES : RED_AMP_POSES;
+		Pose2d ampPose = isBlue ? BLUE_AMP_POSES : RED_AMP_POSES;
 		// sets the point for the path to go to
 		List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(robotPose, ampPose);
 		// this is flipped
@@ -93,6 +95,7 @@ public class AmpAlign {
 		@Override
 		public void initialize() {
 			ampCommand = ampAlign(drivebaseSubsystem, launcherSubsystem);
+
 			ampCommand.initialize();
 			// launcherSubsystem.setAngle(LauncherSubsystem.TRAP_AIM_ANGLE);
 			// launcherSubsystem.launch(LauncherSubsystem.TRAP_SHOOT_SPEED_RPM);

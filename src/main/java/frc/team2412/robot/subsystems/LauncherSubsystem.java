@@ -7,7 +7,6 @@ import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkAbsoluteEncoder;
-import com.revrobotics.SparkAbsoluteEncoder.Type;
 import com.revrobotics.SparkPIDController;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
@@ -142,8 +141,10 @@ public class LauncherSubsystem extends SubsystemBase {
 		// encoders
 		launcherTopEncoder = launcherTopMotor.getEncoder();
 		launcherBottomEncoder = launcherBottomMotor.getEncoder();
-		launcherAngleEncoder = launcherAngleOneMotor.getAbsoluteEncoder(Type.kDutyCycle);
-		launcherAngleThroughboreEncoder = launcherAngleTwoMotor.getAbsoluteEncoder(Type.kDutyCycle);
+		launcherAngleEncoder =
+				launcherAngleOneMotor.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
+		launcherAngleThroughboreEncoder =
+				launcherAngleTwoMotor.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
 		manualAngleSetpoint = launcherAngleEncoder.getPosition();
 
 		// PID controllers
@@ -350,9 +351,9 @@ public class LauncherSubsystem extends SubsystemBase {
 		this.ignoreLimits = ignoreLimits;
 		if (powerControl || ignoreLimits) {
 			if (!USE_THROUGHBORE) {
-				launcherAngleOneMotor.set(ignoreLimits ? joystickInput * 0.3 : joystickInput);
+				launcherAngleOneMotor.set(ignoreLimits ? joystickInput * 0.5 : joystickInput);
 			} else {
-				launcherAngleTwoMotor.set(ignoreLimits ? joystickInput * 0.3 : joystickInput);
+				launcherAngleTwoMotor.set(ignoreLimits ? joystickInput * 0.5 : joystickInput);
 			}
 			manualAngleSetpoint =
 					MathUtil.clamp(
@@ -520,7 +521,7 @@ public class LauncherSubsystem extends SubsystemBase {
 		double offset = pivotAngle - currentRelativePosition;
 
 		if (relativeEncoderStartPosition.isEmpty()
-				|| Math.abs(relativeEncoderStartPosition.orElse(0.0) + offset) > OFFSET_SYNCING_TOLERANCE) {
+				|| Math.abs(relativeEncoderStartPosition.orElse(0.0) - offset) > OFFSET_SYNCING_TOLERANCE) {
 			relativeEncoderStartPosition = Optional.of(offset);
 		}
 	}

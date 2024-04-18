@@ -2,6 +2,7 @@ package frc.team2412.robot.util;
 
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import frc.team2412.robot.Robot;
 import java.io.BufferedReader;
@@ -40,7 +41,8 @@ public class LauncherDataLoader {
 								debugWriter.append(debugPrefix + msg);
 								debugWriter.newLine();
 							} catch (IOException e) {
-								e.printStackTrace();
+								DriverStation.reportWarning(
+										"Error writing to CSV interpreter log: " + e.getMessage(), e.getStackTrace());
 							}
 						};
 

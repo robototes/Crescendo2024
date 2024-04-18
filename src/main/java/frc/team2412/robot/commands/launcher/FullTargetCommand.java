@@ -28,7 +28,7 @@ public class FullTargetCommand extends Command {
 									LauncherSubsystem.USE_THROUGHBORE
 											? "launcher_data_throughbore.csv"
 											: "launcher_data_lamprey.csv"));
-	private static final double YAW_TARGET_VIBRATION_TOLERANCE = 10; // degrees
+
 	private Translation2d SPEAKER_POSITION;
 
 	private DrivebaseSubsystem drivebaseSubsystem;
