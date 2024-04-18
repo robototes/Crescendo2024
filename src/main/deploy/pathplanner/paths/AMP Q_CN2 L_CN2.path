@@ -3,41 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.37,
-        "y": 2.17
+        "x": 7.11,
+        "y": 6.2
       },
       "prevControl": null,
       "nextControl": {
-        "x": 10.008260737242196,
-        "y": 5.3989066536691634
+        "x": 8.313171140797435,
+        "y": 5.858016163771393
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.709473761289865,
-        "y": 4.067669396600055
+        "x": 8.208949968678292,
+        "y": 5.576005933331364
       },
       "prevControl": {
-        "x": 6.681405594867146,
-        "y": 4.093587578828783
+        "x": 9.097895260282737,
+        "y": 5.3614329319096
       },
       "nextControl": {
-        "x": 5.016121023233037,
-        "y": 4.049179990251873
+        "x": 7.429803381615057,
+        "y": 5.764075799174215
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 4.267300066131663,
-        "y": 5.3619278409727995
+        "x": 5.38,
+        "y": 6.34233808126623
       },
       "prevControl": {
-        "x": 4.581619974050758,
-        "y": 4.714798618786427
+        "x": 6.440603692741855,
+        "y": 6.4233695906976696
       },
       "nextControl": null,
       "isLocked": false,
@@ -46,16 +46,33 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.2,
-      "rotationDegrees": -165.6866093141997,
+      "waypointRelativePos": 0.35,
+      "rotationDegrees": 160.91930566366563,
       "rotateFast": false
     }
   ],
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "rev launcher",
-      "waypointRelativePos": 0.85,
+      "name": "intake",
+      "waypointRelativePos": 0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Intake"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "rev flywheel",
+      "waypointRelativePos": 0.5,
       "command": {
         "type": "parallel",
         "data": {
@@ -78,15 +95,15 @@
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": 177.11011808038828,
+    "velocity": 0.0,
+    "rotation": -170.70918729620652,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "Auto Logic Paths",
   "previewStartingState": {
-    "rotation": -163.67,
-    "velocity": 0
+    "rotation": 159.94,
+    "velocity": 2.0
   },
   "useDefaultConstraints": true
 }
