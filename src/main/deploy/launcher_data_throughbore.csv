@@ -1,0 +1,8 @@
+# DISTANCE (meters), ANGLE (degrees without PIVOT_OFFSET), RPM (velocity)
+
+1.30, 254, 3500
+2.38, 237, 3500
+3.00, 232, 3750
+4.00, 228, 4000
+5.00, 224.3, 4500
+6.00, 220.5, 5500

@@ -9,9 +9,6 @@ import frc.team2412.robot.subsystems.IntakeSubsystem;
 public class AllInCommand extends Command {
 	private final IntakeSubsystem intakeSubsystem;
 	private final Controls controls;
-	private boolean rumbledIntakeFront = false;
-	private boolean rumbledIntakeLeft = false;
-	private boolean rumbledIntakeRight = false;
 	private boolean rumbledIndex = false;
 
 	public AllInCommand(IntakeSubsystem intakeSubsystem, Controls controls) {
@@ -24,7 +21,7 @@ public class AllInCommand extends Command {
 	public void initialize() {
 		intakeSubsystem.intakeIn();
 		intakeSubsystem.indexIn();
-		intakeSubsystem.feederIn();
+		intakeSubsystem.feedUntilNoteLaunched();
 	}
 
 	@Override
@@ -39,7 +36,7 @@ public class AllInCommand extends Command {
 			}
 
 			if (controls != null && !rumbledIndex) {
-				Commands.race(new RumbleCommand(controls), new WaitCommand(3)).schedule();
+				Commands.race(new RumbleCoDriveControllerCommand(controls), new WaitCommand(3)).schedule();
 				rumbledIndex = true;
 			}
 		}
@@ -56,8 +53,13 @@ public class AllInCommand extends Command {
 		intakeSubsystem.indexStop();
 		intakeSubsystem.feederStop();
 
+		if (interrupted) {
+			return;
+		}
+
 		if (controls != null) {
-			Commands.race(new RumbleCommand(controls), new WaitCommand(3)).schedule();
+			Commands.race(new RumbleCoDriveControllerCommand(controls), new WaitCommand(1)).schedule();
+			Commands.race(new RumbleDriveControllerCommand(controls), new WaitCommand(1)).schedule();
 		}
 
 		// rumbledIntakeFront = false;

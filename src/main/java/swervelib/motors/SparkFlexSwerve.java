@@ -110,11 +110,12 @@ public class SparkFlexSwerve extends SwerveMotor {
 	 * Set the current limit for the swerve drive motor, remember this may cause jumping if used in
 	 * conjunction with voltage compensation. This is useful to protect the motor from current spikes.
 	 *
-	 * @param currentLimit Current limit in AMPS at free speed.
+	 * @param statorLimit Current limit in AMPS at free speed.
+	 * @param supplyLimit
 	 */
 	@Override
-	public void setCurrentLimit(int currentLimit) {
-		configureSparkFlex(() -> motor.setSmartCurrentLimit(currentLimit));
+	public void setCurrentLimit(int statorLimit, int supplyLimit) {
+		configureSparkFlex(() -> motor.setSmartCurrentLimit(supplyLimit));
 	}
 
 	/**

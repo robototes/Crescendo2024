@@ -49,7 +49,7 @@ public class AutoLogic {
 
 	// rpm to rev up launcher before launching
 	public static final double REV_RPM = 2500;
-	public static final double STAGE_ANGLE = 247;
+	public static final double STAGE_ANGLE = 262;
 
 	public static enum StartPosition {
 		AMP_SIDE_SUBWOOFER(
@@ -86,6 +86,7 @@ public class AutoLogic {
 					// presets
 					new AutoPath("Test Path Rotate", "5mForwardRotate180"),
 					new AutoPath("Test Path", "DiameterTest"),
+					new AutoPath("Master PID Test", "MasterPIDTest"),
 					new AutoPath("Tune Translational PID", "TuneTranslationalPID"),
 					new AutoPath("Tune Rotational PID", "TuneRotationalPID"),
 					new AutoPath("Stand Still", "PresetSourceSide1Score"),
@@ -113,6 +114,7 @@ public class AutoLogic {
 					// presets
 					new AutoPath("Autoline N1 Centerline N1", "PresetAmpSideAutoline3Score"),
 					new AutoPath("Autoline N2 N1", "PresetMidAutoline3Score"),
+					new AutoPath("Autoline N2 N3", "PresetMidAutoline3Score2"),
 					new AutoPath("Centerline N5 N4", "PresetSourceSideCenterline3Score2"),
 					new AutoPath("Centerline N5 N3", "PresetSourceSideCenterline3Score2"),
 					// vision
@@ -259,11 +261,11 @@ public class AutoLogic {
 			gameObjects.addOption(String.valueOf(i), i);
 		}
 
-		tab.add("Starting Position", startPositionChooser).withPosition(5, 0).withSize(2, 1);
-		tab.add("Launch Type", isVision).withPosition(5, 1);
-		tab.add("Game Objects", gameObjects).withPosition(6, 1);
-		tab.add("Available Auto Variants", availableAutos).withPosition(5, 2).withSize(2, 1);
-		autoDelayEntry = tab.add("Auto Delay", 0).withPosition(5, 3).withSize(1, 1).getEntry();
+		tab.add("Starting Position", startPositionChooser).withPosition(4, 0).withSize(2, 1);
+		tab.add("Launch Type", isVision).withPosition(4, 1);
+		tab.add("Game Objects", gameObjects).withPosition(5, 1);
+		tab.add("Available Auto Variants", availableAutos).withPosition(4, 2).withSize(2, 1);
+		autoDelayEntry = tab.add("Auto Delay", 0).withPosition(4, 3).withSize(1, 1).getEntry();
 
 		isVision.onChange((dummyVar) -> AutoLogic.filterAutos(gameObjects.getSelected()));
 		startPositionChooser.onChange((dummyVar) -> AutoLogic.filterAutos(gameObjects.getSelected()));
@@ -370,6 +372,10 @@ public class AutoLogic {
 		return (INTAKE_ENABLED ? () -> !s.intakeSubsystem.isIntakeRunning() : () -> true);
 	}
 
+	public static BooleanSupplier hasNote() {
+		return (INTAKE_ENABLED ? () -> s.intakeSubsystem.feederSensorHasNote() : () -> true);
+	}
+
 	// registered commands
 
 	public static Command subwooferLaunch() {
@@ -404,37 +410,26 @@ public class AutoLogic {
 																		.until(untilFeederHasNoNote()))
 														.andThen(new WaitCommand(0.4)),
 												Commands.none(),
-												hasNoNote()))
+												hasNote()))
 						: Commands.none())
 				.withName("Auto - SubwooferLaunchCommand");
 	}
 
 	public static Command visionLaunch() {
-
-		// return (LAUNCHER_ENABLED && INTAKE_ENABLED && APRILTAGS_ENABLED
-		// 		? stopFeeder()
-		// 				.andThen(
-		// 						Commands.either(Commands.none(), index(), s.intakeSubsystem::feederSensorHasNote))
-		// 				.andThen(
-		// 						new FullTargetCommand(s.launcherSubsystem, s.drivebaseSubsystem, controls)
-		// 								.until(isReadyToLaunch())
-		// 								.andThen(new WaitCommand(FEEDER_DELAY))
-		// 								.andThen(new FeederInCommand(s.intakeSubsystem).until(untilNoNote())))
-		// 		: Commands.none());
-
 		return (LAUNCHER_ENABLED && INTAKE_ENABLED && APRILTAGS_ENABLED
 						? stopFeeder()
 								.andThen(
 										Commands.either(
 												new FullTargetCommand(s.launcherSubsystem, s.drivebaseSubsystem, controls)
 														.until(isReadyToLaunch())
+														.andThen(Commands.waitUntil(hasNote()))
 														.andThen(new WaitCommand(FEEDER_DELAY))
 														.andThen(
 																new FeederInCommand(s.intakeSubsystem)
 																		.until(untilFeederHasNoNote()))
 														.andThen(new WaitCommand(0.4)),
 												Commands.none(),
-												hasNoNote()))
+												hasNote()))
 						: Commands.none())
 				.withName("Auto - VisionLaunchCommand");
 	}
@@ -453,7 +448,7 @@ public class AutoLogic {
 
 	public static Command setAngleRetracted() {
 		return (LAUNCHER_ENABLED && INTAKE_ENABLED
-						? new SetAngleLaunchCommand(s.launcherSubsystem, 0, LauncherSubsystem.RETRACTED_ANGLE)
+						? new SetAngleLaunchCommand(s.launcherSubsystem, 0, STAGE_ANGLE)
 						: Commands.none())
 				.withName("Auto - SetPivotRetractedCommand");
 	}
@@ -470,14 +465,15 @@ public class AutoLogic {
 				.withName("Auto - SetPivotSubwooferCommand");
 	}
 
-	public static Command feederIn() {
+	public static Command feedUntilNoteLaunched() {
 		return (INTAKE_ENABLED && LAUNCHER_ENABLED
 						? Commands.waitUntil(isReadyToLaunch())
-								.andThen(Commands.waitSeconds(FEEDER_DELAY))
-								.andThen(new FeederInCommand(s.intakeSubsystem))
-								.andThen(Commands.waitSeconds(0.1))
+								.andThen(Commands.waitUntil(hasNote()))
+								.andThen(new WaitCommand(FEEDER_DELAY))
+								.andThen(new FeederInCommand(s.intakeSubsystem).until(untilFeederHasNoNote()))
+								.andThen(new WaitCommand(0.4))
 						: Commands.none())
-				.withName("Auto - FeedCommand");
+				.withName("Auto - FeedUntilNoteLaunchedCommand");
 	}
 
 	public static Command noteSteal() {

@@ -25,17 +25,26 @@ public class IntakeSubsystem extends SubsystemBase {
 	public static final double INTAKE_REJECT_SPEED = -0.4;
 
 	public static final double INDEX_UPPER_IN_SPEED = 1.0;
-	public static final double INDEX_UPPER_REVERSE_SPEED = -0.3;
+	public static final double INDEX_UPPER_REVERSE_SPEED = -1.0;
 
 	public static final double INGEST_LOWER_IN_SPEED = 0.8;
-	public static final double INGEST_LOWER_REVERSE_SPEED = -0.3;
+	public static final double INGEST_LOWER_REVERSE_SPEED = -1.0;
 
 	public static final double FEEDER_SHOOT_SPEED = 1.0;
 
-	public static final double FEEDER_IN_SPEED = 0.65;
-	public static final double FEEDER_REVERSE_SPEED = -0.3;
+	public static final double FEEDER_IN_SPEED = 1.0;
+	public static final double FEEDER_REVERSE_SPEED = -1.0;
 
-	private static final boolean enableFrontAndSideIntakes = false;
+	private static final boolean enableFrontAndSideIntakes = true;
+
+	@SuppressWarnings("ComplexBooleanConstant")
+	private static final boolean FRONT_MOTOR_ENABLED = enableFrontAndSideIntakes && false;
+
+	@SuppressWarnings("ComplexBooleanConstant")
+	private static final boolean LEFT_MOTOR_ENABLED = enableFrontAndSideIntakes && true;
+
+	@SuppressWarnings("ComplexBooleanConstant")
+	private static final boolean RIGHT_MOTOR_ENABLED = enableFrontAndSideIntakes && true;
 
 	// Motors
 	private final CANSparkMax intakeMotorFront;
@@ -51,12 +60,18 @@ public class IntakeSubsystem extends SubsystemBase {
 	private final SparkLimitSwitch indexSensor;
 	private final SparkLimitSwitch feederSensor;
 	private final DigitalInput feederSensorIR;
-	private final SparkLimitSwitch intakeFrontSensor;
+	// private final SparkLimitSwitch intakeFrontSensor;
 
 	// debounce ! !
+	@SuppressWarnings("UnusedVariable")
 	private final Debouncer intakeFrontSensorDebouncer;
+
+	@SuppressWarnings("UnusedVariable")
 	private final Debouncer intakeRightSensorDebouncer;
+
+	@SuppressWarnings("UnusedVariable")
 	private final Debouncer intakeLeftSensorDebouncer;
+
 	private final Debouncer feederSensorDebouncer;
 	private final Debouncer feederSensorIRDebouncer;
 
@@ -80,13 +95,14 @@ public class IntakeSubsystem extends SubsystemBase {
 	// reject override
 	private GenericEntry rejectOverride;
 
-	private boolean feederSensorSignal;
-
 	public IntakeSubsystem() {
 
-		intakeMotorFront = new CANSparkMax(INTAKE_MOTOR_FRONT, MotorType.kBrushless);
-		intakeMotorLeft = new CANSparkMax(INTAKE_MOTOR_LEFT, MotorType.kBrushless);
-		intakeMotorRight = new CANSparkMax(INTAKE_MOTOR_RIGHT, MotorType.kBrushless);
+		intakeMotorFront =
+				FRONT_MOTOR_ENABLED ? new CANSparkMax(INTAKE_MOTOR_FRONT, MotorType.kBrushless) : null;
+		intakeMotorLeft =
+				LEFT_MOTOR_ENABLED ? new CANSparkMax(INTAKE_MOTOR_LEFT, MotorType.kBrushless) : null;
+		intakeMotorRight =
+				RIGHT_MOTOR_ENABLED ? new CANSparkMax(INTAKE_MOTOR_RIGHT, MotorType.kBrushless) : null;
 
 		ingestMotor = new CANSparkFlex(INGEST_MOTOR, MotorType.kBrushless);
 		indexMotorUpper = new CANSparkFlex(INDEX_MOTOR_UPPER, MotorType.kBrushless);
@@ -97,19 +113,26 @@ public class IntakeSubsystem extends SubsystemBase {
 		feederSensor = feederMotor.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
 		feederSensorIR = new DigitalInput(FEEDER_SENSOR);
 
-		intakeFrontSensor = intakeMotorFront.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
+		// intakeFrontSensor =
+		// intakeMotorFront.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
 		// intakeBackSensor =
 		// intakeMotorBack.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
-		intakeLeftSensor = intakeMotorLeft.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
-		intakeRightSensor = intakeMotorRight.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
+		intakeLeftSensor =
+				LEFT_MOTOR_ENABLED
+						? intakeMotorLeft.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen)
+						: null;
+		intakeRightSensor =
+				RIGHT_MOTOR_ENABLED
+						? intakeMotorRight.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen)
+						: null;
 
 		// sensor must be true for 0.1 seconds before being actually true
 		intakeFrontSensorDebouncer = new Debouncer(0.1, Debouncer.DebounceType.kBoth);
 		intakeRightSensorDebouncer = new Debouncer(0.1, Debouncer.DebounceType.kBoth);
 		intakeLeftSensorDebouncer = new Debouncer(0.1, Debouncer.DebounceType.kBoth);
 
-		feederSensorDebouncer = new Debouncer(0.1, Debouncer.DebounceType.kBoth);
-		feederSensorIRDebouncer = new Debouncer(0.1, Debouncer.DebounceType.kBoth);
+		feederSensorDebouncer = new Debouncer(0.01, Debouncer.DebounceType.kBoth);
+		feederSensorIRDebouncer = new Debouncer(0.01, Debouncer.DebounceType.kBoth);
 
 		resetMotors();
 
@@ -137,9 +160,15 @@ public class IntakeSubsystem extends SubsystemBase {
 	}
 
 	private void resetMotors() {
-		configureMotor(intakeMotorFront, true);
-		configureMotor(intakeMotorLeft, true);
-		configureMotor(intakeMotorRight, true);
+		if (FRONT_MOTOR_ENABLED) {
+			configureMotor(intakeMotorFront, 25, true);
+		}
+		if (LEFT_MOTOR_ENABLED) {
+			configureMotor(intakeMotorLeft, 25, true);
+		}
+		if (RIGHT_MOTOR_ENABLED) {
+			configureMotor(intakeMotorRight, 25, true);
+		}
 
 		configureMotor(ingestMotor, true);
 		configureMotor(indexMotorUpper, 40, false);
@@ -151,9 +180,15 @@ public class IntakeSubsystem extends SubsystemBase {
 
 	public void intakeSet(double speed) {
 		if (enableFrontAndSideIntakes) {
-			intakeMotorFront.set(speed);
-			intakeMotorLeft.set(speed);
-			intakeMotorRight.set(speed);
+			if (FRONT_MOTOR_ENABLED) {
+				intakeMotorFront.set(speed);
+			}
+			if (LEFT_MOTOR_ENABLED) {
+				intakeMotorLeft.set(speed);
+			}
+			if (RIGHT_MOTOR_ENABLED) {
+				intakeMotorRight.set(speed);
+			}
 		}
 		ingestMotor.set(speed);
 	}
@@ -170,9 +205,15 @@ public class IntakeSubsystem extends SubsystemBase {
 	public void intakeSteal() {
 
 		if (enableFrontAndSideIntakes) {
-			intakeMotorLeft.set(INTAKE_IN_SPEED);
-			intakeMotorRight.set(INTAKE_IN_SPEED);
-			intakeMotorFront.set(INTAKE_REJECT_SPEED);
+			if (LEFT_MOTOR_ENABLED) {
+				intakeMotorLeft.set(INTAKE_IN_SPEED);
+			}
+			if (RIGHT_MOTOR_ENABLED) {
+				intakeMotorRight.set(INTAKE_IN_SPEED);
+			}
+			if (FRONT_MOTOR_ENABLED) {
+				intakeMotorFront.set(INTAKE_REJECT_SPEED);
+			}
 		}
 		ingestMotor.set(INTAKE_REJECT_SPEED);
 		indexMotorUpper.set(INTAKE_IN_SPEED);
@@ -184,19 +225,19 @@ public class IntakeSubsystem extends SubsystemBase {
 	}
 
 	public void intakeFrontStop() {
-		if (enableFrontAndSideIntakes) {
+		if (FRONT_MOTOR_ENABLED) {
 			intakeMotorFront.set(0);
 		}
 	}
 
 	public void intakeLeftStop() {
-		if (enableFrontAndSideIntakes) {
+		if (LEFT_MOTOR_ENABLED) {
 			intakeMotorLeft.set(0);
 		}
 	}
 
 	public void intakeRightStop() {
-		if (enableFrontAndSideIntakes) {
+		if (RIGHT_MOTOR_ENABLED) {
 			intakeMotorRight.set(0);
 		}
 	}
@@ -207,19 +248,19 @@ public class IntakeSubsystem extends SubsystemBase {
 	}
 
 	public void intakeFrontReject() {
-		if (enableFrontAndSideIntakes) {
+		if (FRONT_MOTOR_ENABLED) {
 			intakeMotorFront.set(INTAKE_REJECT_SPEED);
 		}
 	}
 
 	public void intakeLeftReject() {
-		if (enableFrontAndSideIntakes) {
+		if (LEFT_MOTOR_ENABLED) {
 			intakeMotorLeft.set(INTAKE_REJECT_SPEED);
 		}
 	}
 
 	public void intakeRightReject() {
-		if (enableFrontAndSideIntakes) {
+		if (RIGHT_MOTOR_ENABLED) {
 			intakeMotorRight.set(INTAKE_REJECT_SPEED);
 		}
 	}
@@ -239,7 +280,7 @@ public class IntakeSubsystem extends SubsystemBase {
 	}
 
 	// feeder methods
-	public void feederIn() {
+	public void feedUntilNoteLaunched() {
 		feederMotor.set(setFeederInSpeedEntry.getDouble(FEEDER_IN_SPEED));
 	}
 
@@ -274,7 +315,8 @@ public class IntakeSubsystem extends SubsystemBase {
 	}
 
 	public boolean intakeFrontSeesNote() {
-		return intakeFrontSensor.isPressed();
+		return false;
+		// return intakeFrontSensor.isPressed();
 	}
 
 	public boolean intakeLeftSeesNote() {
@@ -290,21 +332,24 @@ public class IntakeSubsystem extends SubsystemBase {
 		// if (intakeFrontSensorDebouncer.calculate(intakeFrontSensor.isPressed())) {
 		// 	return true;
 		// }
-		return intakeFrontSensorDebouncer.calculate(intakeFrontSensor.isPressed());
+		return false;
+		// return intakeFrontSensorDebouncer.calculate(intakeFrontSensor.isPressed());
 	}
 
 	public boolean debouncedIntakeLeftSensor() {
 		// if (intakeLeftSensorDebouncer.calculate(intakeLeftSensor.isPressed())) {
 		// 	return true;
 		// }
-		return intakeLeftSensorDebouncer.calculate(intakeFrontSensor.isPressed());
+		return false;
+		// return intakeLeftSensorDebouncer.calculate(intakeFrontSensor.isPressed());
 	}
 
 	public boolean debouncedIntakeRightSensor() {
 		// if (intakeRightSensorDebouncer.calculate(intakeRightSensor.isPressed())) {
 		// 	return true;
 		// }
-		return intakeRightSensorDebouncer.calculate(intakeFrontSensor.isPressed());
+		return false;
+		// return intakeRightSensorDebouncer.calculate(intakeFrontSensor.isPressed());
 	}
 
 	// override methods on shuffleboard
@@ -317,25 +362,43 @@ public class IntakeSubsystem extends SubsystemBase {
 	}
 
 	public boolean isIntakeOn() {
-		return (intakeMotorFront.get() > 0
+		return ((LEFT_MOTOR_ENABLED && intakeMotorLeft.get() > 0)
 				|| indexMotorUpper.get() > 0
 				|| ingestMotor.get() > 0
 				|| feederMotor.get() > 0);
+	}
+
+	public boolean isLeftIntakeRunning() {
+		return Math.abs(intakeMotorLeft.getEncoder().getVelocity()) > 1.0;
+	}
+
+	public boolean isRightIntakeRunning() {
+		return Math.abs(intakeMotorRight.getEncoder().getVelocity()) > 1.0;
+	}
+
+	public boolean isIndexRunning() {
+		return Math.abs(indexMotorUpper.getEncoder().getVelocity()) > 1.0;
 	}
 
 	// logging
 	public void initShuffleboard() {
 		if (Robot.isDebugMode()) {
 			shuffleboardTab
-					.addDouble("Front Intake Motor Temp", () -> intakeMotorFront.getMotorTemperature())
+					.addDouble(
+							"Front Intake Motor Temp",
+							() -> FRONT_MOTOR_ENABLED ? intakeMotorFront.getMotorTemperature() : -1)
 					.withSize(1, 1)
 					.withWidget(BuiltInWidgets.kTextView);
 			shuffleboardTab
-					.addDouble("Left Intake Motor Temp", () -> intakeMotorLeft.getMotorTemperature())
+					.addDouble(
+							"Left Intake Motor Temp",
+							() -> LEFT_MOTOR_ENABLED ? intakeMotorLeft.getMotorTemperature() : -1)
 					.withSize(1, 1)
 					.withWidget(BuiltInWidgets.kTextView);
 			shuffleboardTab
-					.addDouble("Right Intake Motor Temp", () -> intakeMotorRight.getMotorTemperature())
+					.addDouble(
+							"Right Intake Motor Temp",
+							() -> RIGHT_MOTOR_ENABLED ? intakeMotorRight.getMotorTemperature() : -1)
 					.withSize(1, 1)
 					.withWidget(BuiltInWidgets.kTextView);
 			shuffleboardTab
@@ -399,8 +462,7 @@ public class IntakeSubsystem extends SubsystemBase {
 	 * returns true if all the motors are set to be not moving
 	 */
 	public boolean isIntakeRunning() {
-		return (intakeMotorFront.get() != 0
-				&& intakeMotorLeft.get() != 0
-				&& intakeMotorRight.get() != 0);
+		return (!LEFT_MOTOR_ENABLED || intakeMotorLeft.get() != 0)
+				&& (!RIGHT_MOTOR_ENABLED || intakeMotorRight.get() != 0);
 	}
 }

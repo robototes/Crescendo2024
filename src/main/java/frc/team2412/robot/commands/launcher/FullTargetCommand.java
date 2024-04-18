@@ -2,8 +2,8 @@ package frc.team2412.robot.commands.launcher;
 
 import static frc.team2412.robot.Subsystems.SubsystemConstants.*;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -23,9 +23,13 @@ public class FullTargetCommand extends Command {
 	private static final InterpolatingTreeMap<Double, LauncherDataPoint> LAUNCHER_DATA =
 			LauncherDataLoader.fromCSV(
 					FileSystems.getDefault()
-							.getPath(Filesystem.getDeployDirectory().getPath(), "launcher_data.csv"));
-	private static final double YAW_TARGET_VIBRATION_TOLERANCE = 10; // degrees
-	private Pose2d SPEAKER_POSE;
+							.getPath(
+									Filesystem.getDeployDirectory().getPath(),
+									LauncherSubsystem.USE_THROUGHBORE
+											? "launcher_data_throughbore.csv"
+											: "launcher_data_lamprey.csv"));
+
+	private Translation2d SPEAKER_POSITION;
 
 	private DrivebaseSubsystem drivebaseSubsystem;
 	private LauncherSubsystem launcherSubsystem;
@@ -51,20 +55,24 @@ public class FullTargetCommand extends Command {
 	public void initialize() {
 		CommandScheduler.getInstance().schedule(yawAlignmentCommand);
 
-		SPEAKER_POSE =
-				DriverStation.getAlliance().get().equals(Alliance.Blue)
-						? new Pose2d(0.0, 5.55, Rotation2d.fromRotations(0))
-						: new Pose2d(16.5, 5.55, Rotation2d.fromRotations(0));
+		SPEAKER_POSITION =
+				DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Blue
+						? new Translation2d(0.0, 5.55)
+						: new Translation2d(16.5, 5.55);
 	}
 
 	@Override
 	public void execute() {
-		Pose2d robotPose = drivebaseSubsystem.getPose();
-		Pose2d relativeSpeaker = robotPose.relativeTo(SPEAKER_POSE);
-		yawTarget =
-				Rotation2d.fromRadians(
-						Math.atan2(relativeSpeaker.getY(), relativeSpeaker.getX()) + Math.PI);
-		double distance = relativeSpeaker.getTranslation().getNorm();
+		// look ahead half a second into the future
+		var fieldSpeed = drivebaseSubsystem.getFieldSpeeds().times(0.5);
+		Translation2d robotPosition =
+				drivebaseSubsystem
+						.getPose()
+						.getTranslation()
+						.plus(new Translation2d(fieldSpeed.vxMetersPerSecond, fieldSpeed.vyMetersPerSecond));
+		Translation2d robotToSpeaker = SPEAKER_POSITION.minus(robotPosition);
+		yawTarget = robotToSpeaker.getAngle();
+		double distance = robotToSpeaker.getNorm();
 		LauncherDataPoint dataPoint = LAUNCHER_DATA.get(distance);
 		launcherSubsystem.setAngleWithOffset(dataPoint.angle);
 		launcherSubsystem.launch(dataPoint.rpm);

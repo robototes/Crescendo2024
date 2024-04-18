@@ -1,6 +1,7 @@
 package frc.team2412.robot;
 
 import com.ctre.phoenix6.SignalLogger;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -19,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.team2412.robot.Subsystems.SubsystemConstants;
 import frc.team2412.robot.commands.diagnostic.IntakeDiagnosticCommand;
 import frc.team2412.robot.commands.diagnostic.LauncherDiagnosticCommand;
+import frc.team2412.robot.commands.launcher.SyncPivotRelativeEncoderCommand;
 import frc.team2412.robot.util.MACAddress;
 import frc.team2412.robot.util.MatchDashboard;
 import frc.team2412.robot.util.auto.AutoLogic;
@@ -121,6 +123,12 @@ public class Robot extends TimedRobot {
 		dashboard = new MatchDashboard(subsystems);
 
 		RobotController.setBrownoutVoltage(5.75);
+
+		CommandScheduler.getInstance()
+				.schedule(
+						new SyncPivotRelativeEncoderCommand(subsystems.launcherSubsystem)
+								.ignoringDisable(true)
+								.withName("Sync Relative Encoder"));
 	}
 
 	@Override
@@ -138,6 +146,16 @@ public class Robot extends TimedRobot {
 	@Override
 	public void robotPeriodic() {
 		CommandScheduler.getInstance().run();
+		if (SubsystemConstants.DRIVEBASE_ENABLED && SubsystemConstants.LAUNCHER_ENABLED) {
+			Translation2d speakerPosition =
+					DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Blue
+							? new Translation2d(0.0, 5.55)
+							: new Translation2d(16.5, 5.55);
+			Translation2d robotPosition = subsystems.drivebaseSubsystem.getPose().getTranslation();
+			Translation2d robotToSpeaker = speakerPosition.minus(robotPosition);
+			double distance = robotToSpeaker.getNorm();
+			subsystems.launcherSubsystem.updateDistanceEntry(distance);
+		}
 	}
 
 	@Override

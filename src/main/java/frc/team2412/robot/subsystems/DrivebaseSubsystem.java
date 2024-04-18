@@ -32,6 +32,7 @@ import frc.team2412.robot.Subsystems.SubsystemConstants;
 import java.io.File;
 import java.util.EnumSet;
 import java.util.Map;
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 import swervelib.SwerveDrive;
@@ -49,7 +50,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 			Robot.getInstance().getRobotType() == RobotType.BONK
 					? 3.0
 					: Robot.getInstance().getRobotType() == RobotType.COMPETITION
-							? 4.7
+							? 6.0
 							: Robot.getInstance().getRobotType() == RobotType.CRANE ? 3.0 : 1.0;
 
 	// Auto align stuff, dw abt it
@@ -71,13 +72,13 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
 	private static final PIDConstants AUTO_TRANSLATION_PID =
 			Robot.getInstance().getRobotType() == RobotType.COMPETITION
-					? new PIDConstants(5, 0, 0.5) // practice
+					? new PIDConstants(5.3, 0, 0.6) // practice
 					: Robot.getInstance().getRobotType() == RobotType.BONK
 							? new PIDConstants(6, 0, 0.1) // bonk
 							: Robot.getInstance().getRobotType() == RobotType.CRANE
 									? new PIDConstants(3.9, 0, 0.2) // crane
 									: new PIDConstants(0.1, 0, 0.1); // bobot TODO: tune
-	private static final PIDConstants AUTO_ROTATION_PID = new PIDConstants(4.0, 0, 0.2);
+	private static final PIDConstants AUTO_ROTATION_PID = new PIDConstants(5.5, 0, 0);
 	private static final double MAX_AUTO_SPEED =
 			500.0; // this seems to only affect rotation for some reason
 
@@ -91,9 +92,11 @@ public class DrivebaseSubsystem extends SubsystemBase {
 	private GenericEntry headingCorrectionEntry;
 	private GenericEntry translationSpeedEntry;
 	private GenericEntry rotationSpeedEntry;
+	private GenericEntry turboRotationMultiplierEntry;
 	private GenericEntry xWheelsEntry;
 	private GenericEntry flipTranslationEntry;
 
+	@SuppressWarnings("StaticAssignmentInConstructor")
 	public DrivebaseSubsystem() {
 		initShuffleboard();
 
@@ -188,13 +191,19 @@ public class DrivebaseSubsystem extends SubsystemBase {
 	 * @param rotation Rotation2d value of robot rotation. CW is positive TODO: is this true?
 	 */
 	public Command driveJoystick(
-			DoubleSupplier forward, DoubleSupplier strafe, Supplier<Rotation2d> rotation) {
+			DoubleSupplier forward,
+			DoubleSupplier strafe,
+			Supplier<Rotation2d> rotation,
+			BooleanSupplier turboRotation) {
 		return this.run(
 				() -> {
 					Rotation2d constrainedRotation =
 							Rotation2d.fromRotations(
 									SwerveMath.applyDeadband(rotation.get().getRotations(), true, JOYSTICK_DEADBAND)
 											* MAX_SPEED
+											* (turboRotation.getAsBoolean()
+													? turboRotationMultiplierEntry.getDouble(1.0)
+													: 1)
 											* rotationSpeedEntry.getDouble(1.0)
 											* -1);
 					Translation2d constrainedTranslation =
@@ -246,6 +255,10 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
 	public ChassisSpeeds getRobotSpeeds() {
 		return swerveDrive.getRobotVelocity();
+	}
+
+	public ChassisSpeeds getFieldSpeeds() {
+		return swerveDrive.getFieldVelocity();
 	}
 
 	/** Set the robot's pose. TODO: does this change yaw too? does this affect field oriented? */
@@ -321,6 +334,13 @@ public class DrivebaseSubsystem extends SubsystemBase {
 						.withWidget(BuiltInWidgets.kNumberSlider)
 						.withSize(2, 1)
 						.withProperties(Map.of("Min", 0.0))
+						.getEntry();
+		turboRotationMultiplierEntry =
+				drivebaseTab
+						.addPersistent("Turbo rotation multiplier", 1.0)
+						.withWidget(BuiltInWidgets.kNumberSlider)
+						.withSize(2, 1)
+						.withProperties(Map.of("Min", 0.5, "Max", 5.0))
 						.getEntry();
 		xWheelsEntry =
 				drivebaseTab
@@ -435,6 +455,23 @@ public class DrivebaseSubsystem extends SubsystemBase {
 													.of(modules[3].getAngleMotor().getVelocity()));
 						},
 						this));
+	}
+
+	public Command debugDriveFullPower() {
+		return this.runEnd(
+						() -> {
+							for (SwerveModule module : swerveDrive.getModules()) {
+								module.getDriveMotor().set(1.0);
+								module.setAngle(0);
+							}
+						},
+						() -> {
+							for (SwerveModule module : swerveDrive.getModules()) {
+								module.getDriveMotor().set(0.0);
+								module.setAngle(0);
+							}
+						})
+				.withName("DriveFullPower");
 	}
 
 	public Command driveSysIdQuasistatic(SysIdRoutine.Direction direction) {

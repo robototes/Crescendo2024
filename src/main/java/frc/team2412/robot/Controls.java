@@ -8,7 +8,6 @@ import static frc.team2412.robot.Subsystems.SubsystemConstants.LAUNCHER_ENABLED;
 import static frc.team2412.robot.Subsystems.SubsystemConstants.LED_ENABLED;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
@@ -31,7 +30,6 @@ import frc.team2412.robot.commands.launcher.SetAngleLaunchCommand;
 import frc.team2412.robot.commands.launcher.SetPivotCommand;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
 import frc.team2412.robot.util.AmpAlign;
-import frc.team2412.robot.util.TrapAlign;
 
 public class Controls {
 	public static class ControlConstants {
@@ -60,7 +58,7 @@ public class Controls {
 	private final Trigger launcherSubwooferPresetButton;
 	private final Trigger launcherLowerPresetButton;
 	// private final Trigger launcherPodiumPresetButton;
-	private final Trigger launcherTrapPresetButton;
+	// private final Trigger launcherTrapPresetButton;
 	private final Trigger launcherAmpAlignPresetButton;
 	private final Trigger launcherLaunchButton;
 
@@ -78,7 +76,7 @@ public class Controls {
 		launcherSubwooferPresetButton = codriveController.a();
 		launcherLowerPresetButton = codriveController.y();
 		// launcherPodiumPresetButton = codriveController.povLeft();
-		launcherTrapPresetButton = codriveController.start();
+		// launcherTrapPresetButton = codriveController.start();
 		launcherAmpAlignPresetButton = driveController.y();
 		launcherLaunchButton = codriveController.rightBumper();
 		// intake controls (confirmed with driveteam)
@@ -112,22 +110,6 @@ public class Controls {
 		}
 		if (LED_ENABLED) {
 			bindLEDControls();
-		}
-		Pose2d SPEAKER_POSE =
-				Robot.isBlue()
-						? new Pose2d(0.0, 5.55, Rotation2d.fromRotations(0))
-						: new Pose2d(16.5, 5.55, Rotation2d.fromRotations(0));
-		if (DRIVEBASE_ENABLED && LAUNCHER_ENABLED) {
-			Commands.run(
-							() -> {
-								Pose2d robotPose = s.drivebaseSubsystem.getPose();
-								Pose2d relativeSpeaker = robotPose.relativeTo(SPEAKER_POSE);
-								double distance = relativeSpeaker.getTranslation().getNorm();
-								s.launcherSubsystem.updateDistanceEntry(distance);
-							})
-					.withName("Update distance")
-					.ignoringDisable(true)
-					.schedule();
 		}
 		if (DRIVEBASE_ENABLED && LAUNCHER_ENABLED && INTAKE_ENABLED) {
 			// temporary controls, not sure what drive team wants
@@ -172,7 +154,8 @@ public class Controls {
 						s.drivebaseSubsystem.driveJoystick(
 								driveController::getLeftY,
 								driveController::getLeftX,
-								() -> Rotation2d.fromRotations(driveController.getRightX())));
+								() -> Rotation2d.fromRotations(driveController.getRightX()),
+								driveController.rightTrigger()));
 		driveController.rightStick().onTrue(new InstantCommand(s.drivebaseSubsystem::toggleXWheels));
 		driveController
 				.start()
@@ -221,7 +204,9 @@ public class Controls {
 								s.launcherSubsystem,
 								() ->
 										MathUtil.applyDeadband(codriveController.getLeftY(), 0.1)
-												* LauncherSubsystem.ANGLE_MAX_SPEED));
+												* LauncherSubsystem.ANGLE_MAX_SPEED,
+								codriveController.leftBumper(),
+								codriveController.back()));
 
 		launcherLowerPresetButton.onTrue(
 				s.launcherSubsystem
@@ -242,11 +227,12 @@ public class Controls {
 						s.launcherSubsystem,
 						LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
 						LauncherSubsystem.AMP_AIM_ANGLE));
-		launcherTrapPresetButton.onTrue(
-				TrapAlign.trapPreset(s.drivebaseSubsystem, s.launcherSubsystem));
+
+		// launcherTrapPresetButton.onTrue(
+		// 		TrapAlign.trapPreset(s.drivebaseSubsystem, s.launcherSubsystem));
 		launcherAmpAlignPresetButton.onTrue(
 				Commands.either(
-						AmpAlign.ampPreset(s.drivebaseSubsystem),
+						AmpAlign.ampPreset(s.drivebaseSubsystem, s.launcherSubsystem),
 						Commands.none(),
 						() -> s.drivebaseSubsystem.getPose().getY() > 5.0));
 
@@ -258,7 +244,7 @@ public class Controls {
 		// 				s.launcherSubsystem.runEnd(
 		// 						s.launcherSubsystem::launch, s.launcherSubsystem::stopLauncher));
 
-		driveController.b().onTrue(new InstantCommand(() -> s.launcherSubsystem.launch(4000)));
+		driveController.b().onTrue(new InstantCommand(() -> s.launcherSubsystem.launch(6500)));
 	}
 
 	private void bindSysIdControls() {
@@ -277,10 +263,11 @@ public class Controls {
 		// 		.rightTrigger()
 		// 		.whileTrue(s.launcherSubsystem.flywheelSysIdDynamic(Direction.kReverse));
 		// switch these between angle and drive tests in code when tuning
-		driveController.x().whileTrue(s.drivebaseSubsystem.angleSysIdQuasistatic(Direction.kForward));
-		driveController.y().whileTrue(s.drivebaseSubsystem.angleSysIdQuasistatic(Direction.kReverse));
-		driveController.a().whileTrue(s.drivebaseSubsystem.angleSysIdDynamic(Direction.kForward));
-		driveController.b().whileTrue(s.drivebaseSubsystem.angleSysIdDynamic(Direction.kReverse));
+		driveController.x().whileTrue(s.drivebaseSubsystem.driveSysIdQuasistatic(Direction.kForward));
+		driveController.y().whileTrue(s.drivebaseSubsystem.driveSysIdQuasistatic(Direction.kReverse));
+		driveController.a().whileTrue(s.drivebaseSubsystem.driveSysIdDynamic(Direction.kForward));
+		driveController.b().whileTrue(s.drivebaseSubsystem.driveSysIdDynamic(Direction.kReverse));
+		driveController.back().whileTrue(s.drivebaseSubsystem.debugDriveFullPower());
 	}
 
 	public void vibrateDriveController(double vibration) {

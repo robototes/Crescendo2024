@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.73,
-        "y": 4.47
+        "x": 0.7275269251393202,
+        "y": 4.4671669970120575
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.0485713043498155,
-        "y": 1.848940634818207
+        "x": 2.046098229489136,
+        "y": 1.8461076318302645
       },
       "isLocked": false,
       "linkedName": "LowSpeaker"
     },
     {
       "anchor": {
-        "x": 6.97,
+        "x": 6.4,
         "y": 0.8
       },
       "prevControl": {
-        "x": 4.923673991492127,
-        "y": 0.785799769797738
+        "x": 4.100008967931012,
+        "y": 0.8064228032996081
       },
       "nextControl": {
-        "x": 7.0774886027857535,
-        "y": 0.8007459040726312
+        "x": 6.509999571098952,
+        "y": 0.7996928224508884
       },
       "isLocked": false,
       "linkedName": null
@@ -36,7 +36,7 @@
         "y": 0.77
       },
       "prevControl": {
-        "x": 7.848466239624848,
+        "x": 7.8505863938223595,
         "y": 0.7700000000000005
       },
       "nextControl": null,
@@ -47,23 +47,23 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.05,
-      "rotationDegrees": 120.0,
-      "rotateFast": false
-    },
-    {
-      "waypointRelativePos": 0.25,
-      "rotationDegrees": 150.98859902992157,
+      "rotationDegrees": 130.0,
       "rotateFast": false
     },
     {
       "waypointRelativePos": 0.5,
       "rotationDegrees": 175.80321002729156,
-      "rotateFast": false
+      "rotateFast": true
     },
     {
       "waypointRelativePos": 0.65,
       "rotationDegrees": 180.0,
       "rotateFast": true
+    },
+    {
+      "waypointRelativePos": 0.3,
+      "rotationDegrees": 174.13621568699799,
+      "rotateFast": false
     }
   ],
   "constraintZones": [],
@@ -87,7 +87,7 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 4.0,
+    "maxVelocity": 4.5,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0

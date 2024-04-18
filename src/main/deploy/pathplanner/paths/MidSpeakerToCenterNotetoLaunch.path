@@ -108,7 +108,7 @@
   "eventMarkers": [
     {
       "name": "retract",
-      "waypointRelativePos": 0.2,
+      "waypointRelativePos": 0.25,
       "command": {
         "type": "parallel",
         "data": {

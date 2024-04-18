@@ -147,9 +147,10 @@ public abstract class SwerveMotor {
 	 * Set the current limit for the swerve drive motor, remember this may cause jumping if used in
 	 * conjunction with voltage compensation. This is useful to protect the motor from current spikes.
 	 *
-	 * @param currentLimit Current limit in AMPS at free speed.
+	 * @param statorLimit Current limit in AMPS at free speed.
+	 * @param supplyLimit;
 	 */
-	public abstract void setCurrentLimit(int currentLimit);
+	public abstract void setCurrentLimit(int statorLimit, int supplyLimit);
 
 	/**
 	 * Set the maximum rate the open/closed loop output can change by.

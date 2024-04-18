@@ -20,12 +20,12 @@
         "y": 2.4481294676875076
       },
       "prevControl": {
-        "x": 8.337533809215634,
-        "y": 1.7307971969497182
+        "x": 8.057894836551087,
+        "y": 1.8070758038267916
       },
       "nextControl": {
-        "x": 8.240937624732393,
-        "y": 3.5769077252440225
+        "x": 8.534598822328235,
+        "y": 3.0693076055203994
       },
       "isLocked": false,
       "linkedName": null
@@ -36,8 +36,8 @@
         "y": 5.321383214195
       },
       "prevControl": {
-        "x": 5.059835262527669,
-        "y": 3.9580536303929756
+        "x": 5.641519404680388,
+        "y": 4.3469619676204285
       },
       "nextControl": null,
       "isLocked": false,
@@ -46,18 +46,33 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.75,
-      "rotationDegrees": 146.44882381880868,
+      "waypointRelativePos": 0.7,
+      "rotationDegrees": 137.84146867175556,
       "rotateFast": false
     },
     {
-      "waypointRelativePos": 1.65,
+      "waypointRelativePos": 1.6,
       "rotationDegrees": 176.0,
       "rotateFast": false
     },
     {
       "waypointRelativePos": 1.0,
-      "rotationDegrees": 162.59131699825656,
+      "rotationDegrees": 145.1820620122512,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 0.8,
+      "rotationDegrees": 135.96440825571213,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 1.3,
+      "rotationDegrees": 157.65879132111158,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 1.45,
+      "rotationDegrees": 164.3979661370285,
       "rotateFast": false
     }
   ],
@@ -98,8 +113,8 @@
       }
     },
     {
-      "name": "retract",
-      "waypointRelativePos": 0.45,
+      "name": "under stage",
+      "waypointRelativePos": 1.5,
       "command": {
         "type": "parallel",
         "data": {

@@ -20,15 +20,21 @@
         "y": 4.07539893464585
       },
       "prevControl": {
-        "x": 1.8241337089851442,
-        "y": 4.2187176915536355
+        "x": 1.8408648194756145,
+        "y": 4.097305368134887
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "Podium"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 163.6034850413123,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [
     {

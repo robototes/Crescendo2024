@@ -21,9 +21,9 @@ public class Hardware {
 	public static final int LAUNCHER_PIVOT_TWO_MOTOR_ID = 32;
 
 	// intake [40 - 49]
-	public static final int INTAKE_MOTOR_FRONT = 40;
-	public static final int INTAKE_MOTOR_BACK = 41;
-	public static final int INTAKE_MOTOR_LEFT = 42;
+	public static final int INTAKE_MOTOR_FRONT = 41;
+	// public static final int INTAKE_MOTOR_BACK = 42;
+	public static final int INTAKE_MOTOR_LEFT = 40;
 	public static final int INTAKE_MOTOR_RIGHT = 43;
 
 	public static final int INGEST_MOTOR = 44;
@@ -31,8 +31,8 @@ public class Hardware {
 	public static final int INDEX_MOTOR_UPPER = 45;
 
 	public static final int FEEDER_MOTOR = 46;
-	// LED strip is PWM port 8
-	public static final int BLINKIN_LED = 8;
+	// LED strip is PWM port 3
+	public static final int BLINKIN_LED = 3;
 
 	// intake sensors  (Digital IO)
 	public static final int INDEX_SENSOR = 1;

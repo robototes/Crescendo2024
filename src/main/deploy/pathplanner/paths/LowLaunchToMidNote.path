@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.770693659609494,
-        "y": 5.1295050435105765
+        "x": 2.7776195372993056,
+        "y": 4.946521435183591
       },
       "isLocked": false,
       "linkedName": "PodiumLaunch"
@@ -20,8 +20,8 @@
         "y": 5.55
       },
       "prevControl": {
-        "x": 2.843883094194073,
-        "y": 5.224806376319017
+        "x": 2.877482177096141,
+        "y": 5.287229265078679
       },
       "nextControl": null,
       "isLocked": false,

@@ -8,36 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.01058639382236,
-        "y": 0.7700000000000005
+        "x": 5.156891888026078,
+        "y": 1.4098255030081461
       },
       "isLocked": false,
       "linkedName": "CenterLineN5"
     },
     {
       "anchor": {
-        "x": 3.0808084473311808,
-        "y": 1.363329583802025
+        "x": 0.7275269251393202,
+        "y": 4.4671669970120575
       },
       "prevControl": {
-        "x": 3.9310570049711533,
-        "y": 0.7769512681882514
-      },
-      "nextControl": {
-        "x": 1.8459892684582195,
-        "y": 2.2149290175075143
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 0.73,
-        "y": 4.47
-      },
-      "prevControl": {
-        "x": 1.4899471997783693,
-        "y": 3.081925867364013
+        "x": 1.7057565421060124,
+        "y": 2.2909664423919924
       },
       "nextControl": null,
       "isLocked": false,
@@ -46,13 +30,23 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.2,
-      "rotationDegrees": 180.0,
+      "waypointRelativePos": 0.25,
+      "rotationDegrees": -173.50545807332855,
       "rotateFast": false
     },
     {
-      "waypointRelativePos": 1.9,
+      "waypointRelativePos": 0.6,
+      "rotationDegrees": 117.19405608697582,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 0.95,
       "rotationDegrees": 120.0,
+      "rotateFast": true
+    },
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": -161.29004592647703,
       "rotateFast": false
     }
   ],
@@ -60,7 +54,7 @@
   "eventMarkers": [
     {
       "name": "rev launcher",
-      "waypointRelativePos": 1.0,
+      "waypointRelativePos": 0.5,
       "command": {
         "type": "parallel",
         "data": {

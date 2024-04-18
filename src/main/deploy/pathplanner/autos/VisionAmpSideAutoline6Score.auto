@@ -48,6 +48,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "VisionLaunch"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "launchSecondNoteLaunch2"
@@ -60,9 +66,9 @@
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "VisionLaunch"
+            "pathName": "MidNoteToBottomNote"
           }
         }
       ]
