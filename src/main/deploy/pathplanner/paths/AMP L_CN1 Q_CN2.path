@@ -3,52 +3,34 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.35,
-        "y": 5.45
+        "x": 5.42,
+        "y": 6.51
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.9574504756216715,
-        "y": 6.973346239305092
+        "x": 5.97739075389196,
+        "y": 6.434297939018414
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.123913346925792,
-        "y": 6.369600486948722
+        "x": 7.105431675652084,
+        "y": 6.195202308862735
       },
       "prevControl": {
-        "x": 6.153219513646234,
-        "y": 6.609962769475089
+        "x": 6.529149900405065,
+        "y": 6.34233808126623
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "QCenterLineN2"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "eventMarkers": [
-    {
-      "name": "intake",
-      "waypointRelativePos": 0,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "Intake"
-              }
-            }
-          ]
-        }
-      }
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.0,
     "maxAcceleration": 3.0,
@@ -56,14 +38,14 @@
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": 145.95,
+    "velocity": 2.0,
+    "rotation": 159.94,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "Auto Logic Paths",
   "previewStartingState": {
-    "rotation": 172.81,
+    "rotation": -166.57,
     "velocity": 0.0
   },
   "useDefaultConstraints": true
