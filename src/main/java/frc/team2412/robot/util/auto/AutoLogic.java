@@ -48,7 +48,7 @@ public class AutoLogic {
 	public static final double FEEDER_DELAY = 0.4;
 
 	// rpm to rev up launcher before launching
-	public static final double REV_RPM = 2500;
+	public static final double REV_RPM = 3400;
 	public static final double STAGE_ANGLE = 262;
 
 	public static enum StartPosition {
@@ -436,7 +436,10 @@ public class AutoLogic {
 
 	public static Command revFlyWheels() {
 		return (LAUNCHER_ENABLED
-						? new SetLaunchSpeedCommand(s.launcherSubsystem, REV_RPM)
+						? Commands.either(
+								new SetLaunchSpeedCommand(s.launcherSubsystem, REV_RPM),
+								Commands.none(),
+								() -> s.launcherSubsystem.getLauncherSpeed() < REV_RPM)
 						: Commands.none())
 				.withName("Auto - RevFlyWheelsCommand");
 	}
