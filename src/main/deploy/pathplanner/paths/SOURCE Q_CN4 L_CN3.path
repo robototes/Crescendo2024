@@ -51,8 +51,8 @@
       "rotateFast": false
     },
     {
-      "waypointRelativePos": 0.4,
-      "rotationDegrees": 158.54968613263847,
+      "waypointRelativePos": 0.55,
+      "rotationDegrees": 165.67804039032245,
       "rotateFast": false
     },
     {
@@ -63,6 +63,11 @@
     {
       "waypointRelativePos": 1.55,
       "rotationDegrees": -170.51629313962593,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 0.05,
+      "rotationDegrees": -172.10284485923188,
       "rotateFast": false
     }
   ],

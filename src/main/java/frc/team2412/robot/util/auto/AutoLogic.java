@@ -48,6 +48,7 @@ public class AutoLogic {
 	public static final Controls controls = r.controls;
 
 	public static final double FEEDER_DELAY = 0.4;
+	public static final double HEADING_SPEED_TOLERANCE = 1.0;
 
 	// rpm to rev up launcher before launching
 	public static final double REV_RPM = 2500;
@@ -347,7 +348,8 @@ public class AutoLogic {
 				? () ->
 						(s.launcherSubsystem.isAtAngle()
 								&& s.launcherSubsystem.isAtSpeed()
-								&& !(s.intakeSubsystem.getCurrentCommand() instanceof AllInCommand))
+								&& !(s.intakeSubsystem.getCurrentCommand() instanceof AllInCommand)
+								&& Units.radiansToDegrees(s.drivebaseSubsystem.getRobotSpeeds().omegaRadiansPerSecond) < HEADING_SPEED_TOLERANCE)
 				: () -> true);
 	}
 
