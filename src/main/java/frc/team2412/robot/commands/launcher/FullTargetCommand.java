@@ -20,7 +20,7 @@ import java.nio.file.FileSystems;
 
 public class FullTargetCommand extends Command {
 
-	private static final InterpolatingTreeMap<Double, LauncherDataPoint> LAUNCHER_DATA =
+	public static final InterpolatingTreeMap<Double, LauncherDataPoint> LAUNCHER_DATA =
 			LauncherDataLoader.fromCSV(
 					FileSystems.getDefault()
 							.getPath(
