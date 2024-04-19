@@ -562,7 +562,7 @@ public class LauncherSubsystem extends SubsystemBase {
 		if (getPosition()
 						>= (USE_THROUGHBORE ? PIVOT_SOFTSTOP_FORWARD_THROUGHBORE : PIVOT_SOFTSTOP_FORWARD)
 								+ PIVOT_DISABLE_OFFSET
-				|| launcherAngleEncoder.getPosition()
+				|| getPosition()
 						<= (USE_THROUGHBORE ? PIVOT_SOFTSTOP_BACKWARD_THROUGHBORE : PIVOT_SOFTSTOP_BACKWARD)
 								- PIVOT_DISABLE_OFFSET) {
 			if (!ignoreLimits) {

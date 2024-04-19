@@ -2,6 +2,7 @@ package frc.team2412.robot.commands.launcher;
 
 import static frc.team2412.robot.Subsystems.SubsystemConstants.*;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
@@ -9,6 +10,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.team2412.robot.subsystems.DrivebaseSubsystem;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
 import frc.team2412.robot.util.LauncherDataLoader;
@@ -26,6 +28,8 @@ public class AimTowardsSpeakerCommand extends Command {
 											? "launcher_data_throughbore.csv"
 											: "launcher_data_lamprey.csv"));
 
+	private final double HEADING_TOLERANCE = 2.0;
+
 	private Translation2d SPEAKER_POSITION;
 
 	private DrivebaseSubsystem drivebaseSubsystem;
@@ -38,7 +42,7 @@ public class AimTowardsSpeakerCommand extends Command {
 		this.launcherSubsystem = launcherSubsystem;
 		this.drivebaseSubsystem = drivebaseSubsystem;
 		if (DRIVEBASE_ENABLED) {
-			yawAlignmentCommand = drivebaseSubsystem.rotateToAngle(() -> yawTarget, false);
+			yawAlignmentCommand = drivebaseSubsystem.rotateToAngle(() -> yawTarget, true);
 		}
 
 		addRequirements(launcherSubsystem);
@@ -46,6 +50,8 @@ public class AimTowardsSpeakerCommand extends Command {
 
 	@Override
 	public void initialize() {
+		CommandScheduler.getInstance().schedule(yawAlignmentCommand);
+
 		SPEAKER_POSITION =
 				DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Blue
 						? new Translation2d(0.0, 5.55)
@@ -64,8 +70,10 @@ public class AimTowardsSpeakerCommand extends Command {
 		Translation2d robotToSpeaker = SPEAKER_POSITION.minus(robotPosition);
 		double distance = robotToSpeaker.getNorm();
 		LauncherDataPoint dataPoint = LAUNCHER_DATA.get(distance);
-		launcherSubsystem.launch(dataPoint.rpm);
 		launcherSubsystem.updateDistanceEntry(distance);
+
+		yawTarget = robotToSpeaker.getAngle();
+		launcherSubsystem.setAngleWithOffset(dataPoint.angle);
 	}
 
 	@Override
@@ -75,6 +83,10 @@ public class AimTowardsSpeakerCommand extends Command {
 
 	@Override
 	public boolean isFinished() {
-		return true;
+		return (MathUtil.isNear(
+						drivebaseSubsystem.getPose().getRotation().getDegrees(),
+						yawTarget.getDegrees(),
+						HEADING_TOLERANCE)
+				&& launcherSubsystem.isAtSpeed());
 	}
 }
