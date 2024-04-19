@@ -1,5 +1,8 @@
 package frc.team2412.robot;
 
+import static frc.team2412.robot.Subsystems.SubsystemConstants.APRILTAGS_ENABLED;
+import static frc.team2412.robot.Subsystems.SubsystemConstants.DRIVEBASE_ENABLED;
+
 import com.ctre.phoenix6.SignalLogger;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -23,6 +26,7 @@ import frc.team2412.robot.commands.diagnostic.LauncherDiagnosticCommand;
 import frc.team2412.robot.commands.launcher.SyncPivotRelativeEncoderCommand;
 import frc.team2412.robot.util.MACAddress;
 import frc.team2412.robot.util.MatchDashboard;
+import frc.team2412.robot.util.auto.AutoAlignment;
 import frc.team2412.robot.util.auto.AutoLogic;
 
 public class Robot extends TimedRobot {
@@ -92,9 +96,11 @@ public class Robot extends TimedRobot {
 			AutoLogic.registerCommands();
 		}
 
-		if (Subsystems.SubsystemConstants.DRIVEBASE_ENABLED) {
-			if (autoEnabled) {
-				AutoLogic.initShuffleBoard();
+		if (Subsystems.SubsystemConstants.DRIVEBASE_ENABLED && autoEnabled) {
+			AutoLogic.initShuffleboard();
+
+			if (APRILTAGS_ENABLED) {
+				AutoAlignment.initShuffleboard();
 			}
 		}
 
@@ -165,8 +171,8 @@ public class Robot extends TimedRobot {
 		// Checks if FMS is attatched and enables joystick warning if true
 		DriverStation.silenceJoystickConnectionWarning(!DriverStation.isFMSAttached());
 		// System.out.println(AutoLogic.getSelected() != null);
-		if (autoEnabled) {
-			if (AutoLogic.getSelectedAuto() != null && SubsystemConstants.DRIVEBASE_ENABLED) {
+		if (autoEnabled && SubsystemConstants.DRIVEBASE_ENABLED) {
+			if (AutoLogic.getSelectedAuto() != null) {
 				AutoLogic.getSelectedAuto().schedule();
 			}
 		}
@@ -204,6 +210,13 @@ public class Robot extends TimedRobot {
 						.ignoringDisable(true)
 						.withName("drivebaseCoast");
 		coastCommand.schedule();
+	}
+
+	@Override
+	public void disabledPeriodic() {
+		if (DRIVEBASE_ENABLED && APRILTAGS_ENABLED && autoEnabled) {
+			AutoAlignment.updateField();
+		}
 	}
 
 	@Override

@@ -248,7 +248,7 @@ public class AutoLogic {
 		return AutoBuilder.followPath(path);
 	}
 
-	public static void initShuffleBoard() {
+	public static void initShuffleboard() {
 
 		startPositionChooser.setDefaultOption(StartPosition.MISC.title, StartPosition.MISC);
 		for (StartPosition startPosition : StartPosition.values()) {
@@ -344,6 +344,9 @@ public class AutoLogic {
 		return 0;
 	}
 
+	public static AutoPath getSelectedAutoPath() {
+		return (chooserHasAutoSelected() ? availableAutos.getSelected() : defaultPath);
+	}
 	// commands util
 
 	public static BooleanSupplier isReadyToLaunch() {
