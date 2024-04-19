@@ -469,6 +469,16 @@ public class AutoLogic {
 				.withName("Auto - SetPivotSubwooferCommand");
 	}
 
+	public static Command setAngleIndex() {
+		return (LAUNCHER_ENABLED
+						? new SetAngleLaunchCommand(
+								s.launcherSubsystem,
+								LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
+								LauncherSubsystem.RETRACTED_ANGLE)
+						: Commands.none())
+				.withName("Auto - SetPivotIndexCommand");
+	}
+
 	public static Command feedUntilNoteLaunched() {
 		return (INTAKE_ENABLED && LAUNCHER_ENABLED
 						? Commands.waitUntil(isReadyToLaunch())
