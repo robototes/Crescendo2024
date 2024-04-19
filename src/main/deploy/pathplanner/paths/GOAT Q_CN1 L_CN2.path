@@ -1,0 +1,94 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 6.762426586077662,
+        "y": 7.131234422184906
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 7.737031684754967,
+        "y": 7.355164995426253
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.131856689622873,
+        "y": 5.49228881953771
+      },
+      "prevControl": {
+        "x": 8.717177144208623,
+        "y": 5.650709478514413
+      },
+      "nextControl": {
+        "x": 7.546536235037132,
+        "y": 5.333868160561007
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.385712279854019,
+        "y": 6.737887477549577
+      },
+      "prevControl": {
+        "x": 6.121416750375649,
+        "y": 6.3299721275573875
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.55,
+      "rotationDegrees": -167.11,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 0.8,
+      "rotationDegrees": -167.11,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 1.05,
+      "rotationDegrees": -153.03913733710152,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 1.35,
+      "rotationDegrees": -139.4626994148533,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 1.45,
+      "rotationDegrees": -145.30053913979032,
+      "rotateFast": false
+    }
+  ],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0.0,
+    "rotation": -166.04,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Auto Logic Paths",
+  "previewStartingState": {
+    "rotation": -168.06,
+    "velocity": 1.9
+  },
+  "useDefaultConstraints": true
+}
