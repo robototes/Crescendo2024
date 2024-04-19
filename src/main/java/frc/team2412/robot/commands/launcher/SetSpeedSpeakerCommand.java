@@ -1,30 +1,17 @@
 package frc.team2412.robot.commands.launcher;
 
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.team2412.robot.subsystems.DrivebaseSubsystem;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
-import frc.team2412.robot.util.LauncherDataLoader;
 import frc.team2412.robot.util.LauncherDataPoint;
-import java.nio.file.FileSystems;
 
 public class SetSpeedSpeakerCommand extends Command {
 
 	LauncherSubsystem launcherSubsystem;
 	DrivebaseSubsystem drivebaseSubsystem;
-
-	private static final InterpolatingTreeMap<Double, LauncherDataPoint> LAUNCHER_DATA =
-			LauncherDataLoader.fromCSV(
-					FileSystems.getDefault()
-							.getPath(
-									Filesystem.getDeployDirectory().getPath(),
-									LauncherSubsystem.USE_THROUGHBORE
-											? "launcher_data_throughbore.csv"
-											: "launcher_data_lamprey.csv"));
 
 	private Translation2d SPEAKER_POSITION;
 
@@ -53,7 +40,7 @@ public class SetSpeedSpeakerCommand extends Command {
 						.plus(new Translation2d(fieldSpeed.vxMetersPerSecond, fieldSpeed.vyMetersPerSecond));
 		Translation2d robotToSpeaker = SPEAKER_POSITION.minus(robotPosition);
 		double distance = robotToSpeaker.getNorm();
-		LauncherDataPoint dataPoint = LAUNCHER_DATA.get(distance);
+		LauncherDataPoint dataPoint = FullTargetCommand.LAUNCHER_DATA.get(distance);
 		launcherSubsystem.launch(dataPoint.rpm);
 		launcherSubsystem.updateDistanceEntry(distance);
 	}

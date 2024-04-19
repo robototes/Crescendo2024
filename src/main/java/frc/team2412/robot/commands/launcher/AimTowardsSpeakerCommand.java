@@ -5,28 +5,15 @@ import static frc.team2412.robot.Subsystems.SubsystemConstants.*;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.team2412.robot.subsystems.DrivebaseSubsystem;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
-import frc.team2412.robot.util.LauncherDataLoader;
 import frc.team2412.robot.util.LauncherDataPoint;
-import java.nio.file.FileSystems;
 
 public class AimTowardsSpeakerCommand extends Command {
-
-	private static final InterpolatingTreeMap<Double, LauncherDataPoint> LAUNCHER_DATA =
-			LauncherDataLoader.fromCSV(
-					FileSystems.getDefault()
-							.getPath(
-									Filesystem.getDeployDirectory().getPath(),
-									LauncherSubsystem.USE_THROUGHBORE
-											? "launcher_data_throughbore.csv"
-											: "launcher_data_lamprey.csv"));
 
 	private final double HEADING_TOLERANCE = 2.0;
 
@@ -69,7 +56,7 @@ public class AimTowardsSpeakerCommand extends Command {
 						.plus(new Translation2d(fieldSpeed.vxMetersPerSecond, fieldSpeed.vyMetersPerSecond));
 		Translation2d robotToSpeaker = SPEAKER_POSITION.minus(robotPosition);
 		double distance = robotToSpeaker.getNorm();
-		LauncherDataPoint dataPoint = LAUNCHER_DATA.get(distance);
+		LauncherDataPoint dataPoint = FullTargetCommand.LAUNCHER_DATA.get(distance);
 		launcherSubsystem.updateDistanceEntry(distance);
 
 		yawTarget = robotToSpeaker.getAngle();
