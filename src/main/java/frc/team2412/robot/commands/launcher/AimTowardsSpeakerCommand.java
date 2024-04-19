@@ -74,6 +74,6 @@ public class AimTowardsSpeakerCommand extends Command {
 						drivebaseSubsystem.getPose().getRotation().getDegrees(),
 						yawTarget.getDegrees(),
 						HEADING_TOLERANCE)
-				&& launcherSubsystem.isAtSpeed());
+				&& launcherSubsystem.isAtAngle());
 	}
 }
