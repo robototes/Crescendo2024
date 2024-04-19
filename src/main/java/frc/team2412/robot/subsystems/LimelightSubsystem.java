@@ -13,6 +13,7 @@ public class LimelightSubsystem extends SubsystemBase {
 
 	// POTENTIAL CONSTANTS
 	private GenericEntry GOAL_DISTANCE_FROM_NOTE;
+	private final double AUTO_DETECTION_DISTANCE_FROM_NOTE = 3.5; // meters
 
 	// MEMBERS
 
@@ -68,6 +69,10 @@ public class LimelightSubsystem extends SubsystemBase {
 	}
 
 	// METHODS
+
+	public boolean isNoteInFront() {
+		return (hasTargets() && getDistanceFromTargetInches() <= AUTO_DETECTION_DISTANCE_FROM_NOTE);
+	}
 
 	public boolean hasTargets() {
 		return (networkTable.getEntry("tv").getDouble(0) != 0);
