@@ -350,7 +350,9 @@ public class AutoLogic {
 						(s.launcherSubsystem.isAtAngle()
 								&& s.launcherSubsystem.isAtSpeed()
 								&& !(s.intakeSubsystem.getCurrentCommand() instanceof AllInCommand)
-								&& Units.radiansToDegrees(s.drivebaseSubsystem.getRobotSpeeds().omegaRadiansPerSecond) < HEADING_SPEED_TOLERANCE)
+								&& Units.radiansToDegrees(
+												s.drivebaseSubsystem.getRobotSpeeds().omegaRadiansPerSecond)
+										< HEADING_SPEED_TOLERANCE)
 				: () -> true);
 	}
 
