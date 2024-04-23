@@ -30,6 +30,7 @@ import frc.team2412.robot.commands.launcher.SetAngleLaunchCommand;
 import frc.team2412.robot.commands.launcher.SetPivotCommand;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
 import frc.team2412.robot.util.AmpAlign;
+import frc.team2412.robot.util.TrapAlign;
 
 public class Controls {
 	public static class ControlConstants {
@@ -58,7 +59,7 @@ public class Controls {
 	private final Trigger launcherSubwooferPresetButton;
 	private final Trigger launcherLowerPresetButton;
 	// private final Trigger launcherPodiumPresetButton;
-	// private final Trigger launcherTrapPresetButton;
+	private final Trigger launcherTrapPresetButton;
 	private final Trigger launcherAmpAlignPresetButton;
 	private final Trigger launcherLaunchButton;
 
@@ -76,7 +77,7 @@ public class Controls {
 		launcherSubwooferPresetButton = codriveController.a();
 		launcherLowerPresetButton = codriveController.y();
 		// launcherPodiumPresetButton = codriveController.povLeft();
-		// launcherTrapPresetButton = codriveController.start();
+		launcherTrapPresetButton = codriveController.start();
 		launcherAmpAlignPresetButton = driveController.y();
 		launcherLaunchButton = codriveController.rightBumper();
 		// intake controls (confirmed with driveteam)
@@ -228,8 +229,8 @@ public class Controls {
 						LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
 						LauncherSubsystem.AMP_AIM_ANGLE));
 
-		// launcherTrapPresetButton.onTrue(
-		// 		TrapAlign.trapPreset(s.drivebaseSubsystem, s.launcherSubsystem));
+		launcherTrapPresetButton.whileTrue(
+				TrapAlign.trapPreset(s.drivebaseSubsystem, s.launcherSubsystem));
 		launcherAmpAlignPresetButton.onTrue(
 				Commands.either(
 						AmpAlign.ampPreset(s.drivebaseSubsystem, s.launcherSubsystem),
@@ -242,7 +243,7 @@ public class Controls {
 		// 		.leftBumper()
 		// 		.whileTrue(
 		// 				s.launcherSubsystem.runEnd(
-		// 						s.launcherSubsystem::launch, s.launcherSubsystem::stopLauncher));
+		// 						s.launcherSubsystem::l[]\aunch, s.launcherSubsystem::stopLauncher));
 
 		driveController.b().onTrue(new InstantCommand(() -> s.launcherSubsystem.launch(6500)));
 	}

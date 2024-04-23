@@ -464,6 +464,7 @@ public class AutoLogic {
 				.withName("Auto - SetPivotSubwooferCommand");
 	}
 
+
 	public static Command visionLaunch2() {
 		return (LAUNCHER_ENABLED && INTAKE_ENABLED && DRIVEBASE_ENABLED && APRILTAGS_ENABLED
 						? new AimTowardsSpeakerCommand(s.launcherSubsystem, s.drivebaseSubsystem)
@@ -477,6 +478,16 @@ public class AutoLogic {
 						? new SetSpeedSpeakerCommand(s.launcherSubsystem, s.drivebaseSubsystem)
 						: Commands.none())
 				.withName("Auto - SetFlywheelSpeedTowardsSpeaker");
+
+	public static Command setAngleIndex() {
+		return (LAUNCHER_ENABLED
+						? new SetAngleLaunchCommand(
+								s.launcherSubsystem,
+								LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
+								LauncherSubsystem.RETRACTED_ANGLE)
+						: Commands.none())
+				.withName("Auto - SetPivotIndexCommand");
+
 	}
 
 	public static Command feedUntilNoteLaunched() {
