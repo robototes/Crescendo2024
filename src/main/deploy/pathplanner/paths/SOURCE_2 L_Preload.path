@@ -3,50 +3,50 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.3,
-        "y": 7.0
+        "x": 1.47,
+        "y": 2.05
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.3,
-        "y": 7.0
+        "x": 2.039986937116732,
+        "y": 2.0083457309771764
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 6.3,
-        "y": 7.0
+        "x": 2.9089022069531514,
+        "y": 1.9539173222406319
       },
       "prevControl": {
-        "x": 5.3,
-        "y": 7.0
+        "x": 2.333176094923619,
+        "y": 1.979026815196488
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "SourceVisionLaunch"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 2.0,
+    "maxVelocity": 4.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0,
+    "rotation": 46.3971529891948,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Auto Logic Paths",
   "previewStartingState": {
-    "rotation": 0,
+    "rotation": 88.97220638847216,
     "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

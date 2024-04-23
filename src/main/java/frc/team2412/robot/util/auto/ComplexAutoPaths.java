@@ -7,9 +7,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.team2412.robot.commands.launcher.FullTargetCommand;
-import frc.team2412.robot.commands.launcher.SetAngleLaunchCommand;
-import frc.team2412.robot.subsystems.LauncherSubsystem;
+
 import java.util.function.BooleanSupplier;
 
 public class ComplexAutoPaths {
@@ -63,6 +61,7 @@ public class ComplexAutoPaths {
 					Commands.parallel(
 							AutoLogic.setFlyWheelSpeaker(),
 							new SequentialCommandGroup(
+									AutoLogic.subwooferLaunch(),
 									AutoLogic.getAutoCommand("MID L_Preload L_AN2"),
 									visionLaunch2(),
 									AutoLogic.getAutoCommand("MID L_AN2 Q_CN3"),
@@ -88,6 +87,7 @@ public class ComplexAutoPaths {
 					Commands.parallel(
 							AutoLogic.setFlyWheelSpeaker(),
 							new SequentialCommandGroup(
+									AutoLogic.subwooferLaunch(),
 									AutoLogic.getAutoCommand("SOURCE L_Preload"),
 									AutoLogic.visionLaunch2(),
 									AutoLogic.getAutoCommand("SOURCE L_Preload Q_CN5"),
@@ -114,22 +114,7 @@ public class ComplexAutoPaths {
 		return Commands.either(onTrue, onFalse, checkForTargets());
 	}
 
-	public static final Command VisionLaunchCommand() {
-		return (LAUNCHER_ENABLED && INTAKE_ENABLED && APRILTAGS_ENABLED
-				? new FullTargetCommand(s.launcherSubsystem, s.drivebaseSubsystem, controls)
-				: Commands.none());
-	}
-
-	public static final Command SubwooferLaunchCommand() {
-		return (LAUNCHER_ENABLED
-				? new SetAngleLaunchCommand(
-						s.launcherSubsystem,
-						LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
-						LauncherSubsystem.SUBWOOFER_AIM_ANGLE)
-				: Commands.none());
-	}
-
 	public static BooleanSupplier checkForTargets() {
-		return (LIMELIGHT_ENABLED ? s.limelightSubsystem::hasTargets : () -> true);
+		return (LIMELIGHT_ENABLED ? s.limelightSubsystem::isNoteInFront : () -> true);
 	}
 }
