@@ -243,7 +243,7 @@ public class Controls {
 		// 		.leftBumper()
 		// 		.whileTrue(
 		// 				s.launcherSubsystem.runEnd(
-		// 						s.launcherSubsystem::l[]\aunch, s.launcherSubsystem::stopLauncher));
+		// 						s.launcherSubsystem::launch, s.launcherSubsystem::stopLauncher));
 
 		driveController.b().onTrue(new InstantCommand(() -> s.launcherSubsystem.launch(6500)));
 	}
