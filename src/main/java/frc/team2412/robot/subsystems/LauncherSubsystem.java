@@ -280,12 +280,14 @@ public class LauncherSubsystem extends SubsystemBase {
 
 	// returns the degrees of the angle of the launcher
 	public double getAngle() {
-		// get position returns a double in the form of rotations
+		return Units.rotationsToDegrees(getPosition());
+	}
+
+	public double getPosition() {
 		if (!USE_THROUGHBORE) {
-			return Units.rotationsToDegrees(launcherAngleEncoder.getPosition());
+			return launcherAngleEncoder.getPosition();
 		}
-		return Units.rotationsToDegrees(
-				convertEncoderRotationsToPivotRotations(launcherAngleThroughboreEncoder.getPosition()));
+		return convertEncoderRotationsToPivotRotations(launcherAngleThroughboreEncoder.getPosition());
 	}
 
 	/**
@@ -557,10 +559,10 @@ public class LauncherSubsystem extends SubsystemBase {
 					false);
 		}
 
-		if (launcherAngleEncoder.getPosition()
+		if (getPosition()
 						>= (USE_THROUGHBORE ? PIVOT_SOFTSTOP_FORWARD_THROUGHBORE : PIVOT_SOFTSTOP_FORWARD)
 								+ PIVOT_DISABLE_OFFSET
-				|| launcherAngleEncoder.getPosition()
+				|| getPosition()
 						<= (USE_THROUGHBORE ? PIVOT_SOFTSTOP_BACKWARD_THROUGHBORE : PIVOT_SOFTSTOP_BACKWARD)
 								- PIVOT_DISABLE_OFFSET) {
 			if (!ignoreLimits) {

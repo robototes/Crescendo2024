@@ -1,0 +1,52 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 0.7275269251393202,
+        "y": 4.4671669970120575
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.3509924162705473,
+        "y": 3.694183388366777
+      },
+      "isLocked": false,
+      "linkedName": "LowSpeaker"
+    },
+    {
+      "anchor": {
+        "x": 2.9089022069531514,
+        "y": 1.9539173222406319
+      },
+      "prevControl": {
+        "x": 2.289197721252586,
+        "y": 2.5654051308102623
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "SourceVisionLaunch"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 133.0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Auto Logic Paths",
+  "previewStartingState": {
+    "rotation": 120.0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

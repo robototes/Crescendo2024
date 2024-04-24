@@ -7,9 +7,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.team2412.robot.commands.launcher.FullTargetCommand;
-import frc.team2412.robot.commands.launcher.SetAngleLaunchCommand;
-import frc.team2412.robot.subsystems.LauncherSubsystem;
 import java.util.function.BooleanSupplier;
 
 public class ComplexAutoPaths {
@@ -30,146 +27,90 @@ public class ComplexAutoPaths {
 
 	// Complex Autos
 
-	public static Command TopSpeakerCenterLineN1N2AutoLineN1 =
+	public static Command ampAuto =
 			registerAuto(
-					"TopSpeakerCenterLineN1N2AutoLineN1",
-					Commands.sequence(
-							SubwooferLaunchCommand(),
-							getAutoCommand("TopSpeakerQCenterLineN1"),
-							Commands.either(
-									Commands.sequence(
-											getAutoCommand("QCenterLineN1LCenterLineN1"),
-											VisionLaunchCommand(),
-											getAutoCommand("LCenterLineN1QCenterLineN2")),
-									Commands.sequence(
-											getAutoCommand("QCenterLineN1QCenterLineN2"),
-											Commands.either(
-													Commands.sequence(
-															getAutoCommand("QCenterLineN2LCenterLineN2"),
-															VisionLaunchCommand(),
-															getAutoCommand("LCenterLineN2LAutoLineN1")),
-													Commands.sequence(getAutoCommand("QCenterLineN2LAutoLineN1")),
-													checkForTargets())),
-									checkForTargets()),
-							VisionLaunchCommand()),
-					"TopSpeakerQCenterLineN1",
-					"QCenterLineN1LCenterLineN1",
-					"LCenterLineN1QCenterLineN2");
+					"Autoline N1 Centerline N1 N2 N3",
+					Commands.parallel(
+							new SequentialCommandGroup(
+									AutoLogic.subwooferLaunch(),
+									AutoLogic.getAutoCommand("AMP L_Preload L_AN1"),
+									AutoLogic.visionLaunch2(),
+									AutoLogic.getAutoCommand("AMP L_AN1 Q_CN1"),
+									conditionalPath(
+											new SequentialCommandGroup(
+													AutoLogic.getAutoCommand("AMP Q_CN1 L_CN1"),
+													AutoLogic.visionLaunch2(),
+													AutoLogic.getAutoCommand("AMP L_CN1 Q_CN2"),
+													conditionalPath(
+															new SequentialCommandGroup(
+																	AutoLogic.getAutoCommand("AMP Q_CN2 L_CN2"),
+																	AutoLogic.visionLaunch2(),
+																	AutoLogic.getAutoCommand("AMP L_CN2 L_CN3")),
+															AutoLogic.getAutoCommand("AMP Q_CN2 L_CN3"))),
+											new SequentialCommandGroup(
+													AutoLogic.getAutoCommand("AMP Q_CN1 L_CN2"),
+													AutoLogic.visionLaunch2(),
+													AutoLogic.getAutoCommand("AMP L_CN2 L_CN3"))),
+									visionLaunch2()),
+							AutoLogic.setFlyWheelSpeaker()));
 
-	public static Command TopSpeakerCenterLineN1N2N3 =
+	public static Command midAuto =
 			registerAuto(
-					"TopSpeakerCenterLineN1N2N3",
-					Commands.sequence(
-							SubwooferLaunchCommand(),
-							getAutoCommand("TopSpeakerQCenterLineN1"),
-							Commands.either(
-									Commands.sequence(
-											getAutoCommand("QCenterLineN1LCenterLineN1"),
-											VisionLaunchCommand(),
-											getAutoCommand("LCenterLineN1QCenterLineN2")),
-									Commands.sequence(
-											getAutoCommand("QCenterLineN1QCenterLineN2"),
-											Commands.either(
-													Commands.sequence(
-															getAutoCommand("QCenterLineN2LCenterLineN2"),
-															VisionLaunchCommand(),
-															getAutoCommand("LCenterLineN2LCenterLineN3")),
-													Commands.sequence(getAutoCommand("QCenterLineN2LCenterLineN3")),
-													checkForTargets())),
-									checkForTargets()),
-							VisionLaunchCommand()),
-					"TopSpeakerQCenterLineN1",
-					"QCenterLineN1LCenterLineN1",
-					"LCenterLineN1QCenterLineN2");
+					"Centerline N3 N1 N2",
+					Commands.parallel(
+							AutoLogic.setFlyWheelSpeaker(),
+							new SequentialCommandGroup(
+									AutoLogic.subwooferLaunch(),
+									AutoLogic.getAutoCommand("MID L_Preload L_AN2"),
+									visionLaunch2(),
+									AutoLogic.getAutoCommand("MID L_AN2 Q_CN3"),
+									conditionalPath(
+											new SequentialCommandGroup(
+													AutoLogic.getAutoCommand("MID Q_CN3 L_CN3"),
+													visionLaunch2(),
+													AutoLogic.getAutoCommand("MID L_CN3 Q_CN1"),
+													conditionalPath(
+															new SequentialCommandGroup(
+																	AutoLogic.getAutoCommand("MID Q_CN1 L_CN1"),
+																	visionLaunch2(),
+																	AutoLogic.getAutoCommand("MID L_CN1 L_CN2")),
+															AutoLogic.getAutoCommand("MID Q_CN1 L_CN2"))),
+											new SequentialCommandGroup(
+													AutoLogic.getAutoCommand("MID Q_CN3 L_CN2"),
+													AutoLogic.getAutoCommand("MID L_CN2 L_CN1"))),
+									visionLaunch2())));
 
-	public static Command midSpeakerCenterLineN3N2N1 =
+	public static Command sourceAuto =
 			registerAuto(
-					"MidSpeakerCenterLineN5N4N3",
-					Commands.sequence(
-							SubwooferLaunchCommand(),
-							getAutoCommand("MidSpeakerQCenterLineN3"),
-							Commands.either(
-									Commands.sequence(
-											getAutoCommand("QCenterLineN3LCenterLineN3"),
-											VisionLaunchCommand(),
-											getAutoCommand("LCenterLineN3QCenterLineN2"),
-											Commands.either(
-													Commands.sequence(
-															getAutoCommand("N3QCenterLineN2LCenterLineN2"),
-															VisionLaunchCommand(),
-															getAutoCommand("N3LCenterLineN2LCenterLineN1")),
-													getAutoCommand("QCenterLineN2LCenterLineN1"),
-													checkForTargets())),
-									Commands.sequence(
-											getAutoCommand("QCenterLineN3QCenterLineN2"),
-											getAutoCommand("QCenterLineN2LCenterLineN2")),
-									checkForTargets()),
-							VisionLaunchCommand()),
-					"MidSpeakerQCenterLineN3",
-					"QCenterLineN3LCenterLineN3",
-					"LCenterLineN3QCenterLineN2",
-					"N3QCenterLineN2LCenterLineN2",
-					"N3LCenterLineN2LCenterLineN1");
-
-	public static Command lowSpeakerCenterLineN5N4 =
-			registerAuto(
-					"LowSpeakerCenterLineN5N4",
-					Commands.sequence(
-							SubwooferLaunchCommand(),
-							getAutoCommand("LowSpeakerQCenterLineN5"),
-							Commands.either(
-									Commands.sequence(
-											getAutoCommand("QCenterLineN5LCenterLineN5"),
-											Commands.waitSeconds(0.5),
-											getAutoCommand("LCenterLineN5LCenterLineN4")),
-									Commands.sequence(getAutoCommand("QCenterLineN5LCenterLineN4")),
-									checkForTargets())),
-					"LowSpeakerQCenterLineN5",
-					"QCenterLineN5LCenterLineN5",
-					"LCenterLineN5LCenterLineN4");
-
-	public static Command lowSpeakerCenterLineN5N4N3 =
-			registerAuto(
-					"LowSpeakerCenterLineN5N4N3",
-					Commands.sequence(
-							SubwooferLaunchCommand(),
-							getAutoCommand("LowSpeakerQCenterLineN5"),
-							Commands.either(
-									Commands.sequence(
-											getAutoCommand("QCenterLineN5QCenterLineN4"),
-											Commands.either(
-													Commands.sequence(
-															getAutoCommand("QCenterLineN4LCenterLineN4"),
-															VisionLaunchCommand(),
-															getAutoCommand("LCenterLineN4LCenterLineN3")),
-													Commands.sequence(getAutoCommand("QCenterLineN4LCenterLineN3")),
-													checkForTargets())),
-									Commands.sequence(
-											getAutoCommand("QCenterLineN5LCenterLineN4"),
-											VisionLaunchCommand(),
-											getAutoCommand("LCenterLineN4LCenterLineN3")),
-									checkForTargets()),
-							VisionLaunchCommand()),
-					"LowSpeakerQCenterLineN5",
-					"QCenterLineN5QCenterLineN4",
-					"QCenterLineN4LCenterLineN4",
-					"LCenterLineN4LCenterLineN3");
+					"Centerline N5 N4 N3",
+					Commands.parallel(
+							AutoLogic.setFlyWheelSpeaker(),
+							new SequentialCommandGroup(
+									AutoLogic.subwooferLaunch(),
+									AutoLogic.getAutoCommand("SOURCE L_Preload"),
+									AutoLogic.visionLaunch2(),
+									AutoLogic.getAutoCommand("SOURCE L_Preload Q_CN5"),
+									conditionalPath(
+											new SequentialCommandGroup(
+													AutoLogic.getAutoCommand("SOURCE Q_CN5 L_CN5"),
+													AutoLogic.visionLaunch2(),
+													AutoLogic.getAutoCommand("SOURCE L_CN5 Q_CN4"),
+													conditionalPath(
+															new SequentialCommandGroup(
+																	AutoLogic.getAutoCommand("SOURCE Q_CN4 L_CN4"),
+																	AutoLogic.visionLaunch2(),
+																	AutoLogic.getAutoCommand("SOURCE L_CN4 L_CN3")),
+															AutoLogic.getAutoCommand("SOURCE Q_CN4 L_CN3"))),
+											new SequentialCommandGroup(
+													AutoLogic.getAutoCommand("SOURCE Q_CN5 L_CN4"),
+													AutoLogic.visionLaunch2(),
+													AutoLogic.getAutoCommand("SOURCE L_CN4 L_CN3"))),
+									AutoLogic.visionLaunch2())));
 
 	// new command getters
 
-	public static final Command VisionLaunchCommand() {
-		return (LAUNCHER_ENABLED && INTAKE_ENABLED && APRILTAGS_ENABLED
-				? new FullTargetCommand(s.launcherSubsystem, s.drivebaseSubsystem, controls)
-				: Commands.none());
-	}
-
-	public static final Command SubwooferLaunchCommand() {
-		return (LAUNCHER_ENABLED
-				? new SetAngleLaunchCommand(
-						s.launcherSubsystem,
-						LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
-						LauncherSubsystem.SUBWOOFER_AIM_ANGLE)
-				: Commands.none());
+	private static Command conditionalPath(Command onTrue, Command onFalse) {
+		return Commands.either(onTrue, onFalse, checkForTargets());
 	}
 
 	public static BooleanSupplier checkForTargets() {

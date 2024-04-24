@@ -27,9 +27,11 @@ import frc.team2412.robot.commands.intake.FeederStopCommand;
 import frc.team2412.robot.commands.intake.IntakeRejectCommand;
 import frc.team2412.robot.commands.intake.IntakeStopCommand;
 import frc.team2412.robot.commands.intake.NoteStealCommand;
+import frc.team2412.robot.commands.launcher.AimTowardsSpeakerCommand;
 import frc.team2412.robot.commands.launcher.FullTargetCommand;
 import frc.team2412.robot.commands.launcher.SetAngleLaunchCommand;
 import frc.team2412.robot.commands.launcher.SetLaunchSpeedCommand;
+import frc.team2412.robot.commands.launcher.SetSpeedSpeakerCommand;
 import frc.team2412.robot.commands.launcher.StopLauncherCommand;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
 import frc.team2412.robot.util.DynamicSendableChooser;
@@ -46,6 +48,7 @@ public class AutoLogic {
 	public static final Controls controls = r.controls;
 
 	public static final double FEEDER_DELAY = 0.4;
+	public static final double HEADING_SPEED_TOLERANCE = 1.0;
 
 	// rpm to rev up launcher before launching
 	public static final double REV_RPM = 3400;
@@ -220,17 +223,6 @@ public class AutoLogic {
 		NamedCommands.registerCommand("RevLauncher", revFlyWheels());
 		// Complex Autos
 		NamedCommands.registerCommand("AutoLogicTest", ComplexAutoPaths.testAuto);
-
-		NamedCommands.registerCommand(
-				"MidSpeakerCenterLineN3N2N1", ComplexAutoPaths.midSpeakerCenterLineN3N2N1);
-		NamedCommands.registerCommand(
-				"LowSpeakerCenterLineN5N4N3", ComplexAutoPaths.lowSpeakerCenterLineN5N4N3);
-		NamedCommands.registerCommand(
-				"LowSpeakerCenterLineN5N4", ComplexAutoPaths.lowSpeakerCenterLineN5N4);
-		NamedCommands.registerCommand(
-				"TopSpeakerCenterLineN1N2AutoLineN1", ComplexAutoPaths.TopSpeakerCenterLineN1N2AutoLineN1);
-		NamedCommands.registerCommand(
-				"TopSpeakerCenterLineN1N2N3", ComplexAutoPaths.TopSpeakerCenterLineN1N2N3);
 	}
 
 	// public Command getConditionalCommand(){}
@@ -357,7 +349,10 @@ public class AutoLogic {
 				? () ->
 						(s.launcherSubsystem.isAtAngle()
 								&& s.launcherSubsystem.isAtSpeed()
-								&& !(s.intakeSubsystem.getCurrentCommand() instanceof AllInCommand))
+								&& !(s.intakeSubsystem.getCurrentCommand() instanceof AllInCommand)
+								&& Units.radiansToDegrees(
+												s.drivebaseSubsystem.getRobotSpeeds().omegaRadiansPerSecond)
+										< HEADING_SPEED_TOLERANCE)
 				: () -> true);
 	}
 
@@ -417,7 +412,7 @@ public class AutoLogic {
 	}
 
 	public static Command visionLaunch() {
-		return (LAUNCHER_ENABLED && INTAKE_ENABLED && APRILTAGS_ENABLED
+		return (LAUNCHER_ENABLED && INTAKE_ENABLED && APRILTAGS_ENABLED && DRIVEBASE_ENABLED
 						? stopFeeder()
 								.andThen(
 										Commands.either(
@@ -467,6 +462,21 @@ public class AutoLogic {
 												LauncherSubsystem.SUBWOOFER_AIM_ANGLE))
 						: Commands.none())
 				.withName("Auto - SetPivotSubwooferCommand");
+	}
+
+	public static Command visionLaunch2() {
+		return (LAUNCHER_ENABLED && INTAKE_ENABLED && DRIVEBASE_ENABLED && APRILTAGS_ENABLED
+						? new AimTowardsSpeakerCommand(s.launcherSubsystem, s.drivebaseSubsystem)
+								.andThen(feedUntilNoteLaunched())
+						: Commands.none())
+				.withName("Auto - Aim Fire");
+	}
+
+	public static Command setFlyWheelSpeaker() {
+		return (LAUNCHER_ENABLED && APRILTAGS_ENABLED && DRIVEBASE_ENABLED
+						? new SetSpeedSpeakerCommand(s.launcherSubsystem, s.drivebaseSubsystem)
+						: Commands.none())
+				.withName("Auto - SetFlywheelSpeedTowardsSpeaker");
 	}
 
 	public static Command setAngleIndex() {
