@@ -55,8 +55,8 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 	private static final double PARK_TIME = 15.;
 	private static final double FORCE_PARK_TIME = 5.;
 
-	private static final Translation2d BLUE_STAGE_POSITION = new Translation2d(4.88, 4.05);
-	private static final Translation2d RED_STAGE_POSITION = new Translation2d(11.7, 4.05);
+	private static final Translation2d BLUE_STAGE_POSITION = new Translation2d(4.88, 4.09);
+	private static final Translation2d RED_STAGE_POSITION = new Translation2d(11.7, 4.09);
 	private static final double STAGE_SIZE = 1.2;
 
 	// TODO: get these points
