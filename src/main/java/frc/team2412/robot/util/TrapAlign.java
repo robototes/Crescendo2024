@@ -15,6 +15,20 @@ import frc.team2412.robot.subsystems.LauncherSubsystem;
 import java.util.List;
 
 public class TrapAlign {
+
+	// Distance from Middle of Trap used for calculations is 0.8m
+	private static final Pose2d[] BLUE_TRAP_POSES_REVISED = {
+		new Pose2d(5.68, 4.09, new Rotation2d(180.0)), // CENTERLINE SIDE
+		new Pose2d(4.48, 3.40, new Rotation2d(-60.0)), // SOURCE SIDE
+		new Pose2d(4.48, 4.78, new Rotation2d(-60.0)) // AMP SIDE
+	};
+
+	private static final Pose2d[] RED_TRAP_POSES_REVISED = {
+		new Pose2d(11.69, 4.11, new Rotation2d(-60.0)), // CENTERLINE SIDE
+		new Pose2d(12.09, 3.42, new Rotation2d(0)), // SOURCE SIDE
+		new Pose2d(12.09, 4.8, new Rotation2d(-60.0)), // AMP SIDE
+	};
+
 	private static final Pose2d[] BLUE_TRAP_POSES = {
 		// trap that faces amp
 		new Pose2d(new Translation2d(4.3, 5.14), Rotation2d.fromDegrees(-60)),
