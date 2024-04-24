@@ -1,13 +1,17 @@
 package frc.team2412.robot.subsystems;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathfindThenFollowPathHolonomic;
 import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.pathfinding.LocalADStar;
 import com.pathplanner.lib.pathfinding.Pathfinding;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -27,7 +31,22 @@ import java.util.List;
 
 public class AutonomousTeleopSubsystem extends SubsystemBase {
 
+	// physical properties
+	private static final double BUMPER_WIDTH_LENGTH = 0.8382; // meters
 	private static final PathConstraints CONSTRAINTS = new PathConstraints(3., 3., 3., 3.);
+
+	// TODO: constructor for config has option for error spike threshold that leads path to be
+	// replanned
+	private static final ReplanningConfig REPLANNING_CONFIG = new ReplanningConfig(true, true);
+
+	// TODO: module speed
+	private static final HolonomicPathFollowerConfig PATH_FOLLOWER_CONFIG =
+			new HolonomicPathFollowerConfig(
+					DrivebaseSubsystem.AUTO_TRANSLATION_PID,
+					DrivebaseSubsystem.AUTO_ROTATION_PID,
+					3.0,
+					BUMPER_WIDTH_LENGTH,
+					REPLANNING_CONFIG);
 
 	private static final double PARK_TIME = 15.;
 	private static final double FORCE_PARK_TIME = 5.;
@@ -42,9 +61,15 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 	private static final Pose2d BLUE_SOURCE_ROAM_POSE = new Pose2d();
 	private static final Pose2d RED_SOURCE_ROAM_POSE = new Pose2d();
 
+	// amp
+	private static final Pose2d BLUE_AMP_ALIGN_POSE = new Pose2d(1.82, 7.40, new Rotation2d(90));
+	private static final Pose2d RED_AMP_ALIGN_POSE = new Pose2d(14.72, 7.40, new Rotation2d(90));
+	private static final Pose2d BLUE_AMP_SCORE_POSE = new Pose2d(1.82, 7.63, new Rotation2d(90));
+	private static final Pose2d RED_AMP_SCORE_POSE = new Pose2d(14.72, 7.63, new Rotation2d(90));
+
 	private static final double ACCELERATION_TOLERANCE = 0.1;
 
-	private static final double COLLISION_DISTANCE = 0.84 + 0.3;
+	private static final double COLLISION_DISTANCE = BUMPER_WIDTH_LENGTH + 0.3;
 
 	public enum RobotState {
 		IDLE {
@@ -357,8 +382,9 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 
 	// Path find methods
 
-	private void setGoalPosition(Translation2d goalTranslation) {
-		Pathfinding.setGoalPosition(goalTranslation);
+	private void setGoalPosition(Translation2d robotPosition, Translation2d goalPosition) {
+		Pathfinding.setStartPosition(robotPosition);
+		Pathfinding.setGoalPosition(goalPosition);
 	}
 
 	private PathPlannerPath getPathToSource(Translation2d robotPosition) {
@@ -378,10 +404,37 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 	}
 
 	private PathPlannerPath getPathToAmp(Translation2d robotPosition) {
+		Pose2d ampPose = alliance.equals(Alliance.Blue) ? BLUE_AMP_ALIGN_POSE : RED_AMP_ALIGN_POSE;
+		setGoalPosition(robotPosition, ampPose.getTranslation());
+
 		return null;
 	}
 
 	private PathPlannerPath getPathToStage(Translation2d robotPosition) {
 		return null;
 	}
+
+	public Command getPathFindingCommand(Pose2d goalPose) {
+		// TODO: i think this is how were supposed to approach pathfinding?
+
+
+		// TODO: ended off here so need to find place to get goal pose?
+		GoalEndState goalEndState = new GoalEndState(0, goalPose.getRotation());
+
+		// TODO: think about rotation delay distance (option in constructor)
+		Command pathFindCommand =
+				new PathfindThenFollowPathHolonomic(
+						Pathfinding.getCurrentPath(CONSTRAINTS, goalEndState),
+						CONSTRAINTS,
+						s.drivebaseSubsystem::getPose,
+						s.drivebaseSubsystem::getFieldSpeeds, // Field or robot speeds? idk lol
+						s.drivebaseSubsystem::drive,
+						PATH_FOLLOWER_CONFIG,
+						() -> DriverStation.getAlliance().get().equals(alliance.Red),
+						s.drivebaseSubsystem);
+
+		return pathFindCommand;
+	}
+
+	
 }
