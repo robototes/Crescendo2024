@@ -3,64 +3,74 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.3,
-        "y": 7.0
+        "x": 5.97,
+        "y": 1.26
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.1999999999999997,
-        "y": 7.0
+        "x": 8.270256540513081,
+        "y": 0.5423999419427418
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.335023775460655,
-        "y": 7.0
+        "x": 7.463986356544141,
+        "y": 2.565405130810262
       },
       "prevControl": {
-        "x": 4.835024537004013,
-        "y": 6.999127335817051
+        "x": 9.04716199057292,
+        "y": 3.4323822637307857
       },
       "nextControl": {
-        "x": 5.835023013917296,
-        "y": 7.000872664182949
+        "x": 6.232591893755215,
+        "y": 1.891070067854421
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.3,
-        "y": 7.0
+        "x": 2.9089022069531514,
+        "y": 1.9539173222406319
       },
       "prevControl": {
-        "x": 2.5999999999999996,
-        "y": 7.0
+        "x": 5.001197430966291,
+        "y": 1.4219674153634028
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "SourceVisionLaunch"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1.0,
-      "rotationDegrees": 1.8407261107289572,
+      "waypointRelativePos": 0.55,
+      "rotationDegrees": 167.28088153901805,
       "rotateFast": false
     },
     {
-      "waypointRelativePos": 0.55,
-      "rotationDegrees": 89.63503006133968,
+      "waypointRelativePos": 0.9,
+      "rotationDegrees": 151.86616719969595,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 0.7,
+      "rotationDegrees": 169.82766725075905,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 1.1,
+      "rotationDegrees": 136.71376216092094,
       "rotateFast": false
     }
   ],
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "New Event Marker",
-      "waypointRelativePos": 0.5,
+      "name": "intake",
+      "waypointRelativePos": 0.25,
       "command": {
         "type": "parallel",
         "data": {
@@ -83,15 +93,15 @@
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": 90.0,
+    "velocity": 0.0,
+    "rotation": 133.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Auto Logic Paths",
   "previewStartingState": {
-    "rotation": 0,
-    "velocity": 0
+    "rotation": 169.47,
+    "velocity": 2.0
   },
   "useDefaultConstraints": true
 }

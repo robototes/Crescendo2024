@@ -1,0 +1,43 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.33,
+      "y": 5.55
+    },
+    "rotation": 180.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MID L_Preload L_AN2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MID L_AN2 Q_CN3"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MID Q_CN3 L_CN2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "MID L_CN2 L_CN1"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Complex Autos",
+  "choreoAuto": false
+}

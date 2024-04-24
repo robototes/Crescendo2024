@@ -1,0 +1,55 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.7275269251393202,
+      "y": 4.4671669970120575
+    },
+    "rotation": 120.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SOURCE L_Preload"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SOURCE L_Preload Q_CN5"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SOURCE Q_CN5 L_CN5"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SOURCE L_CN5 Q_CN4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SOURCE Q_CN4 L_CN4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SOURCE L_CN4 L_CN3"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Complex Autos",
+  "choreoAuto": false
+}

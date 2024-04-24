@@ -3,41 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.3,
-        "y": 7.0
+        "x": 7.11,
+        "y": 6.2
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.1999999999999997,
-        "y": 7.0
+        "x": 8.313171140797435,
+        "y": 5.858016163771393
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.335023775460655,
-        "y": 7.0
+        "x": 8.208949968678292,
+        "y": 5.576005933331364
       },
       "prevControl": {
-        "x": 4.835024537004013,
-        "y": 6.999127335817051
+        "x": 9.097895260282737,
+        "y": 5.3614329319096
       },
       "nextControl": {
-        "x": 5.835023013917296,
-        "y": 7.000872664182949
+        "x": 7.429803381615057,
+        "y": 5.764075799174215
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.3,
-        "y": 7.0
+        "x": 5.38,
+        "y": 6.34233808126623
       },
       "prevControl": {
-        "x": 2.5999999999999996,
-        "y": 7.0
+        "x": 6.440603692741855,
+        "y": 6.4233695906976696
       },
       "nextControl": null,
       "isLocked": false,
@@ -46,21 +46,16 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1.0,
-      "rotationDegrees": 1.8407261107289572,
-      "rotateFast": false
-    },
-    {
-      "waypointRelativePos": 0.55,
-      "rotationDegrees": 89.63503006133968,
+      "waypointRelativePos": 0.35,
+      "rotationDegrees": 160.91930566366563,
       "rotateFast": false
     }
   ],
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "New Event Marker",
-      "waypointRelativePos": 0.5,
+      "name": "intake",
+      "waypointRelativePos": 0,
       "command": {
         "type": "parallel",
         "data": {
@@ -83,15 +78,15 @@
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": 90.0,
+    "velocity": 0.0,
+    "rotation": -170.70918729620652,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Auto Logic Paths",
   "previewStartingState": {
-    "rotation": 0,
-    "velocity": 0
+    "rotation": 159.94,
+    "velocity": 2.0
   },
   "useDefaultConstraints": true
 }

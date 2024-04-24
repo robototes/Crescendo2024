@@ -1,0 +1,80 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+<<<<<<<< HEAD:src/main/deploy/pathplanner/paths/AMP L_AN1 Q_CN1.path
+        "x": 4.8,
+        "y": 7.34
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 5.327541092443193,
+        "y": 7.421333745558521
+========
+        "x": 6.3,
+        "y": 7.0
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 5.3,
+        "y": 7.0
+>>>>>>>> 1c303a3f01e55d196fe89166f18a300f24cc863a:src/main/deploy/pathplanner/paths/TuneRotationPID back.path
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+<<<<<<<< HEAD:src/main/deploy/pathplanner/paths/AMP L_AN1 Q_CN1.path
+        "x": 6.713069615909433,
+        "y": 7.464248345842875
+      },
+      "prevControl": {
+        "x": 6.020305354176314,
+        "y": 7.46588354801617
+========
+        "x": 2.3,
+        "y": 7.0
+      },
+      "prevControl": {
+        "x": 3.218814272122443,
+        "y": 7.0
+>>>>>>>> 1c303a3f01e55d196fe89166f18a300f24cc863a:src/main/deploy/pathplanner/paths/TuneRotationPID back.path
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+<<<<<<<< HEAD:src/main/deploy/pathplanner/paths/AMP L_AN1 Q_CN1.path
+    "velocity": 2.0,
+    "rotation": 180.0,
+========
+    "velocity": 0,
+    "rotation": 0.0,
+>>>>>>>> 1c303a3f01e55d196fe89166f18a300f24cc863a:src/main/deploy/pathplanner/paths/TuneRotationPID back.path
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": null,
+  "previewStartingState": {
+<<<<<<<< HEAD:src/main/deploy/pathplanner/paths/AMP L_AN1 Q_CN1.path
+    "rotation": -158.01,
+========
+    "rotation": 0,
+>>>>>>>> 1c303a3f01e55d196fe89166f18a300f24cc863a:src/main/deploy/pathplanner/paths/TuneRotationPID back.path
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

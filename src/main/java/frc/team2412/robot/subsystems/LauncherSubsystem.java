@@ -38,9 +38,9 @@ public class LauncherSubsystem extends SubsystemBase {
 	// HARDWARE
 	private static final double PIVOT_GEARING_RATIO = 1.0 / 180.0;
 	private static final double PIVOT_TO_ENCODER_GEARING_RATIO = 1.0 / 2.0;
-	private static final float PIVOT_SOFTSTOP_FORWARD = 0.93f;
+	private static final float PIVOT_SOFTSTOP_FORWARD = 0.99f;
 	private static final float PIVOT_SOFTSTOP_BACKWARD = 0.635f;
-	private static final float PIVOT_SOFTSTOP_FORWARD_THROUGHBORE = 0.93f;
+	private static final float PIVOT_SOFTSTOP_FORWARD_THROUGHBORE = 0.99f;
 	private static final float PIVOT_SOFTSTOP_BACKWARD_THROUGHBORE = 0.38f;
 	private static final float PIVOT_DISABLE_OFFSET = 0.04f;
 	private static final int PIVOT_OFFSET = USE_THROUGHBORE ? 40 : 36;
@@ -51,9 +51,9 @@ public class LauncherSubsystem extends SubsystemBase {
 
 	// ANGLE VALUES
 	public static final int AMP_AIM_ANGLE = 290 + PIVOT_OFFSET;
-	public static final int SUBWOOFER_AIM_ANGLE = 252 + PIVOT_OFFSET;
+	public static final double SUBWOOFER_AIM_ANGLE = 253.5 + PIVOT_OFFSET;
 	public static final int PODIUM_AIM_ANGLE = 238 + PIVOT_OFFSET;
-	public static final int TRAP_AIM_ANGLE = 317 + PIVOT_OFFSET;
+	public static final double TRAP_AIM_ANGLE = 311.879 + PIVOT_OFFSET;
 	public static final double MANUAL_MODIFIER = 0.02;
 	public static final double RETRACTED_ANGLE = 242 + PIVOT_OFFSET;
 	// offset for FF so parallel to floor is 0
@@ -65,7 +65,7 @@ public class LauncherSubsystem extends SubsystemBase {
 	public static final double ANGLE_TOLERANCE = 5;
 	public static final double RPM_TOLERANCE = 500;
 	// RPM
-	public static final int SPEAKER_SHOOT_SPEED_RPM = 4500;
+	public static final int SPEAKER_SHOOT_SPEED_RPM = 3800;
 	public static final int TRAP_SHOOT_SPEED_RPM = 4500;
 	public static final int LOBBING_RPM = 4700;
 	public static final double ANGLE_MAX_SPEED = 0.3; // percent output
@@ -562,7 +562,7 @@ public class LauncherSubsystem extends SubsystemBase {
 		if (getPosition()
 						>= (USE_THROUGHBORE ? PIVOT_SOFTSTOP_FORWARD_THROUGHBORE : PIVOT_SOFTSTOP_FORWARD)
 								+ PIVOT_DISABLE_OFFSET
-				|| launcherAngleEncoder.getPosition()
+				|| getPosition()
 						<= (USE_THROUGHBORE ? PIVOT_SOFTSTOP_BACKWARD_THROUGHBORE : PIVOT_SOFTSTOP_BACKWARD)
 								- PIVOT_DISABLE_OFFSET) {
 			if (!ignoreLimits) {

@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.45,
-      "y": 2.1
+      "x": 6.3,
+      "y": 7.0
     },
-    "rotation": 180.0
+    "rotation": 0
   },
   "command": {
     "type": "sequential",
@@ -14,12 +14,12 @@
         {
           "type": "path",
           "data": {
-            "pathName": "LowPassAutoLine"
+            "pathName": "TuneRotationPID back"
           }
         }
       ]
     }
   },
-  "folder": null,
+  "folder": "Test",
   "choreoAuto": false
 }

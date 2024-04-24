@@ -8,46 +8,56 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.4199314885116257,
-        "y": 6.813346239305091
+        "x": 1.8158000468525717,
+        "y": 6.7919738327251
       },
       "isLocked": false,
       "linkedName": "TopSpeaker"
     },
     {
       "anchor": {
-        "x": 5.413643259718952,
-        "y": 7.183134366268733
+        "x": 4.8,
+        "y": 7.34
       },
       "prevControl": {
-        "x": 4.378236504220756,
-        "y": 7.136910850398278
+        "x": 3.911080493464376,
+        "y": 7.1992089814637925
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "LaunchHighNote"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.35,
-      "rotationDegrees": -167.0,
+      "waypointRelativePos": 0.05,
+      "rotationDegrees": -120.0,
       "rotateFast": false
     },
     {
-      "waypointRelativePos": 0.05,
-      "rotationDegrees": -120.0,
+      "waypointRelativePos": 0.35,
+      "rotationDegrees": -167.72,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": -167.72,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 0.75,
+      "rotationDegrees": -155.46044346607027,
       "rotateFast": false
     }
   ],
   "constraintZones": [
     {
       "name": "New Constraints Zone",
-      "minWaypointRelativePos": 0,
-      "maxWaypointRelativePos": 0.45,
+      "minWaypointRelativePos": 0.0,
+      "maxWaypointRelativePos": 0.3,
       "constraints": {
         "maxVelocity": 4.0,
-        "maxAcceleration": 2.5,
+        "maxAcceleration": 2.24,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0
       }
@@ -56,7 +66,7 @@
   "eventMarkers": [
     {
       "name": "intake",
-      "waypointRelativePos": 0.15,
+      "waypointRelativePos": 0,
       "command": {
         "type": "parallel",
         "data": {
@@ -65,23 +75,6 @@
               "type": "named",
               "data": {
                 "name": "Intake"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "rev launcher",
-      "waypointRelativePos": 0.55,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "RevLauncher"
               }
             }
           ]
@@ -97,11 +90,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -161.0,
+    "rotation": -158.01,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Auto Logic Paths",
   "previewStartingState": {
     "rotation": -120.0,
     "velocity": 0

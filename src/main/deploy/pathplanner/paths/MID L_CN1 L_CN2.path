@@ -3,41 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.3,
-        "y": 7.0
+        "x": 5.42,
+        "y": 6.51
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.1999999999999997,
-        "y": 7.0
+        "x": 6.71635400413658,
+        "y": 6.889945208461845
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.335023775460655,
-        "y": 7.0
+        "x": 8.284915998403426,
+        "y": 5.761166950905331
       },
       "prevControl": {
-        "x": 4.835024537004013,
-        "y": 6.999127335817051
+        "x": 8.229542251035843,
+        "y": 6.259530677213579
       },
       "nextControl": {
-        "x": 5.835023013917296,
-        "y": 7.000872664182949
+        "x": 8.358213287855147,
+        "y": 5.101491345839835
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.3,
-        "y": 7.0
+        "x": 5.42,
+        "y": 6.51
       },
       "prevControl": {
-        "x": 2.5999999999999996,
-        "y": 7.0
+        "x": 6.525781051562102,
+        "y": 6.318226350738416
       },
       "nextControl": null,
       "isLocked": false,
@@ -46,21 +46,31 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1.0,
-      "rotationDegrees": 1.8407261107289572,
+      "waypointRelativePos": 0.75,
+      "rotationDegrees": -140.65,
       "rotateFast": false
     },
     {
-      "waypointRelativePos": 0.55,
-      "rotationDegrees": 89.63503006133968,
+      "waypointRelativePos": 0.8,
+      "rotationDegrees": -143.42505712451216,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 1.35,
+      "rotationDegrees": -151.58632276225933,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 1.05,
+      "rotationDegrees": -152.12305357233848,
       "rotateFast": false
     }
   ],
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "New Event Marker",
-      "waypointRelativePos": 0.5,
+      "name": "intake",
+      "waypointRelativePos": 0,
       "command": {
         "type": "parallel",
         "data": {
@@ -83,15 +93,15 @@
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": 90.0,
+    "velocity": 0.0,
+    "rotation": -166.57,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Auto Logic Paths",
   "previewStartingState": {
-    "rotation": 0,
-    "velocity": 0
+    "rotation": -166.57,
+    "velocity": 0.0
   },
   "useDefaultConstraints": true
 }

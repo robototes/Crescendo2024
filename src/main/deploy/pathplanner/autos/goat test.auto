@@ -1,0 +1,49 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.47,
+      "y": 3.35
+    },
+    "rotation": 90.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "GOAT L_Preload Q_CN3"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "GOAT Q_CN3 L_CN3"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "GOAT L_CN3 Q_CN1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "GOAT Q_CN1 L_CN1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "GOAT L_CN1 L_CN2"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Complex Autos",
+  "choreoAuto": false
+}
