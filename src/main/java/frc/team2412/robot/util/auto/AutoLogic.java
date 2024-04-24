@@ -223,6 +223,11 @@ public class AutoLogic {
 		NamedCommands.registerCommand("RevLauncher", revFlyWheels());
 		// Complex Autos
 		NamedCommands.registerCommand("AutoLogicTest", ComplexAutoPaths.testAuto);
+
+		// NamedCommands.registerCommand("Source Side Complex Auto", ComplexAutoPaths.sourceAuto);
+		// NamedCommands.registerCommand("Amp Side Complex Auto", ComplexAutoPaths.sourceAuto);
+		// NamedCommands.registerCommand("Mid Side Complex Auto", ComplexAutoPaths.sourceAuto);
+		// NamedCommands.registerCommand("Goat Side Complex Auto", ComplexAutoPaths.sourceAuto);
 	}
 
 	// public Command getConditionalCommand(){}

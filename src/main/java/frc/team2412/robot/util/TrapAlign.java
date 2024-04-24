@@ -18,15 +18,15 @@ public class TrapAlign {
 
 	// Distance from Middle of Trap used for calculations is 0.8m
 	private static final Pose2d[] BLUE_TRAP_POSES_REVISED = {
-		new Pose2d(5.68, 4.09, new Rotation2d(180.0)), // CENTERLINE SIDE
+		new Pose2d(5.68, 4.11, new Rotation2d(180.0)), // CENTERLINE SIDE
 		new Pose2d(4.48, 3.40, new Rotation2d(-60.0)), // SOURCE SIDE
-		new Pose2d(4.48, 4.78, new Rotation2d(-60.0)) // AMP SIDE
+		new Pose2d(4.48, 4.78, new Rotation2d(60.0)) // AMP SIDE
 	};
 
 	private static final Pose2d[] RED_TRAP_POSES_REVISED = {
-		new Pose2d(11.69, 4.11, new Rotation2d(-60.0)), // CENTERLINE SIDE
-		new Pose2d(12.09, 3.42, new Rotation2d(0)), // SOURCE SIDE
-		new Pose2d(12.09, 4.8, new Rotation2d(-60.0)), // AMP SIDE
+		new Pose2d(10.89, 4.11, new Rotation2d(0.0)), // CENTERLINE SIDE
+		new Pose2d(12.09, 3.4, new Rotation2d(-180.0)), // SOURCE SIDE
+		new Pose2d(12.09, 4.78, new Rotation2d(180.0)), // AMP SIDE
 	};
 
 	private static final Pose2d[] BLUE_TRAP_POSES = {
@@ -60,7 +60,8 @@ public class TrapAlign {
 			isBlue = false;
 		}
 		// figures out which trap to go to
-		Pose2d trapPose = robotPose.nearest(List.of(isBlue ? BLUE_TRAP_POSES : RED_TRAP_POSES));
+		Pose2d trapPose =
+				robotPose.nearest(List.of(isBlue ? BLUE_TRAP_POSES_REVISED : RED_TRAP_POSES_REVISED));
 		// sets the point for the path to go to
 		List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(robotPose, trapPose);
 		// this is flipped
