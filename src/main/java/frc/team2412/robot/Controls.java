@@ -7,6 +7,7 @@ import static frc.team2412.robot.Subsystems.SubsystemConstants.DRIVEBASE_ENABLED
 import static frc.team2412.robot.Subsystems.SubsystemConstants.INTAKE_ENABLED;
 import static frc.team2412.robot.Subsystems.SubsystemConstants.LAUNCHER_ENABLED;
 import static frc.team2412.robot.Subsystems.SubsystemConstants.LED_ENABLED;
+import static frc.team2412.robot.Subsystems.SubsystemConstants.LIMELIGHT_ENABLED;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -137,8 +138,16 @@ public class Controls {
 			// 						this,
 			// 						codriveController.leftBumper()));
 		}
-		if (AUTONOMOUS_TELEOP_ENABLED) {
-			driveController.back().whileTrue(s.autonomousTeleopSubsystem.runEnd(s.autonomousTeleopSubsystem::start, s.autonomousTeleopSubsystem::stop));
+		if (AUTONOMOUS_TELEOP_ENABLED
+				&& LAUNCHER_ENABLED
+				&& DRIVEBASE_ENABLED
+				&& INTAKE_ENABLED
+				&& LIMELIGHT_ENABLED) {
+			driveController
+					.back()
+					.whileTrue(
+							s.autonomousTeleopSubsystem.runEnd(
+									s.autonomousTeleopSubsystem::start, s.autonomousTeleopSubsystem::stop));
 		}
 	}
 	// LED
