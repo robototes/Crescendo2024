@@ -10,44 +10,7 @@
   "command": {
     "type": "sequential",
     "data": {
-      "commands": [
-        {
-          "type": "path",
-          "data": {
-            "pathName": "AMP L_Preload L_AN1"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": null
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "AMP Q_CN1 L_CN1"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": null
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "AMP Q_CN2 L_CN2"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "AMP L_CN2 L_CN3"
-          }
-        }
-      ]
+      "commands": []
     }
   },
   "folder": "Complex Autos",
