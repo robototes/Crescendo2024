@@ -418,24 +418,10 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 
 	public Command getPathFindingCommand(Pose2d goalPose) {
 		// TODO: i think this is how were supposed to approach pathfinding?
-
-		// TODO: ended off here so need to find place to get goal pose?
 		GoalEndState goalEndState = new GoalEndState(0, goalPose.getRotation());
 
-		// TODO: think about rotation delay distance (option in constructor)
-		// found out you may be able to simplify this part by just using autobuilder instead
-		Command pathFindCommand =
-				new PathfindThenFollowPathHolonomic(
-						Pathfinding.getCurrentPath(CONSTRAINTS, goalEndState),
-						CONSTRAINTS,
-						s.drivebaseSubsystem::getPose,
-						s.drivebaseSubsystem::getFieldSpeeds, // Field or robot speeds? idk lol
-						s.drivebaseSubsystem::drive,
-						PATH_FOLLOWER_CONFIG,
-						() -> DriverStation.getAlliance().get().equals(Alliance.Red),
-						s.drivebaseSubsystem);
-
-		return pathFindCommand;
+		// TODO: think abt rotation delay parameter?
+		return AutoBuilder.pathfindThenFollowPath(Pathfinding.getCurrentPath(CONSTRAINTS, goalEndState), CONSTRAINTS);
 	}
 
 	public Command scoreAmpCommand() {
