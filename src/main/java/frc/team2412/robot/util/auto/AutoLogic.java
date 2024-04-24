@@ -487,8 +487,6 @@ public class AutoLogic {
 								LauncherSubsystem.RETRACTED_ANGLE)
 						: Commands.none())
 				.withName("Auto - SetPivotIndexCommand");
-
-
 	}
 
 	public static Command feedUntilNoteLaunched() {
