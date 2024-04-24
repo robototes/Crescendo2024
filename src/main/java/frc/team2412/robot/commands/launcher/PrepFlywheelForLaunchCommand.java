@@ -8,14 +8,14 @@ import frc.team2412.robot.subsystems.DrivebaseSubsystem;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
 import frc.team2412.robot.util.LauncherDataPoint;
 
-public class SetSpeedSpeakerCommand extends Command {
+public class PrepFlywheelForLaunchCommand extends Command {
 
 	LauncherSubsystem launcherSubsystem;
 	DrivebaseSubsystem drivebaseSubsystem;
 
 	private Translation2d SPEAKER_POSITION;
 
-	public SetSpeedSpeakerCommand(
+	public PrepFlywheelForLaunchCommand(
 			LauncherSubsystem launcherSubsystem, DrivebaseSubsystem drivebaseSubsystem) {
 		this.launcherSubsystem = launcherSubsystem;
 		this.drivebaseSubsystem = drivebaseSubsystem;

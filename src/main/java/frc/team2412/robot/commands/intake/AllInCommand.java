@@ -50,6 +50,7 @@ public class AllInCommand extends Command {
 			intakeSubsystem.intakeStop();
 		}
 
+		intakeSubsystem.intakeStop();
 		intakeSubsystem.indexStop();
 		intakeSubsystem.feederStop();
 

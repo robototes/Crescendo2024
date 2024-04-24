@@ -79,7 +79,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 									? new PIDConstants(3.9, 0, 0.2) // crane
 									: new PIDConstants(0.1, 0, 0.1); // bobot TODO: tune
 
-	private static final PIDConstants AUTO_ROTATION_PID = new PIDConstants(5.5, 0, 1);
+	public static final PIDConstants AUTO_ROTATION_PID = new PIDConstants(5.5, 0, 1);
 	// 7 0 0.2
 
 	private static final double MAX_AUTO_SPEED =

@@ -29,9 +29,9 @@ import frc.team2412.robot.commands.intake.IntakeStopCommand;
 import frc.team2412.robot.commands.intake.NoteStealCommand;
 import frc.team2412.robot.commands.launcher.AimTowardsSpeakerCommand;
 import frc.team2412.robot.commands.launcher.FullTargetCommand;
+import frc.team2412.robot.commands.launcher.PrepFlywheelForLaunchCommand;
 import frc.team2412.robot.commands.launcher.SetAngleLaunchCommand;
 import frc.team2412.robot.commands.launcher.SetLaunchSpeedCommand;
-import frc.team2412.robot.commands.launcher.SetSpeedSpeakerCommand;
 import frc.team2412.robot.commands.launcher.StopLauncherCommand;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
 import frc.team2412.robot.util.DynamicSendableChooser;
@@ -474,7 +474,7 @@ public class AutoLogic {
 
 	public static Command setFlyWheelSpeaker() {
 		return (LAUNCHER_ENABLED && APRILTAGS_ENABLED && DRIVEBASE_ENABLED
-						? new SetSpeedSpeakerCommand(s.launcherSubsystem, s.drivebaseSubsystem)
+						? new PrepFlywheelForLaunchCommand(s.launcherSubsystem, s.drivebaseSubsystem)
 						: Commands.none())
 				.withName("Auto - SetFlywheelSpeedTowardsSpeaker");
 	}
@@ -487,8 +487,6 @@ public class AutoLogic {
 								LauncherSubsystem.RETRACTED_ANGLE)
 						: Commands.none())
 				.withName("Auto - SetPivotIndexCommand");
-
-
 	}
 
 	public static Command feedUntilNoteLaunched() {

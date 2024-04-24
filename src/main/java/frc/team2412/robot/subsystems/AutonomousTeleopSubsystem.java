@@ -1,7 +1,6 @@
 package frc.team2412.robot.subsystems;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.PathfindThenFollowPathHolonomic;
 import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
@@ -25,8 +24,11 @@ import frc.team2412.robot.Robot;
 import frc.team2412.robot.Subsystems;
 import frc.team2412.robot.commands.drivebase.DriveToNoteCommand;
 import frc.team2412.robot.commands.intake.AllInCommand;
+import frc.team2412.robot.commands.intake.FeederInCommand;
+import frc.team2412.robot.commands.launcher.AimTowardsSpeakerCommand;
 import frc.team2412.robot.commands.launcher.FullTargetCommand;
 import frc.team2412.robot.commands.launcher.SetAngleAmpLaunchCommand;
+import frc.team2412.robot.commands.launcher.SetAngleLaunchCommand;
 import frc.team2412.robot.subsystems.AutonomousTeleopSubsystem.RobotState;
 import frc.team2412.robot.util.auto.AutoLogic;
 import java.util.List;
@@ -416,12 +418,15 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 		return null;
 	}
 
+	// Commands
+
 	public Command getPathFindingCommand(Pose2d goalPose) {
 		// TODO: i think this is how were supposed to approach pathfinding?
 		GoalEndState goalEndState = new GoalEndState(0, goalPose.getRotation());
 
 		// TODO: think abt rotation delay parameter?
-		return AutoBuilder.pathfindThenFollowPath(Pathfinding.getCurrentPath(CONSTRAINTS, goalEndState), CONSTRAINTS);
+		return AutoBuilder.pathfindThenFollowPath(
+				Pathfinding.getCurrentPath(CONSTRAINTS, goalEndState), CONSTRAINTS);
 	}
 
 	public Command scoreAmpCommand() {
@@ -435,5 +440,20 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 						LauncherSubsystem.AMP_AIM_ANGLE),
 				getPathFindingCommand(ampScorePose),
 				Commands.waitUntil(AutoLogic.isReadyToLaunch()).andThen(AutoLogic.feedUntilNoteLaunched()));
+	}
+
+	public Command scoreSpeaker() {
+		return new AimTowardsSpeakerCommand(s.launcherSubsystem, s.drivebaseSubsystem)
+				.andThen(launch());
+	}
+
+	public Command launch() {
+		return Commands.waitUntil(AutoLogic.isReadyToLaunch())
+				.andThen(new FeederInCommand(s.intakeSubsystem).until(AutoLogic.untilFeederHasNoNote()));
+	}
+
+	public Command intake() {
+		return new SetAngleLaunchCommand(s.launcherSubsystem, 0, LauncherSubsystem.RETRACTED_ANGLE)
+				.andThen(new AllInCommand(s.intakeSubsystem, null));
 	}
 }
