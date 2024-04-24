@@ -423,6 +423,7 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 		GoalEndState goalEndState = new GoalEndState(0, goalPose.getRotation());
 
 		// TODO: think about rotation delay distance (option in constructor)
+		// found out you may be able to simplify this part by just using autobuilder instead
 		Command pathFindCommand =
 				new PathfindThenFollowPathHolonomic(
 						Pathfinding.getCurrentPath(CONSTRAINTS, goalEndState),
