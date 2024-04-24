@@ -2,6 +2,7 @@ package frc.team2412.robot;
 
 import static frc.team2412.robot.Controls.ControlConstants.CODRIVER_CONTROLLER_PORT;
 import static frc.team2412.robot.Controls.ControlConstants.CONTROLLER_PORT;
+import static frc.team2412.robot.Subsystems.SubsystemConstants.AUTONOMOUS_TELEOP_ENABLED;
 import static frc.team2412.robot.Subsystems.SubsystemConstants.DRIVEBASE_ENABLED;
 import static frc.team2412.robot.Subsystems.SubsystemConstants.INTAKE_ENABLED;
 import static frc.team2412.robot.Subsystems.SubsystemConstants.LAUNCHER_ENABLED;
@@ -135,6 +136,9 @@ public class Controls {
 			// 						s.drivebaseSubsystem,
 			// 						this,
 			// 						codriveController.leftBumper()));
+		}
+		if (AUTONOMOUS_TELEOP_ENABLED) {
+			driveController.back().whileTrue(s.autonomousTeleopSubsystem.runEnd(s.autonomousTeleopSubsystem::start, s.autonomousTeleopSubsystem::stop));
 		}
 	}
 	// LED

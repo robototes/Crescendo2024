@@ -62,7 +62,9 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
         TRAVELLING {
             @Override
             public RobotState nextState() {
+                // if the current command is null then this is the first time we're running this stage
                 if (currentCommand == null) {
+                    input.s.launcherSubsystem.setAngle(LauncherSubsystem.RETRACTED_ANGLE);
                     switch (input.goal) {
                         case PICKUP_NOTE:
                             currentPath = input.getPathToSource(input.s.drivebaseSubsystem.getPose().getTranslation());
@@ -92,6 +94,7 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
                 if (!currentCommand.isFinished()) {
                     return this;
                 }
+                currentCommand = null;
                 switch (input.goal) {
                     case PICKUP_NOTE:
                         return SEARCHING;
@@ -151,6 +154,7 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 
     private final Subsystems s;
 
+    private boolean enabled = false;
     private RobotState state;
     private RobotGoal goal;
     private ScoringMode scoringMode;
@@ -167,20 +171,27 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
     }
 
     public void start() {
+        enabled = true;
         inMatch = !(DriverStation.getMatchType().equals(MatchType.None));
         alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
         state.input = this;
         Pathfinding.ensureInitialized();
     }
 
+    public void stop() {
+        enabled = false;
+    }
+
     @Override
     public void periodic() {
-        matchTimeRemaining = DriverStation.getMatchTime();
-        if (matchTimeRemaining <= FORCE_PARK_TIME) {
-            // TODO: force park
-            return;
+        if (enabled) {
+            matchTimeRemaining = DriverStation.getMatchTime();
+            if (matchTimeRemaining <= FORCE_PARK_TIME) {
+                // TODO: force park
+                return;
+            }
+            state = state.nextState();
         }
-        state = state.nextState();
     }
 
     private boolean inMidgame() {
