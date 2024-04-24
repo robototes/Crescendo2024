@@ -48,7 +48,7 @@ public class AutoLogic {
 	public static final double FEEDER_DELAY = 0.4;
 
 	// rpm to rev up launcher before launching
-	public static final double REV_RPM = 2500;
+	public static final double REV_RPM = 3400;
 	public static final double STAGE_ANGLE = 262;
 
 	public static enum StartPosition {
@@ -88,6 +88,7 @@ public class AutoLogic {
 					new AutoPath("Test Path", "DiameterTest"),
 					new AutoPath("Master PID Test", "MasterPIDTest"),
 					new AutoPath("Tune Translational PID", "TuneTranslationalPID"),
+					new AutoPath("Tune Translational PID nack", "TuneTranslationPID back"),
 					new AutoPath("Tune Rotational PID", "TuneRotationalPID"),
 					new AutoPath("Stand Still", "PresetSourceSide1Score"),
 					new AutoPath("Stand Still", "PresetMid1Score"),
@@ -436,7 +437,10 @@ public class AutoLogic {
 
 	public static Command revFlyWheels() {
 		return (LAUNCHER_ENABLED
-						? new SetLaunchSpeedCommand(s.launcherSubsystem, REV_RPM)
+						? Commands.either(
+								new SetLaunchSpeedCommand(s.launcherSubsystem, REV_RPM),
+								Commands.none(),
+								() -> s.launcherSubsystem.getLauncherSpeed() < REV_RPM)
 						: Commands.none())
 				.withName("Auto - RevFlyWheelsCommand");
 	}
@@ -463,6 +467,16 @@ public class AutoLogic {
 												LauncherSubsystem.SUBWOOFER_AIM_ANGLE))
 						: Commands.none())
 				.withName("Auto - SetPivotSubwooferCommand");
+	}
+
+	public static Command setAngleIndex() {
+		return (LAUNCHER_ENABLED
+						? new SetAngleLaunchCommand(
+								s.launcherSubsystem,
+								LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
+								LauncherSubsystem.RETRACTED_ANGLE)
+						: Commands.none())
+				.withName("Auto - SetPivotIndexCommand");
 	}
 
 	public static Command feedUntilNoteLaunched() {

@@ -30,7 +30,7 @@ public class TrapAlign {
 		// trap that faces amp
 		new Pose2d(new Translation2d(12.3, 5.14), Rotation2d.fromDegrees(-120)),
 		// trap that faces source
-		new Pose2d(new Translation2d(12.3, 3.09), Rotation2d.fromDegrees(300)),
+		new Pose2d(new Translation2d(12.15, 3.45), Rotation2d.fromDegrees(120)),
 		// trap that faces mid
 		// DO THIS ONE FIRST
 		// brute force the X lol

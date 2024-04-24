@@ -173,6 +173,6 @@ public class ComplexAutoPaths {
 	}
 
 	public static BooleanSupplier checkForTargets() {
-		return (LIMELIGHT_ENABLED ? s.limelightSubsystem::hasTargets : () -> true);
+		return (LIMELIGHT_ENABLED ? s.limelightSubsystem::isNoteInFront : () -> true);
 	}
 }

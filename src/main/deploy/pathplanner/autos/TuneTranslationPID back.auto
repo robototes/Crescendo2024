@@ -2,7 +2,7 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 2.3,
+      "x": 6.3,
       "y": 7.0
     },
     "rotation": 0
@@ -14,7 +14,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "bonkRotateForward"
+            "pathName": "TuneRotationPID back"
           }
         }
       ]
