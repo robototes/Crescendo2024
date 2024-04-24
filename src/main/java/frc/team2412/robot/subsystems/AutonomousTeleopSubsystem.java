@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.DriverStation.MatchType;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2412.robot.Robot;
 import frc.team2412.robot.Subsystems;
@@ -27,6 +28,7 @@ import frc.team2412.robot.commands.intake.AllInCommand;
 import frc.team2412.robot.commands.launcher.FullTargetCommand;
 import frc.team2412.robot.commands.launcher.SetAngleAmpLaunchCommand;
 import frc.team2412.robot.subsystems.AutonomousTeleopSubsystem.RobotState;
+import frc.team2412.robot.util.auto.AutoLogic;
 import java.util.List;
 
 public class AutonomousTeleopSubsystem extends SubsystemBase {
@@ -417,7 +419,6 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 	public Command getPathFindingCommand(Pose2d goalPose) {
 		// TODO: i think this is how were supposed to approach pathfinding?
 
-
 		// TODO: ended off here so need to find place to get goal pose?
 		GoalEndState goalEndState = new GoalEndState(0, goalPose.getRotation());
 
@@ -430,11 +431,22 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 						s.drivebaseSubsystem::getFieldSpeeds, // Field or robot speeds? idk lol
 						s.drivebaseSubsystem::drive,
 						PATH_FOLLOWER_CONFIG,
-						() -> DriverStation.getAlliance().get().equals(alliance.Red),
+						() -> DriverStation.getAlliance().get().equals(Alliance.Red),
 						s.drivebaseSubsystem);
 
 		return pathFindCommand;
 	}
 
-	
+	public Command scoreAmpCommand() {
+		Pose2d ampScorePose = alliance.equals(Alliance.Blue) ? BLUE_AMP_SCORE_POSE : RED_AMP_SCORE_POSE;
+		Pathfinding.setGoalPosition(ampScorePose.getTranslation());
+
+		return Commands.sequence(
+				new SetAngleAmpLaunchCommand(
+						s.launcherSubsystem,
+						LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
+						LauncherSubsystem.AMP_AIM_ANGLE),
+				getPathFindingCommand(ampScorePose),
+				Commands.waitUntil(AutoLogic.isReadyToLaunch()).andThen(AutoLogic.feedUntilNoteLaunched()));
+	}
 }
