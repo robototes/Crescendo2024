@@ -549,14 +549,16 @@ public class LauncherSubsystem extends SubsystemBase {
 				launcherAngleTwoMotor.disable();
 				launcherDisabledEntry.setBoolean(true);
 			}
-			DriverStation.reportError(
-					"Pivot encoder deviated too far from motor encoder angle ... .. Reported pivot angle of "
-							+ getAngle()
-							+ " and motor angle of "
-							+ getAngleOneMotorAngle()
-							+ ". Is overidden: "
-							+ ignoreLimits,
-					false);
+			if (Robot.isReal()) {
+				DriverStation.reportError(
+						"Pivot encoder deviated too far from motor encoder angle ... .. Reported pivot angle of "
+								+ getAngle()
+								+ " and motor angle of "
+								+ getAngleOneMotorAngle()
+								+ ". Is overidden: "
+								+ ignoreLimits,
+						false);
+			}
 		}
 
 		if (getPosition()
@@ -570,12 +572,14 @@ public class LauncherSubsystem extends SubsystemBase {
 				launcherAngleTwoMotor.disable();
 				launcherDisabledEntry.setBoolean(true);
 			}
-			DriverStation.reportError(
-					"Launcher encoder angle is insane!!!! Reports angle of "
-							+ getAngle()
-							+ " degrees. Is overridden: "
-							+ ignoreLimits,
-					false);
+			if (Robot.isReal()) {
+				DriverStation.reportError(
+						"Launcher encoder angle is insane!!!! Reports angle of "
+								+ getAngle()
+								+ " degrees. Is overridden: "
+								+ ignoreLimits,
+						false);
+			}
 		}
 	}
 

@@ -3,7 +3,6 @@ package frc.team2412.robot.util.auto;
 import static frc.team2412.robot.Subsystems.SubsystemConstants.*;
 import static frc.team2412.robot.util.auto.AutoLogic.*;
 
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
@@ -108,9 +107,13 @@ public class ComplexAutoPaths {
 	// 												AutoLogic.getAutoCommand("SOURCE L_CN4 L_CN3"))),
 	// 								AutoLogic.visionLaunch2())));
 
-	// Warning at edu.wpi.first.wpilibj.DriverStation.reportJoystickUnpluggedWarning(DriverStation.java:1364): Joystick Button 3 on port 1 not available, check if controller is plugged in
+	// Warning at
+	// edu.wpi.first.wpilibj.DriverStation.reportJoystickUnpluggedWarning(DriverStation.java:1364):
+	// Joystick Button 3 on port 1 not available, check if controller is plugged in
 	// Done serializing CSV
-	// Error at com.pathplanner.lib.path.PathPlannerPath.fromPathFile(PathPlannerPath.java:305): Unhandled exception: java.lang.RuntimeException: org.json.simple.parser.ParseException: Unexpected character (<) at position 56.
+	// Error at com.pathplanner.lib.path.PathPlannerPath.fromPathFile(PathPlannerPath.java:305):
+	// Unhandled exception: java.lang.RuntimeException: org.json.simple.parser.ParseException:
+	// Unexpected character (<) at position 56.
 	//         at com.pathplanner.lib.path.PathPlannerPath.fromPathFile(PathPlannerPath.java:305)
 	//         at frc.team2412.robot.util.auto.AutoLogic.getAutoCommand(AutoLogic.java:243)
 	//         at frc.team2412.robot.util.auto.ComplexAutoPaths.<clinit>(ComplexAutoPaths.java:38)
@@ -121,7 +124,7 @@ public class ComplexAutoPaths {
 	//         at edu.wpi.first.wpilibj.RobotBase.runRobot(RobotBase.java:365)
 	//         at edu.wpi.first.wpilibj.RobotBase.lambda$startRobot$0(RobotBase.java:433)
 	//         at java.base/java.lang.Thread.run(Thread.java:833)
-	
+
 	// new command getters
 
 	private static Command conditionalPath(Command onTrue, Command onFalse) {

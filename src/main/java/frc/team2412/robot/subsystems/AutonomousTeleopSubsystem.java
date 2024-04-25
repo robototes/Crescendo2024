@@ -1,9 +1,11 @@
 package frc.team2412.robot.subsystems;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathfindHolonomic;
+import com.pathplanner.lib.commands.PathfindingCommand;
+import com.pathplanner.lib.controllers.PathFollowingController;
 import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
-import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.pathfinding.LocalADStar;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
@@ -12,10 +14,13 @@ import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.DriverStation.MatchType;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -29,7 +34,6 @@ import frc.team2412.robot.commands.launcher.AimTowardsSpeakerCommand;
 import frc.team2412.robot.commands.launcher.FullTargetCommand;
 import frc.team2412.robot.commands.launcher.SetAngleAmpLaunchCommand;
 import frc.team2412.robot.commands.launcher.SetAngleLaunchCommand;
-import frc.team2412.robot.subsystems.AutonomousTeleopSubsystem.RobotState;
 import frc.team2412.robot.util.auto.AutoLogic;
 import java.util.List;
 
@@ -60,16 +64,15 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 	private static final double STAGE_SIZE = 1.2;
 
 	// TODO: get these points
-	private static final Pose2d BLUE_SOURCE_POSE = new Pose2d();
-	private static final Pose2d RED_SOURCE_POSE = new Pose2d();
+	private static final Pose2d BLUE_SOURCE_POSE = new Pose2d(13.87, 1.2, new Rotation2d());
+	private static final Pose2d RED_SOURCE_POSE = new Pose2d(2.7, 1.2, Rotation2d.fromDegrees(180));
 	private static final Pose2d BLUE_SOURCE_ROAM_POSE = new Pose2d();
 	private static final Pose2d RED_SOURCE_ROAM_POSE = new Pose2d();
-
 	// amp
-	private static final Pose2d BLUE_AMP_ALIGN_POSE = new Pose2d(1.82, 7.40, new Rotation2d(90));
-	private static final Pose2d RED_AMP_ALIGN_POSE = new Pose2d(14.72, 7.40, new Rotation2d(90));
-	private static final Pose2d BLUE_AMP_SCORE_POSE = new Pose2d(1.82, 7.63, new Rotation2d(90));
-	private static final Pose2d RED_AMP_SCORE_POSE = new Pose2d(14.72, 7.63, new Rotation2d(90));
+	private static final Pose2d BLUE_AMP_ALIGN_POSE = new Pose2d(1.82, 7.40, Rotation2d.fromDegrees(90));
+	private static final Pose2d RED_AMP_ALIGN_POSE = new Pose2d(14.72, 7.40, Rotation2d.fromDegrees(90));
+	private static final Pose2d BLUE_AMP_SCORE_POSE = new Pose2d(1.82, 7.63, Rotation2d.fromDegrees(90));
+	private static final Pose2d RED_AMP_SCORE_POSE = new Pose2d(14.72, 7.63, Rotation2d.fromDegrees(90));
 
 	private static final double ACCELERATION_TOLERANCE = 0.1;
 
@@ -78,7 +81,7 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 	public enum RobotState {
 		IDLE {
 			@Override
-			public RobotState nextState() {
+			public RobotState nextState(AutonomousTeleopSubsystem input) {
 				currentCommand = null;
 				if (input.inMidgame()) {
 					if (input.hasNote()) {
@@ -103,34 +106,26 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 		},
 		TRAVELLING {
 			@Override
-			public RobotState nextState() {
+			public RobotState nextState(AutonomousTeleopSubsystem input) {
 				// if the current command is null then this is the first time we're running this stage
 				if (currentCommand == null) {
 					input.s.launcherSubsystem.setAngle(LauncherSubsystem.RETRACTED_ANGLE);
 					input.s.launcherSubsystem.stopLauncher();
 					switch (input.goal) {
 						case PICKUP_NOTE:
-							currentPath =
-									input.getPathToSource(input.s.drivebaseSubsystem.getPose().getTranslation());
-							currentCommand = AutoBuilder.followPath(currentPath);
+							currentCommand = input.pathfindToSource();
 							currentCommand.schedule();
 							break;
 						case SCORE_SPEAKER:
-							currentPath =
-									input.getPathToSpeaker(input.s.drivebaseSubsystem.getPose().getTranslation());
-							currentCommand = AutoBuilder.followPath(currentPath);
+							currentCommand = input.pathfindToSpeaker();
 							currentCommand.schedule();
 							break;
 						case SCORE_AMP:
-							currentPath =
-									input.getPathToAmp(input.s.drivebaseSubsystem.getPose().getTranslation());
-							currentCommand = AutoBuilder.followPath(currentPath);
+							currentCommand = input.pathfindToAmp();
 							currentCommand.schedule();
 							break;
 						case PARK:
-							currentPath =
-									input.getPathToStage(input.s.drivebaseSubsystem.getPose().getTranslation());
-							currentCommand = AutoBuilder.followPath(currentPath);
+							currentCommand = input.pathfindToStage();
 							currentCommand.schedule();
 							break;
 					}
@@ -157,17 +152,16 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 		},
 		REROUTING {
 			@Override
-			public RobotState nextState() {
+			public RobotState nextState(AutonomousTeleopSubsystem input) {
 				input.avoidCollisionSpot();
 				return TRAVELLING;
 			}
 		},
 		SEARCHING {
 			AllInCommand intakeCommand;
-			boolean roamed;
 
 			@Override
-			public RobotState nextState() {
+			public RobotState nextState(AutonomousTeleopSubsystem input) {
 				if (intakeCommand == null) {
 					Robot robot = Robot.getInstance();
 					intakeCommand = new AllInCommand(input.s.intakeSubsystem, robot.controls);
@@ -179,23 +173,21 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 					return TRAVELLING;
 				}
 				if (input.s.limelightSubsystem.hasTargets()
-						&& currentCommand.isFinished()
-						&& !currentCommand.getClass().equals(DriveToNoteCommand.class)) {
+						&& !(currentCommand.getClass().equals(DriveToNoteCommand.class)
+								&& !currentCommand.isFinished())) {
 					currentCommand.cancel();
 					currentCommand =
 							new DriveToNoteCommand(input.s.drivebaseSubsystem, input.s.limelightSubsystem);
 					currentCommand.schedule();
 				} else if (currentCommand != null && currentCommand.isFinished()) {
-					if (roamed) {}
-					// currentCommand =
-					// TODO: idk what is being done here jbear
+					// roam command
 				}
 				return this;
 			}
 		},
 		SPEAKER_SCORING {
 			@Override
-			public RobotState nextState() {
+			public RobotState nextState(AutonomousTeleopSubsystem input) {
 				if (currentCommand == null) {
 					Robot robot = Robot.getInstance();
 					currentCommand =
@@ -215,7 +207,7 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 		},
 		AMP_SCORING {
 			@Override
-			public RobotState nextState() {
+			public RobotState nextState(AutonomousTeleopSubsystem input) {
 				if (currentCommand == null) {
 					currentCommand =
 							new SetAngleAmpLaunchCommand(
@@ -235,10 +227,8 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 			}
 		};
 
-		public abstract RobotState nextState();
+		public abstract RobotState nextState(AutonomousTeleopSubsystem input);
 
-		AutonomousTeleopSubsystem input;
-		PathPlannerPath currentPath;
 		Command currentCommand;
 	}
 
@@ -255,36 +245,44 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 	}
 
 	private final Subsystems s;
+	private final ShuffleboardTab tab = Shuffleboard.getTab("Auto Teleop");
 
 	private boolean enabled = false;
-	private RobotState state;
-	private RobotGoal goal;
+	private RobotState state = RobotState.IDLE;
+	private RobotGoal goal = RobotGoal.PICKUP_NOTE;
 	private ScoringMode scoringMode = ScoringMode.SPEAKER;
 	private double matchTimeRemaining;
 	private boolean inMatch = false;
-	private Alliance alliance;
+	private Alliance alliance = Alliance.Blue;
 
 	// for collision detection
-	private Translation2d lastExpectedVelocity;
-	private double lastTimestamp;
-	private Translation2d collisionDirection;
+	private Translation2d lastExpectedVelocity = new Translation2d();
+	private double lastTimestamp = 0;
+	private Translation2d collisionDirection = new Translation2d();
 
 	public AutonomousTeleopSubsystem(Subsystems s) {
 		this.s = s;
 
 		// Pathfinder w/ obstacle avoidance
 		Pathfinding.setPathfinder(new LocalADStar());
+
+		initData();
 	}
 
 	public void start() {
 		enabled = true;
 		inMatch = !(DriverStation.getMatchType().equals(MatchType.None));
 		alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
-		state.input = this;
+		state = RobotState.IDLE;
 		Pathfinding.ensureInitialized();
+		PathfindingCommand.warmupCommand().withName("PathplannerWarmupCommand").schedule();
 	}
 
 	public void stop() {
+		if (state.currentCommand != null) {
+			state.currentCommand.cancel();
+		}
+		state.currentCommand = null;
 		enabled = false;
 	}
 
@@ -300,8 +298,25 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 				// TODO: force park
 				return;
 			}
-			state = state.nextState();
+			state = state.nextState(this);
 		}
+	}
+
+	public void initData() {
+		tab.addBoolean("Enabled", () -> enabled);
+		tab.addString("Robot State", () -> state.toString());
+		tab.addString("Robot Goal", () -> goal.toString());
+		tab.addString("Current Command", () -> {if (state.currentCommand != null) return state.currentCommand.toString(); else return "None";});
+		tab.addDouble("Match Time", () -> matchTimeRemaining);
+		tab.addBoolean("Is Match", () -> inMatch);
+		tab.addBoolean("Has Note", this::hasNote);
+		tab.addBoolean("In Midgame", this::inMidgame);
+		tab.addBoolean("Under Stage", this::underStage);
+		tab.addBoolean("Is Colliding", this::isColliding);
+	}
+
+	public boolean isEnabled() {
+		return enabled;
 	}
 
 	private boolean inMidgame() {
@@ -331,7 +346,7 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 				(lastExpectedVelocity.minus(expectedVelocity))
 						.div((lastTimestamp - Timer.getFPGATimestamp()));
 		Translation2d actualAccel =
-				s.drivebaseSubsystem.getSwerveDrive().getAccel().get().toTranslation2d();
+				s.drivebaseSubsystem.getSwerveDrive().getAccel().orElse(new Translation3d(expectedAccel.getX(), expectedAccel.getY(), 0)).toTranslation2d();
 
 		double accelDifference = Math.abs(expectedAccel.getNorm() - actualAccel.getNorm());
 
@@ -391,42 +406,32 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 		Pathfinding.setGoalPosition(goalPosition);
 	}
 
-	private PathPlannerPath getPathToSource(Translation2d robotPosition) {
-		Pose2d sourcePose = alliance.equals(Alliance.Blue) ? BLUE_SOURCE_POSE : RED_SOURCE_POSE;
-		return new PathPlannerPath(
-				List.of(robotPosition, sourcePose.getTranslation()),
-				CONSTRAINTS,
-				new GoalEndState(0, sourcePose.getRotation()));
-	}
-
-	private PathPlannerPath getPathToSourceRoam(Translation2d robotPosition) {
-		return null;
-	}
-
-	private PathPlannerPath getPathToSpeaker(Translation2d robotPosition) {
-		return null;
-	}
-
-	private PathPlannerPath getPathToAmp(Translation2d robotPosition) {
-		Pose2d ampPose = alliance.equals(Alliance.Blue) ? BLUE_AMP_ALIGN_POSE : RED_AMP_ALIGN_POSE;
-		setGoalPosition(robotPosition, ampPose.getTranslation());
-
-		return null;
-	}
-
-	private PathPlannerPath getPathToStage(Translation2d robotPosition) {
-		return null;
-	}
-
 	// Commands
 
-	public Command getPathFindingCommand(Pose2d goalPose) {
-		// TODO: i think this is how were supposed to approach pathfinding?
-		GoalEndState goalEndState = new GoalEndState(0, goalPose.getRotation());
+	private Command pathfindToSource() {
+		Pose2d sourcePose = alliance.equals(Alliance.Blue) ? BLUE_SOURCE_POSE : RED_SOURCE_POSE;
+		return pathfindToPose(sourcePose);
+	}
 
-		// TODO: think abt rotation delay parameter?
-		return AutoBuilder.pathfindThenFollowPath(
-				Pathfinding.getCurrentPath(CONSTRAINTS, goalEndState), CONSTRAINTS);
+	private Command pathfindToSourceRoam() {
+		return null;
+	}
+
+	private Command pathfindToSpeaker() {
+		return null;
+	}
+
+	private Command pathfindToAmp() {
+		Pose2d ampPose = alliance.equals(Alliance.Blue) ? BLUE_AMP_ALIGN_POSE : RED_AMP_ALIGN_POSE;
+		return pathfindToPose(ampPose);
+	}
+
+	private Command pathfindToStage() {
+		return null;
+	}
+
+	public Command pathfindToPose(Pose2d goalPose) {
+		return new PathfindHolonomic(goalPose, CONSTRAINTS, s.drivebaseSubsystem::getPose, s.drivebaseSubsystem::getRobotSpeeds, s.drivebaseSubsystem::drive, PATH_FOLLOWER_CONFIG, s.drivebaseSubsystem);
 	}
 
 	public Command scoreAmpCommand() {
@@ -438,7 +443,7 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 						s.launcherSubsystem,
 						LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
 						LauncherSubsystem.AMP_AIM_ANGLE),
-				getPathFindingCommand(ampScorePose),
+				pathfindToPose(ampScorePose),
 				Commands.waitUntil(AutoLogic.isReadyToLaunch()).andThen(AutoLogic.feedUntilNoteLaunched()));
 	}
 

@@ -14,7 +14,7 @@ import frc.team2412.robot.util.DrivebaseWrapper;
 public class Subsystems {
 	public static class SubsystemConstants {
 		public static final boolean APRILTAGS_ENABLED = true;
-		public static final boolean LIMELIGHT_ENABLED = false;
+		public static final boolean LIMELIGHT_ENABLED = true;
 		public static final boolean CLIMB_ENABLED = false;
 		public static final boolean LAUNCHER_ENABLED = true;
 		public static final boolean INTAKE_ENABLED = true;

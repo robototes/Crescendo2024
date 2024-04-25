@@ -224,7 +224,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 						constrainedTranslation = constrainedTranslation.unaryMinus();
 					}
 					drive(constrainedTranslation, constrainedRotation, true);
-				});
+				}).withName("DriveCommand");
 	}
 
 	// this might need to be put in its own file due to complexity
@@ -242,7 +242,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 						},
 						() -> {
 							rotationSetpoint = null;
-						});
+						}).withName("RotateToAngleCommand");
 
 		if (endWhenAligned)
 			return alignCommand.until(
