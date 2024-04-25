@@ -1,10 +1,7 @@
 package frc.team2412.robot.subsystems;
 
-import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathfindHolonomic;
 import com.pathplanner.lib.commands.PathfindingCommand;
-import com.pathplanner.lib.controllers.PathFollowingController;
-import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.pathfinding.LocalADStar;
 import com.pathplanner.lib.pathfinding.Pathfinding;
@@ -19,9 +16,9 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.DriverStation.MatchType;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -69,10 +66,14 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 	private static final Pose2d BLUE_SOURCE_ROAM_POSE = new Pose2d();
 	private static final Pose2d RED_SOURCE_ROAM_POSE = new Pose2d();
 	// amp
-	private static final Pose2d BLUE_AMP_ALIGN_POSE = new Pose2d(1.82, 7.40, Rotation2d.fromDegrees(90));
-	private static final Pose2d RED_AMP_ALIGN_POSE = new Pose2d(14.72, 7.40, Rotation2d.fromDegrees(90));
-	private static final Pose2d BLUE_AMP_SCORE_POSE = new Pose2d(1.82, 7.63, Rotation2d.fromDegrees(90));
-	private static final Pose2d RED_AMP_SCORE_POSE = new Pose2d(14.72, 7.63, Rotation2d.fromDegrees(90));
+	private static final Pose2d BLUE_AMP_ALIGN_POSE =
+			new Pose2d(1.82, 7.40, Rotation2d.fromDegrees(90));
+	private static final Pose2d RED_AMP_ALIGN_POSE =
+			new Pose2d(14.72, 7.40, Rotation2d.fromDegrees(90));
+	private static final Pose2d BLUE_AMP_SCORE_POSE =
+			new Pose2d(1.82, 7.63, Rotation2d.fromDegrees(90));
+	private static final Pose2d RED_AMP_SCORE_POSE =
+			new Pose2d(14.72, 7.63, Rotation2d.fromDegrees(90));
 
 	private static final double ACCELERATION_TOLERANCE = 0.1;
 
@@ -306,7 +307,12 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 		tab.addBoolean("Enabled", () -> enabled);
 		tab.addString("Robot State", () -> state.toString());
 		tab.addString("Robot Goal", () -> goal.toString());
-		tab.addString("Current Command", () -> {if (state.currentCommand != null) return state.currentCommand.toString(); else return "None";});
+		tab.addString(
+				"Current Command",
+				() -> {
+					if (state.currentCommand != null) return state.currentCommand.toString();
+					else return "None";
+				});
 		tab.addDouble("Match Time", () -> matchTimeRemaining);
 		tab.addBoolean("Is Match", () -> inMatch);
 		tab.addBoolean("Has Note", this::hasNote);
@@ -346,7 +352,11 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 				(lastExpectedVelocity.minus(expectedVelocity))
 						.div((lastTimestamp - Timer.getFPGATimestamp()));
 		Translation2d actualAccel =
-				s.drivebaseSubsystem.getSwerveDrive().getAccel().orElse(new Translation3d(expectedAccel.getX(), expectedAccel.getY(), 0)).toTranslation2d();
+				s.drivebaseSubsystem
+						.getSwerveDrive()
+						.getAccel()
+						.orElse(new Translation3d(expectedAccel.getX(), expectedAccel.getY(), 0))
+						.toTranslation2d();
 
 		double accelDifference = Math.abs(expectedAccel.getNorm() - actualAccel.getNorm());
 
@@ -431,7 +441,14 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 	}
 
 	public Command pathfindToPose(Pose2d goalPose) {
-		return new PathfindHolonomic(goalPose, CONSTRAINTS, s.drivebaseSubsystem::getPose, s.drivebaseSubsystem::getRobotSpeeds, s.drivebaseSubsystem::drive, PATH_FOLLOWER_CONFIG, s.drivebaseSubsystem);
+		return new PathfindHolonomic(
+				goalPose,
+				CONSTRAINTS,
+				s.drivebaseSubsystem::getPose,
+				s.drivebaseSubsystem::getRobotSpeeds,
+				s.drivebaseSubsystem::drive,
+				PATH_FOLLOWER_CONFIG,
+				s.drivebaseSubsystem);
 	}
 
 	public Command scoreAmpCommand() {

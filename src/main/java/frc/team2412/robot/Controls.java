@@ -147,8 +147,9 @@ public class Controls {
 			driveController
 					.back()
 					.whileTrue(
-							s.autonomousTeleopSubsystem.startEnd(
-									s.autonomousTeleopSubsystem::start, s.autonomousTeleopSubsystem::stop).withName("StartEndAutoTeleopCommand"));
+							s.autonomousTeleopSubsystem
+									.startEnd(s.autonomousTeleopSubsystem::start, s.autonomousTeleopSubsystem::stop)
+									.withName("StartEndAutoTeleopCommand"));
 		}
 	}
 	// LED
