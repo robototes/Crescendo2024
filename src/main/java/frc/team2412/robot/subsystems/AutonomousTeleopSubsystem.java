@@ -29,6 +29,7 @@ import frc.team2412.robot.commands.intake.AllInCommand;
 import frc.team2412.robot.commands.intake.FeederInCommand;
 import frc.team2412.robot.commands.launcher.AimTowardsSpeakerCommand;
 import frc.team2412.robot.commands.launcher.FullTargetCommand;
+import frc.team2412.robot.commands.launcher.PrepFlywheelForLaunchCommand;
 import frc.team2412.robot.commands.launcher.SetAngleAmpLaunchCommand;
 import frc.team2412.robot.commands.launcher.SetAngleLaunchCommand;
 import frc.team2412.robot.util.auto.AutoLogic;
@@ -59,6 +60,9 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 	private static final Translation2d BLUE_STAGE_POSITION = new Translation2d(4.88, 4.09);
 	private static final Translation2d RED_STAGE_POSITION = new Translation2d(11.7, 4.09);
 	private static final double STAGE_SIZE = 1.2;
+
+	private static final double BLUE_WING_LINE = 5.85;
+	private static final double RED_WING_LINE = 10.70;
 
 	// TODO: get these points
 	private static final Pose2d BLUE_SOURCE_POSE = new Pose2d(13.87, 1.2, new Rotation2d());
@@ -120,6 +124,10 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 						case SCORE_SPEAKER:
 							currentCommand = input.pathfindToSpeaker();
 							currentCommand.schedule();
+							if (input.alliance.equals(Alliance.Blue)
+									? input.s.drivebaseSubsystem.getPose().getX() < BLUE_WING_LINE
+									: input.s.drivebaseSubsystem.getPose().getX() > RED_WING_LINE) {}
+
 							break;
 						case SCORE_AMP:
 							currentCommand = input.pathfindToAmp();
@@ -477,5 +485,9 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 	public Command intake() {
 		return new SetAngleLaunchCommand(s.launcherSubsystem, 0, LauncherSubsystem.RETRACTED_ANGLE)
 				.andThen(new AllInCommand(s.intakeSubsystem, null));
+	}
+
+	public Command revFlyWheels() {
+		return new PrepFlywheelForLaunchCommand(s.launcherSubsystem, s.drivebaseSubsystem);
 	}
 }
