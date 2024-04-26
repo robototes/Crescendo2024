@@ -173,6 +173,7 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 			@Override
 			public RobotState nextState(AutonomousTeleopSubsystem input) {
 				input.avoidCollisionSpot();
+				currentCommand = null;
 				return TRAVELLING;
 			}
 		},
