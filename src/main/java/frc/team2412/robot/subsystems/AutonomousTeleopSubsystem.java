@@ -31,11 +31,7 @@ import frc.team2412.robot.commands.drivebase.DriveToNoteCommand;
 import frc.team2412.robot.commands.intake.AllInCommand;
 import frc.team2412.robot.commands.intake.FeederInCommand;
 import frc.team2412.robot.commands.launcher.AimTowardsSpeakerCommand;
-<<<<<<< HEAD
-=======
-import frc.team2412.robot.commands.launcher.FullTargetCommand;
 import frc.team2412.robot.commands.launcher.PrepFlywheelForLaunchCommand;
->>>>>>> 4473c63ed31b1d2ecb3fe157fcf8e03ccab8136d
 import frc.team2412.robot.commands.launcher.SetAngleAmpLaunchCommand;
 import frc.team2412.robot.commands.launcher.SetAngleLaunchCommand;
 import frc.team2412.robot.util.auto.AutoLogic;
