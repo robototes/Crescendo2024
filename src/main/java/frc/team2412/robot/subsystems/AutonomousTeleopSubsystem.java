@@ -12,6 +12,7 @@ import com.pathplanner.lib.pathfinding.LocalADStar;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.ReplanningConfig;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -94,6 +95,8 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 			new Pose2d(1.82, 7.63, Rotation2d.fromDegrees(-90));
 	private static final Pose2d RED_AMP_SCORE_POSE =
 			new Pose2d(14.72, 7.63, Rotation2d.fromDegrees(-90));
+
+	private static final double AMP_PIVOTING_DISTANCE_TOLERANCE = 2.5;
 
 	// trap poses
 	private static final double TRAP_ALIGNMENT_DISTANCE = 1.83; // TODO: test and tune
@@ -527,6 +530,13 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 		Pathfinding.setDynamicObstacles(List.of(), s.drivebaseSubsystem.getPose().getTranslation());
 	}
 
+	private boolean isNearPosition(Translation2d expectedPosition, double tolerance) {
+		return (MathUtil.isNear(
+						expectedPosition.getX(), s.drivebaseSubsystem.getPose().getX(), tolerance)
+				&& MathUtil.isNear(
+						expectedPosition.getY(), s.drivebaseSubsystem.getPose().getY(), tolerance));
+	}
+
 	// Path find methods
 
 	private void setGoalPosition(Translation2d robotPosition, Translation2d goalPosition) {
@@ -620,16 +630,28 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 				.andThen(pathfindToPose(alignmentPose))
 				.andThen(prepTrapLaunchCommand())
 				.andThen(pathfindToPose(launchingPose))
-				.andThen(launch()).withName("ScoreTrapCommand");
+				.andThen(launch())
+				.withName("ScoreTrapCommand");
 	}
 
 	// SUBSYSTEM COMMANDS
 
 	public Command scoreAmpCommand() {
+		Pose2d ampAlignPose = alliance.equals(Alliance.Blue) ? BLUE_AMP_ALIGN_POSE : RED_AMP_ALIGN_POSE;
 		Pose2d ampScorePose = alliance.equals(Alliance.Blue) ? BLUE_AMP_SCORE_POSE : RED_AMP_SCORE_POSE;
 		Pathfinding.setGoalPosition(ampScorePose.getTranslation());
 
-		return Commands.sequence(pathfindToPose(ampScorePose), prepAmpLaunchCommand(), launch()).withName("ScoreAmpCommand");
+		return retractPivot()
+				.andThen(
+						Commands.parallel(
+										pathfindToPose(ampAlignPose).andThen(pathfindToPose(ampScorePose)),
+										Commands.waitUntil(
+														() ->
+																isNearPosition(
+																		ampScorePose.getTranslation(), AMP_PIVOTING_DISTANCE_TOLERANCE))
+												.andThen(prepAmpLaunchCommand()))
+								.andThen(launch()))
+				.withName("ScoreAmpCommand");
 	}
 
 	public Command scoreSpeaker() {
