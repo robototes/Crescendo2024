@@ -629,8 +629,7 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 		Pose2d ampScorePose = alliance.equals(Alliance.Blue) ? BLUE_AMP_SCORE_POSE : RED_AMP_SCORE_POSE;
 		Pathfinding.setGoalPosition(ampScorePose.getTranslation());
 
-		return Commands.sequence(
-				prepAmpLaunchCommand(), pathfindToPose(ampScorePose), launch()).withName("ScoreAmpCommand");
+		return Commands.sequence(pathfindToPose(ampScorePose), prepAmpLaunchCommand(), launch()).withName("ScoreAmpCommand");
 	}
 
 	public Command scoreSpeaker() {
