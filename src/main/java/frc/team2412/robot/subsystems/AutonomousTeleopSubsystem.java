@@ -640,6 +640,7 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 				.withName("ScoreSpeakerCommand");
 	}
 
+	@SuppressWarnings("unused")
 	public Command launch() {
 		return (LAUNCHER_ENABLED && INTAKE_ENABLED
 						? Commands.waitUntil(AutoLogic.isReadyToLaunch())
