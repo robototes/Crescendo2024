@@ -15,6 +15,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.DriverStation.MatchType;
@@ -24,8 +25,8 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.team2412.robot.Robot;
 import frc.team2412.robot.Subsystems;
 import frc.team2412.robot.commands.drivebase.DriveToNoteCommand;
 import frc.team2412.robot.commands.intake.AllInCommand;
@@ -34,6 +35,7 @@ import frc.team2412.robot.commands.launcher.AimTowardsSpeakerCommand;
 import frc.team2412.robot.commands.launcher.PrepFlywheelForLaunchCommand;
 import frc.team2412.robot.commands.launcher.SetAngleAmpLaunchCommand;
 import frc.team2412.robot.commands.launcher.SetAngleLaunchCommand;
+import frc.team2412.robot.commands.launcher.StopLauncherCommand;
 import frc.team2412.robot.util.auto.AutoLogic;
 import java.util.List;
 
@@ -60,14 +62,16 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 	private static final double FORCE_PARK_TIME = 5.;
 
 	private static final Translation2d BLUE_STAGE_POSITION = new Translation2d(4.88, 4.09);
-	private static final Translation2d RED_STAGE_POSITION = new Translation2d(11.7, 4.09);
+	private static final Translation2d RED_STAGE_POSITION = new Translation2d(11.69, 4.09);
 	private static final double STAGE_SIZE = 1.2;
 
 	private static final double BLUE_WING_LINE = 5.85;
 	private static final double RED_WING_LINE = 10.70;
 
-	private static final Pose2d BLUE_SOURCE_POSE = new Pose2d(13.09, 0.86, new Rotation2d(-17.45+180));
-	private static final Pose2d RED_SOURCE_POSE = new Pose2d(3.09, 0.86, Rotation2d.fromDegrees(-170.79));
+	private static final Pose2d BLUE_SOURCE_POSE =
+			new Pose2d(13.09, 0.86, new Rotation2d(-17.45 + 180));
+	private static final Pose2d RED_SOURCE_POSE =
+			new Pose2d(3.09, 0.86, Rotation2d.fromDegrees(-170.79));
 	private static final PathPlannerPath BLUE_SOURCE_ROAM_PATH =
 			PathPlannerPath.fromPathFile("BlueSourceRoamPath");
 	private static final PathPlannerPath RED_SOURCE_ROAM_PATH =
@@ -88,6 +92,92 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 			new Pose2d(1.82, 7.63, Rotation2d.fromDegrees(-90));
 	private static final Pose2d RED_AMP_SCORE_POSE =
 			new Pose2d(14.72, 7.63, Rotation2d.fromDegrees(-90));
+
+	// trap poses
+	private static final double TRAP_ALIGNMENT_DISTANCE = 1.83; // TODO: test and tune
+	private static final double TRAP_SCORING_DISTANCE = 0.8; // TODO: test and tune
+
+	// TODO: verify calculations, i think i did it correctly but the math has given me aneurysms to
+	// the point of me not knowing anymore
+	public static final Pose2d[] BLUE_TRAP_ALIGNMENT_POSES = {
+		// CENTERLINE SIDE
+		new Pose2d(
+				BLUE_STAGE_POSITION.getX() + TRAP_SCORING_DISTANCE,
+				BLUE_STAGE_POSITION.getY(),
+				new Rotation2d(180.0)),
+		// SOURCE SIDE
+		new Pose2d(
+				BLUE_STAGE_POSITION.getX()
+						- (TRAP_ALIGNMENT_DISTANCE * Math.sin(Units.degreesToRadians(30))),
+				BLUE_STAGE_POSITION.getY()
+						- (TRAP_ALIGNMENT_DISTANCE * Math.cos(Units.degreesToRadians(30))),
+				new Rotation2d(60.0)),
+		// AMP SIDE
+		new Pose2d(
+				BLUE_STAGE_POSITION.getX()
+						- (TRAP_ALIGNMENT_DISTANCE * Math.sin(Units.degreesToRadians(30))),
+				BLUE_STAGE_POSITION.getY()
+						+ (TRAP_ALIGNMENT_DISTANCE * Math.cos(Units.degreesToRadians(30))),
+				new Rotation2d(-60.0))
+	};
+
+	public static final Pose2d[] RED_TRAP_ALIGNMENT_POSES = {
+		// CENTERLINE SIDE
+		new Pose2d(
+				RED_STAGE_POSITION.getX() - TRAP_SCORING_DISTANCE,
+				RED_STAGE_POSITION.getY(),
+				new Rotation2d(0.0)),
+		// SOURCE SIDE
+		new Pose2d(
+				RED_STAGE_POSITION.getX()
+						+ (TRAP_ALIGNMENT_DISTANCE * Math.sin(Units.degreesToRadians(30))),
+				RED_STAGE_POSITION.getY()
+						- (TRAP_ALIGNMENT_DISTANCE * Math.cos(Units.degreesToRadians(30))),
+				new Rotation2d(120.0)),
+		// AMP SIDE
+		new Pose2d(
+				RED_STAGE_POSITION.getX()
+						+ (TRAP_ALIGNMENT_DISTANCE * Math.sin(Units.degreesToRadians(30))),
+				RED_STAGE_POSITION.getY()
+						+ (TRAP_ALIGNMENT_DISTANCE * Math.cos(Units.degreesToRadians(30))),
+				new Rotation2d(-120.0))
+	};
+
+	public static final Pose2d[] BLUE_TRAP_SCORING_POSES = {
+		// CENTERLINE SIDE
+		new Pose2d(
+				BLUE_STAGE_POSITION.getX() + TRAP_SCORING_DISTANCE,
+				BLUE_STAGE_POSITION.getY(),
+				new Rotation2d(180.0)),
+		// SOURCE SIDE
+		new Pose2d(
+				BLUE_STAGE_POSITION.getX() - (TRAP_SCORING_DISTANCE * Math.sin(Units.degreesToRadians(30))),
+				BLUE_STAGE_POSITION.getY() - (TRAP_SCORING_DISTANCE * Math.cos(Units.degreesToRadians(30))),
+				new Rotation2d(60.0)),
+		// AMP SIDE
+		new Pose2d(
+				BLUE_STAGE_POSITION.getX() - (TRAP_SCORING_DISTANCE * Math.sin(Units.degreesToRadians(30))),
+				BLUE_STAGE_POSITION.getY() + (TRAP_SCORING_DISTANCE * Math.cos(Units.degreesToRadians(30))),
+				new Rotation2d(-60.0))
+	};
+
+	public static final Pose2d[] RED_TRAP_SCORING_POSES = {
+		// CENTERLINE SIDE
+		new Pose2d(
+				RED_STAGE_POSITION.getX() - TRAP_SCORING_DISTANCE,
+				RED_STAGE_POSITION.getY(),
+				new Rotation2d(0.0)),
+		// SOURCE SIDE
+		new Pose2d(
+				RED_STAGE_POSITION.getX() + (TRAP_SCORING_DISTANCE * Math.sin(Units.degreesToRadians(30))),
+				RED_STAGE_POSITION.getY() - (TRAP_SCORING_DISTANCE * Math.cos(Units.degreesToRadians(30))),
+				new Rotation2d(120.0)),
+		// AMP SIDE
+		new Pose2d(
+				RED_STAGE_POSITION.getX() + (TRAP_SCORING_DISTANCE * Math.sin(Units.degreesToRadians(30))),
+				RED_STAGE_POSITION.getY() + (TRAP_SCORING_DISTANCE * Math.cos(Units.degreesToRadians(30))),
+				new Rotation2d(-120.0))
+	};
 
 	private static final double ACCELERATION_TOLERANCE = 0.1;
 
@@ -136,7 +226,9 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 							currentCommand.schedule();
 							if (input.alliance.equals(Alliance.Blue)
 									? input.s.drivebaseSubsystem.getPose().getX() < BLUE_WING_LINE
-									: input.s.drivebaseSubsystem.getPose().getX() > RED_WING_LINE) {}
+									: input.s.drivebaseSubsystem.getPose().getX() > RED_WING_LINE) {
+								input.revFlyWheels().schedule();
+							}
 
 							break;
 						case SCORE_AMP:
@@ -396,7 +488,6 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 	}
 
 	public void avoidCollisionSpot() {
-		ChassisSpeeds currentSpeeds = s.drivebaseSubsystem.getRobotSpeeds();
 
 		Translation2d currentPosition = s.drivebaseSubsystem.getPose().getTranslation();
 
@@ -497,11 +588,12 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 				alliance.equals(Alliance.Blue) ? BLUE_SOURCE_ROAM_PATH : RED_SOURCE_ROAM_PATH;
 		roamPath.preventFlipping = true;
 		return Commands.race(
-				AutoBuilder.followPath(roamPath)
-						.repeatedly()
-						.until(s.limelightSubsystem::hasTargets)
-						.andThen(new DriveToNoteCommand(s.drivebaseSubsystem, s.limelightSubsystem)),
-				intake()).withName("SearchNoteCommand");
+						AutoBuilder.followPath(roamPath)
+								.repeatedly()
+								.until(s.limelightSubsystem::hasTargets)
+								.andThen(new DriveToNoteCommand(s.drivebaseSubsystem, s.limelightSubsystem)),
+						intake())
+				.withName("SearchNoteCommand");
 	}
 
 	public Command scoreAmpCommand() {
@@ -514,25 +606,66 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 						LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
 						LauncherSubsystem.AMP_AIM_ANGLE),
 				pathfindToPose(ampScorePose),
-				Commands.waitUntil(AutoLogic.isReadyToLaunch()).andThen(AutoLogic.feedUntilNoteLaunched()).withName("ScoreAmpCommand"));
+				Commands.waitUntil(AutoLogic.isReadyToLaunch())
+						.andThen(AutoLogic.feedUntilNoteLaunched())
+						.withName("ScoreAmpCommand"));
 	}
 
 	public Command scoreSpeaker() {
 		return new AimTowardsSpeakerCommand(s.launcherSubsystem, s.drivebaseSubsystem)
-				.andThen(launch()).withName("ScoreSpeakerCommand");
+				.andThen(launch())
+				.withName("ScoreSpeakerCommand");
 	}
 
 	public Command launch() {
 		return Commands.waitUntil(AutoLogic.isReadyToLaunch())
-				.andThen(new FeederInCommand(s.intakeSubsystem).until(AutoLogic.untilFeederHasNoNote())).withName("LaunchCommand");
+				.andThen(new FeederInCommand(s.intakeSubsystem).until(AutoLogic.untilFeederHasNoNote()))
+				.andThen(new StopLauncherCommand(s.launcherSubsystem))
+				.withName("LaunchCommand");
 	}
 
 	public Command intake() {
 		return new SetAngleLaunchCommand(s.launcherSubsystem, 0, LauncherSubsystem.RETRACTED_ANGLE)
-				.andThen(new AllInCommand(s.intakeSubsystem, null)).withName("IntakeCommand");
+				.andThen(new AllInCommand(s.intakeSubsystem, null))
+				.withName("IntakeCommand");
 	}
 
 	public Command revFlyWheels() {
-		return new PrepFlywheelForLaunchCommand(s.launcherSubsystem, s.drivebaseSubsystem).withName("RevFlywheelsCommand");
+		return new PrepFlywheelForLaunchCommand(s.launcherSubsystem, s.drivebaseSubsystem)
+				.withName("RevFlywheelsCommand");
+	}
+
+	public Command retractPivot() {
+		return new InstantCommand(
+				() -> s.launcherSubsystem.setAngle(LauncherSubsystem.RETRACTED_ANGLE));
+	}
+
+	public Command trapCommand() {
+		Pose2d alignmentPose =
+				s.drivebaseSubsystem
+						.getPose()
+						.nearest(
+								List.of(
+										alliance.equals(Alliance.Blue)
+												? BLUE_TRAP_ALIGNMENT_POSES
+												: RED_TRAP_ALIGNMENT_POSES));
+		Pose2d launchingPose =
+				s.drivebaseSubsystem
+						.getPose()
+						.nearest(
+								List.of(
+										alliance.equals(Alliance.Blue)
+												? BLUE_TRAP_SCORING_POSES
+												: RED_TRAP_SCORING_POSES));
+
+		return retractPivot()
+				.andThen(pathfindToPose(alignmentPose))
+				.andThen(
+						new SetAngleLaunchCommand(
+								s.launcherSubsystem,
+								LauncherSubsystem.TRAP_SHOOT_SPEED_RPM,
+								LauncherSubsystem.TRAP_AIM_ANGLE))
+				.andThen(pathfindToPose(launchingPose))
+				.andThen(launch());
 	}
 }

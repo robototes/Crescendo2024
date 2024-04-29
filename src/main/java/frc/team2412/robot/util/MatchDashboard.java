@@ -1,7 +1,6 @@
 package frc.team2412.robot.util;
 
 import com.pathplanner.lib.util.PathPlannerLogging;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -26,8 +25,10 @@ public class MatchDashboard {
 					field.getObject("target pose").setPose(pose);
 					if (!Robot.isReal() && s.autonomousTeleopSubsystem.isEnabled()) {
 						// for some reason rotation is weird in sim so I'm just going to fake it
-						Rotation2d newRotation = s.drivebaseSubsystem.getPose().getRotation().interpolate(pose.getRotation(), 0.1);
-						s.drivebaseSubsystem.setPose(new Pose2d(s.drivebaseSubsystem.getPose().getTranslation(), newRotation));
+						Rotation2d newRotation =
+								s.drivebaseSubsystem.getPose().getRotation().interpolate(pose.getRotation(), 0.1);
+						s.drivebaseSubsystem.setPose(
+								new Pose2d(s.drivebaseSubsystem.getPose().getTranslation(), newRotation));
 					}
 				});
 
