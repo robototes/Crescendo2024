@@ -1,5 +1,8 @@
 package frc.team2412.robot.subsystems;
 
+import static frc.team2412.robot.Subsystems.SubsystemConstants.INTAKE_ENABLED;
+import static frc.team2412.robot.Subsystems.SubsystemConstants.LAUNCHER_ENABLED;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathfindHolonomic;
 import com.pathplanner.lib.commands.PathfindingCommand;
@@ -14,7 +17,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -596,50 +598,6 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 				.withName("SearchNoteCommand");
 	}
 
-	public Command scoreAmpCommand() {
-		Pose2d ampScorePose = alliance.equals(Alliance.Blue) ? BLUE_AMP_SCORE_POSE : RED_AMP_SCORE_POSE;
-		Pathfinding.setGoalPosition(ampScorePose.getTranslation());
-
-		return Commands.sequence(
-				new SetAngleAmpLaunchCommand(
-						s.launcherSubsystem,
-						LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
-						LauncherSubsystem.AMP_AIM_ANGLE),
-				pathfindToPose(ampScorePose),
-				Commands.waitUntil(AutoLogic.isReadyToLaunch())
-						.andThen(AutoLogic.feedUntilNoteLaunched())
-						.withName("ScoreAmpCommand"));
-	}
-
-	public Command scoreSpeaker() {
-		return new AimTowardsSpeakerCommand(s.launcherSubsystem, s.drivebaseSubsystem)
-				.andThen(launch())
-				.withName("ScoreSpeakerCommand");
-	}
-
-	public Command launch() {
-		return Commands.waitUntil(AutoLogic.isReadyToLaunch())
-				.andThen(new FeederInCommand(s.intakeSubsystem).until(AutoLogic.untilFeederHasNoNote()))
-				.andThen(new StopLauncherCommand(s.launcherSubsystem))
-				.withName("LaunchCommand");
-	}
-
-	public Command intake() {
-		return new SetAngleLaunchCommand(s.launcherSubsystem, 0, LauncherSubsystem.RETRACTED_ANGLE)
-				.andThen(new AllInCommand(s.intakeSubsystem, null))
-				.withName("IntakeCommand");
-	}
-
-	public Command revFlyWheels() {
-		return new PrepFlywheelForLaunchCommand(s.launcherSubsystem, s.drivebaseSubsystem)
-				.withName("RevFlywheelsCommand");
-	}
-
-	public Command retractPivot() {
-		return new InstantCommand(
-				() -> s.launcherSubsystem.setAngle(LauncherSubsystem.RETRACTED_ANGLE));
-	}
-
 	public Command trapCommand() {
 		Pose2d alignmentPose =
 				s.drivebaseSubsystem
@@ -660,12 +618,79 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 
 		return retractPivot()
 				.andThen(pathfindToPose(alignmentPose))
-				.andThen(
-						new SetAngleLaunchCommand(
+				.andThen(prepTrapLaunchCommand())
+				.andThen(pathfindToPose(launchingPose))
+				.andThen(launch()).withName("ScoreTrapCommand");
+	}
+
+	// SUBSYSTEM COMMANDS
+
+	public Command scoreAmpCommand() {
+		Pose2d ampScorePose = alliance.equals(Alliance.Blue) ? BLUE_AMP_SCORE_POSE : RED_AMP_SCORE_POSE;
+		Pathfinding.setGoalPosition(ampScorePose.getTranslation());
+
+		return Commands.sequence(
+				prepAmpLaunchCommand(), pathfindToPose(ampScorePose), launch()).withName("ScoreAmpCommand");
+	}
+
+	public Command scoreSpeaker() {
+		return (LAUNCHER_ENABLED
+						? new AimTowardsSpeakerCommand(s.launcherSubsystem, s.drivebaseSubsystem)
+								.andThen(launch())
+						: Commands.none())
+				.withName("ScoreSpeakerCommand");
+	}
+
+	public Command launch() {
+		return (LAUNCHER_ENABLED && INTAKE_ENABLED
+						? Commands.waitUntil(AutoLogic.isReadyToLaunch())
+								.andThen(
+										new FeederInCommand(s.intakeSubsystem).until(AutoLogic.untilFeederHasNoNote()))
+								.andThen(new StopLauncherCommand(s.launcherSubsystem))
+						: Commands.none())
+				.withName("LaunchCommand");
+	}
+
+	public Command intake() {
+		return (INTAKE_ENABLED
+						? new SetAngleLaunchCommand(s.launcherSubsystem, 0, LauncherSubsystem.RETRACTED_ANGLE)
+								.andThen(new AllInCommand(s.intakeSubsystem, null))
+						: Commands.none())
+				.withName("IntakeCommand");
+	}
+
+	public Command revFlyWheels() {
+		return (LAUNCHER_ENABLED
+						? new PrepFlywheelForLaunchCommand(s.launcherSubsystem, s.drivebaseSubsystem)
+						: Commands.none())
+				.withName("RevFlywheelsCommand");
+	}
+
+	public Command retractPivot() {
+		return (LAUNCHER_ENABLED
+						? new InstantCommand(
+								() -> s.launcherSubsystem.setAngle(LauncherSubsystem.RETRACTED_ANGLE))
+						: Commands.none())
+				.withName("RetractPivotCommand");
+	}
+
+	public Command prepAmpLaunchCommand() {
+		return (LAUNCHER_ENABLED
+						? new SetAngleAmpLaunchCommand(
+								s.launcherSubsystem,
+								LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
+								LauncherSubsystem.AMP_AIM_ANGLE)
+						: Commands.none())
+				.withName("PrepAmpLaunchCommand");
+	}
+
+	public Command prepTrapLaunchCommand() {
+		return (LAUNCHER_ENABLED
+						? new SetAngleLaunchCommand(
 								s.launcherSubsystem,
 								LauncherSubsystem.TRAP_SHOOT_SPEED_RPM,
-								LauncherSubsystem.TRAP_AIM_ANGLE))
-				.andThen(pathfindToPose(launchingPose))
-				.andThen(launch());
+								LauncherSubsystem.TRAP_AIM_ANGLE)
+						: Commands.none())
+				.withName("PrepTrapLaunchCommandCommand");
 	}
 }
