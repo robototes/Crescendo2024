@@ -40,6 +40,7 @@ import frc.team2412.robot.commands.launcher.SetAngleAmpLaunchCommand;
 import frc.team2412.robot.commands.launcher.SetAngleLaunchCommand;
 import frc.team2412.robot.commands.launcher.StopLauncherCommand;
 import frc.team2412.robot.util.auto.AutoLogic;
+import java.util.ArrayList;
 import java.util.List;
 
 public class AutonomousTeleopSubsystem extends SubsystemBase {
@@ -71,8 +72,7 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 	private static final double BLUE_WING_LINE = 5.85;
 	private static final double RED_WING_LINE = 10.70;
 
-	private static final Pose2d BLUE_SOURCE_POSE =
-			new Pose2d(13.09, 0.86, new Rotation2d(8.62));
+	private static final Pose2d BLUE_SOURCE_POSE = new Pose2d(13.09, 0.86, new Rotation2d(8.62));
 	private static final Pose2d RED_SOURCE_POSE =
 			new Pose2d(3.09, 0.86, Rotation2d.fromDegrees(-162.55));
 	private static final PathPlannerPath BLUE_SOURCE_ROAM_PATH =
@@ -332,6 +332,72 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 		AMP
 	}
 
+	public enum TrapTarget {
+		NONE(new Pose2d(), new Pose2d(), new Pose2d(), new Pose2d()) {
+
+			// If no specific trap target is specified, return nearest trap positions
+			@Override
+			public Pose2d getAlignmentPose(AutonomousTeleopSubsystem input) {
+
+				List<Pose2d> alignmentPoses = new ArrayList<Pose2d>();
+
+				for (TrapTarget trap : TrapTarget.values()) {
+					if (trap.equals(TrapTarget.NONE)) {
+						break;
+					}
+					alignmentPoses.add(trap.getAlignmentPose(input));
+				}
+
+				return input.s.drivebaseSubsystem.getPose().nearest(alignmentPoses);
+			}
+
+			@Override
+			public Pose2d getScoringPose(AutonomousTeleopSubsystem input) {
+
+				List<Pose2d> scoringPoses = new ArrayList<Pose2d>();
+
+				for (TrapTarget trap : TrapTarget.values()) {
+					if (trap.equals(TrapTarget.NONE)) {
+						break;
+					}
+					scoringPoses.add(trap.getAlignmentPose(input));
+				}
+
+				return input.s.drivebaseSubsystem.getPose().nearest(scoringPoses);
+			}
+		},
+
+		// TODO: migrate values from trap pose constants to this enum
+		CENTERLINE(new Pose2d(), new Pose2d(), new Pose2d(), new Pose2d()),
+		AMP(new Pose2d(), new Pose2d(), new Pose2d(), new Pose2d()),
+		SOURCE(new Pose2d(), new Pose2d(), new Pose2d(), new Pose2d());
+
+		private Pose2d blueAlignmentPose;
+		private Pose2d blueScoringPose;
+
+		private Pose2d redAlignmentPose;
+		private Pose2d redScoringPose;
+
+		private TrapTarget(
+				Pose2d blueAlignmentPose,
+				Pose2d blueScoringPose,
+				Pose2d redAlignmentPose,
+				Pose2d redScoringPose) {
+			this.blueAlignmentPose = blueAlignmentPose;
+			this.blueScoringPose = blueScoringPose;
+			this.redAlignmentPose = redAlignmentPose;
+			this.redScoringPose = redScoringPose;
+		}
+
+		public Pose2d getAlignmentPose(AutonomousTeleopSubsystem input) {
+			return input.alliance.equals(Alliance.Blue) ? blueAlignmentPose : redAlignmentPose;
+		}
+
+		public Pose2d getScoringPose(AutonomousTeleopSubsystem input) {
+			return input.alliance.equals(Alliance.Blue) ? blueScoringPose : redScoringPose;
+		}
+	}
+
 	private final Subsystems s;
 	private final ShuffleboardTab tab = Shuffleboard.getTab("Auto Teleop");
 
@@ -346,6 +412,7 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 	private SendableChooser<ScoringMode> scoringModeChooser;
 	private SendableChooser<RobotState> forceState;
 	private SendableChooser<RobotGoal> forceGoal;
+	private SendableChooser<TrapTarget> trapTarget;
 
 	// for collision detection
 	private Translation2d lastExpectedVelocity = new Translation2d();
@@ -442,6 +509,16 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 			forceGoal.addOption(goal.name(), goal);
 		}
 		tab.add("Force Goal", forceGoal);
+
+		trapTarget = new SendableChooser<TrapTarget>();
+		trapTarget.setDefaultOption("None", TrapTarget.NONE);
+		for (TrapTarget trap : TrapTarget.values()) {
+			if (trap.equals(TrapTarget.NONE)) {
+				break;
+			}
+			trapTarget.addOption(trap.name(), trap);
+		}
+		tab.add(trapTarget);
 	}
 
 	public boolean isEnabled() {
