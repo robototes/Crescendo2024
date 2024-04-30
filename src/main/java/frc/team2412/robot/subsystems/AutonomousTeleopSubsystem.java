@@ -72,9 +72,9 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 	private static final double RED_WING_LINE = 10.70;
 
 	private static final Pose2d BLUE_SOURCE_POSE =
-			new Pose2d(13.09, 0.86, new Rotation2d(-17.45 + 180));
+			new Pose2d(13.09, 0.86, new Rotation2d(8.62));
 	private static final Pose2d RED_SOURCE_POSE =
-			new Pose2d(3.09, 0.86, Rotation2d.fromDegrees(-170.79));
+			new Pose2d(3.09, 0.86, Rotation2d.fromDegrees(-162.55));
 	private static final PathPlannerPath BLUE_SOURCE_ROAM_PATH =
 			PathPlannerPath.fromPathFile("BlueSourceRoamPath");
 	private static final PathPlannerPath RED_SOURCE_ROAM_PATH =
@@ -229,12 +229,6 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 						case SCORE_SPEAKER:
 							currentCommand = input.pathfindToSpeaker();
 							currentCommand.schedule();
-							if (input.alliance.equals(Alliance.Blue)
-									? input.s.drivebaseSubsystem.getPose().getX() < BLUE_WING_LINE
-									: input.s.drivebaseSubsystem.getPose().getX() > RED_WING_LINE) {
-								input.revFlyWheels().schedule();
-							}
-
 							break;
 						case SCORE_AMP:
 							currentCommand = input.pathfindToAmp();
@@ -244,6 +238,13 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 							currentCommand = input.pathfindToStage();
 							currentCommand.schedule();
 							break;
+					}
+				}
+				if (input.goal.equals(RobotGoal.SCORE_SPEAKER)) {
+					if (input.alliance.equals(Alliance.Blue)
+							? input.s.drivebaseSubsystem.getPose().getX() < BLUE_WING_LINE
+							: input.s.drivebaseSubsystem.getPose().getX() > RED_WING_LINE) {
+						input.revFlyWheels().schedule();
 					}
 				}
 				if (input.isColliding()) {
