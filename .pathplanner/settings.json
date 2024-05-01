@@ -3,7 +3,8 @@
   "robotLength": 0.8382,
   "holonomicMode": true,
   "pathFolders": [
-    "Auto Logic Paths"
+    "Auto Logic Paths",
+    "Auto Teleop"
   ],
   "autoFolders": [
     "Complex Autos",

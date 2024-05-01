@@ -65,7 +65,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Auto Teleop",
   "previewStartingState": {
     "rotation": 162.55,
     "velocity": 0
