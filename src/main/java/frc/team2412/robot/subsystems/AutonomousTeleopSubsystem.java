@@ -20,7 +20,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.DriverStation.MatchType;
@@ -96,8 +95,10 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 			new Pose2d(1.82, 7.40, Rotation2d.fromDegrees(-90));
 	private static final Pose2d RED_AMP_ALIGN_POSE =
 			new Pose2d(14.72, 7.40, Rotation2d.fromDegrees(-90));
-	private static final PathPlannerPath BLUE_AMP_SCORE_PATH = PathPlannerPath.fromPathFile("BlueAmpScorePath");
-	private static final PathPlannerPath RED_AMP_SCORE_PATH = PathPlannerPath.fromPathFile("RedAmpScorePath");
+	private static final PathPlannerPath BLUE_AMP_SCORE_PATH =
+			PathPlannerPath.fromPathFile("BlueAmpScorePath");
+	private static final PathPlannerPath RED_AMP_SCORE_PATH =
+			PathPlannerPath.fromPathFile("RedAmpScorePath");
 
 	private static final double AMP_PIVOTING_DISTANCE_TOLERANCE = 2.5;
 
@@ -258,7 +259,8 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 				if (input.goal.equals(RobotGoal.SCORE_SPEAKER)) {
 					if (input.alliance.equals(Alliance.Blue)
 							? input.s.drivebaseSubsystem.getPose().getX() < BLUE_WING_LINE
-							: input.s.drivebaseSubsystem.getPose().getX() > RED_WING_LINE && !CommandScheduler.getInstance().isScheduled(input.revFlyWheels())) {
+							: input.s.drivebaseSubsystem.getPose().getX() > RED_WING_LINE
+									&& !CommandScheduler.getInstance().isScheduled(input.revFlyWheels())) {
 						input.revFlyWheels().schedule();
 					}
 				}
@@ -298,10 +300,12 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 					currentCommand = input.searchNoteCommand();
 					currentCommand.schedule();
 				}
-				if (!currentCommand.isScheduled() || currentCommand.isFinished() || input.overrideNoteCheck.getBoolean(false)) {
+				if (!currentCommand.isScheduled()
+						|| currentCommand.isFinished()
+						|| input.overrideNoteCheck.getBoolean(false)) {
 					currentCommand = null;
 					return IDLE;
-				}	
+				}
 				return this;
 			}
 		},
@@ -406,9 +410,85 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 		},
 
 		// TODO: migrate values from trap pose constants to this enum
-		CENTERLINE(new Pose2d(), new Pose2d(), new Pose2d(), new Pose2d()),
-		AMP(new Pose2d(), new Pose2d(), new Pose2d(), new Pose2d()),
-		SOURCE(new Pose2d(), new Pose2d(), new Pose2d(), new Pose2d());
+		CENTERLINE(
+				// BLUE ALIGNMENT
+				new Pose2d(
+						BLUE_STAGE_POSITION.getX() + TRAP_ALIGNMENT_DISTANCE,
+						BLUE_STAGE_POSITION.getY(),
+						new Rotation2d(180.0)),
+				// BLUE SCORING
+				new Pose2d(
+						BLUE_STAGE_POSITION.getX() + TRAP_SCORING_DISTANCE,
+						BLUE_STAGE_POSITION.getY(),
+						new Rotation2d(180.0)),
+				// RED ALIGNMENT
+				new Pose2d(
+						RED_STAGE_POSITION.getX() - TRAP_ALIGNMENT_DISTANCE,
+						RED_STAGE_POSITION.getY(),
+						new Rotation2d(0.0)),
+				// RED SCORING
+				new Pose2d(
+						RED_STAGE_POSITION.getX() - TRAP_SCORING_DISTANCE,
+						RED_STAGE_POSITION.getY(),
+						new Rotation2d(0.0))),
+		AMP(
+				// BLUE ALIGNMENT
+				new Pose2d(
+						BLUE_STAGE_POSITION.getX()
+								- (TRAP_ALIGNMENT_DISTANCE * Math.sin(Units.degreesToRadians(30))),
+						BLUE_STAGE_POSITION.getY()
+								+ (TRAP_ALIGNMENT_DISTANCE * Math.cos(Units.degreesToRadians(30))),
+						new Rotation2d(-60.0)),
+				// BLUE SCORING
+				new Pose2d(
+						BLUE_STAGE_POSITION.getX()
+								- (TRAP_SCORING_DISTANCE * Math.sin(Units.degreesToRadians(30))),
+						BLUE_STAGE_POSITION.getY()
+								+ (TRAP_SCORING_DISTANCE * Math.cos(Units.degreesToRadians(30))),
+						new Rotation2d(-60.0)),
+				// RED ALIGNMENT
+				new Pose2d(
+						RED_STAGE_POSITION.getX()
+								+ (TRAP_ALIGNMENT_DISTANCE * Math.sin(Units.degreesToRadians(30))),
+						RED_STAGE_POSITION.getY()
+								- (TRAP_ALIGNMENT_DISTANCE * Math.cos(Units.degreesToRadians(30))),
+						new Rotation2d(-120.0)),
+				// RED SCORING
+				new Pose2d(
+						RED_STAGE_POSITION.getX()
+								+ (TRAP_SCORING_DISTANCE * Math.sin(Units.degreesToRadians(30))),
+						RED_STAGE_POSITION.getY()
+								- (TRAP_SCORING_DISTANCE * Math.cos(Units.degreesToRadians(30))),
+						new Rotation2d(-120.0))),
+		SOURCE(
+				// BLUE ALIGNMENT
+				new Pose2d(
+						BLUE_STAGE_POSITION.getX()
+								- (TRAP_ALIGNMENT_DISTANCE * Math.sin(Units.degreesToRadians(30))),
+						BLUE_STAGE_POSITION.getY()
+								- (TRAP_ALIGNMENT_DISTANCE * Math.cos(Units.degreesToRadians(30))),
+						new Rotation2d(60.0)),
+				// BLUE SCORING
+				new Pose2d(
+						BLUE_STAGE_POSITION.getX()
+								- (TRAP_SCORING_DISTANCE * Math.sin(Units.degreesToRadians(30))),
+						BLUE_STAGE_POSITION.getY()
+								- (TRAP_SCORING_DISTANCE * Math.cos(Units.degreesToRadians(30))),
+						new Rotation2d(60.0)),
+				// RED ALIGNMENT
+				new Pose2d(
+						RED_STAGE_POSITION.getX()
+								+ (TRAP_ALIGNMENT_DISTANCE * Math.sin(Units.degreesToRadians(30))),
+						RED_STAGE_POSITION.getY()
+								- (TRAP_ALIGNMENT_DISTANCE * Math.cos(Units.degreesToRadians(30))),
+						new Rotation2d(120.0)),
+				// RED SCORING
+				new Pose2d(
+						RED_STAGE_POSITION.getX()
+								+ (TRAP_SCORING_DISTANCE * Math.sin(Units.degreesToRadians(30))),
+						RED_STAGE_POSITION.getY()
+								- (TRAP_SCORING_DISTANCE * Math.cos(Units.degreesToRadians(30))),
+						new Rotation2d(120.0)));
 
 		private Pose2d blueAlignmentPose;
 		private Pose2d blueScoringPose;
@@ -446,7 +526,7 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 	private double matchTimeRemaining;
 	private boolean inMatch = false;
 	private Alliance alliance = Alliance.Blue;
-	
+
 	private GenericEntry overrideNoteCheck;
 
 	private SendableChooser<ScoringMode> scoringModeChooser;
@@ -473,7 +553,9 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 
 	public void start() {
 		enabled = true;
-		inMatch = !(DriverStation.getMatchType().equals(MatchType.None)) || (Robot.isSimulation() && DriverStation.getMatchTime() != -1);
+		inMatch =
+				!(DriverStation.getMatchType().equals(MatchType.None))
+						|| (Robot.isSimulation() && DriverStation.getMatchTime() != -1);
 		alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
 		state = RobotState.IDLE;
 	}
@@ -529,7 +611,8 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 		tab.addBoolean("Under Stage", this::underStage);
 		tab.addBoolean("Is Colliding", this::isColliding);
 		tab.addString("Alliance", () -> alliance.toString());
-		overrideNoteCheck = tab.add("Override Note Check", false).withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
+		overrideNoteCheck =
+				tab.add("Override Note Check", false).withWidget(BuiltInWidgets.kToggleSwitch).getEntry();
 
 		scoringModeChooser = new SendableChooser<ScoringMode>();
 		scoringModeChooser.setDefaultOption("Speaker", ScoringMode.SPEAKER);
@@ -698,6 +781,8 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 	}
 
 	private Command pathfindToTrap() {
+		// Pose2d trapPose = trapTarget.getSelected().getAlignmentPose();
+
 		Pose2d trapPose =
 				s.drivebaseSubsystem
 						.getPose()
@@ -734,10 +819,13 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 	}
 
 	public Command trapCommand() {
-		// I moved the alignment pathfinding to a seperate method pathfindToTrap() to mirror the structure of other functions in the state machine. Everything should act just the same way in practice - Jonah
+		// I moved the alignment pathfinding to a seperate method pathfindToTrap() to mirror the
+		// structure of other functions in the state machine. Everything should act just the same way in
+		// practice - Jonah
 
-		// Note to Kirby: We should use followPath instead of pathfindToPose when we're already close to the trap as pathfindToPose does not work well with precise distances
-		
+		// Note to Kirby: We should use followPath instead of pathfindToPose when we're already close to
+		// the trap as pathfindToPose does not work well with precise distances
+
 		Pose2d launchingPose =
 				s.drivebaseSubsystem
 						.getPose()
@@ -756,15 +844,17 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 	// SUBSYSTEM COMMANDS
 
 	public Command scoreAmpCommand() {
-		PathPlannerPath ampScorePath = alliance.equals(Alliance.Blue) ? BLUE_AMP_SCORE_PATH : RED_AMP_SCORE_PATH;
+		PathPlannerPath ampScorePath =
+				alliance.equals(Alliance.Blue) ? BLUE_AMP_SCORE_PATH : RED_AMP_SCORE_PATH;
 
 		return Commands.parallel(
-										AutoBuilder.followPath(ampScorePath),
-										Commands.waitUntil(
-														() ->
-																isNearPosition(
-																		ampScorePath.getPathPoses().get(1).getTranslation(), AMP_PIVOTING_DISTANCE_TOLERANCE))
-												.andThen(prepAmpLaunchCommand())
+						AutoBuilder.followPath(ampScorePath),
+						Commands.waitUntil(
+										() ->
+												isNearPosition(
+														ampScorePath.getPathPoses().get(1).getTranslation(),
+														AMP_PIVOTING_DISTANCE_TOLERANCE))
+								.andThen(prepAmpLaunchCommand())
 								.andThen(launch()))
 				.withName("ScoreAmpCommand");
 	}

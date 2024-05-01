@@ -364,7 +364,9 @@ public class AutoLogic {
 	public static BooleanSupplier untilFeederHasNoNote() {
 		// decided to go from checking for note in feeder to both feeder and index in case note is still
 		// indexing
-		return (INTAKE_ENABLED && Robot.isReal() ? () -> !s.intakeSubsystem.feederSensorHasNote() : () -> true);
+		return (INTAKE_ENABLED && Robot.isReal()
+				? () -> !s.intakeSubsystem.feederSensorHasNote()
+				: () -> true);
 	}
 
 	// Should be able to tell if a robot has a note based off if intake is still running when checked,
