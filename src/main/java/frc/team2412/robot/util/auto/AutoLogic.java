@@ -350,7 +350,7 @@ public class AutoLogic {
 		// Should be able to launch if:
 		// Launcher is at the correct angle and flywheel rpm
 		// Note is finished indexing (intake all in command is finished)
-		return (INTAKE_ENABLED & LAUNCHER_ENABLED
+		return (INTAKE_ENABLED & LAUNCHER_ENABLED & Robot.isReal()
 				? () ->
 						(s.launcherSubsystem.isAtAngle()
 								&& s.launcherSubsystem.isAtSpeed()
@@ -364,7 +364,7 @@ public class AutoLogic {
 	public static BooleanSupplier untilFeederHasNoNote() {
 		// decided to go from checking for note in feeder to both feeder and index in case note is still
 		// indexing
-		return (INTAKE_ENABLED ? () -> !s.intakeSubsystem.feederSensorHasNote() : () -> true);
+		return (INTAKE_ENABLED && Robot.isReal() ? () -> !s.intakeSubsystem.feederSensorHasNote() : () -> true);
 	}
 
 	// Should be able to tell if a robot has a note based off if intake is still running when checked,

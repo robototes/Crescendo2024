@@ -34,6 +34,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.team2412.robot.Robot;
 import frc.team2412.robot.Subsystems;
 import frc.team2412.robot.commands.drivebase.DriveToNoteCommand;
 import frc.team2412.robot.commands.intake.AllInCommand;
@@ -95,10 +96,8 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 			new Pose2d(1.82, 7.40, Rotation2d.fromDegrees(-90));
 	private static final Pose2d RED_AMP_ALIGN_POSE =
 			new Pose2d(14.72, 7.40, Rotation2d.fromDegrees(-90));
-	private static final Pose2d BLUE_AMP_SCORE_POSE =
-			new Pose2d(1.82, 7.63, Rotation2d.fromDegrees(-90));
-	private static final Pose2d RED_AMP_SCORE_POSE =
-			new Pose2d(14.72, 7.63, Rotation2d.fromDegrees(-90));
+	private static final PathPlannerPath BLUE_AMP_SCORE_PATH = PathPlannerPath.fromPathFile("BlueAmpScorePath");
+	private static final PathPlannerPath RED_AMP_SCORE_PATH = PathPlannerPath.fromPathFile("RedAmpScorePath");
 
 	private static final double AMP_PIVOTING_DISTANCE_TOLERANCE = 2.5;
 
@@ -289,7 +288,6 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 			@Override
 			public RobotState nextState(AutonomousTeleopSubsystem input) {
 				input.avoidCollisionSpot();
-				currentCommand = null;
 				return TRAVELLING;
 			}
 		},
@@ -300,12 +298,10 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 					currentCommand = input.searchNoteCommand();
 					currentCommand.schedule();
 				}
-				if (!CommandScheduler.getInstance().isScheduled(currentCommand)) {
-					currentCommand.schedule();
-				}
-				if (currentCommand.isFinished() || input.overrideNoteCheck.getBoolean(false)) {
+				if (!currentCommand.isScheduled() || currentCommand.isFinished() || input.overrideNoteCheck.getBoolean(false)) {
+					currentCommand = null;
 					return IDLE;
-				}
+				}	
 				return this;
 			}
 		},
@@ -316,7 +312,9 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 					currentCommand = input.scoreSpeaker();
 					currentCommand.schedule();
 				}
-				if (currentCommand.isFinished()) {
+				if (!currentCommand.isScheduled() || currentCommand.isFinished()) {
+					currentCommand = null;
+					input.overrideNoteCheck.setBoolean(false);
 					return IDLE;
 				}
 				return this;
@@ -329,7 +327,9 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 					currentCommand = input.scoreAmpCommand();
 					currentCommand.schedule();
 				}
-				if (currentCommand.isFinished()) {
+				if (!currentCommand.isScheduled() || currentCommand.isFinished()) {
+					currentCommand = null;
+					input.overrideNoteCheck.setBoolean(false);
 					return IDLE;
 				}
 				return this;
@@ -342,7 +342,9 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 					currentCommand = input.trapCommand();
 					currentCommand.schedule();
 				}
-				if (currentCommand.isFinished()) {
+				if (!currentCommand.isScheduled() || currentCommand.isFinished()) {
+					currentCommand = null;
+					input.overrideNoteCheck.setBoolean(false);
 					return IDLE;
 				}
 				return this;
@@ -734,6 +736,8 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 	public Command trapCommand() {
 		// I moved the alignment pathfinding to a seperate method pathfindToTrap() to mirror the structure of other functions in the state machine. Everything should act just the same way in practice - Jonah
 
+		// Note to Kirby: We should use followPath instead of pathfindToPose when we're already close to the trap as pathfindToPose does not work well with precise distances
+		
 		Pose2d launchingPose =
 				s.drivebaseSubsystem
 						.getPose()
@@ -752,19 +756,15 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 	// SUBSYSTEM COMMANDS
 
 	public Command scoreAmpCommand() {
-		Pose2d ampAlignPose = alliance.equals(Alliance.Blue) ? BLUE_AMP_ALIGN_POSE : RED_AMP_ALIGN_POSE;
-		Pose2d ampScorePose = alliance.equals(Alliance.Blue) ? BLUE_AMP_SCORE_POSE : RED_AMP_SCORE_POSE;
-		Pathfinding.setGoalPosition(ampScorePose.getTranslation());
+		PathPlannerPath ampScorePath = alliance.equals(Alliance.Blue) ? BLUE_AMP_SCORE_PATH : RED_AMP_SCORE_PATH;
 
-		return retractPivot()
-				.andThen(
-						Commands.parallel(
-										pathfindToPose(ampAlignPose).andThen(pathfindToPose(ampScorePose)),
+		return Commands.parallel(
+										AutoBuilder.followPath(ampScorePath),
 										Commands.waitUntil(
 														() ->
 																isNearPosition(
-																		ampScorePose.getTranslation(), AMP_PIVOTING_DISTANCE_TOLERANCE))
-												.andThen(prepAmpLaunchCommand()))
+																		ampScorePath.getPathPoses().get(1).getTranslation(), AMP_PIVOTING_DISTANCE_TOLERANCE))
+												.andThen(prepAmpLaunchCommand())
 								.andThen(launch()))
 				.withName("ScoreAmpCommand");
 	}

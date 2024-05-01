@@ -10,6 +10,7 @@ import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.SparkPIDController;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.units.BaseUnits;
@@ -98,6 +99,10 @@ public class LauncherSubsystem extends SubsystemBase {
 	// private final SimpleMotorFeedforward launcherBottomFeedforward =
 	// 		new SimpleMotorFeedforward(0, 0.11238, 0.048209);
 
+	private final boolean isSimulated;
+	private Rotation2d simulatedAngle = Rotation2d.fromDegrees(RETRACTED_ANGLE);
+	private double simulatedFlywheelSpeed = 0.0;
+
 	private double rpmSetpoint;
 	private double angleSetpoint;
 	private double manualAngleSetpoint;
@@ -159,6 +164,8 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherAngleTwoPIDController.setFeedbackDevice(launcherAngleThroughboreEncoder);
 
 		relativeEncoderStartPosition = Optional.empty();
+
+		isSimulated = !Robot.isReal();
 
 		configMotors();
 		initShuffleboard();
@@ -267,6 +274,10 @@ public class LauncherSubsystem extends SubsystemBase {
 	}
 
 	public double getLauncherSpeed() {
+		if (isSimulated) {
+			return simulatedFlywheelSpeed;
+		}
+
 		return launcherTopEncoder.getVelocity();
 	}
 
@@ -280,10 +291,18 @@ public class LauncherSubsystem extends SubsystemBase {
 
 	// returns the degrees of the angle of the launcher
 	public double getAngle() {
+		if (isSimulated) {
+			return simulatedAngle.getDegrees();
+		}
+
 		return Units.rotationsToDegrees(getPosition());
 	}
 
 	public double getPosition() {
+		if (isSimulated) {
+			return simulatedAngle.getRotations();
+		}
+
 		if (!USE_THROUGHBORE) {
 			return launcherAngleEncoder.getPosition();
 		}
@@ -540,6 +559,13 @@ public class LauncherSubsystem extends SubsystemBase {
 		launcherFlywheelSetpointEntry.setDouble(rpmSetpoint);
 		launcherDisabledEntry.setBoolean(false);
 
+		if (isSimulated) {
+			simulatedAngle = Rotation2d.fromDegrees(angleSetpoint);
+			// linear interpolation
+			simulatedFlywheelSpeed = simulatedFlywheelSpeed * (0.9) + (rpmSetpoint * 0.1);
+			return;
+		}
+
 		// PIVOT ENCODER SANITY CHECKS
 		// compares the relative encoder angle vs the absolute encoder angle
 		if (relativeEncoderStartPosition.isPresent()
@@ -549,16 +575,14 @@ public class LauncherSubsystem extends SubsystemBase {
 				launcherAngleTwoMotor.disable();
 				launcherDisabledEntry.setBoolean(true);
 			}
-			if (Robot.isReal()) {
-				DriverStation.reportError(
-						"Pivot encoder deviated too far from motor encoder angle ... .. Reported pivot angle of "
-								+ getAngle()
-								+ " and motor angle of "
-								+ getAngleOneMotorAngle()
-								+ ". Is overidden: "
-								+ ignoreLimits,
-						false);
-			}
+			DriverStation.reportError(
+					"Pivot encoder deviated too far from motor encoder angle ... .. Reported pivot angle of "
+							+ getAngle()
+							+ " and motor angle of "
+							+ getAngleOneMotorAngle()
+							+ ". Is overidden: "
+							+ ignoreLimits,
+					false);
 		}
 
 		if (getPosition()
@@ -572,14 +596,12 @@ public class LauncherSubsystem extends SubsystemBase {
 				launcherAngleTwoMotor.disable();
 				launcherDisabledEntry.setBoolean(true);
 			}
-			if (Robot.isReal()) {
-				DriverStation.reportError(
-						"Launcher encoder angle is insane!!!! Reports angle of "
-								+ getAngle()
-								+ " degrees. Is overridden: "
-								+ ignoreLimits,
-						false);
-			}
+			DriverStation.reportError(
+					"Launcher encoder angle is insane!!!! Reports angle of "
+							+ getAngle()
+							+ " degrees. Is overridden: "
+							+ ignoreLimits,
+					false);
 		}
 	}
 
