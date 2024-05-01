@@ -781,16 +781,16 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 	}
 
 	private Command pathfindToTrap() {
-		// Pose2d trapPose = trapTarget.getSelected().getAlignmentPose();
+		Pose2d trapPose = trapTarget.getSelected().getAlignmentPose(this);
 
-		Pose2d trapPose =
-				s.drivebaseSubsystem
-						.getPose()
-						.nearest(
-								List.of(
-										alliance.equals(Alliance.Blue)
-												? BLUE_TRAP_ALIGNMENT_POSES
-												: RED_TRAP_ALIGNMENT_POSES));
+		// Pose2d trapPose =
+		// 		s.drivebaseSubsystem
+		// 				.getPose()
+		// 				.nearest(
+		// 						List.of(
+		// 								alliance.equals(Alliance.Blue)
+		// 										? BLUE_TRAP_ALIGNMENT_POSES
+		// 										: RED_TRAP_ALIGNMENT_POSES));
 		return pathfindToPose(trapPose);
 	}
 
@@ -826,17 +826,11 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 		// Note to Kirby: We should use followPath instead of pathfindToPose when we're already close to
 		// the trap as pathfindToPose does not work well with precise distances
 
-		Pose2d launchingPose =
-				s.drivebaseSubsystem
-						.getPose()
-						.nearest(
-								List.of(
-										alliance.equals(Alliance.Blue)
-												? BLUE_TRAP_SCORING_POSES
-												: RED_TRAP_SCORING_POSES));
+		Pose2d alignmentPose = trapTarget.getSelected().getAlignmentPose(this);
+		Pose2d scoringPose = trapTarget.getSelected().getScoringPose(this);
 
-		return prepTrapLaunchCommand()
-				.andThen(pathfindToPose(launchingPose))
+		return Commands.either(Commands.none(), pathfindToTrap(), () -> isNearPosition(alignmentPose.getTranslation(), ACCELERATION_TOLERANCE)).andThen(prepTrapLaunchCommand())
+				.andThen(pathfindToPose(scoringPose))
 				.andThen(launch())
 				.withName("ScoreTrapCommand");
 	}
