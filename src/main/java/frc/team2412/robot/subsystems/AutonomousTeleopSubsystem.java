@@ -52,7 +52,7 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 
 	// physical properties
 	private static final double BUMPER_WIDTH_LENGTH = 0.8382; // meters
-	private static final PathConstraints CONSTRAINTS = new PathConstraints(3., 3., 3., 3.);
+	private static final PathConstraints CONSTRAINTS = new PathConstraints(6., 3., 3., 3.);
 
 	// TODO: constructor for config has option for error spike threshold that leads path to be
 	// replanned
