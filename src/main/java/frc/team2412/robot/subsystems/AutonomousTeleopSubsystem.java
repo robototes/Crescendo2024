@@ -473,7 +473,7 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 
 	public void start() {
 		enabled = true;
-		inMatch = !(DriverStation.getMatchType().equals(MatchType.None));
+		inMatch = !(DriverStation.getMatchType().equals(MatchType.None)) || (Robot.isSimulation() && DriverStation.getMatchTime() != -1);
 		alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
 		state = RobotState.IDLE;
 	}
