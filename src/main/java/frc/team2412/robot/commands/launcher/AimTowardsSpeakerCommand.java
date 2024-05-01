@@ -32,7 +32,7 @@ public class AimTowardsSpeakerCommand extends Command {
 			yawAlignmentCommand = drivebaseSubsystem.rotateToAngle(() -> yawTarget, true);
 		}
 
-		addRequirements(launcherSubsystem);
+		addRequirements(launcherSubsystem, drivebaseSubsystem);
 	}
 
 	@Override
