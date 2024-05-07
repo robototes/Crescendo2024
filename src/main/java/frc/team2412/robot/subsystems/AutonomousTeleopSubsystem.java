@@ -52,6 +52,7 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 	// physical properties
 	private static final double BUMPER_WIDTH_LENGTH = 0.8382; // meters
 	private static final PathConstraints CONSTRAINTS = new PathConstraints(6., 3., 3., 3.);
+	private static final PathConstraints SLOW_CONSTRAINTS = new PathConstraints(2., 1., 2., 2.);
 
 	// TODO: constructor for config has option for error spike threshold that leads path to be
 	// replanned
@@ -793,8 +794,19 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 		// 										: RED_TRAP_ALIGNMENT_POSES));
 		return pathfindToPose(trapPose);
 	}
+	public Command slowPathfindToPose(Pose2d goalPose) {
+		return new PathfindHolonomic(
+				goalPose,
+				SLOW_CONSTRAINTS,
+				s.drivebaseSubsystem::getPose,
+				s.drivebaseSubsystem::getRobotSpeeds,
+				s.drivebaseSubsystem::drive,
+				PATH_FOLLOWER_CONFIG,
+				s.drivebaseSubsystem);
+	}
 
 	public Command pathfindToPose(Pose2d goalPose) {
+
 		return new PathfindHolonomic(
 				goalPose,
 				CONSTRAINTS,
@@ -839,7 +851,7 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 		Pose2d scoringPose = trapTarget.getSelected().getScoringPose(this);
 
 		return Commands.either(Commands.none(), pathfindToTrap(), () -> isNearPosition(alignmentPose.getTranslation(), ACCELERATION_TOLERANCE)).andThen(prepTrapLaunchCommand())
-				.andThen(pathfindToPose(scoringPose))
+				.andThen(slowPathfindToPose(scoringPose))
 				.andThen(launch())
 				.withName("ScoreTrapCommand");
 	}
