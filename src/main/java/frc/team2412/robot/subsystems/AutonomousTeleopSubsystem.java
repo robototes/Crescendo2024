@@ -385,7 +385,7 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 
 				for (TrapTarget trap : TrapTarget.values()) {
 					if (trap.equals(TrapTarget.NONE)) {
-						break;
+						continue;
 					}
 					alignmentPoses.add(trap.getAlignmentPose(input));
 				}
@@ -636,14 +636,14 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 		tab.add("Force Goal", forceGoal);
 
 		trapTarget = new SendableChooser<TrapTarget>();
-		trapTarget.setDefaultOption("None", TrapTarget.NONE);
+		trapTarget.setDefaultOption("NONE", TrapTarget.NONE);
 		for (TrapTarget trap : TrapTarget.values()) {
 			if (trap.equals(TrapTarget.NONE)) {
-				break;
+				continue;
 			}
 			trapTarget.addOption(trap.name(), trap);
 		}
-		tab.add(trapTarget);
+		tab.add("Trap Target", trapTarget);
 	}
 
 	public boolean isEnabled() {
@@ -825,6 +825,15 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 
 		// Note to Kirby: We should use followPath instead of pathfindToPose when we're already close to
 		// the trap as pathfindToPose does not work well with precise distances
+
+		// Pose2d launchingPose =
+		// 		s.drivebaseSubsystem
+		// 				.getPose()
+		// 				.nearest(
+		// 						List.of(
+		// 								alliance.equals(Alliance.Blue)
+		// 										? BLUE_TRAP_SCORING_POSES
+		// 										: RED_TRAP_SCORING_POSES));
 
 		Pose2d alignmentPose = trapTarget.getSelected().getAlignmentPose(this);
 		Pose2d scoringPose = trapTarget.getSelected().getScoringPose(this);
