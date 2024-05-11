@@ -13,7 +13,7 @@ public class DriveToNoteCommand extends Command {
 	private final LimelightSubsystem limelightSubsystem;
 
 	// limelight placement might be different so this multiplier is convenient
-	private final double INVERT_DRIVE_DIRECTION = -1.0;
+	private final double INVERT_DRIVE_DIRECTION = 1.0;
 
 	public DriveToNoteCommand(
 			DrivebaseSubsystem drivebaseSubsystem, LimelightSubsystem limelightSubsystem) {
@@ -33,12 +33,15 @@ public class DriveToNoteCommand extends Command {
 			Rotation2d turn =
 					Rotation2d.fromDegrees(
 							2 * INVERT_DRIVE_DIRECTION * limelightSubsystem.getHorizontalOffset());
+
+			System.out.println(move.toString());
 			drivebaseSubsystem.drive(move, turn, false);
 		}
 	}
 
 	@Override
 	public boolean isFinished() {
-		return (limelightSubsystem.isWithinDistance() || !limelightSubsystem.hasTargets());
+		return false;
+		// return (limelightSubsystem.isWithinDistance() || !limelightSubsystem.hasTargets());
 	}
 }

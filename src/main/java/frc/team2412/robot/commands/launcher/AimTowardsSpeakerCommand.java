@@ -22,17 +22,17 @@ public class AimTowardsSpeakerCommand extends Command {
 	private DrivebaseSubsystem drivebaseSubsystem;
 	private LauncherSubsystem launcherSubsystem;
 	private Command yawAlignmentCommand;
-	private Rotation2d yawTarget;
+	private Rotation2d yawTarget = new Rotation2d();
 
 	public AimTowardsSpeakerCommand(
 			LauncherSubsystem launcherSubsystem, DrivebaseSubsystem drivebaseSubsystem) {
 		this.launcherSubsystem = launcherSubsystem;
 		this.drivebaseSubsystem = drivebaseSubsystem;
 		if (DRIVEBASE_ENABLED) {
-			yawAlignmentCommand = drivebaseSubsystem.rotateToAngle(() -> yawTarget, true);
+			yawAlignmentCommand = drivebaseSubsystem.forceRotateToAngle(() -> yawTarget);
 		}
 
-		addRequirements(launcherSubsystem, drivebaseSubsystem);
+		addRequirements(launcherSubsystem);
 	}
 
 	@Override

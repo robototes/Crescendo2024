@@ -255,6 +255,23 @@ public class DrivebaseSubsystem extends SubsystemBase {
 		return alignCommand;
 	}
 
+	public Command forceRotateToAngle(Supplier<Rotation2d> angle) {
+		Command alignCommand =
+				this.run(
+						() ->
+								swerveDrive.drive(
+										new Translation2d(),
+										swerveDrive
+												.getSwerveController()
+												.headingCalculate(
+														swerveDrive.getOdometryHeading().getRadians(),
+														angle.get().getRadians()),
+										false,
+										false));
+
+		return alignCommand;
+	}
+
 	public void setMotorBrake(boolean brake) {
 		swerveDrive.setMotorIdleMode(brake);
 	}

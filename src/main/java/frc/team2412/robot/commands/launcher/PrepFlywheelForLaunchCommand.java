@@ -19,7 +19,7 @@ public class PrepFlywheelForLaunchCommand extends Command {
 			LauncherSubsystem launcherSubsystem, DrivebaseSubsystem drivebaseSubsystem) {
 		this.launcherSubsystem = launcherSubsystem;
 		this.drivebaseSubsystem = drivebaseSubsystem;
-		this.addRequirements(launcherSubsystem);
+		// this.addRequirements(launcherSubsystem);
 	}
 
 	@Override

@@ -65,7 +65,7 @@ public class LimelightSubsystem extends SubsystemBase {
 	}
 
 	private void setPipeline() {
-		networkTable.getEntry("pipeline").setNumber(0);
+		networkTable.getEntry("pipeline").setNumber(3);
 	}
 
 	// METHODS
