@@ -868,6 +868,7 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 	public Command scoreAmpCommand() {
 		PathPlannerPath ampScorePath =
 				alliance.equals(Alliance.Blue) ? BLUE_AMP_SCORE_PATH : RED_AMP_SCORE_PATH;
+		ampScorePath.preventFlipping = true;
 
 		return Commands.parallel(
 						AutoBuilder.followPath(ampScorePath),

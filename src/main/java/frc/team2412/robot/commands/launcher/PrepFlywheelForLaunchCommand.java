@@ -48,11 +48,11 @@ public class PrepFlywheelForLaunchCommand extends Command {
 
 	@Override
 	public void end(boolean interrupted) {
-		launcherSubsystem.stopLauncher();
+		// launcherSubsystem.stopLauncher();
 	}
 
 	@Override
 	public boolean isFinished() {
-		return false;
+		return true;
 	}
 }
