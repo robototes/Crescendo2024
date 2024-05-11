@@ -3,7 +3,6 @@
   "waypoints": [
     {
       "anchor": {
-<<<<<<<< HEAD:src/main/deploy/pathplanner/paths/AMP L_CN1 Q_CN2.path
         "x": 5.42,
         "y": 6.51
       },
@@ -11,36 +10,18 @@
       "nextControl": {
         "x": 5.97739075389196,
         "y": 6.434297939018414
-========
-        "x": 4.8,
-        "y": 7.34
-      },
-      "prevControl": null,
-      "nextControl": {
-        "x": 5.327541092443193,
-        "y": 7.421333745558521
->>>>>>>> 1c303a3f01e55d196fe89166f18a300f24cc863a:src/main/deploy/pathplanner/paths/AMP L_AN1 Q_CN1.path
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-<<<<<<<< HEAD:src/main/deploy/pathplanner/paths/AMP L_CN1 Q_CN2.path
         "x": 7.105431675652084,
         "y": 6.195202308862735
       },
       "prevControl": {
         "x": 6.529149900405065,
         "y": 6.34233808126623
-========
-        "x": 6.713069615909433,
-        "y": 7.464248345842875
-      },
-      "prevControl": {
-        "x": 6.020305354176314,
-        "y": 7.46588354801617
->>>>>>>> 1c303a3f01e55d196fe89166f18a300f24cc863a:src/main/deploy/pathplanner/paths/AMP L_AN1 Q_CN1.path
       },
       "nextControl": null,
       "isLocked": false,
@@ -58,23 +39,14 @@
   },
   "goalEndState": {
     "velocity": 2.0,
-<<<<<<<< HEAD:src/main/deploy/pathplanner/paths/AMP L_CN1 Q_CN2.path
     "rotation": 159.94,
-========
-    "rotation": 180.0,
->>>>>>>> 1c303a3f01e55d196fe89166f18a300f24cc863a:src/main/deploy/pathplanner/paths/AMP L_AN1 Q_CN1.path
     "rotateFast": false
   },
   "reversed": false,
   "folder": "Auto Logic Paths",
   "previewStartingState": {
-<<<<<<<< HEAD:src/main/deploy/pathplanner/paths/AMP L_CN1 Q_CN2.path
     "rotation": -166.57,
     "velocity": 0.0
-========
-    "rotation": -158.01,
-    "velocity": 0
->>>>>>>> 1c303a3f01e55d196fe89166f18a300f24cc863a:src/main/deploy/pathplanner/paths/AMP L_AN1 Q_CN1.path
   },
   "useDefaultConstraints": true
 }
