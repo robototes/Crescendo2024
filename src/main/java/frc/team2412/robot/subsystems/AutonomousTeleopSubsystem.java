@@ -25,7 +25,6 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.DriverStation.MatchType;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -35,6 +34,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.team2412.robot.Robot;
 import frc.team2412.robot.Subsystems;
 import frc.team2412.robot.commands.drivebase.DriveToNoteCommand;
@@ -54,7 +54,7 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 
 	// physical properties
 	private static final double BUMPER_WIDTH_LENGTH = 0.8382; // meters
-	private static final PathConstraints CONSTRAINTS = new PathConstraints(6., 3., 3., 3.);
+	private static final PathConstraints CONSTRAINTS = new PathConstraints(1., 3., 3., 3.);
 	private static final PathConstraints SLOW_CONSTRAINTS = new PathConstraints(2., 1., 2., 2.);
 
 	// TODO: constructor for config has option for error spike threshold that leads path to be
@@ -192,7 +192,7 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 				new Rotation2d(-120.0))
 	};
 
-	private static final double ACCELERATION_TOLERANCE = 0.1;
+	private static final double ACCELERATION_TOLERANCE = 10.0;
 
 	private static final double COLLISION_DISTANCE = BUMPER_WIDTH_LENGTH + 0.3;
 
@@ -235,7 +235,7 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 			public RobotState nextState(AutonomousTeleopSubsystem input) {
 				// if the current command is null then this is the first time we're running this stage
 				if (currentCommand == null) {
-					input.s.launcherSubsystem.setAngle(LauncherSubsystem.RETRACTED_ANGLE);
+					input.s.launcherSubsystem.setAngle(AutoLogic.STAGE_ANGLE);
 					input.s.launcherSubsystem.stopLauncher();
 					switch (input.goal) {
 						case PICKUP_NOTE:
@@ -674,31 +674,32 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 	}
 
 	public boolean isColliding() {
-		Translation2d expectedVelocity =
-				new Translation2d(
-						s.drivebaseSubsystem.getFieldSpeeds().vxMetersPerSecond,
-						s.drivebaseSubsystem.getFieldSpeeds().vyMetersPerSecond);
-		// estimate expected acceleration using a = Δv/Δt
-		Translation2d expectedAccel =
-				(lastExpectedVelocity.minus(expectedVelocity))
-						.div((lastTimestamp - Timer.getFPGATimestamp()));
-		Translation2d actualAccel =
-				s.drivebaseSubsystem
-						.getSwerveDrive()
-						.getAccel()
-						.orElse(new Translation3d(expectedAccel.getX(), expectedAccel.getY(), 0))
-						.toTranslation2d();
-
-		double accelDifference = Math.abs(expectedAccel.getNorm() - actualAccel.getNorm());
-
-		lastExpectedVelocity = expectedVelocity;
-		lastTimestamp = Timer.getFPGATimestamp();
-
-		if (Math.abs(accelDifference) > ACCELERATION_TOLERANCE) {
-			collisionDirection = expectedAccel.minus(actualAccel);
-			return true;
-		}
 		return false;
+		// Translation2d expectedVelocity =
+		// 		new Translation2d(
+		// 				s.drivebaseSubsystem.getFieldSpeeds().vxMetersPerSecond,
+		// 				s.drivebaseSubsystem.getFieldSpeeds().vyMetersPerSecond);
+		// // estimate expected acceleration using a = Δv/Δt
+		// Translation2d expectedAccel =
+		// 		(lastExpectedVelocity.minus(expectedVelocity))
+		// 				.div((lastTimestamp - Timer.getFPGATimestamp()));
+		// Translation2d actualAccel =
+		// 		s.drivebaseSubsystem
+		// 				.getSwerveDrive()
+		// 				.getAccel()
+		// 				.orElse(new Translation3d(expectedAccel.getX(), expectedAccel.getY(), 0))
+		// 				.toTranslation2d();
+
+		// double accelDifference = Math.abs(expectedAccel.getNorm() - actualAccel.getNorm());
+
+		// lastExpectedVelocity = expectedVelocity;
+		// lastTimestamp = Timer.getFPGATimestamp();
+
+		// if (Math.abs(accelDifference) > ACCELERATION_TOLERANCE) {
+		// 	collisionDirection = expectedAccel.minus(actualAccel);
+		// 	return true;
+		// }
+		// return false;
 	}
 
 	public void avoidCollisionSpot() {
@@ -831,7 +832,9 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 						AutoBuilder.followPath(roamPath)
 								.repeatedly()
 								.until(s.limelightSubsystem::hasTargets)
-								.andThen(new DriveToNoteCommand(s.drivebaseSubsystem, s.limelightSubsystem)),
+								.andThen(new DriveToNoteCommand(s.drivebaseSubsystem, s.limelightSubsystem))
+								.until(s.intakeSubsystem::indexSensorHasNote)
+								.andThen(new WaitCommand(1)),
 						intake())
 				.withName("SearchNoteCommand");
 	}
@@ -871,6 +874,7 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 	public Command scoreAmpCommand() {
 		PathPlannerPath ampScorePath =
 				alliance.equals(Alliance.Blue) ? BLUE_AMP_SCORE_PATH : RED_AMP_SCORE_PATH;
+		ampScorePath.preventFlipping = true;
 
 		return Commands.parallel(
 						AutoBuilder.followPath(ampScorePath),
@@ -888,6 +892,7 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 		return (LAUNCHER_ENABLED
 						? new AimTowardsSpeakerCommand(s.launcherSubsystem, s.drivebaseSubsystem)
 								.andThen(launch())
+								.andThen(new WaitCommand(0.5))
 						: Commands.none())
 				.withName("ScoreSpeakerCommand");
 	}
@@ -905,7 +910,7 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 
 	public Command intake() {
 		return (INTAKE_ENABLED
-						? new SetAngleLaunchCommand(s.launcherSubsystem, 0, LauncherSubsystem.RETRACTED_ANGLE)
+						? new SetAngleLaunchCommand(s.launcherSubsystem, 0, AutoLogic.STAGE_ANGLE)
 								.andThen(new AllInCommand(s.intakeSubsystem, null))
 						: Commands.none())
 				.withName("IntakeCommand");
@@ -924,8 +929,7 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 
 	public Command retractPivot() {
 		return (LAUNCHER_ENABLED
-						? new InstantCommand(
-								() -> s.launcherSubsystem.setAngle(LauncherSubsystem.RETRACTED_ANGLE))
+						? new InstantCommand(() -> s.launcherSubsystem.setAngle(AutoLogic.STAGE_ANGLE))
 						: Commands.none())
 				.withName("RetractPivotCommand");
 	}
