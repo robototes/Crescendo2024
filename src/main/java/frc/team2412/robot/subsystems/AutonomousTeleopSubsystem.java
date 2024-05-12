@@ -6,6 +6,7 @@ import static frc.team2412.robot.Subsystems.SubsystemConstants.LAUNCHER_ENABLED;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathfindHolonomic;
 import com.pathplanner.lib.commands.PathfindingCommand;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.pathfinding.LocalADStar;
@@ -18,6 +19,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -46,6 +48,7 @@ import frc.team2412.robot.commands.launcher.StopLauncherCommand;
 import frc.team2412.robot.util.auto.AutoLogic;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class AutonomousTeleopSubsystem extends SubsystemBase {
 
@@ -261,16 +264,18 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 					if (input.alliance.equals(Alliance.Blue)
 							? input.s.drivebaseSubsystem.getPose().getX() < BLUE_WING_LINE
 							: input.s.drivebaseSubsystem.getPose().getX() > RED_WING_LINE
-									&& !CommandScheduler.getInstance().isScheduled(input.revFlyWheels())) {
+									&& !input.hasRevFlyWheelCommand()) {
 						input.revFlyWheels().schedule();
 					}
 				}
+				input.rotateTowardsCenterAprilTags();
 				if (input.isColliding()) {
 					return REROUTING;
 				}
 				if (!currentCommand.isFinished()) {
 					return this;
 				}
+
 				currentCommand = null;
 				switch (input.goal) {
 					case PICKUP_NOTE:
@@ -794,6 +799,7 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 		// 										: RED_TRAP_ALIGNMENT_POSES));
 		return pathfindToPose(trapPose);
 	}
+
 	public Command slowPathfindToPose(Pose2d goalPose) {
 		return new PathfindHolonomic(
 				goalPose,
@@ -850,7 +856,11 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 		Pose2d alignmentPose = trapTarget.getSelected().getAlignmentPose(this);
 		Pose2d scoringPose = trapTarget.getSelected().getScoringPose(this);
 
-		return Commands.either(Commands.none(), pathfindToTrap(), () -> isNearPosition(alignmentPose.getTranslation(), ACCELERATION_TOLERANCE)).andThen(prepTrapLaunchCommand())
+		return Commands.either(
+						Commands.none(),
+						pathfindToTrap(),
+						() -> isNearPosition(alignmentPose.getTranslation(), ACCELERATION_TOLERANCE))
+				.andThen(prepTrapLaunchCommand())
 				.andThen(slowPathfindToPose(scoringPose))
 				.andThen(launch())
 				.withName("ScoreTrapCommand");
@@ -901,6 +911,10 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 				.withName("IntakeCommand");
 	}
 
+	public boolean hasRevFlyWheelCommand() {
+		return CommandScheduler.getInstance().requiring(s.launcherSubsystem).getName().equals("RevFlywheelsCommand");
+	}
+
 	public Command revFlyWheels() {
 		return (LAUNCHER_ENABLED
 						? new PrepFlywheelForLaunchCommand(s.launcherSubsystem, s.drivebaseSubsystem)
@@ -934,5 +948,27 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 								LauncherSubsystem.TRAP_AIM_ANGLE)
 						: Commands.none())
 				.withName("PrepTrapLaunchCommandCommand");
+	}
+
+	public void rotateTowardsCenterAprilTags() {
+		ChassisSpeeds fieldSpeed = s.drivebaseSubsystem.getFieldSpeeds().times(0.5);
+
+		Translation2d robotPosition =
+				s.drivebaseSubsystem
+						.getPose()
+						.getTranslation()
+						.plus(new Translation2d(fieldSpeed.vxMetersPerSecond, fieldSpeed.vyMetersPerSecond));
+
+		Translation2d aprilTagRelativePose =
+				alliance.equals(Alliance.Blue)
+						? BLUE_STAGE_POSITION.plus(new Translation2d(0.45, 0.0)).minus(robotPosition)
+						: RED_STAGE_POSITION.plus(new Translation2d(-0.45, 0.0)).minus(robotPosition);
+
+		PPHolonomicDriveController.setRotationTargetOverride(
+				() ->
+						s.drivebaseSubsystem.getPose().getX() >= BLUE_STAGE_POSITION.getX() + 1.5
+										&& s.drivebaseSubsystem.getPose().getX() <= RED_STAGE_POSITION.getX() - 1.5
+								? Optional.of(aprilTagRelativePose.getAngle())
+								: Optional.empty());
 	}
 }
