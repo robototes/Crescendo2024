@@ -18,7 +18,6 @@ import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
@@ -54,7 +53,7 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 
 	// physical properties
 	private static final double BUMPER_WIDTH_LENGTH = 0.8382; // meters
-	private static final PathConstraints CONSTRAINTS = new PathConstraints(1., 3., 3., 3.);
+	private static final PathConstraints CONSTRAINTS = new PathConstraints(5.5, 3., 3., 3.);
 	private static final PathConstraints SLOW_CONSTRAINTS = new PathConstraints(2., 1., 2., 2.);
 
 	// TODO: constructor for config has option for error spike threshold that leads path to be
@@ -268,6 +267,7 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 						input.revFlyWheels().schedule();
 					}
 				}
+				// TODO: doesn't seem to be called or just doesnt function
 				input.rotateTowardsCenterAprilTags();
 				if (input.isColliding()) {
 					return REROUTING;
@@ -917,7 +917,10 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 	}
 
 	public boolean hasRevFlyWheelCommand() {
-		return CommandScheduler.getInstance().requiring(s.launcherSubsystem).getName().equals("RevFlywheelsCommand");
+		return CommandScheduler.getInstance()
+				.requiring(s.launcherSubsystem)
+				.getName()
+				.equals("RevFlywheelsCommand");
 	}
 
 	public Command revFlyWheels() {
@@ -955,6 +958,7 @@ public class AutonomousTeleopSubsystem extends SubsystemBase {
 	}
 
 	public void rotateTowardsCenterAprilTags() {
+		System.out.println("test");
 		ChassisSpeeds fieldSpeed = s.drivebaseSubsystem.getFieldSpeeds().times(0.5);
 
 		Translation2d robotPosition =
