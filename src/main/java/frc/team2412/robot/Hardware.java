@@ -3,6 +3,7 @@ package frc.team2412.robot;
 public class Hardware {
 	// apriltags stuff
 	public static final String PHOTON_CAM = "Arducam_OV9281_USB_Camera";
+	public static final String PHOTON_CAM_2 = "?";
 	public static final String PHOTON_IP = "10.24.12.12";
 
 	public static final int PDP_ID = 1;

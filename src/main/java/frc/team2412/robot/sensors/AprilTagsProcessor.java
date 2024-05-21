@@ -46,6 +46,12 @@ public class AprilTagsProcessor {
 					0,
 					Units.inchesToMeters(8.12331),
 					new Rotation3d(Units.degreesToRadians(90), Units.degreesToRadians(-30), 0));
+	public static final Transform3d ROBOT_TO_CAM_2 =
+			new Transform3d(
+					Units.inchesToMeters(27.0 / 2.0 - 0.94996),
+					0,
+					Units.inchesToMeters(8.12331),
+					new Rotation3d(Units.degreesToRadians(90), Units.degreesToRadians(-30), 0));
 
 	// TODO Measure these
 	private static final Vector<N3> STANDARD_DEVS =
@@ -77,7 +83,9 @@ public class AprilTagsProcessor {
 	}
 
 	private final PhotonCamera photonCamera;
+	private final PhotonCamera photonCamera2;
 	private final PhotonPoseEstimator photonPoseEstimator;
+	private final PhotonPoseEstimator photonPoseEstimator2;
 	private final DrivebaseWrapper aprilTagsHelper;
 	private final FieldObject2d rawVisionFieldObject;
 
@@ -85,6 +93,9 @@ public class AprilTagsProcessor {
 	private double lastRawTimestampSeconds = 0;
 	private PhotonPipelineResult latestResult = null;
 	private boolean latestResultIsValid = false;
+
+	private PhotonPipelineResult latestResult2 = null;
+	private boolean latestResultIsValid2 = false;
 
 	// This is set for every non-filtered pipeline result
 	private Optional<EstimatedRobotPose> latestPose = Optional.empty();
@@ -110,14 +121,25 @@ public class AprilTagsProcessor {
 		photonPoseEstimator =
 				new PhotonPoseEstimator(
 						fieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, photonCamera, ROBOT_TO_CAM);
+		photonCamera2 = new PhotonCamera(Hardware.PHOTON_CAM_2);
+		photonPoseEstimator2 = new PhotonPoseEstimator(fieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, photonCamera2, ROBOT_TO_CAM_2);
 
 		photonPoseEstimator.setLastPose(aprilTagsHelper.getEstimatedPosition());
+		photonPoseEstimator2.setLastPose(aprilTagsHelper.getEstimatedPosition());
 		photonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.CLOSEST_TO_LAST_POSE);
+		photonPoseEstimator2.setMultiTagFallbackStrategy(PoseStrategy.CLOSEST_TO_LAST_POSE);
 
 		networkTables.addListener(
 				networkTables
 						.getTable("photonvision")
 						.getSubTable(Hardware.PHOTON_CAM)
+						.getEntry("rawBytes"),
+				EnumSet.of(NetworkTableEvent.Kind.kValueAll),
+				event -> update());
+		networkTables.addListener(
+				networkTables
+						.getTable("photonvision")
+						.getSubTable(Hardware.PHOTON_CAM_2)
 						.getEntry("rawBytes"),
 				EnumSet.of(NetworkTableEvent.Kind.kValueAll),
 				event -> update());
@@ -148,19 +170,27 @@ public class AprilTagsProcessor {
 	public void update() {
 		latestResult = photonCamera.getLatestResult();
 		latestResultIsValid = resultIsValid(latestResult);
-		lastRawTimestampSeconds = latestResult.getTimestampSeconds();
-		if (!latestResultIsValid) {
-			return;
-		}
-		latestPose = photonPoseEstimator.update(latestResult);
-		if (latestPose.isPresent()) {
-			lastValidTimestampSeconds = latestPose.get().timestampSeconds;
-			lastFieldPose = latestPose.get().estimatedPose.toPose2d();
-			rawVisionFieldObject.setPose(lastFieldPose);
-			aprilTagsHelper.addVisionMeasurement(lastFieldPose, lastValidTimestampSeconds, STANDARD_DEVS);
-			var estimatedPose = aprilTagsHelper.getEstimatedPosition();
-			aprilTagsHelper.getField().setRobotPose(estimatedPose);
-			photonPoseEstimator.setLastPose(estimatedPose);
+
+		latestResult2 = photonCamera2.getLatestResult();
+		latestResultIsValid2 = resultIsValid(latestResult2);
+
+		if (latestResultIsValid || latestResultIsValid2) {
+			if (latestResultIsValid) {
+				latestPose = photonPoseEstimator.update(latestResult);
+				lastRawTimestampSeconds = latestResult.getTimestampSeconds();
+			} else {
+				latestPose = photonPoseEstimator2.update(latestResult2);
+				lastRawTimestampSeconds = latestResult2.getTimestampSeconds();
+			}
+			if (latestPose.isPresent()) {
+				lastValidTimestampSeconds = latestPose.get().timestampSeconds;
+				lastFieldPose = latestPose.get().estimatedPose.toPose2d();
+				rawVisionFieldObject.setPose(lastFieldPose);
+				aprilTagsHelper.addVisionMeasurement(lastFieldPose, lastValidTimestampSeconds, STANDARD_DEVS);
+				var estimatedPose = aprilTagsHelper.getEstimatedPosition();
+				aprilTagsHelper.getField().setRobotPose(estimatedPose);
+				photonPoseEstimator.setLastPose(estimatedPose);
+			}
 		}
 	}
 
