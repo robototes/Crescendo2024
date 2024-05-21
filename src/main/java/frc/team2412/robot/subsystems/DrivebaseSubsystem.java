@@ -196,32 +196,34 @@ public class DrivebaseSubsystem extends SubsystemBase {
 			Supplier<Rotation2d> rotation,
 			BooleanSupplier turboRotation) {
 		return this.run(
-				() -> {
-					Rotation2d constrainedRotation =
-							Rotation2d.fromRotations(
-									SwerveMath.applyDeadband(rotation.get().getRotations(), true, JOYSTICK_DEADBAND)
-											* MAX_SPEED
-											* (turboRotation.getAsBoolean()
-													? turboRotationMultiplierEntry.getDouble(1.0)
-													: 1)
-											* rotationSpeedEntry.getDouble(1.0)
-											* -1);
-					Translation2d constrainedTranslation =
-							new Translation2d(
-									SwerveMath.applyDeadband(forward.getAsDouble(), true, JOYSTICK_DEADBAND)
-											* MAX_SPEED
-											* translationSpeedEntry.getDouble(1.0),
-									SwerveMath.applyDeadband(strafe.getAsDouble(), true, JOYSTICK_DEADBAND)
-											* MAX_SPEED
-											* translationSpeedEntry.getDouble(1.0));
-					if (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red) {
-						constrainedTranslation = constrainedTranslation.unaryMinus();
-					}
-					if (flipTranslationEntry.getBoolean(false)) {
-						constrainedTranslation = constrainedTranslation.unaryMinus();
-					}
-					drive(constrainedTranslation, constrainedRotation, true);
-				});
+						() -> {
+							Rotation2d constrainedRotation =
+									Rotation2d.fromRotations(
+											SwerveMath.applyDeadband(
+															rotation.get().getRotations(), true, JOYSTICK_DEADBAND)
+													* MAX_SPEED
+													* (turboRotation.getAsBoolean()
+															? turboRotationMultiplierEntry.getDouble(1.0)
+															: 1)
+													* rotationSpeedEntry.getDouble(1.0)
+													* -1);
+							Translation2d constrainedTranslation =
+									new Translation2d(
+											SwerveMath.applyDeadband(forward.getAsDouble(), true, JOYSTICK_DEADBAND)
+													* MAX_SPEED
+													* translationSpeedEntry.getDouble(1.0),
+											SwerveMath.applyDeadband(strafe.getAsDouble(), true, JOYSTICK_DEADBAND)
+													* MAX_SPEED
+													* translationSpeedEntry.getDouble(1.0));
+							if (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red) {
+								constrainedTranslation = constrainedTranslation.unaryMinus();
+							}
+							if (flipTranslationEntry.getBoolean(false)) {
+								constrainedTranslation = constrainedTranslation.unaryMinus();
+							}
+							drive(constrainedTranslation, constrainedRotation, true);
+						})
+				.withName("DriveJoystick");
 	}
 
 	// this might need to be put in its own file due to complexity

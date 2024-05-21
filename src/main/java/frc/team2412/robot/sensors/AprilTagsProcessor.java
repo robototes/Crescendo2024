@@ -11,8 +11,10 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTableEvent;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
@@ -81,6 +83,8 @@ public class AprilTagsProcessor {
 	private final DrivebaseWrapper aprilTagsHelper;
 	private final FieldObject2d rawVisionFieldObject;
 
+	private final GenericEntry rotateToSpeakerEntry;
+
 	// These are always set with every pipeline result
 	private double lastRawTimestampSeconds = 0;
 	private PhotonPipelineResult latestResult = null;
@@ -95,6 +99,9 @@ public class AprilTagsProcessor {
 
 	private static final AprilTagFieldLayout fieldLayout =
 			AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
+
+	public static final Pose2d RED_SPEAKER_POSE = fieldLayout.getTagPose(4).get().toPose2d();
+	public static final Pose2d BLUE_SPEAKER_POSE = fieldLayout.getTagPose(7).get().toPose2d();
 
 	public AprilTagsProcessor(DrivebaseWrapper aprilTagsHelper) {
 		this.aprilTagsHelper = aprilTagsHelper;
@@ -143,6 +150,13 @@ public class AprilTagsProcessor {
 				.add("3d pose on field", new SendablePose3d(this::getRobotPose))
 				.withPosition(2, 0)
 				.withSize(2, 2);
+		rotateToSpeakerEntry =
+				shuffleboardTab
+						.add("Rotate to speaker tag", false)
+						.withPosition(0, 2)
+						.withSize(1, 1)
+						.withWidget(BuiltInWidgets.kToggleSwitch)
+						.getEntry();
 	}
 
 	public void update() {
@@ -162,6 +176,15 @@ public class AprilTagsProcessor {
 			aprilTagsHelper.getField().setRobotPose(estimatedPose);
 			photonPoseEstimator.setLastPose(estimatedPose);
 		}
+	}
+
+	/**
+	 * Indicates if the rotate to speaker toggle is selected.
+	 *
+	 * @return Whether the rotate to speaker toggle is selected.
+	 */
+	public boolean shouldRotateToSpeaker() {
+		return rotateToSpeakerEntry.getBoolean(false);
 	}
 
 	/**
