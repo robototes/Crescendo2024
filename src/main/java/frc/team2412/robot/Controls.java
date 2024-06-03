@@ -11,8 +11,8 @@ import static frc.team2412.robot.Subsystems.SubsystemConstants.LED_ENABLED;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -30,7 +30,6 @@ import frc.team2412.robot.commands.launcher.ManualAngleCommand;
 import frc.team2412.robot.commands.launcher.SetAngleAmpLaunchCommand;
 import frc.team2412.robot.commands.launcher.SetAngleLaunchCommand;
 import frc.team2412.robot.commands.launcher.SetPivotCommand;
-import frc.team2412.robot.sensors.AprilTagsProcessor;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
 import frc.team2412.robot.util.AmpAlign;
 
@@ -145,15 +144,15 @@ public class Controls {
 							s.drivebaseSubsystem
 									.rotateToAngle(
 											() -> {
-												var speakerPose =
-														DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red
-																? AprilTagsProcessor.RED_SPEAKER_POSE
-																: AprilTagsProcessor.BLUE_SPEAKER_POSE;
-												var robotToSpeaker =
-														speakerPose
-																.getTranslation()
-																.minus(s.drivebaseSubsystem.getPose().getTranslation());
-												return robotToSpeaker.getAngle();
+												double currentTimestamp = Timer.getFPGATimestamp();
+												double robotToTagAngleTimestamp =
+														s.apriltagsProcessor.getLastRotatedAngleTimestamp();
+												var robotAngle = s.drivebaseSubsystem.getPose().getRotation();
+												var robotToTagAngle = s.apriltagsProcessor.getLastRotatedAngle();
+												if (currentTimestamp - robotToTagAngleTimestamp > 0.1) {
+													return robotAngle;
+												}
+												return robotAngle.plus(robotToTagAngle);
 											},
 											false)
 									.withName("RotateToSpeaker"));

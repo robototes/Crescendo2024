@@ -84,11 +84,16 @@ public class AprilTagsProcessor {
 	private final FieldObject2d rawVisionFieldObject;
 
 	private final GenericEntry rotateToSpeakerEntry;
+	private final GenericEntry trackingIdEntry;
 
 	// These are always set with every pipeline result
 	private double lastRawTimestampSeconds = 0;
 	private PhotonPipelineResult latestResult = null;
 	private boolean latestResultIsValid = false;
+
+	// These are set with every pipeline result with the appropriate tag
+	private Rotation2d lastRotatedAngle = new Rotation2d();
+	private double lastRotatedAngleTimestamp = 0;
 
 	// This is set for every non-filtered pipeline result
 	private Optional<EstimatedRobotPose> latestPose = Optional.empty();
@@ -157,12 +162,22 @@ public class AprilTagsProcessor {
 						.withSize(1, 1)
 						.withWidget(BuiltInWidgets.kToggleSwitch)
 						.getEntry();
+		trackingIdEntry = shuffleboardTab.add("Tag ID", 4).withPosition(1, 2).withSize(1, 1).getEntry();
+		shuffleboardTab
+				.addDouble("Last rotated angle timestamp", this::getLastRotatedAngleTimestamp)
+				.withPosition(2, 2)
+				.withSize(1, 1);
+		shuffleboardTab
+				.addDouble("Last rotated angle degrees", () -> getLastRotatedAngle().getDegrees())
+				.withPosition(3, 2)
+				.withSize(1, 1);
 	}
 
 	public void update() {
 		latestResult = photonCamera.getLatestResult();
 		latestResultIsValid = resultIsValid(latestResult);
 		lastRawTimestampSeconds = latestResult.getTimestampSeconds();
+		updateSpeakerAngle(latestResult);
 		if (!latestResultIsValid) {
 			return;
 		}
@@ -178,6 +193,18 @@ public class AprilTagsProcessor {
 		}
 	}
 
+	private void updateSpeakerAngle(PhotonPipelineResult pipelineResult) {
+		int trackingId = (int) trackingIdEntry.getInteger(-1);
+		for (var target : pipelineResult.targets) {
+			if (target.getFiducialId() != trackingId) {
+				continue;
+			}
+			// Camera is rotated so that global left is camera down
+			lastRotatedAngle = Rotation2d.fromDegrees(-target.getPitch());
+			lastRotatedAngleTimestamp = pipelineResult.getTimestampSeconds();
+		}
+	}
+
 	/**
 	 * Indicates if the rotate to speaker toggle is selected.
 	 *
@@ -185,6 +212,14 @@ public class AprilTagsProcessor {
 	 */
 	public boolean shouldRotateToSpeaker() {
 		return rotateToSpeakerEntry.getBoolean(false);
+	}
+
+	public Rotation2d getLastRotatedAngle() {
+		return lastRotatedAngle;
+	}
+
+	public double getLastRotatedAngleTimestamp() {
+		return lastRotatedAngleTimestamp;
 	}
 
 	/**
