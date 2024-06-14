@@ -2,6 +2,7 @@ package frc.team2412.robot;
 
 import static frc.team2412.robot.Controls.ControlConstants.CODRIVER_CONTROLLER_PORT;
 import static frc.team2412.robot.Controls.ControlConstants.CONTROLLER_PORT;
+import static frc.team2412.robot.Subsystems.SubsystemConstants.APRILTAGS_ENABLED;
 import static frc.team2412.robot.Subsystems.SubsystemConstants.DRIVEBASE_ENABLED;
 import static frc.team2412.robot.Subsystems.SubsystemConstants.INTAKE_ENABLED;
 import static frc.team2412.robot.Subsystems.SubsystemConstants.LAUNCHER_ENABLED;
@@ -11,6 +12,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -136,6 +138,25 @@ public class Controls {
 			// 						this,
 			// 						codriveController.leftBumper()));
 		}
+		if (DRIVEBASE_ENABLED && APRILTAGS_ENABLED) {
+			new Trigger(s.rotateToSpeaker)
+					.whileTrue(
+							s.drivebaseSubsystem
+									.rotateToAngle(
+											() -> {
+												double currentTimestamp = Timer.getFPGATimestamp();
+												double robotToTagAngleTimestamp =
+														s.apriltagsProcessor.getLastRotatedAngleTimestamp();
+												var robotAngle = s.drivebaseSubsystem.getPose().getRotation();
+												var robotToTagAngle = s.apriltagsProcessor.getLastRotatedAngle();
+												if (currentTimestamp - robotToTagAngleTimestamp > 0.1) {
+													return robotAngle;
+												}
+												return robotAngle.plus(robotToTagAngle);
+											},
+											false)
+									.withName("RotateToSpeaker"));
+		}
 	}
 	// LED
 	private void bindLEDControls() {
@@ -244,7 +265,7 @@ public class Controls {
 		// 				s.launcherSubsystem.runEnd(
 		// 						s.launcherSubsystem::launch, s.launcherSubsystem::stopLauncher));
 
-		driveController.b().onTrue(new InstantCommand(() -> s.launcherSubsystem.launch(6500)));
+		driveController.b().onTrue(new InstantCommand(() -> s.launcherSubsystem.launch()));
 	}
 
 	private void bindSysIdControls() {
