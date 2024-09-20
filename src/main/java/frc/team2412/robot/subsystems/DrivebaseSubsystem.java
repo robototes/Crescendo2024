@@ -45,10 +45,10 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 public class DrivebaseSubsystem extends SubsystemBase {
 
 	// SWERVE CONSTANTS (that aren't in deploy dir)
-
+	//In Meters Per Second
 	public static final double MAX_SPEED =
 			Robot.getInstance().getRobotType() == RobotType.BONK
-					? 3.0
+					? 5.0
 					: Robot.getInstance().getRobotType() == RobotType.COMPETITION
 							? 6.0
 							: Robot.getInstance().getRobotType() == RobotType.CRANE ? 3.0 : 1.0;
