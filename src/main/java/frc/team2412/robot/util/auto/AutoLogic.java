@@ -97,7 +97,8 @@ public class AutoLogic {
 					new AutoPath("Pass Autoline", "PresetAmpSide1ScorePassAutoline"),
 					new AutoPath("Pass Autoline", "PresetSourceSide1ScorePassAutoline"),
 					new AutoPath("Vision Launch Test", "VisionLaunchTest", true),
-					new AutoPath("Steal Test", "StealTest"));
+					new AutoPath("Steal Test", "StealTest"),
+					new AutoPath("Bonk GTA", "BonkGrandTheftAuto", false));
 
 	private static List<AutoPath> onePiecePaths =
 			List.of(
@@ -145,8 +146,7 @@ public class AutoLogic {
 					new AutoPath("Autoline N1 Centerline N1 N2 Autoline N2", "VisionAmpSide5Score", true));
 
 	private static List<AutoPath> fivePiecePaths =
-			List.of(new AutoPath("GTA(Centerline N5N4N3N2N1)", "VisionSourceSideGrandTheftAuto", true),
-					new AutoPath("Bonk GTA", "BonkGrandTheftAuto", false));
+			List.of(new AutoPath("GTA(Centerline N5N4N3N2N1)", "VisionSourceSideGrandTheftAuto", true));
 
 	private static List<AutoPath> sixPiecePaths =
 			List.of(
