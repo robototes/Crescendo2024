@@ -145,7 +145,8 @@ public class AutoLogic {
 					new AutoPath("Autoline N1 Centerline N1 N2 Autoline N2", "VisionAmpSide5Score", true));
 
 	private static List<AutoPath> fivePiecePaths =
-			List.of(new AutoPath("GTA(Centerline N5N4N3N2N1)", "VisionSourceSideGrandTheftAuto", true));
+			List.of(new AutoPath("GTA(Centerline N5N4N3N2N1)", "VisionSourceSideGrandTheftAuto", true),
+					new AutoPath("Bonk GTA", "BonkGrandTheftAuto", false));
 
 	private static List<AutoPath> sixPiecePaths =
 			List.of(

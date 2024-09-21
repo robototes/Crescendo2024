@@ -1,0 +1,25 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.5,
+      "y": 2.03
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BonkGrandTheftAuto"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Bonk Autos",
+  "choreoAuto": false
+}

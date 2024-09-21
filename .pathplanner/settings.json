@@ -1,14 +1,15 @@
 {
-  "robotWidth": 0.8382,
-  "robotLength": 0.8382,
+  "robotWidth": 0.74,
+  "robotLength": 0.74,
   "holonomicMode": true,
   "pathFolders": [
     "Auto Logic Paths"
   ],
   "autoFolders": [
     "Complex Autos",
-    "Test",
+    "Bonk Autos",
     "Preset Autos",
+    "Test",
     "Vision Autos"
   ],
   "defaultMaxVel": 4.0,
