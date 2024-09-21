@@ -232,12 +232,14 @@ public class Controls {
 		launcherLowerPresetButton.onTrue(
 				s.launcherSubsystem
 						.runOnce(s.launcherSubsystem::stopLauncher)
-						.andThen(new SetPivotCommand(s.launcherSubsystem, LauncherSubsystem.RETRACTED_ANGLE)));
+						.andThen(new SetPivotCommand(s.launcherSubsystem, LauncherSubsystem.RETRACTED_ANGLE))
+						.withTimeout(2.0));
 		launcherSubwooferPresetButton.onTrue(
 				new SetAngleLaunchCommand(
-						s.launcherSubsystem,
-						LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
-						LauncherSubsystem.SUBWOOFER_AIM_ANGLE));
+								s.launcherSubsystem,
+								LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
+								LauncherSubsystem.SUBWOOFER_AIM_ANGLE)
+						.withTimeout(2.0));
 		// launcherPodiumPresetButton.onTrue(
 		//		new SetAngleLaunchCommand(
 		//				s.launcherSubsystem,
@@ -245,9 +247,10 @@ public class Controls {
 		//				LauncherSubsystem.PODIUM_AIM_ANGLE));
 		launcherAmpPresetButton.onTrue(
 				new SetAngleAmpLaunchCommand(
-						s.launcherSubsystem,
-						LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
-						LauncherSubsystem.AMP_AIM_ANGLE));
+								s.launcherSubsystem,
+								LauncherSubsystem.SPEAKER_SHOOT_SPEED_RPM,
+								LauncherSubsystem.AMP_AIM_ANGLE)
+						.withTimeout(2.0));
 
 		// launcherTrapPresetButton.onTrue(
 		// 		TrapAlign.trapPreset(s.drivebaseSubsystem, s.launcherSubsystem));
