@@ -105,8 +105,9 @@ public class AutoLogic {
 					new AutoPath("Autoline N1", "PresetAmpSide2Score"),
 					new AutoPath("Autoline N2", "PresetMidAutoline2Score"),
 					new AutoPath("Autoline N3", "PresetSourceSideAutoline2Score"),
-					new AutoPath("Centerline N5", "PresetSourceSideFar2Score")
+					new AutoPath("Centerline N5", "PresetSourceSideFar2Score"),
 					// vision
+					new AutoPath("Centerline N4", "VisionSourceSideFar2ScoreN4")
 					);
 
 	private static List<AutoPath> twoPiecePaths =
