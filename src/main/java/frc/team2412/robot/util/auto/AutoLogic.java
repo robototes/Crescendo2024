@@ -107,7 +107,7 @@ public class AutoLogic {
 					new AutoPath("Autoline N3", "PresetSourceSideAutoline2Score"),
 					new AutoPath("Centerline N5", "PresetSourceSideFar2Score"),
 					// vision
-					new AutoPath("Centerline N4", "VisionSourceSide2ScoreN4"));
+					new AutoPath("Centerline N4", "VisionSourceSide2ScoreN4", true));
 
 	private static List<AutoPath> twoPiecePaths =
 			List.of(
