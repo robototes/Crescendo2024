@@ -312,7 +312,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
 		headingCorrectionEntry =
 				drivebaseTab
-						.addPersistent("Heading Correction", true)
+						.add("Heading Correction", false)
 						.withWidget(BuiltInWidgets.kToggleSwitch)
 						.withSize(2, 1)
 						.getEntry();
@@ -325,28 +325,28 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
 		translationSpeedEntry =
 				drivebaseTab
-						.addPersistent("Translation Speed", 1.0)
+						.add("Translation Speed", 1.0)
 						.withWidget(BuiltInWidgets.kNumberSlider)
 						.withSize(2, 1)
 						.withProperties(Map.of("Min", 0.0))
 						.getEntry();
 		rotationSpeedEntry =
 				drivebaseTab
-						.addPersistent("Rotation Speed", 1.0)
+						.add("Rotation Speed", 1.0)
 						.withWidget(BuiltInWidgets.kNumberSlider)
 						.withSize(2, 1)
 						.withProperties(Map.of("Min", 0.0))
 						.getEntry();
 		turboRotationMultiplierEntry =
 				drivebaseTab
-						.addPersistent("Turbo rotation multiplier", 1.0)
+						.add("Turbo rotation multiplier", 1.75)
 						.withWidget(BuiltInWidgets.kNumberSlider)
 						.withSize(2, 1)
 						.withProperties(Map.of("Min", 0.5, "Max", 5.0))
 						.getEntry();
 		xWheelsEntry =
 				drivebaseTab
-						.addPersistent("X Wheels", xWheelsEnabled)
+						.add("X Wheels", false)
 						.withWidget(BuiltInWidgets.kBooleanBox)
 						.withSize(1, 1)
 						.getEntry();
