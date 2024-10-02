@@ -332,7 +332,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 						.getEntry();
 		rotationSpeedEntry =
 				drivebaseTab
-						.add("Rotation Speed", 1.0)
+						.add("Rotation Speed", 0.38)
 						.withWidget(BuiltInWidgets.kNumberSlider)
 						.withSize(2, 1)
 						.withProperties(Map.of("Min", 0.0))
