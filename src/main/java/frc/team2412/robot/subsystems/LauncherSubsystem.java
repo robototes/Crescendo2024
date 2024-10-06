@@ -5,6 +5,7 @@ import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.REVLibError;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.SparkPIDController;
@@ -102,6 +103,7 @@ public class LauncherSubsystem extends SubsystemBase {
 	private double angleSetpoint;
 	private double manualAngleSetpoint;
 	private boolean ignoreLimits;
+	private boolean badCAN;
 
 	private Optional<Double> relativeEncoderStartPosition;
 
@@ -252,6 +254,12 @@ public class LauncherSubsystem extends SubsystemBase {
 	}
 	// used for presets
 	public void launch(double speed) {
+		if (badCAN) {
+			rpmSetpoint = 0;
+			launcherTopMotor.stopMotor();
+			launcherBottomMotor.stopMotor();
+			return;
+		}
 		rpmSetpoint = speed;
 
 		launcherTopPIDController.setReference(
@@ -261,6 +269,10 @@ public class LauncherSubsystem extends SubsystemBase {
 	}
 
 	public void ampLaunch(double speed) {
+		if (badCAN) {
+			launcherTopMotor.stopMotor();
+			return;
+		}
 		launcherTopPIDController.setReference(
 				-speed, ControlType.kVelocity, 0); // launcherTopFeedforward.calculate(-speed));
 		launcherBottomMotor.disable();
@@ -285,9 +297,20 @@ public class LauncherSubsystem extends SubsystemBase {
 
 	public double getPosition() {
 		if (!USE_THROUGHBORE) {
-			return launcherAngleEncoder.getPosition();
+			double position = launcherAngleEncoder.getPosition();
+			badCAN = launcherAngleOneMotor.getLastError() != REVLibError.kOk;
+			if (badCAN) {
+				launcherAngleOneMotor.stopMotor();
+			}
+			return position;
 		}
-		return convertEncoderRotationsToPivotRotations(launcherAngleThroughboreEncoder.getPosition());
+		double position =
+				convertEncoderRotationsToPivotRotations(launcherAngleThroughboreEncoder.getPosition());
+		badCAN = launcherAngleTwoMotor.getLastError() != REVLibError.kOk;
+		if (badCAN) {
+			launcherAngleTwoMotor.stopMotor();
+		}
+		return position;
 	}
 
 	/**
@@ -528,6 +551,10 @@ public class LauncherSubsystem extends SubsystemBase {
 
 	public void resetManualAngleSetpoint() {
 		manualAngleSetpoint = Units.degreesToRotations(getAngle());
+	}
+
+	public boolean hasBadCAN() {
+		return badCAN;
 	}
 
 	@Override
