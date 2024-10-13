@@ -18,6 +18,7 @@ import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
@@ -30,6 +31,7 @@ import frc.team2412.robot.Robot;
 import frc.team2412.robot.util.SparkPIDWidget;
 import java.util.Map;
 import java.util.Optional;
+import java.util.OptionalDouble;
 
 public class LauncherSubsystem extends SubsystemBase {
 	// CONSTANTS
@@ -128,6 +130,8 @@ public class LauncherSubsystem extends SubsystemBase {
 	private GenericEntry launcherFlywheelSetpointEntry;
 
 	private GenericEntry launcherDisabledEntry;
+
+	private OptionalDouble angleInsaneStartTime = OptionalDouble.empty();
 
 	// Constructors
 	public LauncherSubsystem() {
@@ -566,15 +570,21 @@ public class LauncherSubsystem extends SubsystemBase {
 		angleSetpointEntry.setDouble(angleSetpoint);
 		launcherFlywheelSetpointEntry.setDouble(rpmSetpoint);
 		launcherDisabledEntry.setBoolean(false);
+		double now = Timer.getFPGATimestamp();
 
 		// PIVOT ENCODER SANITY CHECKS
 		// compares the relative encoder angle vs the absolute encoder angle
 		if (relativeEncoderStartPosition.isPresent()
 				&& Math.abs(getAngle() - getAngleOneMotorAngle()) >= ENCODER_DIFFERENCE_TOLERANCE) {
-			if (!ignoreLimits) {
+			if (!ignoreLimits
+					&& angleInsaneStartTime.isPresent()
+					&& now - angleInsaneStartTime.getAsDouble() > 0.15) {
 				launcherAngleOneMotor.disable();
 				launcherAngleTwoMotor.disable();
 				launcherDisabledEntry.setBoolean(true);
+			}
+			if (angleInsaneStartTime.isEmpty()) {
+				angleInsaneStartTime = OptionalDouble.of(now);
 			}
 			DriverStation.reportError(
 					"Pivot encoder deviated too far from motor encoder angle ... .. Reported pivot angle of "
