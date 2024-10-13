@@ -496,7 +496,7 @@ public class LauncherSubsystem extends SubsystemBase {
 
 		setAngleOffsetEntry =
 				Shuffleboard.getTab("Match")
-						.add("Set Angle Offset", 0)
+						.add("Set Angle Offset", -5)
 						.withPosition(4, 3)
 						.withSize(2, 1)
 						.withWidget(BuiltInWidgets.kNumberSlider)
