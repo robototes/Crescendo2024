@@ -11,8 +11,10 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTableEvent;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
@@ -45,7 +47,7 @@ public class AprilTagsProcessor {
 					Units.inchesToMeters(27.0 / 2.0 - 0.94996),
 					0,
 					Units.inchesToMeters(8.12331),
-					new Rotation3d(Units.degreesToRadians(90), Units.degreesToRadians(-30), 0));
+					new Rotation3d(0, Units.degreesToRadians(-30), 0));
 
 	// TODO Measure these
 	private static final Vector<N3> STANDARD_DEVS =
@@ -81,10 +83,17 @@ public class AprilTagsProcessor {
 	private final DrivebaseWrapper aprilTagsHelper;
 	private final FieldObject2d rawVisionFieldObject;
 
+	private final GenericEntry rotateToSpeakerEntry;
+	private final GenericEntry trackingIdEntry;
+
 	// These are always set with every pipeline result
 	private double lastRawTimestampSeconds = 0;
 	private PhotonPipelineResult latestResult = null;
 	private boolean latestResultIsValid = false;
+
+	// These are set with every pipeline result with the appropriate tag
+	private Rotation2d lastRotatedAngle = new Rotation2d();
+	private double lastRotatedAngleTimestamp = 0;
 
 	// This is set for every non-filtered pipeline result
 	private Optional<EstimatedRobotPose> latestPose = Optional.empty();
@@ -95,6 +104,9 @@ public class AprilTagsProcessor {
 
 	private static final AprilTagFieldLayout fieldLayout =
 			AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
+
+	public static final Pose2d RED_SPEAKER_POSE = fieldLayout.getTagPose(4).get().toPose2d();
+	public static final Pose2d BLUE_SPEAKER_POSE = fieldLayout.getTagPose(7).get().toPose2d();
 
 	public AprilTagsProcessor(DrivebaseWrapper aprilTagsHelper) {
 		this.aprilTagsHelper = aprilTagsHelper;
@@ -143,12 +155,29 @@ public class AprilTagsProcessor {
 				.add("3d pose on field", new SendablePose3d(this::getRobotPose))
 				.withPosition(2, 0)
 				.withSize(2, 2);
+		rotateToSpeakerEntry =
+				shuffleboardTab
+						.add("Rotate to speaker tag", false)
+						.withPosition(0, 2)
+						.withSize(1, 1)
+						.withWidget(BuiltInWidgets.kToggleSwitch)
+						.getEntry();
+		trackingIdEntry = shuffleboardTab.add("Tag ID", 4).withPosition(1, 2).withSize(1, 1).getEntry();
+		shuffleboardTab
+				.addDouble("Last rotated angle timestamp", this::getLastRotatedAngleTimestamp)
+				.withPosition(2, 2)
+				.withSize(1, 1);
+		shuffleboardTab
+				.addDouble("Last rotated angle degrees", () -> getLastRotatedAngle().getDegrees())
+				.withPosition(3, 2)
+				.withSize(1, 1);
 	}
 
 	public void update() {
 		latestResult = photonCamera.getLatestResult();
 		latestResultIsValid = resultIsValid(latestResult);
 		lastRawTimestampSeconds = latestResult.getTimestampSeconds();
+		updateSpeakerAngle(latestResult);
 		if (!latestResultIsValid) {
 			return;
 		}
@@ -162,6 +191,35 @@ public class AprilTagsProcessor {
 			aprilTagsHelper.getField().setRobotPose(estimatedPose);
 			photonPoseEstimator.setLastPose(estimatedPose);
 		}
+	}
+
+	private void updateSpeakerAngle(PhotonPipelineResult pipelineResult) {
+		int trackingId = (int) trackingIdEntry.getInteger(-1);
+		for (var target : pipelineResult.targets) {
+			if (target.getFiducialId() != trackingId) {
+				continue;
+			}
+			// Camera is rotated so that global left is camera down
+			lastRotatedAngle = Rotation2d.fromDegrees(-target.getPitch());
+			lastRotatedAngleTimestamp = pipelineResult.getTimestampSeconds();
+		}
+	}
+
+	/**
+	 * Indicates if the rotate to speaker toggle is selected.
+	 *
+	 * @return Whether the rotate to speaker toggle is selected.
+	 */
+	public boolean shouldRotateToSpeaker() {
+		return rotateToSpeakerEntry.getBoolean(false);
+	}
+
+	public Rotation2d getLastRotatedAngle() {
+		return lastRotatedAngle;
+	}
+
+	public double getLastRotatedAngleTimestamp() {
+		return lastRotatedAngleTimestamp;
 	}
 
 	/**

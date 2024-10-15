@@ -414,7 +414,8 @@ public class SwerveDrive {
 		if (headingCorrection) {
 			if (Math.abs(getRobotVelocity().omegaRadiansPerSecond) < HEADING_CORRECTION_ROTATION_DEADBAND
 					&& (Math.abs(velocity.vxMetersPerSecond) > HEADING_CORRECTION_TRANSLATION_DEADBAND
-							|| Math.abs(velocity.vyMetersPerSecond) > HEADING_CORRECTION_TRANSLATION_DEADBAND)) {
+							|| Math.abs(velocity.vyMetersPerSecond) > HEADING_CORRECTION_TRANSLATION_DEADBAND)
+					&& (Math.abs(velocity.omegaRadiansPerSecond) < 0.01)) {
 				velocity.omegaRadiansPerSecond =
 						swerveController.headingCalculate(
 								getOdometryHeading().getRadians(), lastHeadingRadians);

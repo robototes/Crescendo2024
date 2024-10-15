@@ -9,6 +9,7 @@ import frc.team2412.robot.subsystems.LEDSubsystem;
 import frc.team2412.robot.subsystems.LauncherSubsystem;
 import frc.team2412.robot.subsystems.LimelightSubsystem;
 import frc.team2412.robot.util.DrivebaseWrapper;
+import java.util.function.BooleanSupplier;
 
 public class Subsystems {
 	public static class SubsystemConstants {
@@ -29,6 +30,7 @@ public class Subsystems {
 	public final IntakeSubsystem intakeSubsystem;
 	public final LEDSubsystem ledSubsystem;
 	public final AprilTagsProcessor apriltagsProcessor;
+	public final BooleanSupplier rotateToSpeaker;
 
 	public Subsystems() {
 		// initialize subsystems here (wow thats wild)
@@ -41,8 +43,10 @@ public class Subsystems {
 		}
 		if (APRILTAGS_ENABLED) {
 			apriltagsProcessor = new AprilTagsProcessor(drivebaseWrapper);
+			rotateToSpeaker = () -> apriltagsProcessor.shouldRotateToSpeaker();
 		} else {
 			apriltagsProcessor = null;
+			rotateToSpeaker = () -> false;
 		}
 		if (LAUNCHER_ENABLED) {
 			launcherSubsystem = new LauncherSubsystem();
